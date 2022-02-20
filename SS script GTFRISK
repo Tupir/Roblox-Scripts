@@ -1,0 +1,899 @@
+game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
+game.Players.LocalPlayer.PlayerGui.CharacterSelection.Character.Value = "GTFrisk"
+wait(1)
+game.Players.LocalPlayer.Backpack:WaitForChild("Main").GTFriskMoves.Animations.Idle.AnimationId = "rbxassetid://4900761581"
+game.Players.LocalPlayer.Backpack:WaitForChild("Main").GTFriskMoves.Animations.Walk.AnimationId = "rbxassetid://4370512420"
+game.Players.LocalPlayer.Backpack:WaitForChild("Main").GTFriskMoves.Animations.Run.AnimationId = "rbxassetid://4576074471"
+game.Players.LocalPlayer.Backpack:WaitForChild("Main").GTFriskMoves.Animations.Idle2.AnimationId = "rbxassetid://4900761581"
+game.Players.LocalPlayer.Backpack:WaitForChild("Main").GTFriskMoves.Animations.Walk2.AnimationId = "rbxassetid://4370512420"
+game.Players.LocalPlayer.Backpack:WaitForChild("Main").GTFriskMoves.Animations.Jump.AnimationId = "rbxassetid://6136050723"
+game.Players.LocalPlayer.Backpack:WaitForChild("Main").GTFriskMoves.Animations.Fall.AnimationId = "rbxassetid://6136052357"
+game.Players.LocalPlayer.Backpack:WaitForChild("Main").GTFriskMoves.Animations.Block.AnimationId = "rbxassetid://3203734026"
+game.Players.LocalPlayer.Backpack:WaitForChild("Main").GTFriskMoves.Animations.Block2.AnimationId = "rbxassetid://3203734026"
+
+wait(1)
+
+local player = game:GetService("Players").LocalPlayer
+local MoveAnimations = player.Backpack.Main.GTFriskMoves.Animations
+local ClickAnimations = player.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Combat
+local pass = getrenv()._G.Pass
+
+ClickAnimations.Light1.AnimationId = "rbxassetid://4906030889"
+ClickAnimations.Light2.AnimationId = "rbxassetid://4906045655"
+ClickAnimations.Light3.AnimationId = "rbxassetid://4906056809"
+ClickAnimations.Light4.AnimationId = "rbxassetid://4906072632"
+ClickAnimations.Light5.AnimationId = "rbxassetid://4906104364"
+ClickAnimations.Light6.AnimationId = "rbxassetid://4906108508"
+
+
+wait(1)
+
+local plr = game.Players.LocalPlayer.Character
+plr.GTFriskSword:Remove()
+plr.GTFriskShield:Remove()
+plr.Humanoid.JumpPower = "100"
+
+--Music
+local music = Instance.new("Sound",game.Players.LocalPlayer:WaitForChild("StarterPlaylist"))
+    music.Volume = 0.5
+    music.SoundId = "rbxassetid://964435618"
+    music.Looped = true
+    music:Play()
+    
+--OWO
+
+game:GetService("StarterGui"):SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
+    game.Players.LocalPlayer.Chatted:connect(function(arg_1)
+local SW_4 = getrenv()._G.Pass
+local SW_5 = "Chatted"
+local SW_6 = arg_1
+local SW_7 = Color3.new(0, 1, 1)
+game.ReplicatedStorage.Remotes.Events:FireServer({SW_4,"Chatted",SW_6,Color3.fromRGB(190, 0, 190)})
+end)
+
+--Custom Attacks
+
+--noobs
+game.Players.LocalPlayer:GetMouse()
+game:GetService("UserInputService").InputBegan:connect(function(inputObject, gameProcessedEvent)
+    if inputObject.KeyCode == Enum.KeyCode.Z then
+        local Anim = Instance.new("Animation")
+        Anim.AnimationId = "rbxassetid://3207868272"
+        local k = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+        k:Play()
+        k:AdjustSpeed(1)
+        local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["VictimCFrame"] = CFrame.new(Vector3.new(957.38525390625, -2.7168080806732, 271.31875610352), Vector3.new(0.90182185173035, 0.0016235302900895, 0.43210506439209)),
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Stunned,
+                ["Velocity"] = Vector3.new(0, 0.5, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Charge,
+                ["Damage"] = 0
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+        wait(1)
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["VictimCFrame"] = CFrame.new(Vector3.new(957.38525390625, -2.7168080806732, 271.31875610352), Vector3.new(0.90182185173035, 0.0016235302900895, 0.43210506439209)),
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Stunned,
+                ["Velocity"] = Vector3.new(0, 1, 0),
+
+                ["Damage"] = 0
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+        wait(1)
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["VictimCFrame"] = CFrame.new(Vector3.new(957.38525390625, -2.7168080806732, 271.31875610352), Vector3.new(0.90182185173035, 0.0016235302900895, 0.43210506439209)),
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Stunned,
+                ["Velocity"] = Vector3.new(0, 1.5, 0),
+
+                ["Damage"] = 0
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+        wait(1)
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["VictimCFrame"] = CFrame.new(Vector3.new(957.38525390625, -2.7168080806732, 271.31875610352), Vector3.new(0.90182185173035, 0.0016235302900895, 0.43210506439209)),
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Stunned,
+                ["Velocity"] = Vector3.new(0, 2, 0),
+                ["Damage"] = 0
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+        wait(1)
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback1,
+                ["Velocity"] = Vector3.new(0, 2, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Fire,
+                ["Damage"] = 10
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback1,
+                ["Velocity"] = Vector3.new(0, 2, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Fire,
+                ["Damage"] = 10
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback1,
+                ["Velocity"] = Vector3.new(0, 2, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Fire,
+                ["Damage"] = 10
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback1,
+                ["Velocity"] = Vector3.new(0, 2, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Fire,
+                ["Damage"] = 10
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+wait(0.05)
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Knockback",
+                ["HitEffect"] = "LightHitEffect3",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback1,
+                ["Velocity"] = Vector3.new(0, 100, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Fire,
+                ["Damage"] = 10
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+        k:Stop()
+    end
+end)
+
+game.Players.LocalPlayer:GetMouse()
+game:GetService("UserInputService").InputBegan:connect(function(inputObject, gameProcessedEvent)
+    if inputObject.KeyCode == Enum.KeyCode.Z then
+        local Anim = Instance.new("Animation")
+        Anim.AnimationId = "rbxassetid://3207868272"
+        local k = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+        k:Play()
+        k:AdjustSpeed(1)
+        local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["VictimCFrame"] = CFrame.new(Vector3.new(957.38525390625, -2.7168080806732, 271.31875610352), Vector3.new(0.90182185173035, 0.0016235302900895, 0.43210506439209)),
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Stunned,
+                ["Velocity"] = Vector3.new(0, 0.5, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Charge,
+                ["Damage"] = 0
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+        wait(1)
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["VictimCFrame"] = CFrame.new(Vector3.new(957.38525390625, -2.7168080806732, 271.31875610352), Vector3.new(0.90182185173035, 0.0016235302900895, 0.43210506439209)),
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Stunned,
+                ["Velocity"] = Vector3.new(0, 1, 0),
+
+                ["Damage"] = 0
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+        wait(1)
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["VictimCFrame"] = CFrame.new(Vector3.new(957.38525390625, -2.7168080806732, 271.31875610352), Vector3.new(0.90182185173035, 0.0016235302900895, 0.43210506439209)),
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Stunned,
+                ["Velocity"] = Vector3.new(0, 1.5, 0),
+
+                ["Damage"] = 0
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+        wait(1)
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["VictimCFrame"] = CFrame.new(Vector3.new(957.38525390625, -2.7168080806732, 271.31875610352), Vector3.new(0.90182185173035, 0.0016235302900895, 0.43210506439209)),
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Stunned,
+                ["Velocity"] = Vector3.new(0, 2, 0),
+                ["Damage"] = 0
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+        wait(1)
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback1,
+                ["Velocity"] = Vector3.new(0, 2, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Fire,
+                ["Damage"] = 10
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback1,
+                ["Velocity"] = Vector3.new(0, 2, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Fire,
+                ["Damage"] = 10
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback1,
+                ["Velocity"] = Vector3.new(0, 2, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Fire,
+                ["Damage"] = 10
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback1,
+                ["Velocity"] = Vector3.new(0, 2, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Fire,
+                ["Damage"] = 10
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+wait(0.05)
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Knockback",
+                ["HitEffect"] = "LightHitEffect3",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback1,
+                ["Velocity"] = Vector3.new(0, 100, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Fire,
+                ["Damage"] = 10
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+        k:Stop()
+    end
+end)
+
+game.Players.LocalPlayer:GetMouse()
+game:GetService("UserInputService").InputBegan:connect(function(inputObject, gameProcessedEvent)
+    if inputObject.KeyCode == Enum.KeyCode.Z then
+                local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 1, 1),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+wait(0.2)
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing2"],
+        [4] = Color3.new(0, 0, 0),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+local args = {
+    [1] = {
+        [1] = getrenv()._G.Pass,
+        [2] = "SlashEffect",
+        [3] = game:GetService("Players").LocalPlayer.Backpack.Main.GTFriskMoves.ModuleScript.Animations.Slash["Swing1"],
+        [4] = Color3.new(0, 0, 0),
+    },
+}
+
+game:GetService("ReplicatedStorage").Remotes.Events:FireServer(unpack(args))
+    end
+end)
+
+-- air combo
+
+game.Players.LocalPlayer:GetMouse()
+game:GetService("UserInputService").InputBegan:connect(function(inputObject, gameProcessedEvent)
+    if inputObject.KeyCode == Enum.KeyCode.X then
+            local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback1,
+                ["Velocity"] = Vector3.new(0, 50, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Explosion,
+                ["Damage"] = 10
+            }
+        }
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+    wait(2)
+local mouse = game.Players.LocalPlayer:GetMouse()
+		function getlockchar()
+			local char = game.Players.LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value
+			return char
+		end
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = getlockchar().HumanoidRootPart.CFrame * CFrame.new(0,0,3)
+wait(0.2)
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = true
+local Anim = Instance.new("Animation")
+		Anim.AnimationId = "rbxassetid://4920626240"
+		local k = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+		k:Play()
+		k:AdjustSpeed(1)
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback1,
+                ["Velocity"] = Vector3.new(0, 2, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Explosion,
+                ["Damage"] = 10
+            }
+        }
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Normal",
+                ["HitEffect"] = "LightHitEffect3",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback1,
+                ["Velocity"] = Vector3.new(0, 2, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Explosion,
+                ["Damage"] = 10
+            }
+        }
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+wait(0.2)
+local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["HitTime"] = 2,
+                ["Type"] = "Knockback",
+                ["HitEffect"] = "LightHitEffect3",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback1,
+                ["Velocity"] = Vector3.new(0, -50, 0),
+                ["Sound"] = game:GetService("ReplicatedStorage").Objects.Moves.Kamehameha.Sound.Explosion,
+                ["Damage"] = 10
+            }
+        }
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+wait(1.5)
+local mouse = game.Players.LocalPlayer:GetMouse()
+		function getlockchar()
+			local char = game.Players.LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value
+			return char
+		end
+		game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = getlockchar().HumanoidRootPart.CFrame * CFrame.new(0,0,3)
+game.Players.LocalPlayer.Character.HumanoidRootPart.Anchored = false
+    end
+end)
