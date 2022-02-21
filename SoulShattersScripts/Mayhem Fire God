@@ -4,17 +4,6 @@ game:GetService("Players").LocalPlayer.PlayerGui.Moves1["3"]:Destroy()
 game:GetService("Players").LocalPlayer.PlayerGui.Moves1["4"]:Destroy()
 game:GetService("Players").LocalPlayer.PlayerGui.Moves1["5"]:Destroy()
 game:GetService("Players").LocalPlayer.PlayerGui.Moves1["6"]:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.UI.Ui.MoveDebounceShower.Moves1["2"]:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.UI.Ui.MoveDebounceShower.Moves1["3"]:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.UI.Ui.MoveDebounceShower.Moves1["4"]:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.UI.Ui.MoveDebounceShower.Moves1["5"]:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.UI.Ui.MoveDebounceShower.Moves2:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.UI.Ui.MoveDebounceShower.Moves3:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.UI.Ui.MoveDebounceShower.Moves4:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.UI.Ui.MoveDebounceShower.Moves5:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.UI.Ui.MoveDebounceShower.Moves6:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.UI.Ui.MoveDebounceShower.Moves7:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.UI.Ui.MoveDebounceShower.Moves8:Destroy()game.Players.LocalPlayer.Chatted:Connect(function(Chat)
 ------------------------------------------------------------------------------
 
 if _G.MayhemMode == true then
