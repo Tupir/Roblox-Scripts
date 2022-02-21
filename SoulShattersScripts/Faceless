@@ -1,4 +1,6 @@
-
+game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
+game.Players.LocalPlayer.PlayerGui.CharacterSelection.Character.Value = "XSans"
+wait(1.6)
 --Music
 
 game.Players.LocalPlayer:WaitForChild("StarterPlaylist")
