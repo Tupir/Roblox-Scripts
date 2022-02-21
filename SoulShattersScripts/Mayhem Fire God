@@ -1,11 +1,3 @@
-------------------------------------------------------------------------------
-game:GetService("Players").LocalPlayer.PlayerGui.Moves1["2"]:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.Moves1["3"]:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.Moves1["4"]:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.Moves1["5"]:Destroy()
-game:GetService("Players").LocalPlayer.PlayerGui.Moves1["6"]:Destroy()
-------------------------------------------------------------------------------
-
 if _G.MayhemMode == true then
     wait(0.2)
 local A_1 =  {
