@@ -1,5 +1,5 @@
 game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
-game.Players.LocalPlayer.PlayerGui.CharacterSelection.Character.Value = "XTale"
+game.Players.LocalPlayer.PlayerGui.CharacterSelection.Character.Value = "XSans"
 wait(1)
 game.Players.LocalPlayer.Character.Head.HealthBar.Frame.PName.Text = "BlackGoku"
 game.Players.LocalPlayer.Character.Head.HealthBar.Frame.PName.TextColor3 = Color3.fromRGB(230, 0, 255)
