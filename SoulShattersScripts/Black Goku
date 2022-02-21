@@ -1,6 +1,9 @@
-
+game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
+game.Players.LocalPlayer.PlayerGui.CharacterSelection.Character.Value = "XTale"
+wait(1)
+game.Players.LocalPlayer.Character.Head.HealthBar.Frame.PName.Text = "BlackGoku"
+game.Players.LocalPlayer.Character.Head.HealthBar.Frame.PName.TextColor3 = Color3.fromRGB(230, 0, 255)
 --Music
-
 game.Players.LocalPlayer:WaitForChild("StarterPlaylist")
 game.Players.LocalPlayer.StarterPlaylist["1Theme"]:Destroy()
 local Sound = Instance.new("Sound")
