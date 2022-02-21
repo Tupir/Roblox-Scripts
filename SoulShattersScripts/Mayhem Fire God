@@ -1,3 +1,4 @@
+game.Players.LocalPlayer.Chatted:Connect(function(Chat)
 if _G.MayhemMode == true then
     wait(0.2)
 local A_1 =  {
