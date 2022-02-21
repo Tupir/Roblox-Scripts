@@ -1,3 +1,7 @@
+game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
+game.Players.LocalPlayer.PlayerGui.CharacterSelection.Character.Value = "Frisk"
+wait(1.6)
+
 game.Players.LocalPlayer.Character.Head.Voice:Destroy()
 function talk(text,color)
 if dead == true then return end
