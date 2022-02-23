@@ -1,8 +1,6 @@
 game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
 game.Players.LocalPlayer.PlayerGui.CharacterSelection.Character.Value = "XSans"
 wait(1.6)
-game.Players.LocalPlayer.Character.Head.HealthBar.Frame.PName.Text = "Dio"
-game.Players.LocalPlayer.Character.Head.HealthBar.Frame.PName.TextColor3 = Color3.fromRGB(255, 233, 0)
 
 
 --Music and chat
