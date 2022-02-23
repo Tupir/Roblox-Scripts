@@ -1,4 +1,4 @@
-
+if game.PlaceId == 3198259055 then
 local library = loadstring(game:HttpGet("http://void-scripts.com/UI/VenyxUi2.lua"))()
 local SShub = library.new("SoulShatters HUB", 5013109572)
 
@@ -253,7 +253,87 @@ end
 
 local Credits = SShub:addPage("Credits", 5012544693)
 local Credit = Credits:addSection("Credits: Tupi#2739")
-local Credit = Credits:addSection("My first script lol")
-local Credit = Credits:addSection("Frisk level 20 is my script")
 
 SShub:SelectPage(SShub.pages[1], true)
+end
+--CRITICAL STRIKE--
+
+if game.PlaceId == 111311599 then
+
+local library = loadstring(game:HttpGet("http://void-scripts.com/UI/VenyxUi2.lua"))()
+local SShub = library.new("Critical Strike", 5013109572)
+
+
+local themes = {
+Background = Color3.fromRGB(24, 24, 24),
+Glow = Color3.fromRGB(0, 0, 0),
+Accent = Color3.fromRGB(10, 10, 10),
+LightContrast = Color3.fromRGB(20, 20, 20),
+DarkContrast = Color3.fromRGB(14, 14, 14),  
+TextColor = Color3.fromRGB(255, 255, 255)
+}
+
+
+
+local Cssect1 = SShub:addPage("Main Scripts", 5012544693)
+local Cs = Cssect1:addSection("Critical Strike Scripts")
+
+Cs:addButton(
+    "Give GP Classes",
+    function()
+        loadstring(
+            game:HttpGet("https://raw.githubusercontent.com/miguel831/Topi/main/CriticalStrike/Give%20GP%20Classes", true)
+        )()
+    end
+)
+Cs:addButton(
+    "Give Admin Cmds",
+    function()
+        loadstring(
+            game:HttpGet("https://raw.githubusercontent.com/miguel831/Topi/main/CriticalStrike/Give%20Admin%20Cmds", true)
+        )()
+    end
+)
+Cs:addButton(
+    "Give Tokens Cmds",
+    function()
+        loadstring(
+            game:HttpGet("https://raw.githubusercontent.com/miguel831/Topi/main/CriticalStrike/Give%20Tokens%20Cmds", true)
+        )()
+    end
+)
+
+local Cssect2 = SShub:addPage("Other", 5012544693)
+local Cs1 = Cssect2:addSection("Scripts")
+
+Cs1:addButton(
+    "CMD-X Fe Commands",
+    function()
+        loadstring(
+            game:HttpGet("https://raw.githubusercontent.com/CMD-X/CMD-X/master/Source", true)
+        )()
+    end
+)
+
+local theme = SShub:addPage("Ui", 5012544693)
+local colors = theme:addSection("Colors")
+local UiToggle = theme:addSection("Ui Toggle")
+
+UiToggle:addKeybind("Toggle Keybind", Enum.KeyCode.RightControl, function()
+    SShub:toggle()
+    end, function()
+end)
+
+
+for theme, color in pairs(themes) do 
+colors:addColorPicker(theme, color, function(color3)
+SShub:setTheme(theme, color3)
+       end
+    )
+end
+
+local Credits = SShub:addPage("Credits", 5012544693)
+local Credit = Credits:addSection("Credits: Tupi#2739")
+
+SShub:SelectPage(SShub.pages[1], true)
+end
