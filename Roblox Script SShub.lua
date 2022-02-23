@@ -238,18 +238,17 @@ local theme = SShub:addPage("Ui", 5012544693)
 local colors = theme:addSection("Colors")
 local UiToggle = theme:addSection("Ui Toggle")
 
-UiToggle:addKeybind("Toggle Keybind", Enum.KeyCode.One, function()
-    print("Activated Keybind")
-    venyx:toggle()
+UiToggle:addKeybind("Toggle Keybind", Enum.KeyCode.RightControl, function()
+    SShub:toggle()
     end, function()
-    print("Changed Keybind")
-    end)
+end)
 
 
 for theme, color in pairs(themes) do 
 colors:addColorPicker(theme, color, function(color3)
 SShub:setTheme(theme, color3)
-end)
+       end
+    )
 end
 
 local Credits = SShub:addPage("Credits", 5012544693)
