@@ -1,37 +1,17 @@
+--SoulShatters--
+
 if game.PlaceId == 3198259055 then
 local library = loadstring(game:HttpGet("http://void-scripts.com/UI/VenyxUi2.lua"))()
-local SShub = library.new("SoulShatters HUB", 5013109572)
-
-
-local themes = {
-Background = Color3.fromRGB(24, 24, 24),
-Glow = Color3.fromRGB(0, 0, 0),
-Accent = Color3.fromRGB(10, 10, 10),
-LightContrast = Color3.fromRGB(20, 20, 20),
-DarkContrast = Color3.fromRGB(14, 14, 14),  
-TextColor = Color3.fromRGB(255, 255, 255)
-}
-
-
-
+local SShub = library.new("SShub SoulShatters", 5013109572)
 local Things = SShub:addPage("Things", 5012544693)
-local Thingsz = Things:addSection("Script can u use")
+local Thingsz = Things:addSection("Scripts")
 
 Thingsz:addButton(
-    "RoseShield Block Ut Frisk",
+    "CMD-X Fe Commands",
     function()
-        local A_1 = {
-            [1] = getrenv()._G.Pass,
-            [2] = "EquipWeapon",
-            [3] = "RoseShield"
-        }
-        game:GetService("ReplicatedStorage").Remotes.FriskMoves:InvokeServer(A_1)
-        local A_1 = {
-            [1] = getrenv()._G.Pass,
-            [2] = "EquipArmor",
-            [3] = "RoseShield"
-        }
-        game:GetService("ReplicatedStorage").Remotes.FriskMoves:InvokeServer(A_1)
+        loadstring(
+            game:HttpGet("https://raw.githubusercontent.com/CMD-X/CMD-X/master/Source", true)
+        )()
     end
 )
 Thingsz:addToggle(
@@ -234,49 +214,47 @@ paidCrs:addButton(
     end
 )
 
-local theme = SShub:addPage("Ui", 5012544693)
-local colors = theme:addSection("Colors")
-local UiToggle = theme:addSection("Ui Toggle")
-
-UiToggle:addKeybind("Toggle Keybind", Enum.KeyCode.RightControl, function()
-    SShub:toggle()
-    end, function()
-end)
-
-
-for theme, color in pairs(themes) do 
-colors:addColorPicker(theme, color, function(color3)
-SShub:setTheme(theme, color3)
-       end
-    )
+local themes = {
+    Background = Color3.fromRGB(24, 24, 24),
+    Glow = Color3.fromRGB(0, 0, 0),
+    Accent = Color3.fromRGB(10, 10, 10),
+    LightContrast = Color3.fromRGB(20, 20, 20),
+    DarkContrast = Color3.fromRGB(14, 14, 14),  
+    TextColor = Color3.fromRGB(255, 255, 255)
+    }
+    
+    local theme = SShub:addPage("Ui", 5012544693)
+    local colors = theme:addSection("Colors")
+    local UiToggle = theme:addSection("Ui Toggle")
+    
+    UiToggle:addKeybind("Toggle Keybind", Enum.KeyCode.RightControl, function()
+        SShub:toggle()
+        end, function()
+    end)
+    
+    
+    for theme, color in pairs(themes) do 
+    colors:addColorPicker(theme, color, function(color3)
+    SShub:setTheme(theme, color3)
+           end
+        )
+    end
+    
+    local Credits = SShub:addPage("Credits", 5012544693)
+    local Credit = Credits:addSection("Credits: Tupi#2739")
+    
+    SShub:SelectPage(SShub.pages[1], true)
 end
 
-local Credits = SShub:addPage("Credits", 5012544693)
-local Credit = Credits:addSection("Credits: Tupi#2739")
-
-SShub:SelectPage(SShub.pages[1], true)
-end
 --CRITICAL STRIKE--
 
 if game.PlaceId == 111311599 then
-
 local library = loadstring(game:HttpGet("http://void-scripts.com/UI/VenyxUi2.lua"))()
 local SShub = library.new("Critical Strike", 5013109572)
-
-
-local themes = {
-Background = Color3.fromRGB(24, 24, 24),
-Glow = Color3.fromRGB(0, 0, 0),
-Accent = Color3.fromRGB(10, 10, 10),
-LightContrast = Color3.fromRGB(20, 20, 20),
-DarkContrast = Color3.fromRGB(14, 14, 14),  
-TextColor = Color3.fromRGB(255, 255, 255)
-}
-
-
-
 local Cssect1 = SShub:addPage("Main Scripts", 5012544693)
 local Cs = Cssect1:addSection("Critical Strike Scripts")
+local Cssect2 = SShub:addPage("Other Scripts", 5012544693)
+local Cs1 = Cssect2:addSection("Scripts")
 
 Cs:addButton(
     "Give GP Classes",
@@ -302,10 +280,6 @@ Cs:addButton(
         )()
     end
 )
-
-local Cssect2 = SShub:addPage("Other", 5012544693)
-local Cs1 = Cssect2:addSection("Scripts")
-
 Cs1:addButton(
     "CMD-X Fe Commands",
     function()
@@ -315,25 +289,34 @@ Cs1:addButton(
     end
 )
 
-local theme = SShub:addPage("Ui", 5012544693)
-local colors = theme:addSection("Colors")
-local UiToggle = theme:addSection("Ui Toggle")
-
-UiToggle:addKeybind("Toggle Keybind", Enum.KeyCode.RightControl, function()
-    SShub:toggle()
-    end, function()
-end)
-
-
-for theme, color in pairs(themes) do 
-colors:addColorPicker(theme, color, function(color3)
-SShub:setTheme(theme, color3)
-       end
-    )
-end
-
-local Credits = SShub:addPage("Credits", 5012544693)
-local Credit = Credits:addSection("Credits: Tupi#2739")
-
-SShub:SelectPage(SShub.pages[1], true)
+local themes = {
+    Background = Color3.fromRGB(24, 24, 24),
+    Glow = Color3.fromRGB(0, 0, 0),
+    Accent = Color3.fromRGB(10, 10, 10),
+    LightContrast = Color3.fromRGB(20, 20, 20),
+    DarkContrast = Color3.fromRGB(14, 14, 14),  
+    TextColor = Color3.fromRGB(255, 255, 255)
+    }
+    
+    local theme = SShub:addPage("Ui", 5012544693)
+    local colors = theme:addSection("Colors")
+    local UiToggle = theme:addSection("Ui Toggle")
+    
+    UiToggle:addKeybind("Toggle Keybind", Enum.KeyCode.RightControl, function()
+        SShub:toggle()
+        end, function()
+    end)
+    
+    
+    for theme, color in pairs(themes) do 
+    colors:addColorPicker(theme, color, function(color3)
+    SShub:setTheme(theme, color3)
+           end
+        )
+    end
+    
+    local Credits = SShub:addPage("Credits", 5012544693)
+    local Credit = Credits:addSection("Credits: Tupi#2739")
+    
+    SShub:SelectPage(SShub.pages[1], true)
 end
