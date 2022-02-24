@@ -1,0 +1,28 @@
+--Throw + Blaster
+
+local mouse = game.Players.LocalPlayer:GetMouse()
+mouse.KeyDown:Connect(function(k)
+	if k == "x" then
+		local A_1 = getrenv()._G.Pass
+		local A_2 = game:GetService("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value
+		local A_3 = 
+			{
+				["HitTime"] = 2.5, 
+				["Type"] = "Knockback", 
+				["HitEffect"] = "KnifeHitEffect",
+				["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback2,
+				["Sound"] = game:GetService("ReplicatedStorage").Sounds.Knockback,
+				["Velocity"] = Vector3.new(0, 90, 0), 
+				["CombatInv"] = true,
+				["Damage"] = 25
+			}
+		local Event = game:GetService("ReplicatedStorage").Remotes.Damage
+		Event:InvokeServer(A_1, A_2, A_3)
+		local v1 = {
+			[1] = getrenv()._G.Pass,
+			[2] = "CrossBlaster"
+		}
+		local rem = game:GetService("ReplicatedStorage").Remotes.XSansMoves
+		rem:InvokeServer(v1)
+	end
+end)
