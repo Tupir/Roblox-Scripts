@@ -2,37 +2,6 @@
 game:GetService("UserInputService").InputBegan:Connect(function(key, gc)
     if gc then return end
     if key.KeyCode == Enum.KeyCode["B"] then
-        bonespam = true
-        spawn(function()
-        repeat wait(0.1)
-            local args = {
-            [1] = {
-                [1] = getrenv()._G.Pass,
-                [2] = "Bones",
-                [3] = "AirSpawn",
-                [4] = workspace:FindFirstChild(game.Players.LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value.Name).Torso.Position
-            }
-        }
-        game:GetService("ReplicatedStorage").Remotes.SansMoves:InvokeServer(unpack(args))
-        until bonespam == false
-        local args = {
-            [1] = {
-                [1] = getrenv()._G.Pass,
-                [2] = "GasterBlasters",
-                [3] = "SummonOneBig",
-                [4] = workspace:FindFirstChild(game.Players.LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value.Name).Torso.Position
-            }
-        }
-        game:GetService("ReplicatedStorage").Remotes.SansMoves:InvokeServer(unpack(args))
-        end)
-        wait(4)
-        bonespam = false
-    end
-end)
-
-game:GetService("UserInputService").InputBegan:Connect(function(key, gc)
-    if gc then return end
-    if key.KeyCode == Enum.KeyCode["G"] then
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = workspace:FindFirstChild(game.Players.LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value.Name).HumanoidRootPart.CFrame * CFrame.new(0, 0, -3)
         wait(0.1)
         stunHit()
