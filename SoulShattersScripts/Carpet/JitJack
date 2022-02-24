@@ -1,0 +1,122 @@
+--JitJack
+
+local mouse = game.Players.LocalPlayer:GetMouse()
+mouse.KeyDown:Connect(function(k)
+	if k == "c" then
+local Anim = Instance.new("Animation")
+		Anim.AnimationId = "rbxassetid://5858687214"
+		local k = game.Players.LocalPlayer.Character.Humanoid:LoadAnimation(Anim)
+		k:Play()
+        local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["Type"] = "Normal",
+                ["HitEffect"] = "KnifeHitEffect",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Hurt2,
+                ["Velocity"] = Vector3.new(1, 1, 1),
+                ["HitTime"] = 1,
+                ["CombatInv"] = true,
+                ["Sound"] = game:GetService("ReplicatedStorage").Sounds.Kick,
+                ["Damage"] = 5
+            }
+        }
+
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+end
+end)
+
+local mouse = game.Players.LocalPlayer:GetMouse()
+mouse.KeyDown:Connect(function(k)
+	if k == "c" then
+        local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["Type"] = "Normal",
+                ["HitEffect"] = "KnifeHitEffect",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Hurt2,
+                ["Velocity"] = Vector3.new(1, 1, 1),
+                ["HitTime"] = 1,
+                ["CombatInv"] = true,
+                ["Sound"] = game:GetService("ReplicatedStorage").Sounds.Kick,
+                ["Damage"] = 5
+            }
+        }
+
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+end
+end)
+
+local mouse = game.Players.LocalPlayer:GetMouse()
+mouse.KeyDown:Connect(function(k)
+	if k == "c" then
+        local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["Type"] = "Normal",
+                ["HitEffect"] = "KnifeHitEffect",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Hurt2,
+                ["Velocity"] = Vector3.new(1, 1, 1),
+                ["HitTime"] = 1,
+                ["CombatInv"] = true,
+                ["Sound"] = game:GetService("ReplicatedStorage").Sounds.Kick,
+                ["Damage"] = 5
+            }
+        }
+
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+end
+end)
+
+local mouse = game.Players.LocalPlayer:GetMouse()
+mouse.KeyDown:Connect(function(k)
+	if k == "c" then
+  wait(1.0)
+        local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["Type"] = "Normal",
+                ["HitEffect"] = "KnifeHitEffect",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Hurt1,
+                ["Velocity"] = Vector3.new(1, -0, 1),
+                ["HitTime"] = 1,
+                ["CombatInv"] = true,
+                ["Sound"] = game:GetService("ReplicatedStorage").Sounds.Kick,
+                ["Damage"] = 5
+            }
+        }
+
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+end
+end)
+
+local mouse = game.Players.LocalPlayer:GetMouse()
+mouse.KeyDown:Connect(function(k)
+	if k == "c" then
+  wait(1.5)
+        local args = {
+            [1] = getrenv()._G.Pass,
+            [2] = game:service("Players").LocalPlayer.Backpack.Main.LockOnScript.LockOn.Value,
+            [3] = {
+                ["Type"] = "Knockback",
+                ["HitEffect"] = "KnifeHitEffect",
+                ["HurtAnimation"] = game:GetService("ReplicatedStorage").Animations.HurtAnimations.Knockback3,
+                ["Velocity"] = Vector3.new(50, -0, 50),
+                ["HitTime"] = 1,
+                ["CombatInv"] = true,
+                ["Sound"] = game:GetService("ReplicatedStorage").Sounds.Punch,
+                ["Damage"] = 10
+            }
+        }
+
+
+        game:GetService("ReplicatedStorage").Remotes.Damage:InvokeServer(unpack(args))
+end
+end)
