@@ -1,5 +1,5 @@
 game.StarterGui:SetCoreGuiEnabled(Enum.CoreGuiType.Chat, true)
-game.Players.LocalPlayer.PlayerGui.CharacterSelection.Character.Value = "XSans"
+game.Players.LocalPlayer.PlayerGui.CharacterSelection.Character.Value = "Sans"
 wait(1.6)
 spawn(function()
 player = game.Players.LocalPlayer
