@@ -1,0 +1,40 @@
+--Heal
+
+local mouse = game.Players.LocalPlayer:GetMouse()
+db = true
+mouse.keyDown:connect(function(k)
+	k = k:lower()
+	if k == "h" then
+		if db == true then
+			local A_1 = 
+				{
+					[1] = getrenv()._G.Pass,
+					[2] = "Overwrite", 
+					[3] = "Summon"
+				}
+			local Event = game:GetService("ReplicatedStorage").Remotes.XSansMoves
+			Event:InvokeServer(A_1)
+			wait(0.6)
+			local A_1 = 
+				{
+					[1] = getrenv()._G.Pass, 
+					[2] = "Overwrite", 
+					[3] = "Heal"
+				}
+			local Event = game:GetService("ReplicatedStorage").Remotes.XSansMoves
+			Event:InvokeServer(A_1)
+			wait(1)
+			local A_1 = 
+				{
+					[1] = getrenv()._G.Pass,
+					[2] = "Overwrite", 
+					[3] = "UnSummon"
+				}
+			local Event = game:GetService("ReplicatedStorage").Remotes.XSansMoves
+			Event:InvokeServer(A_1)
+			db = false
+			wait(1)
+			db = true
+		end
+	end
+end)
