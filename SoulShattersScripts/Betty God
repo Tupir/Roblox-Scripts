@@ -24,13 +24,13 @@
         RunspeedBypass.Name = "Battling"
         RunspeedBypass.Parent = game.Players.LocalPlayer.Character
         wait(0.3)
-        game.Players.LocalPlayer.Backpack.Main.RunSpeed.Value = 189
+        game.Players.LocalPlayer.Backpack.Main.RunSpeed.Value = 50
         ---Fast BOOOOM 2
                 local RunspeedBypass = Instance.new("BoolValue")
         RunspeedBypass.Name = "Battling"
         RunspeedBypass.Parent = game.Players.LocalPlayer.Character
         wait(0.3)
-        game.Players.LocalPlayer.Backpack.Main.WalkSpeed.Value = 89
+        game.Players.LocalPlayer.Backpack.Main.WalkSpeed.Value = 20
         ---HideChat B)
                 _G.hidechat = true
         local mt = getrawmetatable(game)
