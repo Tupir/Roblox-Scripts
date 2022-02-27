@@ -15,14 +15,6 @@ if(gameid == 3198259055) then
         local Thingsz = Things:addSection("Scripts")
         
         Thingsz:addButton(
-            "CMD-X Fe Commands",
-            function()
-                loadstring(
-                    game:HttpGet("https://raw.githubusercontent.com/CMD-X/CMD-X/master/Source", true)
-                )()
-            end
-        )
-        Thingsz:addButton(
             "Hard Reset",
             function()
                 local A_1 = {
