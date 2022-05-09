@@ -1,9 +1,3 @@
--- (WARNING: This Repository is Licensed! You are not permitted to use/copy this User Interface library)
-local library = { 
-	flags = { }, 
-	items = { } 
-}
-
 -- Services
 local players = game:GetService("Players")
 local uis = game:GetService("UserInputService")
