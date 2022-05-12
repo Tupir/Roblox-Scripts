@@ -8,7 +8,7 @@ local players = game:GetService("Players")
 local uis = game:GetService("UserInputService")
 local runservice = game:GetService("RunService")
 local tweenservice = game:GetService("TweenService")
--- local marketplaceservice = game:GetService("MarketplaceService")
+local marketplaceservice = game:GetService("MarketplaceService")
 local textservice = game:GetService("TextService")
 local coregui = game:GetService("CoreGui")
 local httpservice = game:GetService("HttpService")
@@ -23,8 +23,8 @@ library.theme = {
     font = Enum.Font.Code,
     background = "rbxassetid://5553946656",
     tilesize = 90,
-    cursor = false,
-    cursorimg = "https://i.pinimg.com/564x/02/48/18/0248185c3693b0e51e7a2db57753c497.jpg",
+    cursor = true,
+    cursorimg = "https://t0.rbxcdn.com/42f66da98c40252ee151326a82aab51f",
     backgroundcolor = Color3.fromRGB(20, 20, 20),
     tabstextcolor = Color3.fromRGB(240, 240, 240),
     bordercolor = Color3.fromRGB(60, 60, 60),
@@ -43,16 +43,8 @@ library.theme = {
     itemscolor2 = Color3.fromRGB(210, 210, 210)
 }
 
-if not _G.AccentColors then
-    _G.AccentColors = {
-        Accent1 = Color3.fromRGB(252, 255, 255),
-        Accent2 = Color3.fromRGB(255, 255, 255)
-    }
-end
-
 library.theme.accentcolor = _G.AccentColors.Accent1
 library.theme.accentcolor2 = _G.AccentColors.Accent2
-
 
 if library.theme.cursor and Drawing then
     local success = pcall(function() 
@@ -82,7 +74,7 @@ if library.theme.cursor and Drawing then
 end
 
 function library:CreateWatermark(name, position)
-    local gamename = game.Name -- marketplaceservice:GetProductInfo(game.PlaceId).Name
+    local gamename = marketplaceservice:GetProductInfo(game.PlaceId).Name
     local watermark = { }
     watermark.Visible = true
     watermark.text = " " .. name:gsub("{game}", gamename):gsub("{fps}", "0 FPS") .. " "
@@ -229,7 +221,7 @@ function library:CreateWindow(name, size, hidebutton)
 
     window.name = name or ""
     window.size = UDim2.fromOffset(size.X, size.Y) or UDim2.fromOffset(492, 598)
-    window.hidebutton = hidebutton -- or Enum.KeyCode.RightShift
+    window.hidebutton = hidebutton or Enum.KeyCode.RightShift
     window.theme = library.theme
 
     local updateevent = Instance.new("BindableEvent")
@@ -3410,16 +3402,20 @@ function library:CreateWindow(name, size, hidebutton)
         function tab:CreateConfigSystem(side)
             local configSystem = { }
 
-            configSystem.configFolder = "FemWare"
+            if (not isfolder(window.name)) then
+                makefolder(window.name)
+            end
+      
+            configSystem.configFolder = window.name .. "/" .. tostring(game.PlaceId)
             if (not isfolder(configSystem.configFolder)) then
                 makefolder(configSystem.configFolder)
             end
 
-            configSystem.sector = tab:CreateSector("Loadout Config", side or "left")
+            configSystem.sector = tab:CreateSector("Configs", side or "left")
 
             local ConfigName = configSystem.sector:AddTextbox("Config Name", "", ConfigName, function() end, "")
             local default = tostring(listfiles(configSystem.configFolder)[1] or ""):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", "")
-            local Config = configSystem.sector:AddDropdown("Loadouts", {}, default, false, function() end, "")
+            local Config = configSystem.sector:AddDropdown("Configs", {}, default, false, function() end, "")
             for i,v in pairs(listfiles(configSystem.configFolder)) do
                 if v:find(".txt") then
                     Config:Add(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
@@ -3536,6 +3532,7 @@ function library:CreateWindow(name, size, hidebutton)
             return configSystem
         end
 
+        --[[ not finished lol
         function tab:CreatePlayerlist(name)
             local list = { }
             list.name = name or ""
@@ -3549,7 +3546,7 @@ function library:CreateWindow(name, size, hidebutton)
             list.Main.Position = UDim2.new(0, 11, 0, 12)
 
             tab.SectorsLeft[#tab.SectorsLeft + 1] = 220
-            tab.SectorsRight[#tab.SectorsLeft + 1].space = 220
+            --tab.SectorsRight[#tab.SectorsLeft + 1].space = 220
 
             list.Line = Instance.new("Frame", list.Main)
             list.Line.Name = "line"
@@ -3652,6 +3649,7 @@ function library:CreateWindow(name, size, hidebutton)
             
             return list
         end
+        ]]--
 
         table.insert(window.Tabs, tab)
         return tab
