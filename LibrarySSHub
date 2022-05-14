@@ -23,7 +23,7 @@ library.theme = {
     font = Enum.Font.Code,
     background = "rbxassetid://5553946656",
     tilesize = 90,
-    cursor = true,
+    cursor = false,
     cursorimg = "https://t0.rbxcdn.com/42f66da98c40252ee151326a82aab51f",
     backgroundcolor = Color3.fromRGB(20, 20, 20),
     tabstextcolor = Color3.fromRGB(240, 240, 240),
@@ -42,7 +42,7 @@ library.theme = {
     itemscolor = Color3.fromRGB(200, 200, 200),
     itemscolor2 = Color3.fromRGB(210, 210, 210)
 }
-
+library.theme.cursor = _G.LibraryConfg.ShowCursor
 library.theme.accentcolor = _G.AccentColors.Accent1
 library.theme.accentcolor2 = _G.AccentColors.Accent2
 
