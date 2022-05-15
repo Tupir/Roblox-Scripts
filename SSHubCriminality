@@ -1,6 +1,1656 @@
-_, Protected_by_MoonSecV2, Discord = 'discord.gg/gQEH2uZxUk'
+function LOADSCRIPT128319237()
+_G.CriminalityInfo = {
+    SilentAimColor = Color3.fromRGB(255, 176, 0),
+    ESPColor = Color3.fromRGB(255, 176, 0)
+};
+
+_G.AccentColors = {
+    Accent1 = Color3.fromRGB(255, 176, 0),
+    Accent2 = Color3.fromRGB(255, 176, 0),
+};
+
+local Name = 'SShub Beta v.1'
+
+_G.LibraryConfg = {
+	ShowCursor = false,
+	NotificationsTitle = Name,
+};
+
+LibraryHttps = "https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/LibrarySSHub"
+LibraryESPHttps = "https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/ESP"
+local Library = loadstring(game:HttpGet(LibraryHttps, true))() 
+local LibraryESP = loadstring(game:HttpGet(LibraryESPHttps, true))()
+local game = game;
+			local GetService = game.GetService;
+
+			local Workspace = GetService(game, "Workspace");
+			local Players = GetService(game, "Players");
+			local ReplicatedStorage = GetService(game, "ReplicatedStorage");
+			local StarterGui = GetService(game, "StarterGui");
+
+			local LogService = GetService(game, "LogService");
+			local HttpService = GetService(game, "HttpService");
+			local ScriptContext = GetService(game, "ScriptContext");
+
+			--Variables Settings
+
+			local Settings = {
+			GunMods = { NoRecoil = false, InstantEquip = false, Spread = false, SpreadAmount = 0, InstantAim = false,
+				},
+			DownedChat = false,
+			KillChat = false,
+			KillMSG = "",
+			IsDead = true,
+			AutoPickCash = false,
+			AutoPickTools = false,
+			AutoPickScrap = false,
+			InfiniteStamina = false,
+			NoJumpCooldown = false,
+			SpaceJump = false,
+			NoFailLockpick = false,
+			ShowChatLogs = true,
+			NoFlashbang  = false,
+			NoSmoke = false,
+			UnlockDoorsNearby = false,
+			OpenDoorsNearby = false,
+			NoClip = false,
+			FullBright = false,
+			CamFovToggled = false,
+			CamFov = 70,
+			Zoom = 10,
+			InfinitePepperSpray = false,
+			PepperSprayAura = false,
+			WalkSpeed = {Enabled = false, Amount = 30},
+			JumpPower = {Enabled = false, Amount = 75},
+			NoBarbwire = false,
+			NoFallDamage = false,
+			NoRagdoll = false,
+			WallBang = false,
+			ElevatorTP = false,
+			TowerTP = false,
+			UIKey = Enum.KeyCode.LeftAlt,
+			NoDowned = false,
+		};
+			
+			local ESPSettings = { PlayerESP = { Enabled = false, TracersOn = false, BoxesOn = true, NamesOn = true, DistanceOn = true, HealthOn = true, ToolOn = true, FaceCamOn = false, Distance = 2000 }, ScrapESP = { Enabled = false, Distance = 2000, LegendaryOnly = true, RareOnly = true, GoodOnly = true, BadOnly = true }, SafeESP = { Enabled = false, Distance = 2000, BigOnly = true, SmallOnly = true }, RegisterESP = { Enabled = false, Distance = 2000 }, ESPColor = Color3.fromRGB(255, 255, 255), ToolColor = Color3.fromRGB(255, 255, 255)};
+			local CoolDowns = { AutoPickUps = { MoneyCooldown = false, ScrapCooldown = false, ToolCooldown = false } }
+
+			--Silent Aim
+			local SilentSettings = { Main = { Enabled = false, TeamCheck = false, VisibleCheck = false, TargetPart = "Head" }, FOVSettings = { Visible = false, Radius = 360 }, SilentAimColor = Color3.fromRGB(255, 255, 255)};
+			local ValidTargetParts = {"Head", "Torso"};
+
+			local Player = Players.LocalPlayer;
+			local Character = Player.Character or Player.CharacterAdded:Wait();
+			local Mouse = Player:GetMouse()
+			local Cam = workspace.CurrentCamera;
+
+			local WorldToScreen = Cam.WorldToScreenPoint
+			local WorldToViewportPoint = Cam.WorldToViewportPoint
+			local GetPartsObscuringTarget = Cam.GetPartsObscuringTarget
+
+			local ExpectedArguments = {
+				Raycast = {
+					ArgCountRequired = 3,
+					Args = {
+						"Instance", "Vector3", "Vector3", "RaycastParams"
+					}
+				}
+			}
+
+local SShub = Library:CreateWindow(Name, Vector2.new(492, 700))
+local General = SShub:CreateTab("General")
+local Visuals = SShub:CreateTab("Visuals")
+local Teleports = SShub:CreateTab("Teleports")
+local Settingss = SShub:CreateTab("Settings")
+
+local MainC = Settingss:CreateSector("Credits", "left")
+local MainSaveSystem = Settingss:CreateConfigSystem("left") 
+local MainUI = Settingss:CreateSector("UI", "left")
+
+local MainM = General:CreateSector("Main", "left")
+local MainL = General:CreateSector("LocalPlayer", "left")
+
+local MainG = General:CreateSector("GunMods", "right")
+local MainS = General:CreateSector("SilentAim", "right")
+
+local MainP = Visuals:CreateSector("Player ESP", "left")
+
+local MainScrap = Visuals:CreateSector("Scrap ESP", "right")
+local MainSafes = Visuals:CreateSector("Safes ESP", "right")
+local MainRegister = Visuals:CreateSector("Register ESP", "right")
+
+local MainTo = Teleports:CreateSector("Tower", "right")
+local MainEl = Teleports:CreateSector("Elevator", "right")
+local MainTele = Teleports:CreateSector("Teleports", "right")
 
 
-,nil,nil;(function() _msec=(function(l,o,e)local T=o[(0x77a/33)];local Y=e[l[(0x2fb+-125)]][l[(1611-0x342)]];local O=(-39+0x2b)/(0x5f-(209-(215+-0x63)))local k=(-0x61+(0xe0+(-0x35b6/110)))-(237/0xed)local v=e[l[(0x932a/(0x1d4/2))]][l[(-0x51+293)]];local t=((-0x6d+(-64+0xda))+-44)+(208/0x68)local g=e[l[(1146-0x26d)]][l[(1721-0x368)]]local b=(59-0x39)-(-27+(5208/(-0x4a+260)))local C=((((6426-0xca0)-1620)-834)/0xb9)local i=(105+(-95-((-6942/0xb2)+0x2d)))local N=((0x30+((-0xe88+-120)/48))+36)local w=((452-((511+-0x6e)+-0x71))/41)local _=(728/(-52+(0x146+(-20332/0xdd))))local S=(((-108+(-0x18+70812))/186)/95)local H=(((69+((-0x8c14/220)+60))+718)/0xe4)local r=((0x5730/(0x21e-(-0x13+321)))/0x1f)local x=((((0x4e7-663)-334)-174)-0x51)local K=(99+(-0x53-(-0x2e+(182-0x7b))))local p=(((0x4e2-(0x2bd+-49))-0x139)/95)local B=(-0x45+(0xba+((-84/0x3)+-86)))local M=(16/(0x278/(-0x27+(0xdd+-103))))local F=((0x22+((-0xe7+85)+35))+0x4f)local a=((((0xeb/(7896/0xa8))+-108)+0x227)/0xe0)local f=(0x69-(150+(17-(0xb5+-117))))local P=((-5580/(30535/(0x1d7-274)))+0x26)local L=(0x54+(((-0x5c-(-84+0x47))+0x8)-0xb))local G=l[(0x5ad+-69)];local A=e[l[(12236/0x4c)]][l[(0x1ee+(-0x28+-39))]];local V=e[(function(l)return type(l):sub(1,1)..'\101\116'end)('blhBHplm')..'\109\101'..('\116\97'or'mPHoPKmf')..l[(1171-0x286)]];local m=e[l[(0x499-652)]][l[(0x7c6-1039)]];local D=(0x14-18)-(50-(2784/(0x2f5a/209)))local u=(126/((0x1c70/80)+-0x1c))-(0x3b-57)local y=e[l[(0xb1+-16)]][l[((0x4e84/30)-356)]];local o=function(o,l)return o..l end local s=(121+-0x75)*(117+(-0xc7-(-126-(-36-0x4))))local J=e[l[(0x98f-1262)]];local n=(0x2a/21)*(((739-0x186)-185)+-36)local j=(0x30400/193)*(0x26/((-36+0x63)-0x2c))local Q=(((-0x2140/76)+1880)/0x22)local U=(75-(((0x16b+-82)+-51)-0x9d))*(0x2c-42)local c=e[l[(2115-0x439)]]or e[l[((0x4c3+-47)-0x287)]][l[(2115-0x439)]];local d=(617-((856-0x1be)+-49))local l=e[l[((0x9c9+-25)-1264)]];local g=(function(d)local n,e=1,0x10 local o={j={},v={}}local h=-b local l=e+k while true do o[d:sub(l,(function()l=n+l return l-k end)())]=(function()h=h+b return h end)()if h==(s-b)then h=""e=D break end end local h=#d while l<h+k do o.v[e]=d:sub(l,(function()l=n+l return l-k end)())e=e+b if e%O==D then e=u m(o.j,(y((o[o.v[u]]*s)+o[o.v[b]])))end end return g(o.j)end)("..:::MoonSec::..bBfFlLkKoOpPhHmMHBpLkMFmbHHHphKplOBomKPkoLLlfFMkhBObLMMlbOhhOPkpKfBfhFLlbfpFlpmHKhfPHFKlPFhooPLpfOFFHMkHBhPBLKbfpKlHMBObfLlPoblpBOmomHObfMmlKoooOPkbfMMmboPllMmoOFFoHmoffBPkMfPfoBLbFBMHPHohLPfmMOhoOKkholblHFpfKhlbBbHmpmKhlMFLmOPooKkBfLMLhFplKbFbMMhmOMkhFPbpHMMKKKlkBLmMPFoFLBfBmMhfpoLhfPMpHlOokoFkBKmFpFKflBBBHMpmKHLfkpmpPOookffkMkhlOlkfFLBPhMOmkHlKbPHPpOopLkBkmLPlokLffBMbHMhfLHfhMPhpOOkOFKbkMMplKllfBfmbpMKmlHlBmPPpoOLpfKMohLOlpBFfbBHbOMkmFHbhHPpmKOloBKmKPLolLFfFMBhboMkBFfMhhPOppPlbmboHfMKhlFBfmBPbhFlmBmmhPPopLOfobOHLOLkkFFbFHBpbkMllbMHhpmKplOBomoPkoKLlfFBPhBObLMfMMHhhOPkpkfboHKpkKLllBFmfPBPolMfbmHPmoPLPfOMoMHOkkkFlbLHfpBKbFMBfHHphKPlPBOmoPKokLLflMFhfOBkbfMMmhmOhkPFpbOHhpKKklLBLmFPfoBLffbmmPHohLPfpMOhoOKkkFLblHFpOKBlbbMHmmhKhlPBpmpPooKLkfLMlhFOfkBFbMMhmOHkhFPbpHOpoKKlkBLmlPFofLBfbmMhBoHLhfPMphOOokKFkbLHlpFKflBBbHMpmKHlmBPmpPOooLKfkMLhlOlkfFBbbHBOmkHFhMoHMpOKolKLomHoHFpHhmkMbPMomLHfhMPhpOOoLFKbkHLPkoLlfBFmbPBKmlHBhMHhhoOLPfKMohLOlkFllBbHbpFkmFmbhHPppKMlpBKmPPLolLFfFMBhloMLmLkMhhPOpkPFobKHkpLOHlFBfmBPbKMlmBHmhmlopLOfoMphkOLklFFfPHBpbkMFMbHHhpPKpoBBomPPkoKLlflMfhKpkLMfmMHHoOPkPFObOHKppObllBFmfPHobLbBmMBHKoPLpfOBBhKOKkLFpBPHfpBKbLobmHmphKhlpBHbFPKokLLFHMFhFOBkklLMmhmOhKhFpbpHopKKklOfMmFPfoBkBBMmMPHObKkfpMOhoPbkkFkblHFHHKBllbMmbpHKMlPBpflPoohLkfoMlhLOfkKloMMHfOHoLFPbPHOpHKKlpFbmlPFofkpfbMbPmoHOKfPMmhOOpkKFObLHlHmKflkBbmfpmKMlhfBbbPOohLKlbMLhLOFkKFBblmpOmkHFhfLHpppKolKfKmLPooFLffBMbPMompBfhMMhpOpkoFKbkHLHpKFlkBBmfpMKmlHBhmMPpoOLofoMkhLOlkkFfbBHbOMKkFHbhHPffKHloBKmkmOpfFMHfPKhFoMLmfHlBmLKlLkFhbKHkpLpOLbmPOmOhKMlmBHmhPPophOkoPHhhOLklFFlKmpopfFhpkLKopPKplOBoLMhfoLLlfFfOpOkmfbPMkkMpOFlbhOLhbmOfKLllBFmfPBobFMLHbMPhoPLpFPbKhKOOkLFPbFHfpBKbkHbmmbphKmlpBpmoPHHLLLfKMFhKOBkBfMMMhHpbokFpbOHophKklkBlmKhHoBLbBMMkPHoHLPFhbohoOpkkFhblHFpfKBkmbMmBpHKMlPBPmOPoPHLkfoMlhLOfkBFbBBmbOHkMFPBfHOpoKKLofLmlPKofLKfbmMPmOMLhfPMMhOpbkKFkbLHlpFKflKBbHMpmKHlhfHmpPOoMLKfmMLhlOFkkFBbbHlOmoPFhbhHppOPllKBMmLPooFLffBbfmKomkKfhbbhpOOkoLKbkHLpmKFlhBBmFpMOmlHBhMkPpoOLofOMkhLOlkFFMbBHoOMkmFHbhHPppoKloBMmkPLolLFffMBhPoMkhfHMmhPPpkOFoBfHkPbKlllBfmBPbKMLOBHmmPPohLOfoMKhkpbklFmbfHlpboMFmbHmKpPoLlOBhmKPkoLLlfHMfhFObkBfmMHhhOPkmFOBBHKPbKLllBFmfPpobLfBmmMPhpPLpfOMPhKOMkLFobFHkpPKbllbmmPphKhlpfPMKPKoPLLfPMFhfOBkbllMmHfOhkhFpbHHopKphlLBomFPloBLbBMmmhBohLPfpMphoOKkkFLblHFpfKBlBbMHmpHhHLbBpmOPohOkHbkpHLLOkkBFbMMmbphkhFPbpHppoKKlkBLbmPFoFLBfbmMPmoHLhkFMphOOokOFkbkHlpFKklBBbHMpMKHlhBPbmPOooLKLbMhhlOFkflPBOPPLOHfOflFbBppKolKBkllKpOoLffBMbMLOhloHpoofHhBfHboppBlmmKpBbPLlBfkpHkHmhplPhoOLofKMkhLBlpHKflMHBOMkmFHkHHmPbKOloBKHFoPOHhmfkhlBBOLLmfHMhKbklbBKkfMfhkoKolFBfmBBfHhOpKbmhPMopLOfoLobOOmfOFkboHBpbkMoFfkhkLMbkpBPKMBPkoLLlLlMkphlbmbOlFFhokpBoFhbmHKpkKLKHPBhPloPoKfBMohhBoPLpfOFphMkMBhPmfHHhpBKbFMlhMBoLfpHPKmBmPKLmMOlmMohfOBkbKLblpKLFmmoobMHopKKkpKFhhllfhOkLPmMlPHohLPbfofhPfMMOmlhpHppfKBlblomoOOfHhmKOfFKPooLkfLMlFFKmkBFbMMhmOHmhohlpHhPlKKlkBLBPOPkbBfPBLomhoLFfPPlmbbOokPFkbLHlbloMfHPOLlhPKHlhBPLBBfhKKoFbphLkbPbBpKkmflhpKhFoMfkKLBBfhLFhbHhopklkHhhbklbkfFfMMPhpOOOmLBmPOoppKFlfBBloPMFkOpBOoHLooOLofKMkhLLlPFKfpbmkOMkmFHfmMfOBFohPkPBmPBLfPbpOFHmpobHppOkHbMPbFKmPoPOPpLKllFBfmBMbHkomfbMfPPopLOloPhFoHhoFPPfPHBpbkMFmbHHhPFPplhBhmKPkoLoHfOHKKBbKLMfmMHhhOPkpLHloHppmKLllBFffpOlMMBoPlbhkKOoFfOMohKOkkLFlFHBflbKkFMbmHHKmMfomhbPLkLMpLLflMFhlhmkbfMMmhMOhkPFpBPHHpKKklLBMmFPfoBLbBMmmPHohLPfpMOhoOKkkFLbLHFpfKBlbbMMbpHKhlhBpMMPooKLkFKMlhFOFkBFfMMhmOHOfFPbpHppooblkBkmlPkofLLFPmMPmoHkLfPMPhOOokPFkbLHlplKflBBbmBmPKHlHBPmHPOooLKFobmhlOlkfLFbbhMOmkHobbPHPpOKolKBkmLhkOLLffFMbHPomLHfhMHbKOOkPFKbkHLplKFlfLfmbPFKmlmBhmPPpoOLofKMPhLOKkFFfbBmfOMkmlFbhmpppKOloBKmkPLoOLFflMBhfoMklfHMhhMOphLFoboHkppKllKfHmBPbKMppBHmHPPopOLfoMhhkOoklFFbfmFhkkMllbHmhpPKplOfpmKPkohLllLMfhBObKBfmMHHlOPKPFOboHKPoKLllBhmfPooblMBmMMPhoPklfObHhKOkkLFlbFHfpoKblObmHMphKPlpBOmmPKohLLfPMFhfOBkbFlMmhMOhkHFpbMHopKKplLKbmFPFoBLLBMMfHoohLPfpLLhoOokkFLlbHFpKKBlFbMHmpHomKBBpmMPoOKLkfLMlHLOfkBFKMMMbOHkhFPBhHOpoKMlkfMmlPFofkFfbmMhKoHkffPMphOppkKFkbMHlhbKflBBbHMpmKHLFBPMlPOopLKfkMLhlOOkfFKbbHkOmkHFhbPHMpOKplKBomLPpoFLffLMbBPomLmfhbbhpOHoFFKbkHLbbKFlFBBmbmPKmLfBhmmPpoOLofOFFhLOpkFFFbBHbOMkmkfbhmbppKPloBOmkPPHFLFfKMBMboMLMfHMHhPOmolFobKHkHLKlllBfmLhPKMlmBHlKPPoPLOfoFFhkOpklFkbfHBpboBohbHmfpPollOBomKhooLLlfpMfHpObLMfmbMhhOPKfFOBhHKpkKLllBFmfPoobLkBmMLPhOBLpfOMMhKHfkLFLbFHFpBKlLpbmHHphPKlpBpmohOOLLLfPMFmlOBkbfMBbHMOhKFFpfbHopKKkLKfkmFPPoBkfBMmmPHOmkHfpbFhoPfkkFLblHFMKKBlKbMmopHKmlPBpBKPooHLkfPMlhpOfkKolMMHlOHphFPbPHOpoKKlpFbmlPFofOBfbMbPmOBKKfPMphOHOkKFKbLmkPfKflKBbMfpmKHlhBPbMPOoHLKfoMLhkOFkoLFbbHFOmhOFhbhHppmKolPFBmLPloFpmfBMBPMomOOfhbbhpOhkoFKbkmKhpKFloBBmppMKmlHfmmPPpObLolOMkhLOlKLFfbBHoOMKkFHbhHPPhKOlofbmkHFolLFffbFhboMkofHBHhPOpkOFobKHkphKllHBfmFPbKMlmBHMfPPObLOfMMKhkOLklFobfHFpbKBFmBFHhpPKmlOKlmKPKoLLOfFMkHhObLMfmLOhhOhkpFOllHKpPKLlKBFmfPBOfOhBmMFPhOLLpfOMoHOOkkLFPbFMlpBKbFMfbHHphoFlpffmoPKokkKflMFhPOBolfMMmhHpmkPFpBFHopPKklLBlmFPfoBLKBMMoPHomLPfpMOhoOHkkFPblHppfKBlbbMmFpHKmlPBhmOPooKLkfOMlhoOfkBFbbFhmOHkhFPkkHOpOKKlkfkmlPKofLBfbmMPmoHpbfPMmhOOOkKFkbLHpMfKflLBbFmpmKmlhBhmpPHpFLKfkMLfFOFkFFBblmpOmkHFhKfHpppKoKKlomLPOoFKBfBMHPMpbKkfhbbhpOmkoFKbkHLpoKFlfBBmBpMKmlHfmMpPpomLoFLMkhLOlkOFlbBHkOMKfFHbHHPpPKOlolbmkPLolLLffMBhboMOkfHbBhPOhkOFObKHphbKllFBflFPboblmfMMPPPoMLOFKMKhkOLKklHbfHKpboMFmbHHhhPKplOBmmKPhoLLLfFblhBObkKfmBMhhOPkplPboHKpMKLLhBFmfPBOflMBmMKPhOKLpfOMoHOOkkLFMbFMLpBKbFMbmHHphoFlpflmoPOokLLflMFhPOBkBfMMmhHOhkPFpbMHoPbKklLBlmFPfoBLLBMmmPHomLPfpMphoOhkkFkblHlpfKBllbMHmpHKHlPBpmO");local m=(0x2ae/14)local h=47 local e=b;local l={}l={[(0x9b/155)]=function()local o,b,k,l=v(g,e,e+t);e=e+U;h=(h+(m*U))%d;return(((l+h-(m)+n*(U*O))%n)*((O*j)^O))+(((k+h-(m*O)+n*(O^t))%d)*(n*d))+(((b+h-(m*t)+j)%d)*n)+((o+h-(m*U)+j)%d);end,[(23-0x15)]=function(l,l,l)local l=v(g,e,e);e=e+k;h=(h+(m))%d;return((l+h-(m)+j)%n);end,[(630/0xd2)]=function()local l,o=v(g,e,e+O);h=(h+(m*O))%d;e=e+O;return(((o+h-(m)+n*(O*U))%n)*d)+((l+h-(m*O)+d*(O^t))%n);end,[(120/0x1e)]=function(o,l,e)if e then local l=(o/O^(l-b))%O^((e-k)-(l-b)+k);return l-l%b;else local l=O^(l-k);return(o%(l+l)>=l)and b or u;end;end,[(83-0x4e)]=function()local o=l[(101-(14700/0x93))]();local e=l[((0x2599/77)-0x7c)]();local f=b;local h=(l[(71-0x43)](e,k,s+U)*(O^(s*O)))+o;local o=l[(0x300/192)](e,21,31);local l=((-b)^l[(-0x53+87)](e,32));if(o==u)then if(h==D)then return l*u;else o=k;f=D;end;elseif(o==(n*(O^t))-k)then return(h==u)and(l*(k/D))or(l*(u/D));end;return Y(l,o-((d*(U))-b))*(f+(h/(O^Q)));end,[(0xcc/34)]=function(o,O,O)local O;if(not o)then o=l[(102+(-146+0x2d))]();if(o==u)then return'';end;end;O=A(g,e,e+o-b);e=e+o;local l=''for o=k,#O do l=G(l,y((v(A(O,o,o))+h)%d))h=(h+m)%n end return l;end}local function g(...)return{...},J('#',...)end local function A()local M={};local P={};local o={};local f={M,P,nil,o};local e={}local x=(-0x1a+71)local o={[(127+-0x7b)]=(function(o)return not(#o==l[(0x19e/207)]())end),[(0x1fe/255)]=(function(o)return l[(-0x43+72)]()end),[(0x0/232)]=(function(o)return l[(0x7c-(0x1782/51))]()end),[(138/0x2e)]=(function(o)local h=l[(49-0x2b)]()local o=''local l=1 for e=1,#h do l=(l+x)%d o=G(o,y((v(h:sub(e,e))+l)%n))end return o end)};f[3]=l[(-0x5a+92)]();for l=k,l[(0x45+-68)]()do P[l-k]=A();end;local h=l[(0x2e-45)]()for h=1,h do local l=l[(-114+(-0x3c+176))]();local b;local l=o[l%(0xc6-159)];e[h]=l and l({});end;for f=1,l[(0x6/(57-0x33))]()do local o=l[(0x79-119)]();if(l[(0x360/216)](o,b,k)==D)then local n=l[(127-(0x128-173))](o,O,t);local h=l[(0x4c-72)](o,U,O+U);local o={l[(456/0x98)](),l[(0x42+-63)](),nil,nil};local d={[((0/0x1a)/135)]=function()o[p]=l[((0x1102e/158)/147)]();o[w]=l[((0xac-126)+-0x2b)]();end,[(-82+0x53)]=function()o[B]=l[(-0x2c+45)]();end,[(59-0x39)]=function()o[K]=l[((0x98-98)-53)]()-(O^s)end,[(0x264/204)]=function()o[r]=l[(0x16-21)]()-(O^s)o[w]=l[(501/0xa7)]();end};d[n]();if(l[(-102+0x6a)](h,k,b)==k)then o[a]=e[o[F]]end if(l[(0x7d+-121)](h,O,O)==b)then o[B]=e[o[p]]end if(l[(-90+0x5e)](h,t,t)==k)then o[S]=e[o[i]]end M[f]=o;end end;return f;end;local function u(l,U,m)local e=l[O];local h=l[t];local l=l[b];return(function(...)local s=e;local D={};local n=l;local j=J('#',...)-k;local v=g local e=b;local y={};local l=b l*=-1 local t=l;local d=h;local g={...};local h={};for l=0,j do if(l>=d)then y[l-d]=g[l+k];else h[l]=g[l+b];end;end;local l=j-d+b local l;local d;while true do l=n[e];d=l[(0xdf/223)];o=(4223040)while(0x1f8/12)>=d do o-= o o=(2481570)while(0x47-51)>=d do o-= o o=(3338496)while(0x7f-118)>=d do o-= o o=(6161930)while(0x350/212)>=d do o-= o o=(558063)while d<=(94-0x5d)do o-= o o=(10953068)while(-35+0x23)<d do o-= o h[l[M]]();break end while 2726==(o)/((4051+-0x21))do local l={h,l};l[b][l[O][L]]=l[O][N]+l[O][H];break end;break;end while 297==(o)/((3829-0x79e))do o=(3943745)while(19+-0x11)>=d do o-= o local O=s[l[x]];local d;local o={};d=V({},{__index=function(e,l)local l=o[l];return l[1][l[2]];end,__newindex=function(h,l,e)local l=o[l]l[1][l[2]]=e;end;});for b=1,l[C]do e=e+k;local l=n[e];if l[(96-0x5f)]==41 then o[b-1]={h,l[B]};else o[b-1]={U,l[H]};end;D[#D+1]=o;end;h[l[L]]=u(O,d,m);break;end while(o)/((0x1b4b8/(204-0xa4)))==1411 do o=(3901590)while(63+(-0x36-6))<d do o-= o do return end;break end while(o)/((82170/0x53))==3941 do h[l[a]]={};break end;break;end break;end break;end while 3358==(o)/((3744-0x775))do o=(1798144)while((0x4ca-668)/0x5d)>=d do o-= o o=(2093674)while d>(850/0xaa)do o-= o local l=l[f]h[l]=h[l](c(h,l+b,t))break end while 1298==(o)/((-115+0x6c0))do m[l[r]]=h[l[a]];e=e+b;l=n[e];h[l[M]]={};e=e+b;l=n[e];h[l[F]]={};e=e+b;l=n[e];m[l[r]]=h[l[P]];e=e+b;l=n[e];h[l[P]]=m[l[x]];e=e+b;l=n[e];if(h[l[F]]~=l[C])then e=e+k;else e=l[x];end;break end;break;end while(o)/(((0x33c66/30)-3557))==512 do o=(2135280)while d<=(32-0x19)do o-= o h[l[F]]=h[l[B]][h[l[_]]];break;end while 868==(o)/((4986-0x9de))do o=(1504260)while d>(111-0x67)do o-= o h[l[P]]=#h[l[x]];break end while 2055==(o)/((0x60d-817))do local o=l[P]local e,l=v(h[o](c(h,o+1,l[x])))t=l+o-1 local l=0;for o=o,t do l=l+b;h[o]=e[l];end;break end;break;end break;end break;end break;end while(o)/((-0x7c+1228))==3024 do o=(4967505)while(-0x33+65)>=d do o-= o o=(4106548)while(2156/0xc4)>=d do o-= o o=(9294630)while(0x3c0/96)<d do o-= o local e=l[p];local o=h[e]for l=e+1,l[S]do o=o..h[l];end;h[l[M]]=o;break end while(o)/((0x1757-3029))==3155 do local o=l[F];local d=h[o+2];local b=h[o]+d;h[o]=b;if(d>0)then if(b<=h[o+1])then e=l[K];h[o+3]=b;end elseif(b>=h[o+1])then e=l[p];h[o+3]=b;end break end;break;end while 2524==(o)/((167581/0x67))do o=(26432)while(0x648/134)>=d do o-= o local o=l[f];local e=h[l[K]];h[o+1]=e;h[o]=e[l[i]];break;end while(o)/((0x78f-991))==28 do o=(3047627)while d>(0x71+(-8100/0x51))do o-= o h[l[a]]=#h[l[B]];break end while(o)/((158598/0xa2))==3113 do h[l[M]]=m[l[r]];break end;break;end break;end break;end while 1871==(o)/((0xab2+(-87+0x4)))do o=(1981968)while d<=(0x83c/124)do o-= o o=(6931515)while(0x85+-118)>=d do o-= o h[l[L]]=m[l[p]];break;end while 3373==(o)/((4226-0x87b))do o=(5373677)while d>((-115+0xc6)-0x43)do o-= o h[l[F]]=(l[p]~=0);e=e+k;break end while 3931==(o)/((0xada-1411))do local k;local d;local o;h[l[M]]=l[K];e=e+b;l=n[e];h[l[F]]=l[x];e=e+b;l=n[e];h[l[P]]=#h[l[B]];e=e+b;l=n[e];h[l[M]]=l[x];e=e+b;l=n[e];o=l[P];d=h[o]k=h[o+2];if(k>0)then if(d>h[o+1])then e=l[B];else h[o+3]=d;end elseif(d<h[o+1])then e=l[H];else h[o+3]=d;end break end;break;end break;end while 628==(o)/((-25+0xc6d))do o=(1183746)while d<=(4320/0xf0)do o-= o h[l[M]]=l[x];break;end while 498==(o)/((2415+(-85+0x2f)))do o=(2052171)while(77-0x3a)<d do o-= o local o=l[M];local d=h[o+2];local b=h[o]+d;h[o]=b;if(d>0)then if(b<=h[o+1])then e=l[H];h[o+3]=b;end elseif(b>=h[o+1])then e=l[r];h[o+3]=b;end break end while(o)/((2242-0x47f))==1881 do local l=l[L]h[l]=h[l](h[l+k])break end;break;end break;end break;end break;end break;end while 910==(o)/((0x15ad-2822))do o=(2115260)while d<=(189-0x9e)do o-= o o=(1306110)while d<=(0x14b4/212)do o-= o o=(3733240)while(0x94+-126)>=d do o-= o o=(10451025)while(0xe85/177)<d do o-= o if(h[l[F]]~=h[l[C]])then e=e+k;else e=l[x];end;break end while 3573==(o)/((5974-(6142-0xc15)))do h[l[P]][h[l[B]]]=h[l[N]];break end;break;end while 2680==(o)/((203378/0x92))do o=(9437040)while(0xa3-(30240/0xd8))>=d do o-= o local o=l[F]local e,l=v(h[o](c(h,o+1,l[K])))t=l+o-1 local l=0;for o=o,t do l=l+b;h[o]=e[l];end;break;end while 3084==(o)/(((12341-0x183c)-0xc05))do o=(1022504)while(154-0x82)<d do o-= o m[l[p]]=h[l[f]];break end while 1178==(o)/((0x72a-966))do if(h[l[P]]==h[l[i]])then e=e+k;else e=l[K];end;break end;break;end break;end break;end while 3349==(o)/((-43+(0x11dd9/169)))do o=(4182408)while((-0x75+257)+-112)>=d do o-= o o=(2100778)while(0x44-42)>=d do o-= o local d;local H,O;local k;local o;h[l[P]]=m[l[K]];e=e+b;l=n[e];o=l[f];k=h[l[r]];h[o+1]=k;h[o]=k[l[w]];e=e+b;l=n[e];h[l[L]]=m[l[p]];e=e+b;l=n[e];h[l[M]]=l[K];e=e+b;l=n[e];h[l[f]]=l[r];e=e+b;l=n[e];h[l[L]]=l[B];e=e+b;l=n[e];o=l[a]h[o]=h[o](c(h,o+b,l[B]))e=e+b;l=n[e];h[l[a]]=(l[B]~=0);e=e+b;l=n[e];o=l[f]H,O=v(h[o](c(h,o+1,l[x])))t=O+o-1 d=0;for l=o,t do d=d+b;h[l]=H[d];end;e=e+b;l=n[e];o=l[P]h[o]=h[o](c(h,o+b,t))break;end while 1466==(o)/((88846/0x3e))do o=(2759076)while d>(-0x1c+55)do o-= o if(h[l[L]]==h[l[C]])then e=e+k;else e=l[p];end;break end while(o)/((0x3402c/164))==2124 do e=l[r];break end;break;end break;end while(o)/(((-0x76+7087)-0xdad))==1206 do o=(586176)while(0x64+-71)>=d do o-= o h[l[F]][h[l[p]]]=h[l[w]];break;end while(o)/((0x2e4+-52))==852 do o=(3020461)while(0xc4e/105)<d do o-= o if not h[l[a]]then e=e+k;else e=l[K];end;break end while 2099==(o)/(((5952-0xbad)-1524))do h[l[M]]=h[l[x]]%l[i];break end;break;end break;end break;end break;end while(o)/((0x1fec-4112))==521 do o=(785400)while(85+-0x31)>=d do o-= o o=(973500)while d<=(100-0x43)do o-= o o=(5267060)while(126-0x5e)<d do o-= o local l={h,l};l[k][l[O][F]]=l[b][l[O][w]]+l[k][l[O][B]];break end while(o)/((237290/0x7a))==2708 do h[l[F]]=h[l[H]]%l[w];break end;break;end while(o)/((2832+-0x52))==354 do o=(11990514)while d<=((563244/0xfb)/66)do o-= o local o=h[l[S]];if not o then e=e+k;else h[l[L]]=o;e=l[K];end;break;end while(o)/((0x1f87-(446682/0x6d)))==3018 do o=(5359776)while(158-0x7b)<d do o-= o do return h[l[P]]end break end while 3602==(o)/((1612+-0x7c))do local e=l[f];local o=h[l[r]];h[e+1]=o;h[e]=o[l[w]];break end;break;end break;end break;end while(o)/((-83+0x46d))==748 do o=(2909595)while d<=(-109+0x94)do o-= o o=(3618650)while d<=(105-0x44)do o-= o local l=l[P]h[l]=h[l](h[l+k])break;end while 2110==(o)/((255535/0x95))do o=(3130215)while(-28+0x42)<d do o-= o local d=s[l[H]];local b;local o={};b=V({},{__index=function(e,l)local l=o[l];return l[1][l[2]];end,__newindex=function(h,l,e)local l=o[l]l[1][l[2]]=e;end;});for b=1,l[N]do e=e+k;local l=n[e];if l[(0x86/134)]==41 then o[b-1]={h,l[r]};else o[b-1]={U,l[p]};end;D[#D+1]=o;end;h[l[M]]=u(d,b,m);break end while 3355==(o)/((0x33ef4/228))do local d;local o;h[l[f]]=m[l[B]];e=e+b;l=n[e];h[l[F]]=m[l[H]];e=e+b;l=n[e];h[l[P]]=l[K];e=e+b;l=n[e];h[l[P]]=l[x];e=e+b;l=n[e];h[l[M]]=l[r];e=e+b;l=n[e];o=l[M]h[o]=h[o](c(h,o+b,l[p]))e=e+b;l=n[e];h[l[a]]=h[l[p]][h[l[i]]];e=e+b;l=n[e];o=l[M]h[o]=h[o](h[o+k])e=e+b;l=n[e];d=h[l[w]];if not d then e=e+k;else h[l[L]]=d;e=l[r];end;break end;break;end break;end while(o)/((5709-(0x9ea5e/223)))==1041 do o=(10168676)while d<=((0x166-189)-129)do o-= o local t;local d;local U;local o;h[l[f]]=m[l[x]];e=e+b;l=n[e];h[l[P]]=h[l[x]][l[i]];e=e+b;l=n[e];o=l[P];U=h[l[B]];h[o+1]=U;h[o]=U[l[C]];e=e+b;l=n[e];h[l[M]]=h[l[r]];e=e+b;l=n[e];h[l[f]]=h[l[x]];e=e+b;l=n[e];o=l[f]h[o]=h[o](c(h,o+b,l[H]))e=e+b;l=n[e];o=l[M];U=h[l[K]];h[o+1]=U;h[o]=U[l[i]];e=e+b;l=n[e];o=l[L]h[o]=h[o](h[o+k])e=e+b;l=n[e];d={h,l};d[k][d[O][a]]=d[b][d[O][_]]+d[k][d[O][p]];e=e+b;l=n[e];h[l[a]]=h[l[B]]%l[w];e=e+b;l=n[e];o=l[f]h[o]=h[o](h[o+k])e=e+b;l=n[e];U=l[H];t=h[U]for l=U+1,l[S]do t=t..h[l];end;h[l[P]]=t;e=e+b;l=n[e];d={h,l};d[k][d[O][F]]=d[b][d[O][_]]+d[k][d[O][x]];e=e+b;l=n[e];h[l[P]]=h[l[K]]%l[C];break;end while(o)/(((-110+0xee1)+-0x79))==2842 do o=(5737200)while d>(108-0x43)do o-= o h[l[L]]=U[l[K]];break end while 2800==(o)/((-0x67+2152))do h[l[M]]=h[l[x]];break end;break;end break;end break;end break;end break;end break;end while(o)/((1265+-0x14))==3392 do o=(1930425)while d<=(8128/0x7f)do o-= o o=(7794336)while(194-0x8d)>=d do o-= o o=(3989430)while d<=((0x7+-54)+94)do o-= o o=(5508432)while(-0x28+84)>=d do o-= o o=(1177518)while d>(0x1e3c/180)do o-= o if h[l[f]]then e=e+b;else e=l[x];end;break end while 687==(o)/((0x728+-118))do h[l[P]]=h[l[H]][l[C]];break end;break;end while(o)/((47272/0x13))==2214 do o=(563472)while(0x186f/139)>=d do o-= o h[l[f]]();break;end while(o)/((207432/0x43))==182 do o=(6020440)while(78+-0x20)<d do o-= o local l=l[f]h[l]=h[l](c(h,l+b,t))break end while 1640==(o)/((-0x36+3725))do h[l[f]]=h[l[p]][h[l[N]]];break end;break;end break;end break;end while(o)/((4729-0x95c))==1710 do o=(3604290)while(0x50+-30)>=d do o-= o o=(79730)while(196-0x94)>=d do o-= o e=l[B];break;end while(o)/((0x11b+-45))==335 do o=(9765225)while d>(10780/0xdc)do o-= o local l={h,l};l[b][l[O][M]]=l[O][i]+l[O][H];break end while 2775==(o)/((615825/0xaf))do local e=l[x];local o=h[e]for l=e+1,l[i]do o=o..h[l];end;h[l[a]]=o;break end;break;end break;end while 1895==(o)/((-108+0x7da))do o=(8025714)while d<=((-73+-0x2)+0x7e)do o-= o local d;local o;h[l[f]]=m[l[H]];e=e+b;l=n[e];h[l[L]]=m[l[x]];e=e+b;l=n[e];h[l[a]]=l[p];e=e+b;l=n[e];h[l[a]]=l[r];e=e+b;l=n[e];h[l[F]]=l[r];e=e+b;l=n[e];o=l[M]h[o]=h[o](c(h,o+b,l[K]))e=e+b;l=n[e];h[l[M]]=h[l[K]][h[l[N]]];e=e+b;l=n[e];o=l[a]h[o]=h[o](h[o+k])e=e+b;l=n[e];d=h[l[S]];if not d then e=e+k;else h[l[M]]=d;e=l[B];end;break;end while(o)/((597246/0xa9))==2271 do o=(141588)while d>(176-0x7c)do o-= o local l=l[f]h[l](h[l+k])break end while(o)/((-84+0xde))==1026 do h[l[F]]=h[l[H]][l[w]];break end;break;end break;end break;end break;end while(o)/((-127+0xae5))==2928 do o=(7982856)while d<=(0x78+-62)do o-= o o=(2513700)while d<=(0xa0-105)do o-= o o=(4654599)while(0xcd-151)<d do o-= o if(h[l[f]]~=h[l[_]])then e=e+k;else e=l[p];end;break end while(o)/(((121830/0xf)-4071))==1149 do do return h[l[L]]end break end;break;end while(o)/((1444-0x301))==3724 do o=(2362830)while(3640/0x41)>=d do o-= o local l=l[L]h[l](h[l+k])break;end while(o)/((-68+0x5b6))==1695 do o=(4907628)while d>(0x63+-42)do o-= o h[l[f]]=h[l[H]]-h[l[N]];break end while(o)/((-0x5c+1775))==2916 do h[l[P]]=U[l[x]];break end;break;end break;end break;end while(o)/((-0x76+3151))==2632 do o=(6714752)while(1952/0x20)>=d do o-= o o=(2987169)while(0x887/37)>=d do o-= o h[l[a]]=h[l[K]]-h[l[w]];break;end while 1093==(o)/((0x1d5bc/44))do o=(251658)while d>(0xb3-119)do o-= o h[l[a]]=u(s[l[K]],nil,m);break end while 3813==(o)/((0x162c/86))do h[l[P]]=h[l[K]];break end;break;end break;end while(o)/((576384/0xed))==2761 do o=(11605160)while d<=(0xd90/56)do o-= o U[l[r]]=h[l[f]];break;end while(o)/((3096+-0x3a))==3820 do o=(2840208)while(-0x3f+126)<d do o-= o U[l[K]]=h[l[M]];break end while(o)/((13272/(115-0x6b)))==1712 do h[l[F]]=U[l[B]];e=e+b;l=n[e];h[l[a]]=#h[l[r]];e=e+b;l=n[e];U[l[H]]=h[l[a]];e=e+b;l=n[e];h[l[a]]=U[l[H]];e=e+b;l=n[e];h[l[f]]=#h[l[p]];e=e+b;l=n[e];U[l[x]]=h[l[M]];e=e+b;l=n[e];do return end;break end;break;end break;end break;end break;end break;end while 525==(o)/((0x1d19-3772))do o=(120048)while(94+(-0xb48/152))>=d do o-= o o=(1023722)while(-0x6d+178)>=d do o-= o o=(8069711)while d<=(0x8c4/34)do o-= o o=(12078504)while d>(0x2e36/182)do o-= o h[l[P]]=(l[K]~=0);break end while 3582==(o)/((219180/0x41))do local d;local o;h[l[f]]=(l[H]~=0);e=e+b;l=n[e];h[l[f]]=h[l[K]];e=e+b;l=n[e];h[l[a]]=m[l[H]];e=e+b;l=n[e];o=l[M]h[o]=h[o](h[o+k])e=e+b;l=n[e];d=h[l[i]];if not d then e=e+k;else h[l[M]]=d;e=l[x];end;break end;break;end while 2561==(o)/((-46+(131077/0x29)))do o=(3822819)while d<=(0x3802/214)do o-= o h[l[M]]=l[r];break;end while 1463==(o)/(((0x29ab-5353)-0xa8d))do o=(5134635)while(0x78+-52)<d do o-= o m[l[B]]=h[l[a]];break end while 1845==(o)/((0xb49+-106))do h[l[f]]=(l[B]~=0);break end;break;end break;end break;end while 881==(o)/((2417-0x4e7))do o=(5849840)while(172-0x64)>=d do o-= o o=(1796144)while(17500/(0xddae/227))>=d do o-= o do return end;break;end while(o)/((2324+-0x21))==784 do o=(15441930)while(15052/0xd4)<d do o-= o if(h[l[L]]~=l[_])then e=e+k;else e=l[x];end;break end while(o)/((-66+0x1017))==3810 do local o=l[P];local b=h[o]local d=h[o+2];if(d>0)then if(b>h[o+1])then e=l[B];else h[o+3]=b;end elseif(b<h[o+1])then e=l[p];else h[o+3]=b;end break end;break;end break;end while 3320==(o)/((-61+0x71f))do o=(2115036)while(-98+0xab)>=d do o-= o local d;local o;h[l[P]]=m[l[x]];e=e+b;l=n[e];h[l[P]]=m[l[x]];e=e+b;l=n[e];h[l[L]]=l[B];e=e+b;l=n[e];h[l[f]]=l[p];e=e+b;l=n[e];h[l[f]]=l[B];e=e+b;l=n[e];o=l[a]h[o]=h[o](c(h,o+b,l[r]))e=e+b;l=n[e];h[l[P]]=h[l[K]][h[l[i]]];e=e+b;l=n[e];o=l[f]h[o]=h[o](h[o+k])e=e+b;l=n[e];d=h[l[_]];if not d then e=e+k;else h[l[a]]=d;e=l[H];end;break;end while(o)/((3577-0x715))==1199 do o=(7670545)while d>((0x19a-216)-0x78)do o-= o h[l[f]]=u(s[l[B]],nil,m);break end while(o)/((0x15fb6/26))==2215 do local o=l[P];local b=h[o]local d=h[o+2];if(d>0)then if(b>h[o+1])then e=l[B];else h[o+3]=b;end elseif(b<h[o+1])then e=l[r];else h[o+3]=b;end break end;break;end break;end break;end break;end while 123==(o)/((-123+(0x8f1-1190)))do o=(1336384)while d<=(0x4010/205)do o-= o o=(1121400)while(77/0x1)>=d do o-= o o=(2309643)while((8601/0x2f)+-0x6b)<d do o-= o local o;h[l[f]]=m[l[B]];e=e+b;l=n[e];h[l[a]]=m[l[x]];e=e+b;l=n[e];h[l[a]]=l[p];e=e+b;l=n[e];h[l[a]]=l[H];e=e+b;l=n[e];h[l[M]]=l[B];e=e+b;l=n[e];o=l[P]h[o]=h[o](c(h,o+b,l[K]))e=e+b;l=n[e];h[l[a]]=h[l[H]][h[l[i]]];e=e+b;l=n[e];o=l[P]h[o]=h[o](h[o+k])e=e+b;l=n[e];h[l[M]]=h[l[r]];e=e+b;l=n[e];e=l[x];break end while 1281==(o)/((3715-0x778))do h[l[f]]={};break end;break;end while(o)/((0xa2b+-83))==445 do o=(163856)while d<=(247-0xa9)do o-= o local o;local d;h[l[f]]=m[l[x]];e=e+b;l=n[e];h[l[M]]=l[r];e=e+b;l=n[e];h[l[P]]=l[p];e=e+b;l=n[e];d=l[K];o=h[d]for l=d+1,l[S]do o=o..h[l];end;h[l[F]]=o;e=e+b;l=n[e];if not h[l[M]]then e=e+k;else e=l[K];end;break;end while(o)/((0x109-188))==2128 do o=(3377220)while d>(0xf2-163)do o-= o local l={h,l};l[k][l[O][P]]=l[b][l[O][i]]+l[k][l[O][B]];break end while(o)/(((-69+0x14)+0x54e))==2580 do if not h[l[a]]then e=e+k;else e=l[r];end;break end;break;end break;end break;end while 1099==(o)/((-127+0x53f))do o=(719932)while d<=((0x24a-354)-149)do o-= o o=(4167840)while(0x1626/70)>=d do o-= o local o=h[l[_]];if not o then e=e+k;else h[l[L]]=o;e=l[r];end;break;end while(o)/((0x56c+(13-0x1e)))==3040 do o=(4166532)while(17138/0xd1)<d do o-= o if(h[l[P]]~=l[_])then e=e+k;else e=l[r];end;break end while(o)/((0x652+-61))==2676 do h[l[F]]=(l[H]~=0);e=e+k;break end;break;end break;end while 211==(o)/(((0x5cd6e/55)-0xdae))do o=(366980)while d<=(0x4e18/238)do o-= o if h[l[F]]then e=e+b;else e=l[r];end;break;end while 1555==(o)/((0x203-279))do o=(2262164)while d>(270-0xb9)do o-= o local o=l[a]h[o]=h[o](c(h,o+b,l[p]))break end while 601==(o)/((-83+(230820/0x3c)))do local o=l[M]h[o]=h[o](c(h,o+b,l[r]))break end;break;end break;end break;end break;end break;end break;end e+= k end;end);end;return u(A(),{},T())()end)_msec({[(0xc94/20)]='\115\116'..(function(l)return(l and'(-97+(-50+0xf7))')or'\114\105'or'\120\58'end)((79+-0x4a)==(-92+0x62))..'\110g',[(1611-0x342)]='\108\100'..(function(l)return(l and'(0x123-(0x1f9-314))')or'\101\120'or'\119\111'end)((500/0x64)==(-118+0x7c))..'\112',[(-0x51+293)]=(function(l)return(l and'(0xfc-152)')and'\98\121'or'\100\120'end)(((0x2700/104)-0x5b)==(1035/0xcf))..'\116\101',[((0x4e84/30)-356)]='\99'..(function(l)return(l and'(0x55f0/220)')and'\90\19\157'or'\104\97'end)((101+-0x60)==(90/0x1e))..'\114',[(0xd33b/103)]='\116\97'..(function(l)return(l and'(271-0xab)')and'\64\113'or'\98\108'end)((-60+0x42)==(925/0xb9))..'\101',[(0x1ee+(-0x28+-39))]=(function(l)return(l and'((-0x17+250)-127)')or'\115\117'or'\78\107'end)((39+-0x24)==(144-0x71))..'\98',[(1721-0x368)]='\99\111'..(function(l)return(l and'(0xd7+-115)')and'\110\99'or'\110\105\103\97'end)((7285/0xeb)==(0x10b6/138))..'\97\116',[(26796/0x2a)]=(function(l,o)return(l and'(-54+0x9a)')and'\48\159\158\188\10'or'\109\97'end)((410/0x52)==(0x3c+-54))..'\116\104',[(-18+0x57a)]=(function(l,o)return((117+-0x70)==(0x26-35)and'\48'..'\195'or l..((not'\20\95\69'and'\90'..'\180'or o)))or'\199\203\95'end),[(0x7c6-1039)]='\105\110'..(function(l,o)return(l and'((220+-0x48)+-48)')and'\90\115\138\115\15'or'\115\101'end)((0x39-52)==(0x8c-109))..'\114\116',[(2115-0x439)]='\117\110'..(function(l,o)return(l and'(-19+0x77)')or'\112\97'or'\20\38\154'end)((0x4c-71)==(3751/0x79))..'\99\107',[(0x98f-1262)]='\115\101'..(function(l)return(l and'(0x95+-49)')and'\110\112\99\104'or'\108\101'end)((31-(0x74-90))==(0x60-65))..'\99\116',[((0x9c9+-25)-1264)]='\116\111\110'..(function(l,o)return(l and'(0x28a0/(12584/0x79))')and'\117\109\98'or'\100\97\120\122'end)((0x47-66)==(136-0x83))..'\101\114'},{[((0x2d0162/201)/253)]=((getfenv))},((getfenv))()) end)()
+local SilentAIMFov = Drawing.new("Circle")
+SilentAIMFov.Thickness = 1
+SilentAIMFov.NumSides = 100
+SilentAIMFov.Radius = 360
+SilentAIMFov.Filled = false
+SilentAIMFov.Visible = false
+SilentAIMFov.ZIndex = 999
+SilentAIMFov.Transparency = 1
+SilentAIMFov.Color = Color3.fromRGB(25,25,25)
+SilentSettings.Visible = false
+
+--Admins Check--
+game.Players.PlayerAdded:Connect(function(AdminUserCheck)
+    if AdminUserCheck.UserId == 68246168 or AdminUserCheck.UserId == 955294 or AdminUserCheck.UserId == 1095419 or AdminUserCheck.UserId == 50585425 or AdminUserCheck.UserId == 48405917 or AdminUserCheck.UserId == 9212846 or AdminUserCheck.UserId == 47352513 or AdminUserCheck.UserId == 48058122 then
+        game.StarterGui:SetCore("SendNotification", {Title = _G.LibraryConfg.NotificationsTitle; Text = "Mod Alert\n"..AdminUserCheck.Name..", Is in the server."; Icon = "rbxassetid://8426126371"; Duration = 120 })
+    elseif AdminUserCheck.UserId == 42066711 or AdminUserCheck.UserId == 513615792 then
+        game.StarterGui:SetCore("SendNotification", {Title = _G.LibraryConfg.NotificationsTitle; Text = "Contractors Alert\n"..AdminUserCheck.Name..", Is in the server"; Icon = "rbxassetid://8426126371"; Duration = 120 })
+    elseif AdminUserCheck.UserId == 151691292 or AdminUserCheck.UserId == 92504899 or AdminUserCheck.UserId == 31967243 then
+        game.StarterGui:SetCore("SendNotification", {Title = _G.LibraryConfg.NotificationsTitle; Text = "Devs Alert\n"..AdminUserCheck.Name..", Is in the server."; Icon = "rbxassetid://8426126371"; Duration = 120 })
+    elseif AdminUserCheck.UserId == 29761878 then
+        game.StarterGui:SetCore("SendNotification", {Title = _G.LibraryConfg.NotificationsTitle; Text = "Owner Alert\nRvvz, Is in the server."; Icon = "rbxassetid://8426126371"; Duration = 120 })
+    end
+end)
+
+for i, v in pairs(game.Players:GetPlayers()) do
+    if v.UserId == 68246168 or v.UserId == 955294 or v.UserId == 1095419 or v.UserId == 50585425 or v.UserId == 48405917 or v.UserId == 9212846 or v.UserId == 47352513 or v.UserId == 48058122 then
+        game.StarterGui:SetCore("SendNotification", {Title = _G.LibraryConfg.NotificationsTitle; Text = "Mod Alert\n"..v.Name..", Is in the server."; Icon = "rbxassetid://8426126371"; Duration = 120 })
+    elseif v.UserId == 42066711 or v.UserId == 513615792 then
+        game.StarterGui:SetCore("SendNotification", {Title = _G.LibraryConfg.NotificationsTitle; Text = "Contractors Alert\n"..v.Name..", Is in the server"; Icon = "rbxassetid://8426126371"; Duration = 120 })
+    elseif v.UserId == 151691292 or v.UserId == 92504899 or v.UserId == 31967243 then
+        game.StarterGui:SetCore("SendNotification", {Title = _G.LibraryConfg.NotificationsTitle; Text = "Devs Alert\n"..v.Name..", Is in the server."; Icon = "rbxassetid://8426126371"; Duration = 120 })
+    elseif v.UserId == 29761878 then
+        game.StarterGui:SetCore("SendNotification", {Title = _G.LibraryConfg.NotificationsTitle; Text = "Owner Alert\nRvvz, Is in the server."; Icon = "rbxassetid://8426126371"; Duration = 120 })
+    end
+end
+--Admin Check End--
+
+function BypassAnticheat()
+local function CheckTable(tbl, ...)
+    local Indexes = {...}
+
+    for _, v in ipairs(Indexes) do
+        if not (rawget(tbl, v)) then
+            return false
+        end
+    end
+
+    return true
+end
+
+local u21
+for _,v in ipairs(getgc(true)) do
+    if (typeof(v) == "table" and CheckTable(v, "A", "B", "GP", "EN")) then
+        u21 = v
+        break
+    end
+end
+
+hookfunction(u21.A, function()
+
+end)
+hookfunction(u21.B, function()
+
+end)
+end
+
+			--Silent Aim Functions
+			local function GetPositionOnScreen(Vector)
+				local Vec3, OnScreen = WorldToScreen(Cam, Vector)
+				return Vector2.new(Vec3.X, Vec3.Y), OnScreen
+			end
+
+			local function ValidateArguments(Args, RayMethod)
+				local Matches = 0
+
+				if #Args < RayMethod.ArgCountRequired then
+					return false
+				end
+
+				for Pos, Argument in next, Args do
+					if typeof(Argument) == RayMethod.Args[Pos] then
+						Matches = Matches + 1
+					end
+				end
+
+				return Matches >= RayMethod.ArgCountRequired
+			end
+
+			local function GetDirection(Origin, Position)
+				return (Position - Origin).Unit * 1000
+			end
+
+			local function GetMousePosition()
+				return Vector2.new(Mouse.X, Mouse.Y)
+			end
+
+			local function IsPlayerVisible(TargetPlayer)
+				local PlayerCharacter = TargetPlayer.Character
+				local LocalPlayerCharacter = Player.Character
+
+				if not (PlayerCharacter or LocalPlayerCharacter) then return end 
+
+				local PlayerRoot = game.FindFirstChild(PlayerCharacter, SilentSettings.Main.TargetPart) or game.FindFirstChild(PlayerCharacter, "HumanoidRootPart")
+
+				if not PlayerRoot then return end 
+
+				local CastPoints, IgnoreList = {PlayerRoot.Position, LocalPlayerCharacter, PlayerCharacter}, {LocalPlayerCharacter, PlayerCharacter}
+				local ObscuringObjects = #GetPartsObscuringTarget(Cam, CastPoints, IgnoreList)
+
+				return ((ObscuringObjects == 0 and true) or (ObscuringObjects > 0 and false))
+			end
+
+			local function GetClosestPlayer()
+				if not SilentSettings.Main.TargetPart then return end
+
+				local Closest
+				local DistanceToMouse
+
+				for _, v in next, game.GetChildren(Players) do
+					if v == Player then continue end
+					if SilentSettings.Main.TeamCheck and v.Team == Player.Team then continue end
+
+					local Character = v.Character
+					if not Character then continue end
+
+					if SilentSettings.Main.VisibleCheck and not IsPlayerVisible(v) then continue end
+
+					local HumanoidRootPart = game.FindFirstChild(Character, "HumanoidRootPart")
+					local Humanoid = game.FindFirstChild(Character, "Humanoid")
+
+					if not HumanoidRootPart or not Humanoid or Humanoid and Humanoid.Health <= 0 then continue end
+
+					local ScreenPosition, OnScreen = GetPositionOnScreen(HumanoidRootPart.Position)
+
+					if not OnScreen then continue end
+
+					local Distance = (GetMousePosition() - ScreenPosition).Magnitude
+					if Distance <= (DistanceToMouse or (SilentSettings.Main.Enabled and SilentSettings.FOVSettings.Radius) or 2000) then
+						Closest = ((SilentSettings.Main.TargetPart == "Random" and Character[ValidTargetParts[math.random(1, #ValidTargetParts)]]) or Character[SilentSettings.Main.TargetPart])
+						DistanceToMouse = Distance
+					end
+				end
+				return Closest
+			end
+
+			if game:IsLoaded() then BypassAnticheat() end
+			game.StarterGui:SetCore("SendNotification", {Title = _G.LibraryConfg.NotificationsTitle; Text = "SSHub Loaded"; Icon = "rbxassetid://8426126371"; Duration = 3 })
+			--Esp Handlers
+			--ScrapESP 
+			local function ScrapESP(Scrap)
+				local ItemName = Drawing.new("Text")
+				ItemName.Visible = false
+				ItemName.Center = true
+				ItemName.Outline = true
+				ItemName.Font = 2
+				ItemName.Size = 13
+				ItemName.Color = Color3.new(1, 2.5, 2.5)
+				ItemName.Text = "Scrap"
+
+				local RarityText = Drawing.new("Text")
+				RarityText.Visible = false
+				RarityText.Center = true
+				RarityText.Outline = true
+				RarityText.Font = 2
+				RarityText.Size = 13
+				RarityText.Color = Color3.new(1, 2.5, 2.5)
+				RarityText.Text = "Type"
+
+				local DistanceText = Drawing.new("Text")
+				DistanceText.Visible = false
+				DistanceText.Center = true
+				DistanceText.Outline = true
+				DistanceText.Font = 2
+				DistanceText.Size = 13
+				DistanceText.Color = Color3.new(1, 2.5, 2.5)
+				DistanceText.Text = "Distance"
+
+				local function InfoUpdate()
+					local Iu
+
+					Iu = game:GetService("RunService").RenderStepped:Connect(function()
+						if not workspace:IsAncestorOf(Scrap) then
+							ItemName.Visible = false
+							RarityText.Visible = false
+							DistanceText.Visible = false
+
+							Iu:Disconnect()
+						else
+							local Vector, OnScreen = Cam:WorldToViewportPoint(Scrap:FindFirstChild("MeshPart").Position)
+
+							if OnScreen then
+								ItemName.Position = Vector2.new(Vector.X, Vector.Y - 30)
+								RarityText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+								DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
+
+								ItemName.Visible = false
+								RarityText.Visible = false
+								DistanceText.Visible = false
+
+								local ItemDistance = math.ceil((Scrap.MeshPart.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
+
+								if ESPSettings.ScrapESP.Enabled == true then
+									if ItemDistance < ESPSettings.ScrapESP.Distance then
+										if tostring(Scrap:FindFirstChild("MeshPart"):FindFirstChild("Particle").Color) == "0 1 1 1 0 1 1 1 1 0 " then
+											RarityText.Text = "Rarity: Bad"
+											RarityText.Color = Color3.new(1, 2.5, 2.5)
+
+											if ESPSettings.ScrapESP.BadOnly == true then
+												ItemName.Visible = true
+												RarityText.Visible = true
+												DistanceText.Visible = true
+											else
+												ItemName.Visible = false
+												RarityText.Visible = false
+												DistanceText.Visible = false
+											end
+										elseif tostring(Scrap:FindFirstChild("MeshPart"):FindFirstChild("Particle").Color) == "0 0.184314 1 0.4 0 1 0.184314 1 0.4 0 " then
+											RarityText.Text = "Rarity: Good"
+											RarityText.Color = Color3.new(0, 2.5, 0)
+
+											if ESPSettings.ScrapESP.GoodOnly == true then
+												ItemName.Visible = true
+												RarityText.Visible = true
+												DistanceText.Visible = true
+											else
+												ItemName.Visible = false
+												RarityText.Visible = false
+												DistanceText.Visible = false
+											end
+										elseif tostring(Scrap:FindFirstChild("MeshPart"):FindFirstChild("Particle").Color) == "0 1 0.184314 0.184314 0 1 1 0.184314 0.184314 0 " then
+											RarityText.Text = "Rarity: Rare"
+											RarityText.Color = Color3.new(1, 0, 0)
+
+											if ESPSettings.ScrapESP.RareOnly == true then
+												ItemName.Visible = true
+												RarityText.Visible = true
+												DistanceText.Visible = true
+											else
+												ItemName.Visible = false
+												RarityText.Visible = false
+												DistanceText.Visible = false
+											end
+										else
+											RarityText.Text = "Rarity: Legnedary"
+											RarityText.Color = Color3.new(1, 1, 0.5)
+
+											if ESPSettings.ScrapESP.LegendaryOnly == true then
+												ItemName.Visible = true
+												RarityText.Visible = true
+												DistanceText.Visible = true
+											else
+												ItemName.Visible = false
+												RarityText.Visible = false
+												DistanceText.Visible = false
+											end
+										end
+
+										DistanceText.Text = "["..tostring(ItemDistance).."]"
+									else
+										ItemName.Visible = false
+										RarityText.Visible = false
+										DistanceText.Visible = false
+									end
+								else
+									ItemName.Visible = false
+									RarityText.Visible = false
+									DistanceText.Visible = false
+
+									Iu:Disconnect()
+								end
+							else
+								ItemName.Visible = false
+								RarityText.Visible = false
+								DistanceText.Visible = false
+							end
+						end
+					end)
+				end
+				coroutine.wrap(InfoUpdate)()
+			end
+			
+
+			--SafeESP 
+			local function SafeESP(Vault, RarityValue)
+				local ItemName = Drawing.new("Text")
+				ItemName.Visible = false
+				ItemName.Center = true
+				ItemName.Outline = true
+				ItemName.Font = 2
+				ItemName.Size = 13
+				ItemName.Color = Color3.new(1, 2.5, 2.5)
+				ItemName.Text = "Safe"
+
+				local RarityText = Drawing.new("Text")
+				RarityText.Visible = false
+				RarityText.Center = true
+				RarityText.Outline = true
+				RarityText.Font = 2
+				RarityText.Size = 13
+				RarityText.Color = Color3.new(1, 2.5, 2.5)
+				RarityText.Text = "Type"
+
+				local StatusText = Drawing.new("Text")
+				StatusText.Visible = false
+				StatusText.Center = true
+				StatusText.Outline = true
+				StatusText.Font = 2
+				StatusText.Size = 13
+				StatusText.Color = Color3.new(1, 2.5, 2.5)
+				StatusText.Text = "Status"
+
+				local DistanceText = Drawing.new("Text")
+				DistanceText.Visible = false
+				DistanceText.Center = true
+				DistanceText.Outline = true
+				DistanceText.Font = 2
+				DistanceText.Size = 13
+				DistanceText.Color = Color3.new(1, 2.5, 2.5)
+				DistanceText.Text = "Distance"
+
+				local function InfoUpdate()
+					local Iu
+
+					Iu = game:GetService("RunService").RenderStepped:Connect(function()
+						if not workspace:IsAncestorOf(Vault) then
+							ItemName.Visible = false
+							RarityText.Visible = false
+							StatusText.Visible = false
+							DistanceText.Visible = false
+
+							Iu:Disconnect()
+						else
+							local Vector, OnScreen = Cam:WorldToViewportPoint(Vault:FindFirstChild("MainPart").Position)
+
+							if OnScreen then
+								ItemName.Position = Vector2.new(Vector.X, Vector.Y - 30)
+								RarityText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+								StatusText.Position = Vector2.new(Vector.X, Vector.Y - 0)
+								DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
+
+								ItemName.Visible = false
+								RarityText.Visible = false
+								StatusText.Visible = false
+								DistanceText.Visible = false
+
+								local ItemDistance = math.ceil((Vault:FindFirstChild("MainPart").Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
+
+								if ESPSettings.SafeESP.Enabled == true then
+									if ItemDistance < ESPSettings.SafeESP.Distance then
+										if RarityValue == 2 then
+											RarityText.Text = "Rarity: Good"
+											RarityText.Color = Color3.new(0, 2.5, 0)
+
+											if ESPSettings.SafeESP.SmallOnly == true then
+												ItemName.Visible = true
+												RarityText.Visible = true
+												StatusText.Visible = true
+												DistanceText.Visible = true
+											else
+												ItemName.Visible = false
+												RarityText.Visible = false
+												StatusText.Visible = false
+												DistanceText.Visible = false
+											end
+										elseif RarityValue == 3 then
+											RarityText.Text = "Rarity: Rare"
+											RarityText.Color = Color3.new(1, 0, 0)
+
+											if ESPSettings.SafeESP.BigOnly == true then
+												ItemName.Visible = true
+												RarityText.Visible = true
+												StatusText.Visible = true
+												DistanceText.Visible = true
+											else
+												ItemName.Visible = false
+												RarityText.Visible = false
+												StatusText.Visible = false
+												DistanceText.Visible = false
+											end
+										end
+
+										DistanceText.Text = "["..tostring(ItemDistance).."]"
+
+										if Vault.Values.Broken.Value == false then
+											StatusText.Text = "UnBroken"
+
+											ItemName.Visible = true
+											RarityText.Visible = true
+											StatusText.Visible = true
+											DistanceText.Visible = true
+
+										else
+											StatusText.Text = "Broken"
+
+											ItemName.Visible = false
+											RarityText.Visible = false
+											StatusText.Visible = false
+											DistanceText.Visible = false
+
+										end
+									else
+										ItemName.Visible = false
+										RarityText.Visible = false
+										StatusText.Visible = false
+										DistanceText.Visible = false
+									end
+								else
+									ItemName.Visible = false
+									RarityText.Visible = false
+									StatusText.Visible = false
+									DistanceText.Visible = false
+
+									Iu:Disconnect()
+								end
+							else
+								ItemName.Visible = false
+								RarityText.Visible = false
+								StatusText.Visible = false
+								DistanceText.Visible = false
+							end
+						end
+					end)
+				end
+				coroutine.wrap(InfoUpdate)()
+			end
+			
+
+			--  // RegisterESP 
+			local function RegisterESP(Register)
+				local ItemName = Drawing.new("Text")
+				ItemName.Visible = false
+				ItemName.Center = true
+				ItemName.Outline = true
+				ItemName.Font = 2
+				ItemName.Size = 13
+				ItemName.Color = Color3.new(1, 2.5, 2.5)
+				ItemName.Text = "Register"
+
+				local StatusText = Drawing.new("Text")
+				StatusText.Visible = false
+				StatusText.Center = true
+				StatusText.Outline = true
+				StatusText.Font = 2
+				StatusText.Size = 13
+				StatusText.Color = Color3.new(1, 2.5, 2.5)
+				StatusText.Text = "Status"
+
+				local DistanceText = Drawing.new("Text")
+				DistanceText.Visible = false
+				DistanceText.Center = true
+				DistanceText.Outline = true
+				DistanceText.Font = 2
+				DistanceText.Size = 13
+				DistanceText.Color = Color3.new(1, 2.5, 2.5)
+				DistanceText.Text = "Distance"
+
+				local function InfoUpdate()
+					local Iu
+
+					Iu = game:GetService("RunService").RenderStepped:Connect(function()
+						if not workspace:IsAncestorOf(Register) then
+							ItemName.Visible = false
+							StatusText.Visible = false
+							DistanceText.Visible = false
+
+							Iu:Disconnect()
+						else
+							local Vector, OnScreen = Cam:WorldToViewportPoint(Register:FindFirstChild("MainPart").Position)
+
+							if OnScreen then
+								ItemName.Position = Vector2.new(Vector.X, Vector.Y - 20)
+								StatusText.Position = Vector2.new(Vector.X, Vector.Y - 0)
+								DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
+
+								ItemName.Visible = false
+								StatusText.Visible = false
+								DistanceText.Visible = false
+
+								local ItemDistance = math.ceil((Register:FindFirstChild("MainPart").Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
+
+								if ESPSettings.RegisterESP.Enabled == true then
+									if ItemDistance < ESPSettings.RegisterESP.Distance then
+										ItemName.Visible = true
+										StatusText.Visible = true
+										DistanceText.Visible = true
+
+										DistanceText.Text = "["..tostring(ItemDistance).."]"
+
+										if Register.Values.Broken.Value == false then
+											StatusText.Text = "UnBroken"
+
+											ItemName.Visible = true
+											StatusText.Visible = true
+											DistanceText.Visible = true
+
+										else
+											StatusText.Text = "Broken"
+
+											ItemName.Visible = false
+											StatusText.Visible = false
+											DistanceText.Visible = false
+
+										end
+									else
+										ItemName.Visible = false
+										StatusText.Visible = false
+										DistanceText.Visible = false
+									end
+								else
+									ItemName.Visible = false
+									StatusText.Visible = false
+									DistanceText.Visible = false
+
+									Iu:Disconnect()
+								end
+							else
+								ItemName.Visible = false
+								StatusText.Visible = false
+								DistanceText.Visible = false
+							end
+						end
+					end)
+				end
+				coroutine.wrap(InfoUpdate)()
+			end
+			
+
+			--Scrap Added
+			game:GetService("Workspace").Filter.SpawnedPiles.ChildAdded:Connect(function(Object)
+				if ESPSettings.ScrapESP.Enabled == true then
+					coroutine.wrap(ScrapESP)(Object)
+				end
+			end)
+			
+
+            --Infinite Stamina
+			local oldStamina
+			oldStamina =
+				hookfunction(
+					getupvalue(getrenv()._G.S_Take, 2),
+					function(v1, ...)
+						if (Settings.InfiniteStamina) then 
+						v1 = 0
+					end
+						return oldStamina(v1, ...)
+					end
+				)
+			
+
+			--No Jump Cooldown
+			local __newindex
+			__newindex = hookmetamethod(game, "__newindex", function(t, k, v)
+				if (t:IsDescendantOf(Character) and k == "Jump" and v == false) then
+					if Settings.NoJumpCooldown == true then
+						return
+					end
+				end
+
+				return __newindex(t, k, v)
+			end)
+			
+
+			--Auto Pickup
+			coroutine.wrap(function()
+				game:GetService("RunService").RenderStepped:Connect(function()
+					if Settings.AutoPickScrap == true then
+						for i, v in pairs(game:GetService("Workspace").Filter.SpawnedPiles:GetChildren()) do
+							if Settings.IsDead == false then
+								if (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - v:FindFirstChild("MeshPart").Position).Magnitude < 5 then
+									if CoolDowns.AutoPickUps.ScrapCooldown == false then
+										CoolDowns.AutoPickUps.ScrapCooldown = true
+										game:GetService("ReplicatedStorage").Events.PIC_PU:FireServer(string.reverse(v:GetAttribute("zp")))
+
+										wait(1)
+
+										CoolDowns.AutoPickUps.ScrapCooldown = false
+									end
+								end
+							end 
+						end
+					end
+				end)
+			end)()
+
+			coroutine.wrap(function()
+				game:GetService("RunService").RenderStepped:Connect(function()
+					if Settings.AutoPickTools == true then
+						for i, v in pairs(game:GetService("Workspace").Filter.SpawnedTools:GetChildren()) do
+							if Settings.IsDead == false then
+								if (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - v:FindFirstChildWhichIsA("MeshPart").Position).Magnitude < 5 then
+									if CoolDowns.AutoPickUps.ToolCooldown == false then
+										CoolDowns.AutoPickUps.ToolCooldown = true
+										game:GetService("ReplicatedStorage").Events.PIC_TLO:FireServer(v:FindFirstChildWhichIsA("MeshPart"))
+
+										wait(1)
+
+										CoolDowns.AutoPickUps.ToolCooldown = false
+									end
+								end
+							end
+						end
+					end
+				end)
+			end)()
+
+			coroutine.wrap(function()
+				game:GetService("RunService").RenderStepped:Connect(function()
+					if Settings.AutoPickCash == true then
+						for i, v in pairs(game:GetService("Workspace").Filter.SpawnedBread:GetChildren()) do
+							if Settings.IsDead == false then
+								if (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - v.Position).Magnitude < 5 then
+									if CoolDowns.AutoPickUps.MoneyCooldown == false then
+										CoolDowns.AutoPickUps.MoneyCooldown = true
+										game:GetService("ReplicatedStorage").Events.CZDPZUS:FireServer(v)
+
+										wait(1)
+
+										CoolDowns.AutoPickUps.MoneyCooldown = false
+									end
+								end
+							end
+						end
+					end
+				end)
+			end)()
+			
+
+			--FlashBang
+			game.Workspace.Camera.ChildAdded:Connect(function(Item)
+				if Settings.NoFlashbang == true then
+					if Item.Name == "BlindEffect" then
+						Item.Enabled = false
+					end
+				end
+			end)
+
+			game.Players.LocalPlayer.PlayerGui.ChildAdded:Connect(function(Item)
+				if Item.Name == "FlashedGUI" then
+					if Settings.NoFlashbang == true then
+						Item.Enabled = false
+					end
+				end
+			end)
+			
+
+			--Smoke
+			game.Workspace.Debris.ChildAdded:Connect(function(Item)
+				if Item.Name == "SmokeExplosion" then
+					if Settings.NoSmoke == true then
+						wait(0.1)
+						Item.Particle1:Destroy()
+						Item.Particle2:Destroy()
+					end
+				end
+			end)
+
+			game.Players.LocalPlayer.PlayerGui.ChildAdded:Connect(function(Item)
+				if Item.Name == "SmokeScreenGUI" then
+					if Settings.NoSmoke == true then
+						Item.Enabled = false
+					end
+				end
+			end)
+
+			--Pepper Spray Aura
+			coroutine.wrap(function()
+				game:GetService("RunService").RenderStepped:Connect(function()
+					wait(1)
+
+					if Settings.IsDead == false then
+						if Player.Character:FindFirstChild("Pepper-spray") then
+							if Settings.PepperSprayAura == true then
+								if (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - v.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude < 15 then
+									game.Players.LocalPlayer.Character["Pepper-spray"].RemoteEvent:FireServer("Spray", true)
+									game.Players.LocalPlayer.Character["Pepper-spray"].RemoteEvent:FireServer("Hit", v.Character)
+								else
+									game.Players.LocalPlayer.Character["Pepper-spray"].RemoteEvent:FireServer("Spray", false)
+								end
+							end
+						end
+					end
+				end)
+			end)()
+			
+
+			--No Fail Lockpick
+			game.Players.LocalPlayer.PlayerGui.ChildAdded:Connect(function(Item)
+				if Settings.NoFailLockpick == true then
+					if Item.Name == "LockpickGUI" then
+						Item.MF["LP_Frame"].Frames.B1.Bar.UIScale.Scale = 10
+						Item.MF["LP_Frame"].Frames.B2.Bar.UIScale.Scale = 10
+						Item.MF["LP_Frame"].Frames.B3.Bar.UIScale.Scale = 10
+					end
+				elseif Settings.NoFailLockpick == false then
+					if Item.Name == "LockpickGUI" then
+						Item.MF["LP_Frame"].Frames.B1.Bar.UIScale.Scale = 1
+						Item.MF["LP_Frame"].Frames.B2.Bar.UIScale.Scale = 1
+						Item.MF["LP_Frame"].Frames.B3.Bar.UIScale.Scale = 1
+					end
+				end
+			end)
+			
+
+			--Dead Checker
+			game.Players.LocalPlayer.CharacterAdded:Connect(function(Character)
+				repeat wait() until game.Players.LocalPlayer.Character ~= nil and game.Players.LocalPlayer.Character.Parent ~= nil
+
+				Character = Player.Character
+				Settings.IsDead = false
+
+				Character:FindFirstChild("Humanoid").Died:Connect(function()
+
+						if Settings.IsDead == false then
+							Settings.IsDead = true 
+						end
+				end)
+			end)
+
+			if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character.Parent then
+				Settings.IsDead = false
+			end
+			
+
+            --Gun Mods
+			function GunModules()
+				for i,v in pairs(getgc(true)) do 
+					if type(v) == 'table' and rawget(v, 'EquipTime') then 
+						if Settings.GunMods.NoRecoil == true then
+							coroutine.resume(coroutine.create(function()
+								v.Recoil = 0
+								v.CameraRecoilingEnabled = false
+								v.AngleX_Min = 0 
+								v.AngleX_Max = 0 
+								v.AngleY_Min = 0
+								v.AngleY_Max = 0
+								v.AngleZ_Min = 0
+								v.AngleZ_Max = 0
+							end))
+						end
+						if Settings.GunMods.Spread == true then
+							coroutine.resume(coroutine.create(function()
+								v.Spread = 0
+							end))
+						end
+						if Settings.GunMods.InstantEquip == true then
+							coroutine.resume(coroutine.create(function()
+								v.EquipTime = 0
+								v.EquipAnimSpeed = 10000000000
+							end))
+						end
+						if Settings.GunMods.InstantAim == true then
+							coroutine.resume(coroutine.create(function()
+								v.AimSettings.AimSpeed = 0
+							end))
+							coroutine.resume(coroutine.create(function()
+								v.SniperSettings.AimSpeed = 0
+								v.SniperSettings.AimAnimSpeed = 10000000000
+							end))
+						end
+					end
+				end
+			end
+		
+		game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function(Character)
+			Character.ChildAdded:Connect(function(Object)
+				if Object:IsA("Tool") then
+					GunModules()
+				end
+			end)
+		end)
+		
+		if game:GetService("Players").LocalPlayer.Character ~= nil then
+			game:GetService("Players").LocalPlayer.Character.ChildAdded:Connect(function(Object)
+				if Object:IsA("Tool") then
+					GunModules()
+				end
+			end)
+		end
+
+            coroutine.resume(coroutine.create(function()
+				game:GetService("RunService").RenderStepped:Connect(function()
+					if SilentSettings.FOVSettings.Visible then 
+						SilentAIMFov.Visible = SilentSettings.FOVSettings.Visible
+						SilentAIMFov.Color = SilentSettings.SilentAimColor
+						SilentAIMFov.Position = GetMousePosition() + Vector2.new(0, 36)
+					end
+				end)
+			end))
+
+			local oldNamecall
+			oldNamecall = hookmetamethod(game, "__namecall", function(...)
+				local Method = getnamecallmethod()
+				local Arguments = {...}
+				local self = Arguments[1]
+	
+				if SilentSettings.Main.Enabled and self == workspace then
+					if Method == "Raycast" then
+						if ValidateArguments(Arguments, ExpectedArguments.Raycast) then
+							local A_Origin = Arguments[2]
+	
+							local HitPart = GetClosestPlayer()
+							if HitPart then
+								Arguments[3] = GetDirection(A_Origin, HitPart.Position)
+	
+								return oldNamecall(unpack(Arguments))
+							end
+						end
+					end
+				end
+				return oldNamecall(...)
+			end)
+
+			-- #region Anti Stuff
+
+		local MT = getrawmetatable(game)
+		setreadonly(MT, false)
+		local NameCall = MT.__namecall
+
+		MT.__namecall = newcclosure(function(self, ...)
+			local Method = getnamecallmethod()
+			local Args = {...}
+
+			if Method == "FireServer" and Args[1] == "BHHh" then
+				if Settings.NoBarbwire == true then
+					return wait(9e9)
+				end
+			elseif Method == "FireServer" and Args[1] == "FlllD" or Args[1] == "FlllH" then
+				if Settings.NoFallDamage == true then
+					return wait(9e9)
+				end
+			elseif Method == "FireServer" and Args[1] == "__--r" or Args[1] == "HITRGP" then
+				if Settings.NoRagdoll == true then
+					return wait(9e9)
+				end
+			elseif Method == "FireServer" and Args[1] == "FllH" then
+				if Settings.NoDowned == true then
+					return wait(9e9)
+				end
+			end
+
+			return NameCall(self, ...)
+		end)
+			
+
+			--Anti Afk
+			local VirtualUser = game:GetService("VirtualUser")
+
+			Player.Idled:connect(function()
+				VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+				wait(1)
+				VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+			end)
+			
+            --DealerESP
+			LibraryESP:AddObjectListener(workspace.Map.Shopz, {
+				Name = "Dealer",
+				CustomName = "Dealer",
+				Color = Color3.fromRGB(197, 253, 255),
+				IsEnabled = "DealerESP"
+			})
+
+			LibraryESP:AddObjectListener(workspace.Map.Shopz, {
+				Name = "ArmoryDealer",
+				CustomName = "Armory Dealer",
+				Color = Color3.fromRGB(158, 168, 255),
+				IsEnabled = "ArmoryDealerESP"
+			})
+			
+
+			--AtmESP
+			LibraryESP:AddObjectListener(workspace.Map.ATMz, {
+				Name = "ATM",
+				CustomName = "ATM",
+				Color = Color3.fromRGB(197, 255, 120),
+				IsEnabled = "AtmESP"
+			})
+
+			
+
+			game:GetService("RunService").RenderStepped:Connect(function()
+
+				if Settings.CamFovToggled == true then
+					game.Workspace.Camera.FieldOfView = Settings.CamFov
+				else
+					game.Workspace.Camera.FieldOfView = 70
+				end
+
+				if Settings.FullBright == true then
+					game:GetService("Lighting").Brightness = 1
+					game:GetService("Lighting").ClockTime = 14
+					game:GetService("Lighting").FogEnd = 100000
+					game:GetService("Lighting").GlobalShadows = false
+					game:GetService("Lighting").OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+				end
+
+				if Settings.UnlockDoorsNearby == true then
+					if Settings.IsDead == false then
+						for i, v in pairs(game:GetService("Workspace").Map.Doors:GetChildren()) do
+							if (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - v:FindFirstChild("DoorBase").Position).Magnitude <= 5 then
+								if v:FindFirstChild("Values"):FindFirstChild("Locked").Value == true then
+									v:FindFirstChild("Events"):FindFirstChild("Toggle"):FireServer("Unlock", v.Lock)
+								end
+							end
+						end
+					end
+				end
+
+				if Settings.OpenDoorsNearby == true then
+					if Settings.IsDead == false then
+						for i, v in pairs(game:GetService("Workspace").Map.Doors:GetChildren()) do
+							if (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - v:FindFirstChild("DoorBase").Position).Magnitude <= 5 then
+								if v:FindFirstChild("Values"):FindFirstChild("Open").Value == false then
+									v:FindFirstChild("Events"):FindFirstChild("Toggle"):FireServer("Open", v.Knob2)
+								end
+							end
+						end
+					end
+				end
+
+				if Settings.IsDead == false then
+					if Player.Character:FindFirstChild("Pepper-spray") then
+						if Settings.InfinitePepperSpray == true then
+							game.Players.LocalPlayer.Character["Pepper-spray"].Ammo.Value = 100
+							game.Players.LocalPlayer.Character["Pepper-spray"].RemoteEvent:FireServer("Update", 100)
+						end
+					end
+				end
+
+				if Settings.IsDead == false then
+					if Settings.WalkSpeed.Enabled == true then
+						Player.Character:FindFirstChild("Humanoid").WalkSpeed = Settings.WalkSpeed.Amount
+					end
+
+					if Settings.JumpPower.Enabled == true then
+						Player.Character:FindFirstChild("Humanoid").JumpPower = Settings.JumpPower.Amount
+					end
+				end
+
+				for i, v in pairs(game:GetService("ReplicatedStorage").Storage.HitStuff.Main:GetDescendants()) do
+					if v:IsA("Sound") then
+						v.Volume = Settings.VolumeHitsound
+					end
+				end
 
 
+				if Player.PlayerGui:FindFirstChild("MouseGUI") then
+					Player.PlayerGui:FindFirstChild("MouseGUI").HitmarkerSound.Volume = Settings.VolumeHitsound
+					Player.PlayerGui:FindFirstChild("MouseGUI").HeadshotSound.Volume = Settings.VolumeHitsound
+				end
+			end)
+
+            local InfStamina = MainL:AddToggle("Infinite Stamina", Settings.InfiniteStamina, function(V)
+				Settings.InfiniteStamina = V
+			end, "InfStaminaToggle")
+            InfStamina:AddKeybind("None", "InfStaminaToggle")
+
+			MainL:AddToggle("No Jump Cooldown", Settings.NoJumpCooldown, function(V)
+				Settings.NoJumpCooldown = V
+			end)
+
+            MainL:AddToggle("Infinite Jump", Settings.SpaceJump, function(V)
+				Settings.SpaceJump = V
+
+				game:GetService("UserInputService").JumpRequest:connect(function()
+					if Settings.SpaceJump == true then
+						game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+					end
+				end)
+			end)
+
+			MainL:AddToggle("Chat Logs", Settings.ShowChatLogs, function(V)
+				Settings.ShowChatLogs = V
+
+				if V == true then
+					local ChatFrame = game.Players.LocalPlayer.PlayerGui.Chat.Frame
+					ChatFrame.ChatChannelParentFrame.Visible = true
+					ChatFrame.ChatBarParentFrame.Position = ChatFrame.ChatChannelParentFrame.Position + UDim2.new(UDim.new(), ChatFrame.ChatChannelParentFrame.Size.Y)
+				elseif V == false then
+					local ChatFrame = game.Players.LocalPlayer.PlayerGui.Chat.Frame
+					ChatFrame.ChatChannelParentFrame.Visible = false
+					ChatFrame.ChatBarParentFrame.Position = ChatFrame.ChatChannelParentFrame.Position + UDim2.new(0, 0, 0, 0)
+				end
+			end)
+
+			MainL:AddToggle("Full Brightness", Settings.FullBright, function(V)
+				Settings.FullBright = V
+			end)
+
+			local LockPickNofail = MainL:AddToggle("No Fail Lockpick", Settings.NoFailLockpick, function(V)
+				Settings.NoFailLockpick = V
+			end)
+            LockPickNofail:AddKeybind("None", "LockPickNFToggle")
+			MainL:AddToggle("Unlock Nearby Doors", Settings.UnlockDoorsNearby, function(V)
+				Settings.UnlockDoorsNearby = V
+			end)
+
+			MainL:AddToggle("Open Nearby Doors", Settings.OpenDoorsNearby, function(V)
+				Settings.OpenDoorsNearby = V
+			end)
+
+			MainL:AddToggle("NoClip Doors", Settings.NoClip, function(V)
+				Settings.NoClip = V
+
+				if Settings.NoClip == true then
+					for _, v in pairs(game:GetService("Workspace").Map.Doors:GetChildren()) do
+						if v:FindFirstChild("DoorBase") then
+							v.DoorBase.CanCollide = false
+						end
+						if v:FindFirstChild("DoorA") then
+							v.DoorA.CanCollide = false
+						end
+						if v:FindFirstChild("DoorB") then
+							v.DoorB.CanCollide = false
+						end
+						if v:FindFirstChild("DoorC") then
+							v.DoorC.CanCollide = false
+						end
+						if v:FindFirstChild("DoorD") then
+							v.DoorD.CanCollide = false
+						end
+					end
+				else
+					for _, v in pairs(game:GetService("Workspace").Map.Doors:GetChildren()) do
+						if v:FindFirstChild("DoorBase") then
+							v.DoorBase.CanCollide = true
+						end
+						if v:FindFirstChild("DoorA") then
+							v.DoorA.CanCollide = true
+						end
+						if v:FindFirstChild("DoorB") then
+							v.DoorB.CanCollide = true
+						end
+						if v:FindFirstChild("DoorC") then
+							v.DoorC.CanCollide = true
+						end
+						if v:FindFirstChild("DoorD") then
+							v.DoorD.CanCollide = true
+						end
+					end
+				end
+			end)
+
+			MainL:AddToggle("No Flash", Settings.NoFlashbang, function(V)
+				Settings.NoFlashbang = V
+			end)
+
+			MainL:AddToggle("No Smoke", Settings.NoSmoke, function(V)
+				Settings.NoSmoke = V
+			end)
+
+			MainL:AddSlider("Camera Max Zoom", 10, Settings.Zoom, 3000, 10, function(V)
+				Player.CameraMaxZoomDistance = V
+			end)
+
+			MainL:AddSeperator("Autos")
+
+			local AS = MainL:AddToggle("Auto Scrap", Settings.AutoPickScrap, function(V)
+				Settings.AutoPickScrap = V
+			end, "AutoScrapToggle")
+            AS:AddKeybind("None", "AutoScrapToggle")
+
+			local AT = MainL:AddToggle("Auto Tools", Settings.AutoPickTools, function(V)
+				Settings.AutoPickTools = V
+			end, "AutoTools Toggle")
+            AT:AddKeybind("None", "AutoTools Toggle")
+
+			local AC = MainL:AddToggle("Auto Cash", Settings.AutoPickCash, function(V)
+				Settings.AutoPickCash = V
+			end, "AutoCash Toggle")
+            AC:AddKeybind("None", "AutoCash Toggle")
+
+			MainL:AddSeperator("Anti Stuff")
+
+			local AD = MainL:AddToggle("Anti Downed", false, function(V)
+				Settings.NoDowned = V
+			end, "ADt")
+			AD:AddKeybind("None", "ADt")
+
+			local AS = MainL:AddToggle("Anti Stomp", false, function(V)
+				_G.AntiStomp = V
+				local Downed = game:GetService("ReplicatedStorage").CharStats[game:GetService("Players").LocalPlayer.Name].Downed
+				Downed.Changed:Connect(function()
+					if Downed.Value == true and _G.AntiStomp == true then
+						for i, v in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
+							if v:IsA("BasePart") then
+								v:Destroy()
+							end
+						end
+					end
+				end)
+			end, "ASt")
+
+			AS:AddKeybind("None", "ASt")
+
+			local DB = MainL:AddToggle("Anti Barbwire", Settings.NoBarbwire, function(V)
+				Settings.NoBarbwire = V
+			end, "Disablebarb Toggle")
+            DB:AddKeybind("None", "Disablebarb Toggle")
+			local DFA = MainL:AddToggle("Anti Fall Damage", Settings.NoFallDamage, function(V)
+				Settings.NoFallDamage = V
+			end, "DisableFall Toggle")
+            DFA:AddKeybind("None", "DisableFall Toggle")
+			local DR = MainL:AddToggle("Anti Ragdoll", Settings.NoRagdoll, function(V)
+				Settings.NoRagdoll = V
+			end, "DisabelRagdoll Toggle")
+            DR:AddKeybind("None", "DisabelRagdoll Toggle")
+
+
+            --Player Sector
+			local FOVToggle = MainL:AddToggle("Toggle Fov", Settings.CamFovToggled, function(V)
+				Settings.CamFovToggled = V
+			end, "FOVToggle")
+
+			FOVToggle:AddKeybind("None", "FOVToggle")
+
+			MainL:AddSlider("Field Of View", 70, Settings.CamFov, 120, 10, function(V)
+				Settings.CamFov = V
+			end)
+
+            local WalkSpeedToggle = MainL:AddToggle("WalkSpeed Toggler", Settings.WalkSpeed.Enabled, function(V)
+				Settings.WalkSpeed.Enabled = V
+			end, "WalkSpeedToggle")
+
+			WalkSpeedToggle:AddKeybind("None", "WalkSpeedToggle")
+
+			local JumpPowerToggle = MainL:AddToggle("JumpPower Toggler", Settings.JumpPower.Enabled, function(V)
+				Settings.JumpPower.Enabled = V
+			end, "JumpPowerToggle")
+
+			JumpPowerToggle:AddKeybind("None", "JumpPowerToggle")
+
+			MainL:AddSlider("WalkSpeed", 16, Settings.WalkSpeed.Amount, 100, 10, function(V)
+				Settings.WalkSpeed.Amount = V
+			end)
+
+			MainL:AddSlider("JumpPower", 30, Settings.JumpPower.Amount, 150, 10, function(V)
+				Settings.JumpPower.Amount = V
+			end)
+
+            MainG:AddToggle("No Recoil", Settings.GunMods.NoRecoil, function(V)
+				Settings.GunMods.NoRecoil = V
+			end)
+
+            MainG:AddToggle("No Spread", Settings.GunMods.Spread, function(V)
+				Settings.GunMods.Spread = V
+			end)
+
+			MainG:AddToggle("Instant Equip", Settings.GunMods.InstantEquip, function(V)
+				Settings.GunMods.InstantEquip = V
+			end)
+
+			MainG:AddToggle("Instant Aim", Settings.GunMods.InstantAim, function(V)
+				Settings.GunMods.InstantAim = V
+			end)
+
+            --Pepper Sector
+			MainG:AddToggle("Infinite Pepper Spray", Settings.InfinitePepperSpray, function(V)
+				Settings.InfinitePepperSpray = V
+			end)
+
+			MainG:AddToggle("Pepper Spray Aura", Settings.PepperSprayAura, function(V)
+				Settings.PepperSprayAura = V
+			end)
+            --Silent Aim
+            local SilentToggle = MainS:AddToggle("Silent Aim", SilentSettings.Main.Enabled, function(V)
+				SilentSettings.Main.Enabled = V
+			end, "SilentToggle")
+
+			SilentToggle:AddKeybind("None", "SilentToggle")
+
+			local VC = MainS:AddToggle("Visible Check", false, function(V)
+			     SilentSettings.Main.VisibleCheck = V
+			end, "VCt")
+            VC:AddKeybind("None", "VCt")
+			MainS:AddDropdown("Hit Part", {"Head", "Torso", "Random"}, "Head", false, function(V)
+				SilentSettings.Main.TargetPart = V
+			end)
+
+			MainS:AddSeperator("- Fov Settings -")
+
+			local SilentAimToggle = MainS:AddToggle("Silent Aim Fov", SilentSettings.FOVSettings.Visible, function(V)
+				SilentSettings.FOVSettings.Visible = V
+				SilentAIMFov.Visible = V
+			end, "SilentAimVisible")
+
+			SilentAimToggle:AddKeybind("None", "SilentAimVisible")
+
+			MainS:AddSlider("Radius", 5, SilentSettings.FOVSettings.Radius, 1080, 10, function(V)
+				SilentSettings.FOVSettings.Radius = V
+				SilentAIMFov.Radius = V
+			end)
+
+            MainG:AddButton("WallBang", function()
+				game:service[[Workspace]]:FindFirstChild('Map'):FindFirstChild('Parts'):FindFirstChild('M_Parts').Parent = game:service[[Workspace]]:FindFirstChild('Characters')
+			end)
+
+			MainG:AddButton("Melee God Mode", function()
+				loadstring(game:HttpGet("https://raw.githubusercontent.com/Tobias020108Back/YBA-AUT/main/Criminality-Semi-Godmode.lua", true))()
+			end)
+
+			--Player Visuals
+			local PlayerESPsToggle = MainP:AddToggle("Toggle ESP's", ESPSettings.PlayerESP.Enabled, function(V)
+				ESPSettings.PlayerESP.Enabled = V
+
+				LibraryESP.Color = ESPSettings.ESPColor
+				LibraryESP.ToolColor = ESPSettings.ToolColor
+				LibraryESP.Tracers = ESPSettings.PlayerESP.TracersOn
+				LibraryESP.Names = ESPSettings.PlayerESP.NamesOn
+				LibraryESP.Health = ESPSettings.PlayerESP.HealthOn
+				LibraryESP.Distance = ESPSettings.PlayerESP.DistanceOn
+				LibraryESP.Tool = ESPSettings.PlayerESP.ToolOn
+				LibraryESP.Boxes = ESPSettings.PlayerESP.BoxesOn
+				LibraryESP.FaceCamera = ESPSettings.PlayerESP.FaceCamOn
+				LibraryESP:Toggle(ESPSettings.PlayerESP.Enabled)
+			end, "PlayerESPsToggle")
+
+			PlayerESPsToggle:AddKeybind("None", "PlayerESPsToggle")
+
+			MainP:AddToggle("Boxes", ESPSettings.PlayerESP.BoxesOn, function(V)
+				ESPSettings.PlayerESP.BoxesOn = V
+				LibraryESP.Boxes = ESPSettings.PlayerESP.BoxesOn
+			end)
+
+			MainP:AddToggle("Tracers", ESPSettings.PlayerESP.TracersOn, function(V)
+				ESPSettings.PlayerESP.TracersOn = V
+				LibraryESP.Tracers = ESPSettings.PlayerESP.TracersOn
+			end)
+
+			MainP:AddToggle("Name", ESPSettings.PlayerESP.NamesOn, function(V)
+				ESPSettings.PlayerESP.NamesOn = V
+				LibraryESP.Names = ESPSettings.PlayerESP.NamesOn
+			end)
+
+			MainP:AddToggle("Health", ESPSettings.PlayerESP.HealthOn, function(V)
+				ESPSettings.PlayerESP.HealthOn = V
+				LibraryESP.Health = ESPSettings.PlayerESP.HealthOn
+			end)
+
+			MainP:AddToggle("Distance", ESPSettings.PlayerESP.DistanceOn, function(V)
+				ESPSettings.PlayerESP.DistanceOn = V
+				LibraryESP.Distance = ESPSettings.PlayerESP.DistanceOn
+			end)
+
+			MainP:AddToggle("Tool", ESPSettings.PlayerESP.ToolOn, function(V)
+				ESPSettings.PlayerESP.ToolOn = V
+				LibraryESP.Tool = ESPSettings.PlayerESP.ToolOn
+			end)
+
+			MainP:AddToggle("Face Cam", ESPSettings.PlayerESP.FaceCamOn, function(V)
+				ESPSettings.PlayerESP.FaceCamOn = V
+				LibraryESP.FaceCamera = ESPSettings.PlayerESP.FaceCamOn
+			end)
+
+			MainP:AddSeperator("Dealer")
+
+			MainP:AddToggle("Drug Dealer", false, function(V)
+				LibraryESP.DealerESP = V
+			end)
+
+			MainP:AddToggle("Armory Dealer", false, function(V)
+				LibraryESP.ArmoryDealerESP = V
+			end)
+
+			MainP:AddToggle("ATM ESP", false, function(V)
+				LibraryESP.AtmESP = V
+			end)
+
+			MainP:AddSlider("ESP Distance", 0, ESPSettings.PlayerESP.Distance, 2000, 10, function(V)
+				LibraryESP.DistanceS = V
+				ESPSettings.PlayerESP.Distance = V
+			end)
+			
+
+			--Scrap Visuals
+			local ScrapESPToggle = MainScrap:AddToggle("Scrap ESP", ESPSettings.ScrapESP.Enabled, function(V)
+				ESPSettings.ScrapESP.Enabled = V
+
+				if V == true then
+					for i, v in pairs(game:GetService("Workspace").Filter.SpawnedPiles:GetChildren()) do
+						coroutine.wrap(ScrapESP)(v)
+					end
+				end
+			end, "ScrapESPToggle")
+
+			ScrapESPToggle:AddKeybind("None", "ScrapESPToggle")
+
+			MainScrap:AddSeperator("Rarity")
+
+			MainScrap:AddToggle("Legendary Only", ESPSettings.ScrapESP.LegendaryOnly, function(V)
+				ESPSettings.ScrapESP.LegendaryOnly = V
+			end)
+
+			MainScrap:AddToggle("Rare Only", ESPSettings.ScrapESP.RareOnly, function(V)
+				ESPSettings.ScrapESP.RareOnly = V
+			end)
+
+			MainScrap:AddToggle("Good Only", ESPSettings.ScrapESP.GoodOnly, function(V)
+				ESPSettings.ScrapESP.GoodOnly = V
+			end)
+
+			MainScrap:AddToggle("Bad Only", ESPSettings.ScrapESP.BadOnly, function(V)
+				ESPSettings.ScrapESP.BadOnly = V
+			end)
+
+			-- MainScrap:AddSeperator("Distance")
+
+			MainScrap:AddSlider("Scrap Distance", 0, ESPSettings.ScrapESP.Distance, 2000, 10, function(V)
+				ESPSettings.ScrapESP.Distance = V
+			end)
+			
+
+			--Safe Visuals
+			local SafeESPToggle = MainSafes:AddToggle("Safe ESP", ESPSettings.SafeESP.Enabled, function(V)
+				ESPSettings.SafeESP.Enabled = V
+
+				if V == true then
+					for i, v in pairs(game:GetService("Workspace").Map.BredMakurz:GetChildren()) do
+						if tonumber(v:FindFirstChild("Type").Value) == 2 then
+							coroutine.wrap(SafeESP)(v, 2)
+						elseif tonumber(v:FindFirstChild("Type").Value) == 3 then
+							coroutine.wrap(SafeESP)(v, 3)
+						end
+					end
+				end
+			end, "SafeESPToggle")
+
+			SafeESPToggle:AddKeybind("None", "SafeESPToggle")
+
+			MainSafes:AddSeperator("Rarity")
+
+			MainSafes:AddToggle("Big Only", ESPSettings.SafeESP.BigOnly, function(V)
+				ESPSettings.SafeESP.BigOnly = V
+			end)
+
+			MainSafes:AddToggle("Small Only", ESPSettings.SafeESP.SmallOnly, function(V)
+				ESPSettings.SafeESP.SmallOnly = V
+			end)
+
+			MainSafes:AddSeperator("Distance")
+
+			MainSafes:AddSlider("Safe Distance", 0, ESPSettings.SafeESP.Distance, 2000, 10, function(V)
+				ESPSettings.SafeESP.Distance = V
+			end)
+			
+
+			--Register Visuals
+			local RegisterESPToggle = MainRegister:AddToggle("Register ESP", ESPSettings.RegisterESP.Enabled, function(V)
+				ESPSettings.RegisterESP.Enabled = V
+
+				if V == true then
+					for i, v in pairs(game:GetService("Workspace").Map.BredMakurz:GetChildren()) do
+						if tonumber(v:FindFirstChild("Type").Value) == 1 then
+							coroutine.wrap(RegisterESP)(v)
+						end
+					end
+				end
+			end, "RegisterESPToggle")
+
+			RegisterESPToggle:AddKeybind("None", "RegisterESPToggle")
+
+			MainRegister:AddSeperator("Distance")
+
+			MainRegister:AddSlider("Register Distance", 2000, ESPSettings.RegisterESP.Distance, 2000, 10, function(V)
+				ESPSettings.RegisterESP.Distance = V
+			end)
+
+			MainC:AddLabel("Tupi")
+
+			local ToggleToggleUI = MainUI:AddToggle("UI Shortcut", true, function(V)
+				game:GetService("RunService").RenderStepped:Wait()
+				game:GetService("CoreGui"):FindFirstChild(Name).Enabled = V
+			end)
+
+			ToggleToggleUI:AddKeybind(Enum.KeyCode.LeftAlt)
+			
+			MainUI:AddToggle("Show Ui Cursor", true, function(V)
+				_G.LibraryConfg.ShowCursor = V
+			end)
+
+		MainUI:AddColorpicker("Accent 1", _G.AccentColors.Accent1, function(V)
+			Library.theme.accentcolor = V
+			SShub:UpdateTheme()
+		end)
+
+		MainUI:AddColorpicker("Accent 2", _G.AccentColors.Accent2, function(V)
+			Library.theme.accentcolor2 = V
+			SShub:UpdateTheme()
+		end)
+
+		MainUI:AddColorpicker("Text Color", _G.AccentColors.Accent2, function(V)
+		Library.theme.tabstextcolor = V
+		SShub:UpdateTheme()
+		end)
+			
+
+            --Teleports Tab
+
+			local function TeleportAreaNew(Cframe)
+
+				local TPCFrame = Cframe
+				local User = game.Players.LocalPlayer.Character.HumanoidRootPart
+
+				User.CFrame = TPCFrame
+			end
+
+			-- TeleportNew1:AddSeperator("Vibe In-N-Out")
+			local db = false
+			local db1 = false
+			local db2 = false
+			local db3 = false
+
+			local function PartThin(p)
+				p.Anchored = true
+				p.Size = Vector3.new(2, 10, 2)
+				p.Material = Enum.Material.ForceField
+				p.Color = Color3.fromRGB(255, 255, 255)
+				p.CanCollide = false
+				p.Transparency = 1
+			end
+
+			local part = Instance.new("Part", workspace)
+			PartThin(part)
+			part.Position = Vector3.new(-4766.666, -32.768, -818.809)
+
+			local part1 = Instance.new("Part", workspace)
+			PartThin(part1)
+			part1.Position = Vector3.new(-4770.976, -198.929, -842.684)
+
+			local tow = Instance.new("Part", workspace)
+			PartThin(tow)
+			tow.Position = Vector3.new(-4525.734, 9.314, -778.03)
+
+			local tow1 = Instance.new("Part", workspace)
+			PartThin(tow1)
+			tow1.Position = Vector3.new(-4525.795, 85.759, -778.03)
+
+			part.Touched:Connect(function()
+				if Player and Settings.ElevatorTP then
+					if not db and not db1 then
+						db = true
+						TeleportAreaNew(CFrame.new(-4770.976, -198.929, -842.684))
+						wait(1)
+						db = false
+					end
+				end
+			end)
+
+			part1.Touched:Connect(function()
+				if Player and Settings.ElevatorTP then
+					if not db1 and not db then
+						db1 = true
+						TeleportAreaNew(CFrame.new(-4766.666, -32.768, -818.809))
+						wait(1)
+						db1 = false
+					end
+				end
+			end)
+
+			tow.Touched:Connect(function()
+				if Player and Settings.TowerTP then
+					if not d2 and not db3 then
+						db2 = true
+						TeleportAreaNew(CFrame.new(-4525.795, 85.759, -778.03))
+						wait(1)
+						db2 = false
+					end
+				end
+			end)
+
+			tow1.Touched:Connect(function()
+				if Player and Settings.TowerTP then
+					if not db3 and not db2 then
+						db3 = true
+						TeleportAreaNew(CFrame.new(-4525.734, 9.314, -778.03))
+						wait(1)
+						db3 = false
+					end
+				end
+			end)
+
+			MainEl:AddToggle("Elevator", Settings.ElevatorTP, function(V)
+				Settings.ElevatorTP = V
+
+				if Settings.ElevatorTP == true then
+					part.Transparency = 0
+					part1.Transparency = 0
+				else
+					part.Transparency = 1
+					part1.Transparency = 1
+				end
+			end)
+
+			MainTo:AddToggle("Tower", Settings.TowerTP, function(V)
+				Settings.TowerTP = V
+
+				if Settings.TowerTP == true then
+					tow.Transparency = 0
+					tow1.Transparency = 0
+				else
+					tow.Transparency = 1
+					tow1.Transparency = 1
+				end
+			end)
+
+			MainTele:AddSeperator("Elevator")
+
+			MainTele:AddButton("Elevator Up", function()
+				TeleportAreaNew(CFrame.new(-4768.198, -34.303, -817.605))
+			end)
+
+			MainTele:AddButton("Elevator Down", function()
+				TeleportAreaNew(CFrame.new(-4776.88, -201.662, -823.827))
+			end)
+
+			MainTele:AddSeperator("Tower")
+
+			MainTele:AddButton("Tower Up", function()
+				TeleportAreaNew(CFrame.new(-4519.51, 85.714, -773.943))
+			end)
+end
+--Checker--
+if game:GetService("Players").LocalPlayer.Character ~= nil then
+	LOADSCRIPT128319237()
+else 
+	game.StarterGui:SetCore("SendNotification", {Title = "SShub Beta v.1"; Text = "Join to game for script get loaded"; Icon = "rbxassetid://8426126371"; Duration = 3 })
+	if game:GetService("Players").LocalPlayer.CharacterAdded then
+		LOADSCRIPT128319237()
+	end
+end
+--Checker End--
