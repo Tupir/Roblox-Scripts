@@ -42,9 +42,9 @@ library.theme = {
     itemscolor = Color3.fromRGB(200, 200, 200),
     itemscolor2 = Color3.fromRGB(210, 210, 210)
 }
-library.theme.cursor = _G.LibraryConfg.ShowCursor
-library.theme.accentcolor = _G.AccentColors.Accent1
-library.theme.accentcolor2 = _G.AccentColors.Accent2
+library.theme.cursor = LibraryConfg.ShowCursor
+library.theme.accentcolor = LibraryConfg.AccentColors.Accent1
+library.theme.accentcolor2 = LibraryConfg.AccentColors.Accent2
 
 if library.theme.cursor and Drawing then
     local success = pcall(function() 
