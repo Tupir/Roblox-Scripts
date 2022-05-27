@@ -104,10 +104,8 @@ Uis.InputBegan:Connect(function(Key)
                 end
             end)
         end
-        if Key.KeyCode == Enum.KeyCode[AimlockToggleKey] then 
             Aimlock = not Aimlock
             Notify("SSHub", "Aim: "..tostring(Aimlock), "", 3)
-        end
     end
 end)
 Uis.InputEnded:Connect(function(Key)
