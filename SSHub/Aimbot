@@ -104,8 +104,6 @@ Uis.InputBegan:Connect(function(Key)
                 end
             end)
         end
-            Aimlock = not Aimlock
-            Notify("SSHub", "Aim: "..tostring(Aimlock), "", 3)
     end
 end)
 Uis.InputEnded:Connect(function(Key)
