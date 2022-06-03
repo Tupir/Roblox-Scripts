@@ -854,6 +854,12 @@ if game:IsLoaded() then BypassAnticheat() end
 							coroutine.resume(coroutine.create(function()
 								v.Recoil = 0
 								v.CameraRecoilingEnabled = false
+								v.AngleX_Min = 0 
+								v.AngleX_Max = 0 
+								v.AngleY_Min = 0
+								v.AngleY_Max = 0
+								v.AngleZ_Min = 0
+								v.AngleZ_Max = 0
 							end))
 						end
 						if Settings.GunMods.Spread == true then
