@@ -45,6 +45,7 @@ library.theme = {
 library.theme.cursor = LibraryConfg.ShowCursor
 library.theme.accentcolor = LibraryConfg.AccentColors.Accent1
 library.theme.accentcolor2 = LibraryConfg.AccentColors.Accent2
+library.theme.tabstextcolor = LibraryConfg.AccentColors.TabTextColor
 
 if library.theme.cursor and Drawing then
     local success = pcall(function() 
