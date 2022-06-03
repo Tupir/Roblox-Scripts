@@ -40,6 +40,7 @@ local ReplicatedStorage = GetService(game, "ReplicatedStorage");
 local CoreGui = GetService(game, "CoreGui");
 local Cam = Workspace.CurrentCamera;
 local Player = Players.LocalPlayer;
+local Mouse = Player:GetMouse()
 local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
 local Character = Player.Character
 --#endregion
@@ -81,6 +82,7 @@ local Settings = {
 	NoSmoke = false,
 	UnlockDoorsNearby = false,
 	OpenDoorsNearby = false,
+	NoClipD = false,
 	NoClip = false,
 	FullBright = false,
 	CamFovToggled = false,
@@ -1284,15 +1286,16 @@ local MainTele = Teleports:CreateSector("Teleports", "right")
 
 local MainC = Settingss:CreateSector("Credits", "left")
 local MainUI = Settingss:CreateSector("UI", "left")
+local MainSaveSystem = Settingss:CreateConfigSystem("right") 
 
 local InfStamina = MainL:AddToggle("Infinite Stamina", Settings.InfiniteStamina, function(V)
 	Settings.InfiniteStamina = V
-end, "InfStaminaToggle")
-InfStamina:AddKeybind("None", "InfStaminaToggle")
+end, "IS")
+InfStamina:AddKeybind("None", "IS")
 
 MainL:AddToggle("No Jump Cooldown", Settings.NoJumpCooldown, function(V)
 	Settings.NoJumpCooldown = V
-end)
+end,"NJC")
 
 MainL:AddToggle("Infinite Jump", Settings.SpaceJump, function(V)
 	Settings.SpaceJump = V
@@ -1302,28 +1305,28 @@ MainL:AddToggle("Infinite Jump", Settings.SpaceJump, function(V)
 			game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
 		end
 	end)
-end)
+end,"IJ")
 
 MainL:AddToggle("Full Brightness", Settings.FullBright, function(V)
 	Settings.FullBright = V
-end)
+end, "FB")
 
 local LockPickNofail = MainL:AddToggle("No Fail Lockpick", Settings.NoFailLockpick, function(V)
 	Settings.NoFailLockpick = V
-end)
-LockPickNofail:AddKeybind("None", "LockPickNFToggle")
+end,"NFL")
+LockPickNofail:AddKeybind("None", "NFL")
 
 MainL:AddToggle("No Flash", Settings.NoFlashbang, function(V)
 	Settings.NoFlashbang = V
-end)
+end,"NF")
 
 MainL:AddToggle("No Smoke", Settings.NoSmoke, function(V)
 	Settings.NoSmoke = V
-end)
+end,"NSM")
 
 MainL:AddSlider("Camera Max Zoom", 10, Settings.Zoom, 3000, 10, function(V)
 	Player.CameraMaxZoomDistance = V
-end)
+end,"CMZS")
 
 local AD = MainL2:AddToggle("Anti Downed", false, function(V)
 	Settings.NoDowned = V
@@ -1348,16 +1351,16 @@ AS:AddKeybind("None", "ASt")
 
 local DB = MainL2:AddToggle("Anti Barbwire", Settings.NoBarbwire, function(V)
 	Settings.NoBarbwire = V
-end, "Disablebarb Toggle")
-DB:AddKeybind("None", "Disablebarb Toggle")
+end, "DisablebarbToggle")
+DB:AddKeybind("None", "DisablebarbToggle")
 local DFA = MainL2:AddToggle("Anti Fall Damage", Settings.NoFallDamage, function(V)
 	Settings.NoFallDamage = V
-end, "DisableFall Toggle")
-DFA:AddKeybind("None", "DisableFall Toggle")
+end, "DisableFallToggle")
+DFA:AddKeybind("None", "DisableFallToggle")
 local DR = MainL2:AddToggle("Anti Ragdoll", Settings.NoRagdoll, function(V)
 	Settings.NoRagdoll = V
-end, "DisabelRagdoll Toggle")
-DR:AddKeybind("None", "DisabelRagdoll Toggle")
+end, "DisabelRagdollToggle")
+DR:AddKeybind("None", "DisabelRagdollToggle")
 
 MainL:AddSeperator("Player Mods")
 local FOVToggle = MainL:AddToggle("Toggle Fov", Settings.CamFovToggled, function(V)
@@ -1368,7 +1371,7 @@ FOVToggle:AddKeybind("None", "FOVToggle")
 
 MainL:AddSlider("Field Of View", 70, Settings.CamFov, 120, 10, function(V)
 	Settings.CamFov = V
-end)
+end,"FOV")
 
 local WalkSpeedToggle = MainL:AddToggle("WalkSpeed Toggler", Settings.WalkSpeed.Enabled, function(V)
 	Settings.WalkSpeed.Enabled = V
@@ -1384,15 +1387,16 @@ JumpPowerToggle:AddKeybind("None", "JumpPowerToggle")
 
 MainL:AddSlider("WalkSpeed", 16, Settings.WalkSpeed.Amount, 100, 10, function(V)
 	Settings.WalkSpeed.Amount = V
-end)
+end,"WSS")
 
 MainL:AddSlider("JumpPower", 30, Settings.JumpPower.Amount, 150, 10, function(V)
 	Settings.JumpPower.Amount = V
-end)
+end,"JPS")
 
 local ABS = MainAu:AddToggle("AutoBreak Safes (No work lel)", Settings.AutoBreakSafes, function(V)
 	Settings.AutoBreakSafes = V
 end, "ABST")
+ABS:AddKeybind("None", "AutoScrapToggle")
 
 local AS = MainAu:AddToggle("Auto Pick Scrap", Settings.AutoPickScrap, function(V)
 	Settings.AutoPickScrap = V
@@ -1422,20 +1426,20 @@ MainMs:AddToggle("Chat Logs", Settings.ShowChatLogs, function(V)
 		ChatFrame.ChatChannelParentFrame.Visible = false
 		ChatFrame.ChatBarParentFrame.Position = ChatFrame.ChatChannelParentFrame.Position + UDim2.new(0, 0, 0, 0)
 	end
-end)
+end,"CLL")
 MainMs:AddSeperator("Doors")
 MainMs:AddToggle("Unlock Nearby Doors", Settings.UnlockDoorsNearby, function(V)
 	Settings.UnlockDoorsNearby = V
-end)
+end,"UND")
 
 MainMs:AddToggle("Open Nearby Doors", Settings.OpenDoorsNearby, function(V)
 	Settings.OpenDoorsNearby = V
-end)
+end,"OND")
 
-MainMs:AddToggle("NoClip Doors", Settings.NoClip, function(V)
-	Settings.NoClip = V
+MainMs:AddToggle("NoClip Doors", Settings.NoClipD, function(V)
+	Settings.NoClipD = V
 
-	if Settings.NoClip == true then
+	if Settings.NoClipD == true then
 		for _, v in pairs(game:GetService("Workspace").Map.Doors:GetChildren()) do
 			if v:FindFirstChild("DoorBase") then
 				v.DoorBase.CanCollide = false
@@ -1472,44 +1476,44 @@ MainMs:AddToggle("NoClip Doors", Settings.NoClip, function(V)
 			end
 		end
 	end
-end)
+end,"ND")
 
 MainGun:AddToggle("No Recoil", Settings.GunMods.NoRecoil, function(V)
 	Settings.GunMods.NoRecoil = V
-end)
+end,"NORE")
 
 MainGun:AddToggle("No Spread", Settings.GunMods.Spread, function(V)
 	Settings.GunMods.Spread = V
-end)
+end,"NOSP")
 
 MainGun:AddToggle("Instant Equip", Settings.GunMods.InstantEquip, function(V)
 	Settings.GunMods.InstantEquip = V
-end)
+end,"IE")
 
 MainGun:AddToggle("Instant Aim", Settings.GunMods.InstantAim, function(V)
 	Settings.GunMods.InstantAim = V
-end)
+end,"INSTANTAIM")
 MainGun:AddSeperator("xd")
 MainGun:AddToggle("Wall Bang", Settings.WallBang, function(V)
 	Settings.WallBang = V
 	if V == true then
-		Workspace:FindFirstChild('Map'):FindFirstChild('Parts'):FindFirstChild('M_Parts').Parent = Workspace:FindFirstChild('Characters')
+		game:service[[Workspace]]:FindFirstChild('Map'):FindFirstChild('Parts'):FindFirstChild('M_Parts').Parent = game:service[[Workspace]]:FindFirstChild('Characters')
 	elseif V == false then
-		Workspace:FindFirstChild('Characters'):FindFirstChild('M_Parts').Parent = Workspace:FindFirstChild('Map'):FindFirstChild('Parts')
+		game:service[[Workspace]]:FindFirstChild('Characters'):FindFirstChild('M_Parts').Parent = game:service[[Workspace]]:FindFirstChild('Map'):FindFirstChild('Parts')
 	end
-end)
+end,"WB")
 MainGun:AddButton("Melee God Mode", function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/Tobias020108Back/YBA-AUT/main/Criminality-Semi-Godmode.lua", true))()
-end)
+end,"MGM")
 
 MainGun:AddSeperator("Pepper Spray")
 MainGun:AddToggle("Infinite Pepper Spray", Settings.InfinitePepperSpray, function(V)
 	Settings.InfinitePepperSpray = V
-end)
+end,"IPS")
 
 MainGun:AddToggle("Pepper Spray Aura", Settings.PepperSprayAura, function(V)
 	Settings.PepperSprayAura = V
-end)
+end,"PSA")
 --Silent Aim
 local SilentToggle = MainCo:AddToggle("Silent Aim", SilentSettings.Main.Enabled, function(V)
 	SilentSettings.Main.Enabled = V
@@ -1523,7 +1527,7 @@ end, "VCt")
 VC:AddKeybind("None", "VCt")
 MainCo:AddDropdown("Hit Part", {"Head", "Torso", "Random"}, "Head", false, function(V)
 	SilentSettings.Main.TargetPart = V
-end)
+end,"HPSILENT")
 
 MainCo:AddSeperator("- Fov Settings -")
 
@@ -1537,7 +1541,7 @@ SilentAimToggle:AddKeybind("None", "SilentAimVisible")
 MainCo:AddSlider("Radius", 5, SilentSettings.FOVSettings.Radius, 1080, 10, function(V)
 	SilentSettings.FOVSettings.Radius = V
 	SilentAIMFov.Radius = V
-end)
+end,"RADIUSSILENT")
 
 local KA = MainAur:AddToggle("KillAura", Settings.Killaura, function(V)
 	Settings.Killaura = V
@@ -1545,22 +1549,20 @@ end, "KAT")
 
 KA:AddKeybind("None", "KAT")
 
-ABS:AddKeybind("None", "ABST")
-
 MainAur:AddSeperator("Tp Hit")
 
 MainAur:AddTextbox("Player", false, function(V)
 	Settings.TpHit.Name = V
 	Notify(NS.Title,NS.Icon,"Tp Hit", "Current Player is: "..Settings.TpHit.Name,5)
-end)
+end,"TPHITP")
 
 MainAur:AddDropdown("Weapon", {"Fists", "FireAxe", "Chainsaw", "Bat"}, Settings.TpHit.Weapon, false, function(V)
 	Settings.TpHit.Weapon = V
-end)
+end,"TPHITW")
 
 MainAur:AddDropdown("Hit Part", {"Head", "Torso"}, Settings.TpHit.HitPart, false, function(V)
 	Settings.TpHit.HitPart = V
-end)
+end,"TPHITHP")
 
 MainAur:AddButton("Tp Hit", function()
 		local Target = Get(Settings.TpHit.Name)
@@ -1573,7 +1575,7 @@ MainAur:AddButton("Tp Hit", function()
 			elseif Settings.TpHit.Weapon == "Bat" then
 			Hit(Target, Settings.TpHit.HitPart, Settings.TpHit.Configs.Bat, Settings.TpHit.Configs.Bat[2])
 		end
-end)
+end,"TPHIT")
 
 --Player Visuals
 local PlayerESPsToggle = MainP:AddToggle("Toggle ESP's", ESPSettings.PlayerESP.Enabled, function(V)
@@ -1596,56 +1598,56 @@ PlayerESPsToggle:AddKeybind("None", "PlayerESPsToggle")
 MainP:AddToggle("Boxes", ESPSettings.PlayerESP.BoxesOn, function(V)
 	ESPSettings.PlayerESP.BoxesOn = V
 	LibraryESP.Boxes = ESPSettings.PlayerESP.BoxesOn
-end)
+end,"BOXESES")
 
 MainP:AddToggle("Tracers", ESPSettings.PlayerESP.TracersOn, function(V)
 	ESPSettings.PlayerESP.TracersOn = V
 	LibraryESP.Tracers = ESPSettings.PlayerESP.TracersOn
-end)
+end,"TRACERSES")
 
 MainP:AddToggle("Name", ESPSettings.PlayerESP.NamesOn, function(V)
 	ESPSettings.PlayerESP.NamesOn = V
 	LibraryESP.Names = ESPSettings.PlayerESP.NamesOn
-end)
+end,"NAMEES")
 
 MainP:AddToggle("Health", ESPSettings.PlayerESP.HealthOn, function(V)
 	ESPSettings.PlayerESP.HealthOn = V
 	LibraryESP.Health = ESPSettings.PlayerESP.HealthOn
-end)
+end,"HEALTHES")
 
 MainP:AddToggle("Distance", ESPSettings.PlayerESP.DistanceOn, function(V)
 	ESPSettings.PlayerESP.DistanceOn = V
 	LibraryESP.Distance = ESPSettings.PlayerESP.DistanceOn
-end)
+end,"DISTANCEES")
 
 MainP:AddToggle("Tool", ESPSettings.PlayerESP.ToolOn, function(V)
 	ESPSettings.PlayerESP.ToolOn = V
 	LibraryESP.Tool = ESPSettings.PlayerESP.ToolOn
-end)
+end,"TOOLES")
 
 MainP:AddToggle("Face Cam", ESPSettings.PlayerESP.FaceCamOn, function(V)
 	ESPSettings.PlayerESP.FaceCamOn = V
 	LibraryESP.FaceCamera = ESPSettings.PlayerESP.FaceCamOn
-end)
+end,"FACECAMES")
 
 MainP:AddSeperator("Dealer")
 
 MainP:AddToggle("Drug Dealer", false, function(V)
 	LibraryESP.DealerESP = V
-end)
+end,"DDES")
 
 MainP:AddToggle("Armory Dealer", false, function(V)
 	LibraryESP.ArmoryDealerESP = V
-end)
+end,"ADES")
 
 MainP:AddToggle("ATM ESP", false, function(V)
 	LibraryESP.AtmESP = V
-end)
+end,"ATMES")
 
 MainP:AddSlider("ESP Distance", 0, ESPSettings.PlayerESP.Distance, 2000, 10, function(V)
 	LibraryESP.DistanceS = V
 	ESPSettings.PlayerESP.Distance = V
-end)
+end,"ESPDIS")
 
 
 --Scrap Visuals
@@ -1665,25 +1667,25 @@ MainScrap:AddSeperator("Rarity")
 
 MainScrap:AddToggle("Legendary Only", ESPSettings.ScrapESP.LegendaryOnly, function(V)
 	ESPSettings.ScrapESP.LegendaryOnly = V
-end)
+end,"LEGEN")
 
 MainScrap:AddToggle("Rare Only", ESPSettings.ScrapESP.RareOnly, function(V)
 	ESPSettings.ScrapESP.RareOnly = V
-end)
+end,"RARE")
 
 MainScrap:AddToggle("Good Only", ESPSettings.ScrapESP.GoodOnly, function(V)
 	ESPSettings.ScrapESP.GoodOnly = V
-end)
+end,"GOOD")
 
 MainScrap:AddToggle("Bad Only", ESPSettings.ScrapESP.BadOnly, function(V)
 	ESPSettings.ScrapESP.BadOnly = V
-end)
+end,"BAD")
 
 -- MainScrap:AddSeperator("Distance")
 
 MainScrap:AddSlider("Scrap Distance", 0, ESPSettings.ScrapESP.Distance, 2000, 10, function(V)
 	ESPSettings.ScrapESP.Distance = V
-end)
+end,"SCRAPDIS")
 
 
 --Safe Visuals
@@ -1707,17 +1709,17 @@ MainSafes:AddSeperator("Rarity")
 
 MainSafes:AddToggle("Big Only", ESPSettings.SafeESP.BigOnly, function(V)
 	ESPSettings.SafeESP.BigOnly = V
-end)
+end,"BOES")
 
 MainSafes:AddToggle("Small Only", ESPSettings.SafeESP.SmallOnly, function(V)
 	ESPSettings.SafeESP.SmallOnly = V
-end)
+end,"SOES")
 
 MainSafes:AddSeperator("Distance")
 
 MainSafes:AddSlider("Safe Distance", 0, ESPSettings.SafeESP.Distance, 2000, 10, function(V)
 	ESPSettings.SafeESP.Distance = V
-end)
+end,"SAFEDIS")
 
 
 --Register Visuals
@@ -1739,7 +1741,7 @@ MainRegister:AddSeperator("Distance")
 
 MainRegister:AddSlider("Register Distance", 2000, ESPSettings.RegisterESP.Distance, 2000, 10, function(V)
 	ESPSettings.RegisterESP.Distance = V
-end)
+end,"REGSDIS")
 
 MainC:AddLabel("Owner - Tupi")
 
@@ -1755,7 +1757,7 @@ MainUI:AddToggle("Show Ui Cursor", LibraryConfg.ShowCursor, function(V)
 	LibraryConfg.ShowCursor = V
 	Library.theme.cursor = V
 	SShub:UpdateTheme()
-end)
+end,"SHOWUIC")
 --[[
 MainUI:AddToggle("RGB Ui", LibraryConfg.RgbUi, function(V)
 	LibraryConfg.RgbUi = V
@@ -1765,17 +1767,17 @@ end)
 MainUI:AddColorpicker("Accent 1", LibraryConfg.AccentColors.Accent1, function(V)
 Library.theme.accentcolor = V
 SShub:UpdateTheme()
-end)
+end,"COLOR1")
 
 MainUI:AddColorpicker("Accent 2", LibraryConfg.AccentColors.Accent2, function(V)
 Library.theme.accentcolor2 = V
 SShub:UpdateTheme()
-end)
+end,"COLOR2")
 
 MainUI:AddColorpicker("Text Color", LibraryConfg.AccentColors.TabTextColor, function(V)
 Library.theme.tabstextcolor = V
 SShub:UpdateTheme()
-end)
+end,"TEXT1")
 
 
 --Teleports Tab
@@ -1873,7 +1875,7 @@ MainEl:AddToggle("Elevator", Settings.ElevatorTP, function(V)
 		part.Transparency = 1
 		part1.Transparency = 1
 	end
-end)
+end,"ELTP")
 
 MainTo:AddToggle("Tower", Settings.TowerTP, function(V)
 	Settings.TowerTP = V
@@ -1885,23 +1887,23 @@ MainTo:AddToggle("Tower", Settings.TowerTP, function(V)
 		tow.Transparency = 1
 		tow1.Transparency = 1
 	end
-end)
+end,"TOTP")
 
 MainTele:AddSeperator("Elevator")
 
 MainTele:AddButton("Elevator Up", function()
 	TeleportAreaNew(CFrame.new(-4768.198, -34.303, -817.605))
-end)
+end,"ELH")
 
 MainTele:AddButton("Elevator Down", function()
 	TeleportAreaNew(CFrame.new(-4776.88, -201.662, -823.827))
-end)
+end,"ELDH")
 
 MainTele:AddSeperator("Tower")
 
 MainTele:AddButton("Tower Up", function()
 	TeleportAreaNew(CFrame.new(-4519.51, 85.714, -773.943))
-end)
+end,"TOH")
 end
 if game:GetService("Players").LocalPlayer.Character ~= nil then
 		if not CoreGui:FindFirstChild(Name) then
