@@ -3413,8 +3413,8 @@ function library:CreateWindow(name, size, hidebutton)
             end
 
             configSystem.sector = tab:CreateSector("Configs", side or "left")
-            local ConfigName = "Default"
-            configSystem.sector:AddTextbox("", "Config Name", false, function(V) ConfigName = V end, "")
+
+            local ConfigName = configSystem.sector:AddTextbox("Config Name", "", ConfigName, function() end, "")
             local default = tostring(listfiles(configSystem.configFolder)[1] or ""):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", "")
             local Config = configSystem.sector:AddDropdown("Configs", {}, default, false, function() end, "")
             for i,v in pairs(listfiles(configSystem.configFolder)) do
