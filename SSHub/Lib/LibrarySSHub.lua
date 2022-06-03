@@ -3413,8 +3413,8 @@ function library:CreateWindow(name, size, hidebutton)
             end
 
             configSystem.sector = tab:CreateSector("Configs", side or "left")
-
-            local ConfigName = configSystem.sector:AddTextbox("Config Name", "", ConfigName, function() end, "")
+            local ConfigName = "Default"
+            configSystem.sector:AddTextbox("", "Config Name", false, function(V) ConfigName = V end, "")
             local default = tostring(listfiles(configSystem.configFolder)[1] or ""):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", "")
             local Config = configSystem.sector:AddDropdown("Configs", {}, default, false, function() end, "")
             for i,v in pairs(listfiles(configSystem.configFolder)) do
@@ -3424,7 +3424,7 @@ function library:CreateWindow(name, size, hidebutton)
             end
 
             configSystem.Create = configSystem.sector:AddButton("Create", function()
-	game.StarterGui:SetCore("SendNotification", {Title = _G.LibraryConfg.NotificationsTitle; Text = "New Config Created"; Icon = "rbxassetid://8426126371"; Duration = 3 })
+	game.StarterGui:SetCore("SendNotification", {Title = "SSHub"; Text = "New Config Created"; Icon = "rbxassetid://8426126371"; Duration = 3 })
                 for i,v in pairs(listfiles(configSystem.configFolder)) do
                     Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
                 end
@@ -3457,7 +3457,7 @@ function library:CreateWindow(name, size, hidebutton)
             end)
 
             configSystem.Save = configSystem.sector:AddButton("Save", function()
-	game.StarterGui:SetCore("SendNotification", {Title = _G.LibraryConfg.NotificationsTitle; Text = "Config Saved"; Icon = "rbxassetid://8426126371"; Duration = 3 })
+	game.StarterGui:SetCore("SendNotification", {Title = "SSHub"; Text = "Config Saved"; Icon = "rbxassetid://8426126371"; Duration = 3 })
                 local config = {}
                 if Config:Get() and Config:Get() ~= "" then
                     for i,v in pairs(library.flags) do
@@ -3479,7 +3479,7 @@ function library:CreateWindow(name, size, hidebutton)
             end)
 
             configSystem.Load = configSystem.sector:AddButton("Load", function()
-		game.StarterGui:SetCore("SendNotification", {Title = _G.LibraryConfg.NotificationsTitle; Text = "Config Loaded"; Icon = "rbxassetid://8426126371"; Duration = 3 })
+		game.StarterGui:SetCore("SendNotification", {Title = "SSHub"; Text = "Config Loaded"; Icon = "rbxassetid://8426126371"; Duration = 3 })
                 local Success = pcall(readfile, configSystem.configFolder .. "/" .. Config:Get() .. ".txt")
                 if (Success) then
                     pcall(function() 
@@ -3518,7 +3518,7 @@ function library:CreateWindow(name, size, hidebutton)
             end)
 
             configSystem.Delete = configSystem.sector:AddButton("Delete", function()
-		game.StarterGui:SetCore("SendNotification", {Title = _G.LibraryConfg.NotificationsTitle; Text = "Config Deleted"; Icon = "rbxassetid://8426126371"; Duration = 3 })
+		game.StarterGui:SetCore("SendNotification", {Title = "SSHub"; Text = "Config Deleted"; Icon = "rbxassetid://8426126371"; Duration = 3 })
                 for i,v in pairs(listfiles(configSystem.configFolder)) do
                     Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
                 end
