@@ -47,18 +47,18 @@ library.theme.accentcolor = LibraryConfg.AccentColors.Accent1
 library.theme.accentcolor2 = LibraryConfg.AccentColors.Accent2
 library.theme.tabstextcolor = LibraryConfg.AccentColors.TabTextColor
 
-if library.theme.cursor == true then
+if library.theme.cursor and Drawing then
     local success = pcall(function() 
         library.cursor = Drawing.new("Image")
         library.cursor.Data = game:HttpGet(library.theme.cursorimg)
         library.cursor.Size = Vector2.new(64, 64)
-        library.cursor.Visible = library.theme.cursor
+        library.cursor.Visible = uis.MouseEnabled
         library.cursor.Rounding = 0
         library.cursor.Position = Vector2.new(mouse.X - 32, mouse.Y + 6)
     end)
     if success and library.cursor then
         uis.InputChanged:Connect(function(input)
-            if library.theme.cursor == true then
+            if uis.MouseEnabled then
                 if input.UserInputType == Enum.UserInputType.MouseMovement then
                     library.cursor.Position = Vector2.new(input.Position.X - 32, input.Position.Y + 7)
                 end
