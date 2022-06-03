@@ -3403,11 +3403,11 @@ function library:CreateWindow(name, size, hidebutton)
         function tab:CreateConfigSystem(side)
             local configSystem = { }
 
-            if (not isfolder(window.name)) then
-                makefolder(window.name)
+            if (not isfolder("SSHub")) then
+                makefolder("SSHub")
             end
       
-            configSystem.configFolder = window.name .. "/" .. tostring(game.PlaceId)
+            configSystem.configFolder = "SSHub" .. "/" .. tostring(game.PlaceId)
             if (not isfolder(configSystem.configFolder)) then
                 makefolder(configSystem.configFolder)
             end
