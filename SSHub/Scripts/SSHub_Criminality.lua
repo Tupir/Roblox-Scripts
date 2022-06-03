@@ -7,9 +7,11 @@ _G.CriminalityInfo = {
 
 LibraryConfg = {
     ShowCursor = false,
+	RgbUi = false,
     AccentColors = {
         Accent1 = Color3.fromRGB(255, 176, 0),
         Accent2 = Color3.fromRGB(255, 176, 0),
+		TabTextColor = Color3.fromRGB(255,255,255),
     };
 };
 
@@ -1684,7 +1686,8 @@ MainRegister:AddSlider("Register Distance", 2000, ESPSettings.RegisterESP.Distan
 	ESPSettings.RegisterESP.Distance = V
 end)
 
-MainC:AddLabel("Tupi")
+MainC:AddLabel("Owner - Tupi")
+
 
 local ToggleToggleUI = MainUI:AddToggle("UI Shortcut", true, function(V)
 	game:GetService("RunService").RenderStepped:Wait()
@@ -1693,10 +1696,16 @@ end)
 
 ToggleToggleUI:AddKeybind(Enum.KeyCode.LeftAlt)
 
-MainUI:AddToggle("Show Ui Cursor", true, function(V)
+MainUI:AddToggle("Show Ui Cursor", LibraryConfg.ShowCursor, function(V)
+	LibraryConfg.ShowCursor = V
 	Library.theme.cursor = V
 	SShub:UpdateTheme()
 end)
+--[[
+MainUI:AddToggle("RGB Ui", LibraryConfg.RgbUi, function(V)
+	LibraryConfg.RgbUi = V
+end)
+]]--
 
 MainUI:AddColorpicker("Accent 1", LibraryConfg.AccentColors.Accent1, function(V)
 Library.theme.accentcolor = V
@@ -1708,7 +1717,7 @@ Library.theme.accentcolor2 = V
 SShub:UpdateTheme()
 end)
 
-MainUI:AddColorpicker("Text Color", LibraryConfg.AccentColors.Accent2, function(V)
+MainUI:AddColorpicker("Text Color", LibraryConfg.AccentColors.TabTextColor, function(V)
 Library.theme.tabstextcolor = V
 SShub:UpdateTheme()
 end)
