@@ -64,6 +64,7 @@ local Settings = {
 		--|3| When teleport back
 	},
 	Killaura = false,
+	AutoBreakSafes = false,
 	DownedChat = false,
 	KillChat = false,
 	KillMSG = "",
@@ -96,7 +97,7 @@ local Settings = {
 	ElevatorTP = false,
 	TowerTP = false,
 	UIKey = Enum.KeyCode.LeftAlt,
-	NoDowned = false
+	NoDowned = false,
 };
 local ESPSettings = { PlayerESP = { Enabled = false, TracersOn = false, BoxesOn = true, NamesOn = true, DistanceOn = true, HealthOn = true, ToolOn = true, FaceCamOn = false, Distance = 2000 }, ScrapESP = { Enabled = false, Distance = 2000, LegendaryOnly = true, RareOnly = true, GoodOnly = true, BadOnly = true }, SafeESP = { Enabled = false, Distance = 2000, BigOnly = true, SmallOnly = true }, RegisterESP = { Enabled = false, Distance = 2000 }, ESPColor = Color3.fromRGB(255, 255, 255), ToolColor = Color3.fromRGB(255, 255, 255)};
 local CoolDowns = { AutoPickUps = { MoneyCooldown = false, ScrapCooldown = false, ToolCooldown = false } }
@@ -1069,40 +1070,90 @@ if game:IsLoaded() then BypassAnticheat() end
 					Player.PlayerGui:FindFirstChild("MouseGUI").HeadshotSound.Volume = Settings.VolumeHitsound
 				end
 			end)
-
-			local Clients = game.Players
+--#region aurascripts
+local Clients = game.Players
 local Client = Clients.LocalPlayer
+			
+			local function HitSafe(Target, Debounce)
+				local DebounceArgs = {}
+				DebounceArgs[1] = "\240\159\154\168"
+				DebounceArgs[2] = tick()
+				DebounceArgs[3] = Client.Character:FindFirstChildOfClass("Tool")
+				DebounceArgs[4] = "DZDRRRKI"
+				DebounceArgs[5] = "Register"
+				DebounceArgs[6] = tick() - 0
+				DebounceArgs[7] = true
+			
+				local return_value = game:GetService("ReplicatedStorage").Events["XMHH.1"]:InvokeServer(unpack(DebounceArgs))
+			
+				wait(Debounce)
+			
+				local HitArgs = {}
+			
+				HitArgs[1] = "\240\159\154\168"
+				HitArgs[2] = tick()
+				HitArgs[3] = Client.Character:FindFirstChildOfClass("Tool")
+				HitArgs[4] = "2389ZFX33"
+				HitArgs[5] = return_value
+				HitArgs[6] = false
+				HitArgs[7] = Client.Character:FindFirstChild("Crowbar").Handle
+				HitArgs[8] = Target["MainPart"]
+				HitArgs[9] = Target
+				HitArgs[10] = Client.Character:FindFirstChild("Crowbar").Handle.Position
+				HitArgs[11] = Target["MainPart"].Position
+				for i=1, 4 do
+				game:GetService("ReplicatedStorage").Events["XMHH2.1"]:FireServer(unpack(HitArgs))
+				end
+			end
 
-local function KillAura(Target, debounce)
+			task.spawn(function()
+				while wait(0.07) do
+					if Settings.AutoBreakSafes then
+						pcall(function()
+							for _,v in next, Workspace.Map.BredMakurz:GetChildren() do
+								if v and v~=Client then
+									if v:FindFirstChild("MainPart") then
+										if v.Values.Broken.Value == false then
 
-    local ohString1 = "\240\159\154\168"
-    local ohNumber2 = tick()
-    local ohInstance3 = Client.Character:FindFirstChildOfClass("Tool")
-    local ohString4 = "43TRFWJ"
-    local ohString5 = "Normal"
-    local ohNumber6 = tick() - 0
-    local ohBoolean7 = true
+												HitSafe(v, 0)
+										end
+									end
+								end
+							end
+						end)
+					end
+				end
+			end)
 
-    local return_value = game:GetService("ReplicatedStorage").Events["XMHH.1"]:InvokeServer(ohString1, ohNumber2, ohInstance3, ohString4, ohString5, ohNumber6, ohBoolean7)
+local function KillAura(Target, Debounce)
+	local DebounceArgs = {}
+    DebounceArgs[1] = "\240\159\154\168"
+    DebounceArgs[2] = tick()
+    DebounceArgs[3] = Client.Character:FindFirstChildOfClass("Tool")
+    DebounceArgs[4] = "43TRFWJ"
+    DebounceArgs[5] = "Normal"
+    DebounceArgs[6] = tick() - 0
+    DebounceArgs[7] = true
 
-    wait(debounce)
+    local return_value = game:GetService("ReplicatedStorage").Events["XMHH.1"]:InvokeServer(unpack(DebounceArgs))
 
-    local ohString1 = "\240\159\154\168"
-    local ohNumber2 = tick()
-    local ohInstance3 = Client.Character:FindFirstChildOfClass("Tool")
-    local ohString4 = "2389ZFX33"
-    local ohNumber5 = return_value
-    local ohBoolean6 = false
-    local ohInstance7 = Client.Character["Left Arm"]
-    local ohInstance8 = Target["Left Arm"]
-    local ohInstance9 = Target
-    local ohVector310 = Client.Character["Left Arm"].Position
-    local ohVector311 = Target["Head"].Position
+    wait(Debounce)
 
+	local HitArgs = {}
+
+    HitArgs[1] = "\240\159\154\168"
+    HitArgs[2] = tick()
+    HitArgs[3] = Client.Character:FindFirstChildOfClass("Tool")
+    HitArgs[4] = "2389ZFX33"
+    HitArgs[5] = return_value
+    HitArgs[6] = false
+    HitArgs[7] = Client.Character["Left Arm"]
+    HitArgs[8] = Target["Left Arm"]
+    HitArgs[9] = Target
+    HitArgs[10] = Client.Character["Left Arm"].Position
+    HitArgs[11] = Target["Head"].Position
     for i=1, 4 do
-
-    game:GetService("ReplicatedStorage").Events["XMHH2.1"]:FireServer(ohString1, ohNumber2, ohInstance3, ohString4, ohNumber5, ohBoolean6, ohInstance7, ohInstance8, ohInstance9, ohVector310, ohVector311)
-    
+    game:GetService("ReplicatedStorage").Events["XMHH2.1"]:FireServer(unpack(HitArgs))
     end
 end
 
@@ -1128,8 +1179,6 @@ end)
 --#enderegion
 
 --#region TpHit
-local Client = game.Players.LocalPlayer; local Clients = game.Players
-
 local function Hit(Target, Part, Debounce, Debounce2)
 
 	local return_teleport = Client.Character.HumanoidRootPart.CFrame
@@ -1210,6 +1259,7 @@ local function GetDebounce2(Target)
     return debounce
 end
 --#endregion
+--#endregion
 
 local SShub = Library:CreateWindow(Name, Vector2.new(492, 650))
 local General = SShub:CreateTab("General")
@@ -1227,6 +1277,7 @@ local MainGun = Combat:CreateSector("Mods", "right")
 local MainAur = Combat:CreateSector("Stuff", "right")
 
 local MainMs = Misc:CreateSector("Misc", "left")
+local MainAu = Misc:CreateSector("Auto Farms", "right")
 
 local MainP = Visuals:CreateSector("Player ESP", "left")
 local MainScrap = Visuals:CreateSector("Scrap ESP", "right")
@@ -1279,24 +1330,6 @@ end)
 MainL:AddSlider("Camera Max Zoom", 10, Settings.Zoom, 3000, 10, function(V)
 	Player.CameraMaxZoomDistance = V
 end)
-
-MainL:AddSeperator("Autos")
-
-local AS = MainL:AddToggle("Auto Scrap", Settings.AutoPickScrap, function(V)
-	Settings.AutoPickScrap = V
-end, "AutoScrapToggle")
-AS:AddKeybind("None", "AutoScrapToggle")
-
-local AT = MainL:AddToggle("Auto Tools", Settings.AutoPickTools, function(V)
-	Settings.AutoPickTools = V
-end, "AutoTools Toggle")
-AT:AddKeybind("None", "AutoTools Toggle")
-
-local AC = MainL:AddToggle("Auto Cash", Settings.AutoPickCash, function(V)
-	Settings.AutoPickCash = V
-end, "AutoCash Toggle")
-AC:AddKeybind("None", "AutoCash Toggle")
-
 
 local AD = MainL2:AddToggle("Anti Downed", false, function(V)
 	Settings.NoDowned = V
@@ -1362,6 +1395,27 @@ end)
 MainL:AddSlider("JumpPower", 30, Settings.JumpPower.Amount, 150, 10, function(V)
 	Settings.JumpPower.Amount = V
 end)
+
+local ABS = MainAu:AddToggle("AutoBreak Safes (No work lel)", Settings.AutoBreakSafes, function(V)
+	Settings.AutoBreakSafes = V
+end, "ABST")
+
+local AS = MainAu:AddToggle("Auto Pick Scrap", Settings.AutoPickScrap, function(V)
+	Settings.AutoPickScrap = V
+end, "AutoScrapToggle")
+AS:AddKeybind("None", "AutoScrapToggle")
+
+local AT = MainAu:AddToggle("Auto Pick Tools", Settings.AutoPickTools, function(V)
+	Settings.AutoPickTools = V
+end, "AutoTools Toggle")
+AT:AddKeybind("None", "AutoToolsToggle")
+
+local AC = MainAu:AddToggle("Auto Pick Cash", Settings.AutoPickCash, function(V)
+	Settings.AutoPickCash = V
+end, "AutoCash Toggle")
+AC:AddKeybind("None", "AutoCashToggle")
+
+ABS:AddKeybind("None", "ABST")
 MainMs:AddToggle("Chat Logs", Settings.ShowChatLogs, function(V)
 	Settings.ShowChatLogs = V
 
@@ -1442,8 +1496,13 @@ MainGun:AddToggle("Instant Aim", Settings.GunMods.InstantAim, function(V)
 	Settings.GunMods.InstantAim = V
 end)
 MainGun:AddSeperator("xd")
-MainGun:AddButton("WallBang", function()
-	game:service[[Workspace]]:FindFirstChild('Map'):FindFirstChild('Parts'):FindFirstChild('M_Parts').Parent = game:service[[Workspace]]:FindFirstChild('Characters')
+MainGun:AddToggle("Wall Bang", Settings.WallBang, function(V)
+	Settings.WallBang = V
+	if V == true then
+		Workspace:FindFirstChild('Map'):FindFirstChild('Parts'):FindFirstChild('M_Parts').Parent = Workspace:FindFirstChild('Characters')
+	elseif V == false then
+		Workspace:FindFirstChild('Characters'):FindFirstChild('M_Parts').Parent = Workspace:FindFirstChild('Map'):FindFirstChild('Parts')
+	end
 end)
 MainGun:AddButton("Melee God Mode", function()
 	loadstring(game:HttpGet("https://raw.githubusercontent.com/Tobias020108Back/YBA-AUT/main/Criminality-Semi-Godmode.lua", true))()
@@ -1492,11 +1551,17 @@ end, "KAT")
 
 KA:AddKeybind("None", "KAT")
 
+local ABS = MainAur:AddToggle("AutoBreak Safes", Settings.AutoBreakSafes, function(V)
+	Settings.AutoBreakSafes = V
+end, "ABST")
+
+ABS:AddKeybind("None", "ABST")
+
 MainAur:AddSeperator("Tp Hit")
 
 MainAur:AddTextbox("Player", false, function(V)
 	Settings.TpHit.Name = V
-	Notification("Tp Hit", "Current Player is: "..Settings.TpHit.Name, ScriptConfg.NotificationsIcon, 5)
+	Notify(NS.Title,NS.Icon,"Tp Hit", "Current Player is: "..Settings.TpHit.Name,5)
 end)
 
 MainAur:AddDropdown("Weapon", {"Fists", "FireAxe", "Chainsaw", "Bat"}, Settings.TpHit.Weapon, false, function(V)
