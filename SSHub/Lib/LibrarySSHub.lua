@@ -1,3 +1,4 @@
+-- (WARNING: This Repository is Licensed! You are not permitted to use/copy this User Interface library)
 local library = { 
 	flags = { }, 
 	items = { } 
@@ -23,8 +24,8 @@ library.theme = {
     font = Enum.Font.Code,
     background = "rbxassetid://5553946656",
     tilesize = 90,
-    cursor = false,
-    cursorimg = "https://thumbs.dreamstime.com/b/icono-de-puntero-sobre-fondo-transparente-signo-cursor-s%C3%ADmbolo-del-rat%C3%B3n-estilo-plano-188810588.jpg",
+    cursor = true,
+    cursorimg = "https://t0.rbxcdn.com/42f66da98c40252ee151326a82aab51f",
     backgroundcolor = Color3.fromRGB(20, 20, 20),
     tabstextcolor = Color3.fromRGB(240, 240, 240),
     bordercolor = Color3.fromRGB(60, 60, 60),
@@ -42,10 +43,23 @@ library.theme = {
     itemscolor = Color3.fromRGB(200, 200, 200),
     itemscolor2 = Color3.fromRGB(210, 210, 210)
 }
-library.theme.cursor = LibraryConfg.ShowCursor
-library.theme.accentcolor = LibraryConfg.AccentColors.Accent1
-library.theme.accentcolor2 = LibraryConfg.AccentColors.Accent2
-library.theme.tabstextcolor = LibraryConfg.AccentColors.TabTextColor
+
+if not _G.LibraryConfg then
+    _G.LibraryConfg = {
+        ShowCursor = false,
+        AccentColors = {
+            Accent1 = Color3.fromRGB(255, 176, 0),
+            Accent2 = Color3.fromRGB(255, 176, 0),
+            TabTextColor = Color3.fromRGB(255,255,255),
+    }
+}
+end
+
+library.theme.accentcolor = _G.LibraryConfg.AccentColors.Accent1
+library.theme.accentcolor2 = _G.LibraryConfg.AccentColors.Accent2
+library.theme.tabstextcolor = _G.LibraryConfg.AccentColors.TabTextColor
+library.theme.cursor = _G.LibraryConfg.ShowCursor
+
 
 if library.theme.cursor and Drawing then
     local success = pcall(function() 
@@ -3403,11 +3417,7 @@ function library:CreateWindow(name, size, hidebutton)
         function tab:CreateConfigSystem(side)
             local configSystem = { }
 
-            if (not isfolder("SSHub")) then
-                makefolder("SSHub")
-            end
-      
-            configSystem.configFolder = "SSHub" .. "/" .. tostring(game.PlaceId)
+            configSystem.configFolder = window.name .. "/" .. tostring(game.PlaceId)
             if (not isfolder(configSystem.configFolder)) then
                 makefolder(configSystem.configFolder)
             end
@@ -3424,7 +3434,6 @@ function library:CreateWindow(name, size, hidebutton)
             end
 
             configSystem.Create = configSystem.sector:AddButton("Create", function()
-	game.StarterGui:SetCore("SendNotification", {Title = "SSHub"; Text = "New Config Created"; Icon = "rbxassetid://8426126371"; Duration = 3 })
                 for i,v in pairs(listfiles(configSystem.configFolder)) do
                     Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
                 end
@@ -3457,7 +3466,6 @@ function library:CreateWindow(name, size, hidebutton)
             end)
 
             configSystem.Save = configSystem.sector:AddButton("Save", function()
-	game.StarterGui:SetCore("SendNotification", {Title = "SSHub"; Text = "Config Saved"; Icon = "rbxassetid://8426126371"; Duration = 3 })
                 local config = {}
                 if Config:Get() and Config:Get() ~= "" then
                     for i,v in pairs(library.flags) do
@@ -3479,7 +3487,6 @@ function library:CreateWindow(name, size, hidebutton)
             end)
 
             configSystem.Load = configSystem.sector:AddButton("Load", function()
-		game.StarterGui:SetCore("SendNotification", {Title = "SSHub"; Text = "Config Loaded"; Icon = "rbxassetid://8426126371"; Duration = 3 })
                 local Success = pcall(readfile, configSystem.configFolder .. "/" .. Config:Get() .. ".txt")
                 if (Success) then
                     pcall(function() 
@@ -3518,7 +3525,6 @@ function library:CreateWindow(name, size, hidebutton)
             end)
 
             configSystem.Delete = configSystem.sector:AddButton("Delete", function()
-		game.StarterGui:SetCore("SendNotification", {Title = "SSHub"; Text = "Config Deleted"; Icon = "rbxassetid://8426126371"; Duration = 3 })
                 for i,v in pairs(listfiles(configSystem.configFolder)) do
                     Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
                 end
