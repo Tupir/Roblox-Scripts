@@ -31,7 +31,6 @@ library.theme = {
     font = Enum.Font.Code,
     background = "rbxassetid://5553946656",
     tilesize = 90,
-    cursor = true,
     backgroundcolor = Color3.fromRGB(20, 20, 20),
     tabstextcolor = Color3.fromRGB(240, 240, 240),
     bordercolor = Color3.fromRGB(60, 60, 60),
@@ -52,7 +51,6 @@ library.theme = {
 
 if not _G.LibraryConfg then
     _G.LibraryConfg = {
-        ShowCursor = false,
         AccentColors = {
             Accent1 = Color3.fromRGB(255, 176, 0),
             Accent2 = Color3.fromRGB(255, 176, 0),
@@ -64,26 +62,6 @@ end
 library.theme.accentcolor = _G.LibraryConfg.AccentColors.Accent1
 library.theme.accentcolor2 = _G.LibraryConfg.AccentColors.Accent2
 library.theme.tabstextcolor = _G.LibraryConfg.AccentColors.TabTextColor
-library.theme.cursor = _G.LibraryConfg.ShowCursor
-
-local cursor = Drawing.new("Image")
-    cursor.Data = game:HttpGet("https://t0.rbxcdn.com/42f66da98c40252ee151326a82aab51f")
-    cursor.Size = Vector2.new(64, 64)
-    cursor.Visible = library.theme.cursor
-    cursor.Rounding = 0
-    cursor.Position = Vector2.new(mouse.X - 32, mouse.Y + 6)
-if cursor.Visible then
-    uis.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            cursor.Position = Vector2.new(input.Position.X - 32, input.Position.Y + 7)
-        end
-    end)
-end
-if library.theme.cursor then
-    game:GetService("RunService").RenderStepped:Connect(function()
-        uis.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.ForceHide
-    end)
-end
 
 function library:CreateWatermark(name, position)
     local gamename = marketplaceservice:GetProductInfo(game.PlaceId).Name
