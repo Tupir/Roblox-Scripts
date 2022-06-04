@@ -53,44 +53,41 @@ library.theme = {
 
 if not _G.LibraryConfg then
     _G.LibraryConfg = {
+        ShowCursor = false,
         AccentColors = {
             Accent1 = Color3.fromRGB(255, 176, 0),
             Accent2 = Color3.fromRGB(255, 176, 0),
             TabTextColor = Color3.fromRGB(255,255,255),
+        }
     }
-}
 end
 
 library.theme.accentcolor = _G.LibraryConfg.AccentColors.Accent1
 library.theme.accentcolor2 = _G.LibraryConfg.AccentColors.Accent2
 library.theme.tabstextcolor = _G.LibraryConfg.AccentColors.TabTextColor
+library.theme.cursor = _G.LibraryConfg.ShowCursor
 
 
-if library.theme.cursor and Drawing then
-    local success = pcall(function() 
-        library.cursor = Drawing.new("Image")
-        library.cursor.Data = game:HttpGet(library.theme.cursorimg)
-        library.cursor.Size = Vector2.new(64, 64)
-        library.cursor.Visible = uis.MouseEnabled
-        library.cursor.Rounding = 0
-        library.cursor.Position = Vector2.new(mouse.X - 32, mouse.Y + 6)
-    end)
-    if success and library.cursor then
-        uis.InputChanged:Connect(function(input)
-            if uis.MouseEnabled then
-                if input.UserInputType == Enum.UserInputType.MouseMovement then
-                    library.cursor.Position = Vector2.new(input.Position.X - 32, input.Position.Y + 7)
-                end
-            end
-        end)
-        
-        game:GetService("RunService").RenderStepped:Connect(function()
-            uis.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.ForceHide
-            library.cursor.Visible = uis.MouseEnabled and (uis.MouseIconEnabled or game:GetService("GuiService").MenuIsOpen)
-        end)
-    elseif not success and library.cursor then
-        library.cursor:Remove()
-    end
+if library.theme.cursor == true then
+    library.cursor = Drawing.new("Image")
+    library.cursor.Data = game:HttpGet(library.theme.cursorimg)
+    library.cursor.Size = Vector2.new(64, 64)
+    library.cursor.Visible = library.theme.cursor
+    library.cursor.Rounding = 0
+    library.cursor.Position = Vector2.new(mouse.X - 32, mouse.Y + 6)
+        if library.cursor.Visible == true then
+                uis.InputChanged:Connect(function(input)
+                        if input.UserInputType == Enum.UserInputType.MouseMovement then
+                            library.cursor.Position = Vector2.new(input.Position.X - 32, input.Position.Y + 7)
+                        end
+                end)
+                
+                game:GetService("RunService").RenderStepped:Connect(function()
+                    uis.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.ForceHide
+                end)
+        elseif library.theme.cursor == false then
+                library.cursor:Remove()
+        end
 end
 
 function library:CreateWatermark(name, position)
