@@ -53,7 +53,6 @@ library.theme = {
 
 if not _G.LibraryConfg then
     _G.LibraryConfg = {
-        ShowCursor = false,
         AccentColors = {
             Accent1 = Color3.fromRGB(255, 176, 0),
             Accent2 = Color3.fromRGB(255, 176, 0),
@@ -65,7 +64,6 @@ end
 library.theme.accentcolor = _G.LibraryConfg.AccentColors.Accent1
 library.theme.accentcolor2 = _G.LibraryConfg.AccentColors.Accent2
 library.theme.tabstextcolor = _G.LibraryConfg.AccentColors.TabTextColor
-library.theme.cursor = _G.LibraryConfg.ShowCursor
 
 
 if library.theme.cursor and Drawing then
