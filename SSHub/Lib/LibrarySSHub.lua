@@ -4,6 +4,13 @@ local library = {
 	items = { } 
 }
 
+local NS = {
+	Title = "SSHub",
+	Icon = "rbxassetid://8426126371"
+}
+local function Notify(Title, Icon, Text, Duration)
+	game.StarterGui:SetCore("SendNotification", {Title = Title or ""; Text = Text or ""; Icon = Icon or ""; Duration = tonumber(Duration) or 3 })
+end
 -- Services
 local players = game:GetService("Players")
 local uis = game:GetService("UserInputService")
@@ -3434,6 +3441,7 @@ function library:CreateWindow(name, size, hidebutton)
             end
 
             configSystem.Create = configSystem.sector:AddButton("Create", function()
+		Notify(NS.Title,NS.Icon,"Config Created")
                 for i,v in pairs(listfiles(configSystem.configFolder)) do
                     Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
                 end
@@ -3466,6 +3474,7 @@ function library:CreateWindow(name, size, hidebutton)
             end)
 
             configSystem.Save = configSystem.sector:AddButton("Save", function()
+		Notify(NS.Title,NS.Icon,"Config Saved")
                 local config = {}
                 if Config:Get() and Config:Get() ~= "" then
                     for i,v in pairs(library.flags) do
@@ -3487,6 +3496,7 @@ function library:CreateWindow(name, size, hidebutton)
             end)
 
             configSystem.Load = configSystem.sector:AddButton("Load", function()
+		Notify(NS.Title,NS.Icon,"Config Loaded")
                 local Success = pcall(readfile, configSystem.configFolder .. "/" .. Config:Get() .. ".txt")
                 if (Success) then
                     pcall(function() 
@@ -3525,6 +3535,7 @@ function library:CreateWindow(name, size, hidebutton)
             end)
 
             configSystem.Delete = configSystem.sector:AddButton("Delete", function()
+		Notify(NS.Title,NS.Icon,"Config Deleted")
                 for i,v in pairs(listfiles(configSystem.configFolder)) do
                     Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
                 end
@@ -3543,7 +3554,7 @@ function library:CreateWindow(name, size, hidebutton)
             return configSystem
         end
 
-        --[[ not finished lol
+
         function tab:CreatePlayerlist(name)
             local list = { }
             list.name = name or ""
@@ -3660,7 +3671,6 @@ function library:CreateWindow(name, size, hidebutton)
             
             return list
         end
-        ]]--
 
         table.insert(window.Tabs, tab)
         return tab
