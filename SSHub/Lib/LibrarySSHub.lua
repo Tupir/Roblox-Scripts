@@ -32,7 +32,6 @@ library.theme = {
     background = "rbxassetid://5553946656",
     tilesize = 90,
     cursor = true,
-    cursorimg = "https://t0.rbxcdn.com/42f66da98c40252ee151326a82aab51f",
     backgroundcolor = Color3.fromRGB(20, 20, 20),
     tabstextcolor = Color3.fromRGB(240, 240, 240),
     bordercolor = Color3.fromRGB(60, 60, 60),
@@ -67,27 +66,23 @@ library.theme.accentcolor2 = _G.LibraryConfg.AccentColors.Accent2
 library.theme.tabstextcolor = _G.LibraryConfg.AccentColors.TabTextColor
 library.theme.cursor = _G.LibraryConfg.ShowCursor
 
-
-if library.theme.cursor == true then
-    library.cursor = Drawing.new("Image")
-    library.cursor.Data = game:HttpGet(library.theme.cursorimg)
-    library.cursor.Size = Vector2.new(64, 64)
-    library.cursor.Visible = library.theme.cursor
-    library.cursor.Rounding = 0
-    library.cursor.Position = Vector2.new(mouse.X - 32, mouse.Y + 6)
-        if library.cursor.Visible == true then
-                uis.InputChanged:Connect(function(input)
-                        if input.UserInputType == Enum.UserInputType.MouseMovement then
-                            library.cursor.Position = Vector2.new(input.Position.X - 32, input.Position.Y + 7)
-                        end
-                end)
-                
-                game:GetService("RunService").RenderStepped:Connect(function()
-                    uis.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.ForceHide
-                end)
-        elseif library.theme.cursor == false then
-                library.cursor:Remove()
+local cursor = Drawing.new("Image")
+    cursor.Data = game:HttpGet("https://t0.rbxcdn.com/42f66da98c40252ee151326a82aab51f")
+    cursor.Size = Vector2.new(64, 64)
+    cursor.Visible = library.theme.cursor
+    cursor.Rounding = 0
+    cursor.Position = Vector2.new(mouse.X - 32, mouse.Y + 6)
+if cursor.Visible then
+    uis.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
+            cursor.Position = Vector2.new(input.Position.X - 32, input.Position.Y + 7)
         end
+    end)
+end
+if library.theme.cursor then
+    game:GetService("RunService").RenderStepped:Connect(function()
+        uis.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.ForceHide
+    end)
 end
 
 function library:CreateWatermark(name, position)
