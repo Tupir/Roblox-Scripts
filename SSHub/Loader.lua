@@ -15,7 +15,7 @@ local function Load(ToLoad)
     if Error and not Success then
         Notify(NS.Title,NS.Icon,"Error!")
     elseif Success and not Error then
-        Notify(NS.Title,NS.Icon,"Succes!")
+        Notify(NS.Title,NS.Icon,"Load Succes!")
     end
 end
 local Test = coroutine.wrap(function()
@@ -25,11 +25,12 @@ local Criminality = coroutine.wrap(function()
 	loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Scripts/SSHub_Criminality.lua'))()
 end)
 --#endregion
-Notify(NS.Title,NS.Icon,"Checking...")
+Notify(NS.Title,NS.Icon,"Checking...",5)
 
 local SupportedGames = loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Games.lua', true))()
 if SupportedGames[game.PlaceId] then
-	Notify(NS.Title,NS.Icon, game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name.."Loading...")
+	Notify(NS.Title,NS.Icon, game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name.."Loading...",5)
+	wait(2)
 	Load(Criminality)
 else
 	Notify(NS.Title,NS.Icon,"No game found!")
