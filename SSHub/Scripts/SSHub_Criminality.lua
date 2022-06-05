@@ -1,19 +1,12 @@
-local Name = "SSHub | "..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name.." | "
+local Name = "SSHub"
 
-_G.CriminalityInfo = {
-    SilentAimColor = Color3.fromRGB(255, 176, 0),
-    ESPColor = Color3.fromRGB(255, 176, 0)
-};
-
-LibraryConfg = {
-    ShowCursor = false,
-	RgbUi = false,
-    AccentColors = {
-        Accent1 = Color3.fromRGB(255, 176, 0),
-        Accent2 = Color3.fromRGB(255, 176, 0),
+_G.LibraryConfg = {
+	AccentColors = {
+		Accent1 = Color3.fromRGB(255, 176, 0),
+		Accent2 = Color3.fromRGB(255, 176, 0),
 		TabTextColor = Color3.fromRGB(255,255,255),
-    };
-};
+	}
+}
 
 --#region Notify
 local NS = {
@@ -38,6 +31,7 @@ local Players = GetService(game, "Players");
 local Lighting = GetService(game, "Lighting");
 local ReplicatedStorage = GetService(game, "ReplicatedStorage");
 local CoreGui = GetService(game, "CoreGui");
+local Uis = GetService(game, "UserInputService");
 local Cam = Workspace.CurrentCamera;
 local Player = Players.LocalPlayer;
 local Mouse = Player:GetMouse()
@@ -1264,6 +1258,7 @@ end
 --#endregion
 
 local SShub = Library:CreateWindow(Name, Vector2.new(492, 650))
+CoreGui:FindFirstChild(Name).main.top.title.Text = Name.."|"..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name.."|"
 local General = SShub:CreateTab("General")
 local Combat = SShub:CreateTab("Combat")
 local Misc = SShub:CreateTab("Misc")
@@ -1402,7 +1397,7 @@ end,"JPS")
 local ABS = MainAu:AddToggle("AutoBreak Safes (No work lel)", Settings.AutoBreakSafes, function(V)
 	Settings.AutoBreakSafes = V
 end, "ABST")
-ABS:AddKeybind("None", "AutoScrapToggle")
+ABS:AddKeybind("None", "ABST")
 
 local AS = MainAu:AddToggle("Auto Pick Scrap", Settings.AutoPickScrap, function(V)
 	Settings.AutoPickScrap = V
@@ -1418,8 +1413,6 @@ local AC = MainAu:AddToggle("Auto Pick Cash", Settings.AutoPickCash, function(V)
 	Settings.AutoPickCash = V
 end, "AutoCash Toggle")
 AC:AddKeybind("None", "AutoCashToggle")
-
-ABS:AddKeybind("None", "ABST")
 MainMs:AddToggle("Chat Logs", Settings.ShowChatLogs, function(V)
 	Settings.ShowChatLogs = V
 
@@ -1433,6 +1426,13 @@ MainMs:AddToggle("Chat Logs", Settings.ShowChatLogs, function(V)
 		ChatFrame.ChatBarParentFrame.Position = ChatFrame.ChatChannelParentFrame.Position + UDim2.new(0, 0, 0, 0)
 	end
 end,"CLL")
+--[[
+local NC = MainMs:AddToggle("NoClip", Settings.NoClip, function(V)
+	Settings.NoClip = V
+end,"NoClip")
+
+NC:AddKeybind("None", "NoClip")
+]]--
 MainMs:AddSeperator("Doors")
 MainMs:AddToggle("Unlock Nearby Doors", Settings.UnlockDoorsNearby, function(V)
 	Settings.UnlockDoorsNearby = V
@@ -1527,7 +1527,7 @@ end, "SilentToggle")
 
 SilentToggle:AddKeybind("None", "SilentToggle")
 
-local VC = MainCo:AddToggle("Visible Check", false, function(V)
+local VC= MainCo:AddToggle("Visible Check", false, function(V)
 	 SilentSettings.Main.VisibleCheck = V
 end, "VCt")
 VC:AddKeybind("None", "VCt")
@@ -1751,7 +1751,6 @@ end,"REGSDIS")
 
 MainC:AddLabel("Owner - Tupi")
 
-
 local ToggleToggleUI = MainUI:AddToggle("UI Shortcut", true, function(V)
 	game:GetService("RunService").RenderStepped:Wait()
 	game:GetService("CoreGui"):FindFirstChild(Name).Enabled = V
@@ -1759,28 +1758,23 @@ end)
 
 ToggleToggleUI:AddKeybind(Enum.KeyCode.LeftAlt)
 
-MainUI:AddToggle("Show Ui Cursor", LibraryConfg.ShowCursor, function(V)
-	LibraryConfg.ShowCursor = V
-	Library.theme.cursor = V
-	SShub:UpdateTheme()
-end,"SHOWUIC")
 --[[
-MainUI:AddToggle("RGB Ui", LibraryConfg.RgbUi, function(V)
-	LibraryConfg.RgbUi = V
+MainUI:AddToggle("RGB Ui", _G.LibraryConfg.RgbUi, function(V)
+	_G.LibraryConfg.RgbUi = V
 end)
 ]]--
 
-MainUI:AddColorpicker("Accent 1", LibraryConfg.AccentColors.Accent1, function(V)
+MainUI:AddColorpicker("Accent 1", _G.LibraryConfg.AccentColors.Accent1, function(V)
 Library.theme.accentcolor = V
 SShub:UpdateTheme()
 end,"COLOR1")
 
-MainUI:AddColorpicker("Accent 2", LibraryConfg.AccentColors.Accent2, function(V)
+MainUI:AddColorpicker("Accent 2", _G.LibraryConfg.AccentColors.Accent2, function(V)
 Library.theme.accentcolor2 = V
 SShub:UpdateTheme()
 end,"COLOR2")
 
-MainUI:AddColorpicker("Text Color", LibraryConfg.AccentColors.TabTextColor, function(V)
+MainUI:AddColorpicker("Text Color", _G.LibraryConfg.AccentColors.TabTextColor, function(V)
 Library.theme.tabstextcolor = V
 SShub:UpdateTheme()
 end,"TEXT1")
@@ -1851,7 +1845,7 @@ end)
 
 tow.Touched:Connect(function()
 	if Player and Settings.TowerTP then
-		if not d2 and not db3 then
+		if not db2 and not db3 then
 			db2 = true
 			TeleportAreaNew(CFrame.new(-4525.795, 85.759, -778.03))
 			wait(1)
