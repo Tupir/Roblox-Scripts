@@ -3419,7 +3419,9 @@ function library:CreateWindow(name, size, hidebutton)
     
                     for i,v in pairs(library.flags) do
                         if (v ~= nil and v ~= "") then
-                            if (typeof(v) == "Color3") then
+                            if (tostring(v):find("Enum.KeyCode") and (typeof(v) == "table")) then
+                                config[i] = { v }, v.Name
+                            elseif (typeof(v) == "Color3") then
                                 config[i] = { v.R, v.G, v.B }
                             elseif (tostring(v):find("Enum.KeyCode")) then
                                 config[i] = v.Name
