@@ -3420,7 +3420,7 @@ function library:CreateWindow(name, size, hidebutton)
                     for i,v in pairs(library.flags) do
                         if (v ~= nil and v ~= "") then
                             if (tostring(v):find("Enum.KeyCode") and (typeof(v) == "table")) then
-                                config[i] = { v }, v.Name
+                                config[i] = v.Name and { v }
                             elseif (typeof(v) == "Color3") then
                                 config[i] = { v.R, v.G, v.B }
                             elseif (tostring(v):find("Enum.KeyCode")) then
@@ -3450,7 +3450,7 @@ function library:CreateWindow(name, size, hidebutton)
                     for i,v in pairs(library.flags) do
                         if (v ~= nil and v ~= "") then
                             if (tostring(v):find("Enum.KeyCode") and (typeof(v) == "table")) then
-                                config[i] = { v }, v.Name
+                                config[i] = v.Name and { v }
                             elseif (typeof(v) == "Color3") then
                                 config[i] = { v.R, v.G, v.B }
                             elseif (tostring(v):find("Enum.KeyCode")) then
@@ -3483,7 +3483,7 @@ function library:CreateWindow(name, size, hidebutton)
                                     NewConfig[i] = v[1]
                                 end
                             elseif (typeof(v) == "table")  and (tostring(v):find("Enum.KeyCode.")) then
-                                NewConfig[i] = v[1], Enum.KeyCode[tostring(v):gsub("Enum.KeyCode.", "")]
+                                NewConfig[i] = v[1] and Enum.KeyCode[tostring(v):gsub("Enum.KeyCode.", "")]
                             else
                                 NewConfig[i] = v
                             end
@@ -3525,7 +3525,6 @@ function library:CreateWindow(name, size, hidebutton)
 
             return configSystem
         end
-
 --[[Not finished lol
         function tab:CreatePlayerlist(name)
             local list = { }
