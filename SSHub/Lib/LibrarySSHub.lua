@@ -3400,18 +3400,18 @@ function library:CreateWindow(name, size, hidebutton)
             configSystem.sector = tab:CreateSector("Configs", side or "left")
 
             local ConfigName = configSystem.sector:AddTextbox("Config Name", "", ConfigName, function() end, "")
-            local default = tostring(listfiles(configSystem.configFolder)[1] or ""):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", "")
+            local default = tostring(listfiles(configSystem.configFolder)[1] or ""):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", "")
             local Config = configSystem.sector:AddDropdown("Configs", {}, default, false, function() end, "")
             for i,v in pairs(listfiles(configSystem.configFolder)) do
-                if v:find(".txt") then
-                    Config:Add(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
+                if v:find(".json") then
+                    Config:Add(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", ""))
                 end
             end
 
             configSystem.Create = configSystem.sector:AddButton("Create", function()
 		Notify(NS.Title,NS.Icon,"Config Created")
                 for i,v in pairs(listfiles(configSystem.configFolder)) do
-                    Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
+                    Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", ""))
                 end
 
                 if ConfigName:Get() and ConfigName:Get() ~= "" then
@@ -3433,11 +3433,11 @@ function library:CreateWindow(name, size, hidebutton)
                         end
                     end
     
-                    writefile(configSystem.configFolder .. "/" .. ConfigName:Get() .. ".txt", httpservice:JSONEncode(config))
+                    writefile(configSystem.configFolder .. "/" .. ConfigName:Get() .. ".json", httpservice:JSONEncode(config))
     
                     for i,v in pairs(listfiles(configSystem.configFolder)) do
-                        if v:find(".txt") then
-                            Config:Add(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
+                        if v:find(".json") then
+                            Config:Add(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", ""))
                         end
                     end
                 end
@@ -3449,10 +3449,12 @@ function library:CreateWindow(name, size, hidebutton)
                 if Config:Get() and Config:Get() ~= "" then
                     for i,v in pairs(library.flags) do
                         if (v ~= nil and v ~= "") then
-                            if (typeof(v) == "Color3") then
+                            if (tostring(v):find("Enum.KeyCode") and (typeof(v) == "table")) then
+                                config[i] = { v }, v.Name
+                            elseif (typeof(v) == "Color3") then
                                 config[i] = { v.R, v.G, v.B }
                             elseif (tostring(v):find("Enum.KeyCode")) then
-                                config[i] = "Enum.KeyCode." .. v.Name
+                                config[i] = v.Name
                             elseif (typeof(v) == "table") then
                                 config[i] = { v }
                             else
@@ -3461,16 +3463,16 @@ function library:CreateWindow(name, size, hidebutton)
                         end
                     end
     
-                    writefile(configSystem.configFolder .. "/" .. Config:Get() .. ".txt", httpservice:JSONEncode(config))
+                    writefile(configSystem.configFolder .. "/" .. Config:Get() .. ".json", httpservice:JSONEncode(config))
                 end
             end)
 
             configSystem.Load = configSystem.sector:AddButton("Load", function()
 		Notify(NS.Title,NS.Icon,"Config Loaded")
-                local Success = pcall(readfile, configSystem.configFolder .. "/" .. Config:Get() .. ".txt")
+                local Success = pcall(readfile, configSystem.configFolder .. "/" .. Config:Get() .. ".json")
                 if (Success) then
                     pcall(function() 
-                        local ReadConfig = httpservice:JSONDecode(readfile(configSystem.configFolder .. "/" .. Config:Get() .. ".txt"))
+                        local ReadConfig = httpservice:JSONDecode(readfile(configSystem.configFolder .. "/" .. Config:Get() .. ".json"))
                         local NewConfig = {}
     
                         for i,v in pairs(ReadConfig) do
@@ -3480,8 +3482,8 @@ function library:CreateWindow(name, size, hidebutton)
                                 elseif (typeof(v[1]) == "table") then
                                     NewConfig[i] = v[1]
                                 end
-                            elseif (tostring(v):find("Enum.KeyCode.")) then
-                                NewConfig[i] = Enum.KeyCode[tostring(v):gsub("Enum.KeyCode.", "")]
+                            elseif (typeof(v) == "table")  and (tostring(v):find("Enum.KeyCode.")) then
+                                NewConfig[i] = v[1], Enum.KeyCode[tostring(v):gsub("Enum.KeyCode.", "")]
                             else
                                 NewConfig[i] = v
                             end
@@ -3507,16 +3509,16 @@ function library:CreateWindow(name, size, hidebutton)
             configSystem.Delete = configSystem.sector:AddButton("Delete", function()
 		Notify(NS.Title,NS.Icon,"Config Deleted")
                 for i,v in pairs(listfiles(configSystem.configFolder)) do
-                    Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
+                    Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", ""))
                 end
 
                 if (not Config:Get() or Config:Get() == "") then return end
-                if (not isfile(configSystem.configFolder .. "/" .. Config:Get() .. ".txt")) then return end
-                delfile(configSystem.configFolder .. "/" .. Config:Get() .. ".txt")
+                if (not isfile(configSystem.configFolder .. "/" .. Config:Get() .. ".json")) then return end
+                delfile(configSystem.configFolder .. "/" .. Config:Get() .. ".json")
 
                 for i,v in pairs(listfiles(configSystem.configFolder)) do
-                    if v:find(".txt") then
-                        Config:Add(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
+                    if v:find(".json") then
+                        Config:Add(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", ""))
                     end
                 end
             end)
