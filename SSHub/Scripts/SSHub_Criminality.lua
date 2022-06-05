@@ -50,7 +50,19 @@ end)
 --#region Settings
 --Variables Settings
 local Settings = {
-	GunMods = { NoRecoil = false, InstantEquip = false, Spread = false, SpreadAmount = 0, InstantAim = false,
+	GunMods = { 
+		NoRecoil = false,
+		InstantEquip = false,
+		Spread = false,
+		InstantAim = false,
+		Values = {
+			RecoilAmmount = 0,
+			SpreadAmmount = 0,
+			},
+		Removes = {
+			EquipAnim = false,
+			AimAnim = false,
+			},
 		},
 	TpHit = {
 		Name = "nil",
@@ -853,7 +865,7 @@ if game:IsLoaded() then BypassAnticheat() end
 					if type(v) == 'table' and rawget(v, 'EquipTime') then 
 						if Settings.GunMods.NoRecoil == true then
 							coroutine.resume(coroutine.create(function()
-								v.Recoil = 0
+								v.Recoil = Settings.GunMods.Values.RecoilAmmount
 								v.CameraRecoilingEnabled = false
 								v.AngleX_Min = 0 
 								v.AngleX_Max = 0 
@@ -865,13 +877,17 @@ if game:IsLoaded() then BypassAnticheat() end
 						end
 						if Settings.GunMods.Spread == true then
 							coroutine.resume(coroutine.create(function()
-								v.Spread = 0
+								v.Spread = Settings.GunMods.Values.SpreadAmmount
 							end))
 						end
 						if Settings.GunMods.InstantEquip == true then
 							coroutine.resume(coroutine.create(function()
 								v.EquipTime = 0
-								v.EquipAnimSpeed = 10000000000
+							end))
+						end
+						if Settings.GunMods.Removes.EquipAnim == true then
+							coroutine.resume(coroutine.create(function()
+								v.EquipAnimSpeed = 10000
 							end))
 						end
 						if Settings.GunMods.InstantAim == true then
@@ -880,8 +896,12 @@ if game:IsLoaded() then BypassAnticheat() end
 							end))
 							coroutine.resume(coroutine.create(function()
 								v.SniperSettings.AimSpeed = 0
-								v.SniperSettings.AimAnimSpeed = 10000000000
 							end))
+						if Settings.GunMods.Removes.AimAnim == true then
+							coroutine.resume(coroutine.create(function()
+								v.SniperSettings.AimAnimSpeed = 10000
+							end))
+						end
 						end
 					end
 				end
@@ -1495,17 +1515,34 @@ MainGun:AddToggle("No Recoil", Settings.GunMods.NoRecoil, function(V)
 	Settings.GunMods.NoRecoil = V
 end,"NORE")
 
+MainGun:AddSlider("Recoil Ammount", 0, Settings.GunMods.Values.RecoilAmmount, 50, 10, function(V)
+	Settings.GunMods.Values.RecoilAmmount = V
+end,"RAMM")
+
 MainGun:AddToggle("No Spread", Settings.GunMods.Spread, function(V)
 	Settings.GunMods.Spread = V
 end,"NOSP")
+
+MainGun:AddSlider("Spread Ammount", 0, Settings.GunMods.Values.SpreadAmmount, 50, 10, function(V)
+	Settings.GunMods.Values.SpreadAmmount = V
+end,"SAMM")
 
 MainGun:AddToggle("Instant Equip", Settings.GunMods.InstantEquip, function(V)
 	Settings.GunMods.InstantEquip = V
 end,"IE")
 
+MainGun:AddToggle("Remove Equip Animation", Settings.GunMods.InstantEquip, function(V)
+	Settings.GunMods.Removes.EquipAnim = V
+end,"IEA")
+
 MainGun:AddToggle("Instant Aim", Settings.GunMods.InstantAim, function(V)
 	Settings.GunMods.InstantAim = V
 end,"INSTANTAIM")
+
+MainGun:AddToggle("Remove Aim Ainimation", Settings.GunMods.InstantEquip, function(V)
+	Settings.GunMods.Removes.AimAnim = V
+end,"IAA")
+
 MainGun:AddSeperator("xd")
 MainGun:AddToggle("Wall Bang", Settings.WallBang, function(V)
 	Settings.WallBang = V
