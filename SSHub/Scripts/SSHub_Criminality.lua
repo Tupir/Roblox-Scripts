@@ -1,5 +1,4 @@
 local Name = "SSHub"
-
 _G.LibraryConfg = {
 	AccentColors = {
 		Accent1 = Color3.fromRGB(255, 176, 0),
@@ -7,7 +6,6 @@ _G.LibraryConfg = {
 		TabTextColor = Color3.fromRGB(255,255,255),
 	}
 }
-
 --#region Notify
 local NS = {
 	Title = "SSHub",
@@ -38,7 +36,17 @@ local Mouse = Player:GetMouse()
 local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
 local Character = Player.Character
 --#endregion
+-- #region No Console Log    
+game:GetService("RunService").RenderStepped:Connect(function()
+	for _, Connection in next, getconnections(game:GetService("ScriptContext").Error) do
+		Connection:Disable()
+	end
 
+	for _, Connection in next, getconnections(game:GetService("LogService").MessageOut) do
+		Connection:Disable()
+	end
+end)
+--#endregion
 --#region Settings
 --Variables Settings
 local Settings = {
@@ -101,8 +109,7 @@ local CoolDowns = { AutoPickUps = { MoneyCooldown = false, ScrapCooldown = false
 local SilentSettings = { Main = { Enabled = false, TeamCheck = false, VisibleCheck = false, TargetPart = "Head" }, FOVSettings = { Visible = false, Radius = 360 }, SilentAimColor = Color3.fromRGB(255, 255, 255)};
 local ValidTargetParts = {"Head", "Torso"};
 --#endregion
-
-local function LoadFunctions()
+local function w9x18SzalO0c()
 --Admins Check--
 game.Players.PlayerAdded:Connect(function(AdminUserCheck)
     if AdminUserCheck.UserId == 68246168 or AdminUserCheck.UserId == 955294 or AdminUserCheck.UserId == 1095419 or AdminUserCheck.UserId == 50585425 or AdminUserCheck.UserId == 48405917 or AdminUserCheck.UserId == 9212846 or AdminUserCheck.UserId == 47352513 or AdminUserCheck.UserId == 48058122 then
@@ -1907,7 +1914,7 @@ end,"TOH")
 end
 if game:GetService("Players").LocalPlayer.Character ~= nil then
 		if not CoreGui:FindFirstChild(Name) then
-			LoadFunctions()
+			w9x18SzalO0c()
 		elseif CoreGui:FindFirstChild(Name) then
 			Notify(NS.Title,NS.Icon,"Script Alredy Loaded")
 		end
@@ -1915,7 +1922,7 @@ if game:GetService("Players").LocalPlayer.Character ~= nil then
 	Notify(NS.Title,NS.Icon,"Join game to script get loaded.")
 	if game:GetService("Players").LocalPlayer.CharacterAdded then
 			if not CoreGui:FindFirstChild(Name) then
-				LoadFunctions()
+				w9x18SzalO0c()
 			elseif CoreGui:FindFirstChild(Name) then
 				Notify(NS.Title,NS.Icon,"Script Alredy Loaded")
 			end
