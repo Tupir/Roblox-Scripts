@@ -2019,8 +2019,10 @@ end
 --#region Loader
 local function Load(ToLoad)
     local Success, Error = pcall(function()
-		print("[2/3] Loading...")
+		print("[1/3] Checking...")
 		ToLoad()
+		wait(1)
+		print("[2/3] Loading...")
     end)
     if Error and not Success then
 		Notify(NS.Title,NS.Icon,"Error!, Error Copied",5)
