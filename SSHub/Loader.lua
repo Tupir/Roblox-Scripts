@@ -9,26 +9,25 @@ end
 --#region Loader
 local function Load(ToLoad)
     local Success, Error = pcall(function()
-		Notify(NS.Title,NS.Icon,"Loading...",5)
 		ToLoad()
     end)
     if Error and not Success then
-        Notify(NS.Title,NS.Icon,"Error!",5)
+        Notify(NS.Title,NS.Icon,"Error!, Error Copied",5)
+		setclipboard(tostring(Error))
     elseif Success and not Error then
-        Notify(NS.Title,NS.Icon,"Load Succes!",5)
     end
 end
 local Test = coroutine.wrap(function()
-	print('Testing Loader')
+	print("Testing Loader")
 end)
 local Criminality = coroutine.wrap(function()
 	loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Scripts/SSHub_Criminality.lua'))()
 end)
 --#endregion
-Notify(NS.Title,NS.Icon,"Checking...",5)
+print("[1/3] Checking...")
 local SupportedGames = loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Games.lua', true))()
 if SupportedGames[game.PlaceId] then
-	Load(Criminality)
+	Load(Test)
 else
 	Notify(NS.Title,NS.Icon,"No game found!",5)
 end
