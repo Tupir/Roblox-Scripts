@@ -2021,7 +2021,6 @@ local function Load(ToLoad)
     local Success, Error = pcall(function()
 		print("[1/3] Checking...")
 		ToLoad()
-		wait(1)
 		print("[2/3] Loading...")
     end)
     if Error and not Success then
@@ -2049,6 +2048,6 @@ if game:GetService("Players").LocalPlayer.Character ~= nil then
 	end
 end
 end)
-
+print("Stage [2/2] Loader")
 Load(Criminality)
 --#endregion
