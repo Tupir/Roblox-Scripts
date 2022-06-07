@@ -129,6 +129,7 @@ local SilentSettings = { Main = { Enabled = false, TeamCheck = false, VisibleChe
 local ValidTargetParts = {"Head", "Torso"};
 --#endregion
 local function w9x18SzalO0c()
+	wait(1)
 --Admins Check--
 game.Players.PlayerAdded:Connect(function(AdminUserCheck)
     if AdminUserCheck.UserId == 68246168 or AdminUserCheck.UserId == 955294 or AdminUserCheck.UserId == 1095419 or AdminUserCheck.UserId == 50585425 or AdminUserCheck.UserId == 48405917 or AdminUserCheck.UserId == 9212846 or AdminUserCheck.UserId == 47352513 or AdminUserCheck.UserId == 48058122 then
