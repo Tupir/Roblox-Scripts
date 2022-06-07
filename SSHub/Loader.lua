@@ -29,7 +29,11 @@ local SupportedGames = loadstring(game:HttpGet('https://raw.githubusercontent.co
 print("Stage [1/2] Game Checker")
 print("[1/2] Checking...")
 if SupportedGames[game.PlaceId] then
-	Load(Criminality)
+	if not game:GetService("CoreGui"):FindFirstChild("SSHub") then
+		Load(Criminality)
+	elseif game:GetService("CoreGui"):FindFirstChild("SSHub") then
+		Notify(NS.Title,NS.Icon,"Cancelled, Script Alredy Loaded")
+	end
 else
 	print("[2/2] No game found!")
 end
