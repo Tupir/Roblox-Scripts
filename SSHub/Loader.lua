@@ -27,7 +27,7 @@ end)
 print("[1/3] Checking...")
 local SupportedGames = loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Games.lua', true))()
 if SupportedGames[game.PlaceId] then
-	Load(Test)
+	Load(Criminality)
 else
 	Notify(NS.Title,NS.Icon,"No game found!",5)
 end
