@@ -24,7 +24,6 @@ local Criminality = coroutine.wrap(function()
 	loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Scripts/SSHub_Criminality.lua'))()
 end)
 --#endregion
-print("[1/3] Checking...")
 local SupportedGames = loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Games.lua', true))()
 if SupportedGames[game.PlaceId] then
 	Load(Criminality)
