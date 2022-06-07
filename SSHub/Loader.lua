@@ -21,12 +21,15 @@ local Test = coroutine.wrap(function()
 	print("Testing Loader")
 end)
 local Criminality = coroutine.wrap(function()
+	print("[2/2] Game found: "..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
 	loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Scripts/SSHub_Criminality.lua'))()
 end)
 --#endregion
 local SupportedGames = loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Games.lua', true))()
+print("Stage [1/2] Game Checker")
+print("[1/2] Checking...")
 if SupportedGames[game.PlaceId] then
 	Load(Criminality)
 else
-	Notify(NS.Title,NS.Icon,"No game found!",5)
+	print("[2/2] No game found!")
 end
