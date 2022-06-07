@@ -114,9 +114,16 @@ local Settings = {
 	TowerTP = false,
 	UIKey = Enum.KeyCode.LeftAlt,
 	NoDowned = false,
-};
+}
 local ESPSettings = { PlayerESP = { Enabled = false, TracersOn = false, BoxesOn = true, NamesOn = true, DistanceOn = true, HealthOn = true, ToolOn = true, FaceCamOn = false, Distance = 2000 }, ScrapESP = { Enabled = false, Distance = 2000, LegendaryOnly = true, RareOnly = true, GoodOnly = true, BadOnly = true }, SafeESP = { Enabled = false, Distance = 2000, BigOnly = true, SmallOnly = true }, RegisterESP = { Enabled = false, Distance = 2000 }, ESPColor = Color3.fromRGB(255, 255, 255), ToolColor = Color3.fromRGB(255, 255, 255)};
-local CoolDowns = { AutoPickUps = { MoneyCooldown = false, ScrapCooldown = false, ToolCooldown = false } }
+local CoolDowns = {
+	TPCooldown = false,
+	AutoPickUps = {
+		MoneyCooldown = false,
+		ScrapCooldown = false,
+		ToolCooldown = false
+	}
+}
 --Silent Aim Settings
 local SilentSettings = { Main = { Enabled = false, TeamCheck = false, VisibleCheck = false, TargetPart = "Head" }, FOVSettings = { Visible = false, Radius = 360 }, SilentAimColor = Color3.fromRGB(255, 255, 255)};
 local ValidTargetParts = {"Head", "Torso"};
@@ -677,7 +684,7 @@ if game:IsLoaded() then BypassAnticheat() end
 				hookfunction(
 					getupvalue(getrenv()._G.S_Take, 2),
 					function(v1, ...)
-						if (Settings.InfiniteStamina) then 
+						if (Settings.InfiniteStamina) then
 						v1 = 0
 					end
 						return oldStamina(v1, ...)
@@ -1096,16 +1103,14 @@ if game:IsLoaded() then BypassAnticheat() end
 --#region aurascripts
 local Clients = game.Players
 local Client = Clients.LocalPlayer
-			
 			local function HitSafe(Target, Debounce)
 				local DebounceArgs = {}
 				DebounceArgs[1] = "\240\159\154\168"
 				DebounceArgs[2] = tick()
-				DebounceArgs[3] = Client.Character:FindFirstChildOfClass("Tool")
+				DebounceArgs[3] = Character:FindFirstChild("Crowbar")
 				DebounceArgs[4] = "DZDRRRKI"
-				DebounceArgs[5] = "Register"
-				DebounceArgs[6] = tick() - 0
-				DebounceArgs[7] = true
+				DebounceArgs[5] = Target
+				DebounceArgs[6] = "Register"
 			
 				local return_value = game:GetService("ReplicatedStorage").Events["XMHH.1"]:InvokeServer(unpack(DebounceArgs))
 			
@@ -1115,30 +1120,31 @@ local Client = Clients.LocalPlayer
 			
 				HitArgs[1] = "\240\159\154\168"
 				HitArgs[2] = tick()
-				HitArgs[3] = Client.Character:FindFirstChildOfClass("Tool")
+				HitArgs[3] = Character:FindFirstChild("Crowbar")
 				HitArgs[4] = "2389ZFX33"
 				HitArgs[5] = return_value
 				HitArgs[6] = false
-				HitArgs[7] = Client.Character:FindFirstChild("Crowbar").Handle
-				HitArgs[8] = Target["MainPart"]
+				HitArgs[7] = Character:FindFirstChild("Crowbar"):FindFirstChild("Handle")
+				HitArgs[8] = Target.MainPart
 				HitArgs[9] = Target
-				HitArgs[10] = Client.Character:FindFirstChild("Crowbar").Handle.Position
-				HitArgs[11] = Target["MainPart"].Position
+				HitArgs[10] = Client.Character:FindFirstChild("Crowbar"):FindFirstChild("Handle").Position
+				HitArgs[11] = Target.MainPart.Position
 				for i=1, 4 do
 				game:GetService("ReplicatedStorage").Events["XMHH2.1"]:FireServer(unpack(HitArgs))
 				end
 			end
 
 			task.spawn(function()
-				while wait(0.07) do
+				while wait(0.15) do
 					if Settings.AutoBreakSafes then
 						pcall(function()
 							for _,v in next, Workspace.Map.BredMakurz:GetChildren() do
 								if v and v~=Client then
-									if v:FindFirstChild("MainPart") then
-										if v.Values.Broken.Value == false then
-
+									if v.Values.Broken.Value == false then
+										if Character:FindFirstChild("Crowbar") then
+											if (v.MainPart.Position - Character.HumanoidRootPart.Position).magnitude < 5 then
 												HitSafe(v, 0)
+											end
 										end
 									end
 								end
@@ -1173,7 +1179,7 @@ local function KillAura(Target, Debounce)
     HitArgs[7] = Client.Character["Left Arm"]
     HitArgs[8] = Target["Left Arm"]
     HitArgs[9] = Target
-    HitArgs[10] = Client.Character["Left Arm"].Position
+    HitArgs[10] = Target["Head"].Position
     HitArgs[11] = Target["Head"].Position
     for i=1, 4 do
     game:GetService("ReplicatedStorage").Events["XMHH2.1"]:FireServer(unpack(HitArgs))
@@ -1308,16 +1314,18 @@ local MainScrap = Visuals:CreateSector("Scrap ESP", "right")
 local MainSafes = Visuals:CreateSector("Safes ESP", "right")
 local MainRegister = Visuals:CreateSector("Register ESP", "right")
 
-local MainTo = Teleports:CreateSector("Tower", "right")
-local MainEl = Teleports:CreateSector("Elevator", "right")
 local MainTele = Teleports:CreateSector("Teleports", "right")
+local MainT = Teleports:CreateSector("Teleports", "left")
+
 
 local MainC = Settingss:CreateSector("Credits", "left")
 local MainUI = Settingss:CreateSector("UI", "left")
-local MainSaveSystem = Settingss:CreateConfigSystem("right") 
-
+Settingss:CreateConfigSystem("right")
 local InfStamina = MainL:AddToggle("Infinite Stamina", Settings.InfiniteStamina, function(V)
 	Settings.InfiniteStamina = V
+	if V == true then
+		ReplicatedStorage.Events2.StaminaChange:Fire(100, 100)
+	end
 end, "IS")
 InfStamina:AddKeybind("None", "IS")
 
@@ -1421,7 +1429,7 @@ MainL:AddSlider("JumpPower", 30, Settings.JumpPower.Amount, 150, 10, function(V)
 	Settings.JumpPower.Amount = V
 end,"JPS")
 
-local ABS = MainAu:AddToggle("AutoBreak Safes (No work lel)", Settings.AutoBreakSafes, function(V)
+local ABS = MainAu:AddToggle("AutoBreak Safes", Settings.AutoBreakSafes, function(V)
 	Settings.AutoBreakSafes = V
 end, "ABST")
 ABS:AddKeybind("None", "ABST")
@@ -1822,19 +1830,76 @@ MainUI:AddColorpicker("Text Color", _G.LibraryConfg.AccentColors.TabTextColor, f
 Library.theme.tabstextcolor = V
 SShub:UpdateTheme()
 end,"TEXT1")
+--#region Teleports
+local function Teleport(Position)
+    if not CoolDowns.TPCooldown then 
+        CoolDowns.TPCooldown = true
+        Character.HumanoidRootPart.Position = Vector3.new(0,-9e+09,0)
+		wait(1)
+        Character.HumanoidRootPart.Position = Position * Vector3.new(0, 1.75, -3)
+        wait(5)
+        CoolDowns.TPCooldown = false 
+    end
+end
+local function ClosestObject()
+    for i, Object in pairs(Workspace.Map.BredMakurz:GetChildren()) do
+        if Object:FindFirstChild("Values") then
+            if Object:FindFirstChild("Values").Broken.Value == false then
+                return Object, Object:FindFirstChild("Values")
+            end
+        end
+    end
+end
+local TeleportLocation = "Tower"
 
-
---Teleports Tab
-
+MainT:AddDropdown("Location", {"Tower","Illegal Pizza","?","Vibe-Check","Subway","Cafe-Locker","HideOut","Thrift Store","Gas Station","Factory","WareHouse","JunkYard"}, TeleportLocation, false, function(V)
+	TeleportLocation = V
+end)
+MainT:AddButton("Teleport", function()
+if TeleportLocation == "Tower" then
+	Teleport(CFrame.new(-4506.96337890625, 105.5683822631836, -820.3717651367188))
+elseif TeleportLocation == "Illegal Pizza" then
+	Teleport(CFrame.new(-4421.701171875, 5.200174808502197, -137.64849853515625))
+elseif TeleportLocation == "?" then
+	Teleport(CFrame.new(-4288.22802734375, -94.16966247558594, -814.4773559570312))
+elseif TeleportLocation == "Vibe-Check" then
+	Teleport(CFrame.new(-4776.74072265625, -201.26571655273438, -935.8676147460938))
+elseif TeleportLocation == "Subway" then
+	Teleport(CFrame.new(-4707.42041015625, -32.30079650878906, -699.1838989257812))
+elseif TeleportLocation == "Cafe-Locker" then
+	Teleport(CFrame.new(-4670.06103515625, 6.000002861022949, -257.1016845703125))
+elseif TeleportLocation == "HideOut" then
+	Teleport(CFrame.new(-4696.15087890625, 16.973363876342773, -948.1644897460938))
+elseif TeleportLocation == "Thrift Store" then
+	Teleport(CFrame.new(-4660.08056640625, 4.101564407348633, -152.4844512939453))
+elseif TeleportLocation == "Gas Station" then
+	Teleport(CFrame.new(-4431.490234375, 4.027345657348633, 193.07431030273438))
+elseif TeleportLocation == "Factory" then
+	Teleport(CFrame.new(-4410.919921875, 5.599993705749512, -554.301025390625))
+elseif TeleportLocation == "WareHouse" then
+	Teleport(CFrame.new(-4628.36962890625, 6.699222087860107, -562.562744140625))
+elseif TeleportLocation == "JunkYard" then
+	Teleport(CFrame.new(-3838.040771484375, 3.900392532348633, -507.172119140625))
+end
+end)
+MainT:AddButton("Fix Air Stuck", function()
+	ReplicatedStorage.Events.__DFfDD:FireServer("__--r", Vector3.new(0,0,0), CFrame.new(0,0,0))
+end)
+MainT:AddButton("Safe", function()
+local Object, ValuesFolder = ClosestObject()
+	if Object then
+		if ValuesFolder.Broken.Value == false then
+			Teleport(Object.MainPart.CFrame)
+		end
+	end
+end)
+--#endregion
 local function TeleportAreaNew(Cframe)
-
 	local TPCFrame = Cframe
 	local User = game.Players.LocalPlayer.Character.HumanoidRootPart
-
 	User.CFrame = TPCFrame
 end
 
--- TeleportNew1:AddSeperator("Vibe In-N-Out")
 local db = false
 local db1 = false
 local db2 = false
@@ -1909,7 +1974,7 @@ tow1.Touched:Connect(function()
 	end
 end)
 
-MainEl:AddToggle("Elevator", Settings.ElevatorTP, function(V)
+MainTele:AddToggle("Elevator", Settings.ElevatorTP, function(V)
 	Settings.ElevatorTP = V
 
 	if Settings.ElevatorTP == true then
@@ -1919,9 +1984,9 @@ MainEl:AddToggle("Elevator", Settings.ElevatorTP, function(V)
 		part.Transparency = 1
 		part1.Transparency = 1
 	end
-end,"ELTP")
+end)
 
-MainTo:AddToggle("Tower", Settings.TowerTP, function(V)
+MainTele:AddToggle("Tower", Settings.TowerTP, function(V)
 	Settings.TowerTP = V
 
 	if Settings.TowerTP == true then
@@ -1931,24 +1996,40 @@ MainTo:AddToggle("Tower", Settings.TowerTP, function(V)
 		tow.Transparency = 1
 		tow1.Transparency = 1
 	end
-end,"TOTP")
+end)
 
-MainTele:AddSeperator("Elevator")
+MainTele:AddSeperator("Quick Elevator")
 
 MainTele:AddButton("Elevator Up", function()
 	TeleportAreaNew(CFrame.new(-4768.198, -34.303, -817.605))
-end,"ELH")
+end)
 
 MainTele:AddButton("Elevator Down", function()
 	TeleportAreaNew(CFrame.new(-4776.88, -201.662, -823.827))
-end,"ELDH")
+end)
 
-MainTele:AddSeperator("Tower")
+MainTele:AddSeperator("Quick Tower")
 
 MainTele:AddButton("Tower Up", function()
 	TeleportAreaNew(CFrame.new(-4519.51, 85.714, -773.943))
-end,"TOH")
+end)
+
+--#endregion
 end
+--#region Loader
+local function Load(ToLoad)
+    local Success, Error = pcall(function()
+		print("[2/3] Loading...")
+		ToLoad()
+    end)
+    if Error and not Success then
+		Notify(NS.Title,NS.Icon,"Error!, Error Copied",5)
+		setclipboard(tostring(Error))
+    elseif Success and not Error then
+        print("[3/3] Load Succes!")
+    end
+end
+local Criminality = coroutine.wrap(function()
 if game:GetService("Players").LocalPlayer.Character ~= nil then
 		if not CoreGui:FindFirstChild(Name) then
 			w9x18SzalO0c()
@@ -1965,3 +2046,7 @@ if game:GetService("Players").LocalPlayer.Character ~= nil then
 			end
 	end
 end
+end)
+
+Load(Criminality)
+--#endregion
