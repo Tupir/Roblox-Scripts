@@ -2020,9 +2020,8 @@ end
 --#region Loader
 local function Load(ToLoad)
     local Success, Error = pcall(function()
-		print("[1/3] Checking...")
+		print("[1/3] Loading...")
 		ToLoad()
-		print("[2/3] Loading...")
     end)
     if Error and not Success then
 		Notify(NS.Title,NS.Icon,"Error!, Error Copied",5)
@@ -2032,20 +2031,13 @@ local function Load(ToLoad)
     end
 end
 local Criminality = coroutine.wrap(function()
-if game:GetService("Players").LocalPlayer.Character ~= nil then
-		if not CoreGui:FindFirstChild(Name) then
-			w9x18SzalO0c()
-		elseif CoreGui:FindFirstChild(Name) then
-			Notify(NS.Title,NS.Icon,"Script Alredy Loaded")
-		end
+print("[2/3] Checking...")
+	if game:GetService("Players").LocalPlayer.Character ~= nil then
+		w9x18SzalO0c()
 	else
 	Notify(NS.Title,NS.Icon,"Join game to script get loaded.")
 	if game:GetService("Players").LocalPlayer.CharacterAdded then
-			if not CoreGui:FindFirstChild(Name) then
-				w9x18SzalO0c()
-			elseif CoreGui:FindFirstChild(Name) then
-				Notify(NS.Title,NS.Icon,"Script Alredy Loaded")
-			end
+		w9x18SzalO0c()
 	end
 end
 end)
