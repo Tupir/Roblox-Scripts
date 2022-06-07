@@ -32,7 +32,7 @@ if SupportedGames[game.PlaceId] then
 	if not game:GetService("CoreGui"):FindFirstChild("SSHub") then
 		Load(Criminality)
 	elseif game:GetService("CoreGui"):FindFirstChild("SSHub") then
-		Notify(NS.Title,NS.Icon,"Cancelled, Script Alredy Loaded")
+		game:GetService("Players").LocalPlayer:Kick("\nScript Alredy Loaded")
 	end
 else
 	print("[2/2] No game found!")
