@@ -3392,14 +3392,14 @@ function library:CreateWindow(name, size, hidebutton)
         function tab:CreateConfigSystem(side)
             local configSystem = { }
 
-            configSystem.configFolder = window.name .. "/" .. tostring(game.PlaceId)
+            configSystem.configFolder = "SSHub" .. "/" .. tostring(game.PlaceId)
             if (not isfolder(configSystem.configFolder)) then
                 makefolder(configSystem.configFolder)
             end
 
             configSystem.sector = tab:CreateSector("Configs", side or "left")
 
-            local ConfigName = configSystem.sector:AddTextbox("Config Name", "", ConfigName, function() end, "")
+            local ConfigName = configSystem.sector:AddTextbox("Config Name", "", true, function() end, "")
             local default = tostring(listfiles(configSystem.configFolder)[1] or ""):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", "")
             local Config = configSystem.sector:AddDropdown("Configs", {}, default, false, function() end, "")
             for i,v in pairs(listfiles(configSystem.configFolder)) do
@@ -3409,7 +3409,7 @@ function library:CreateWindow(name, size, hidebutton)
             end
 
             configSystem.Create = configSystem.sector:AddButton("Create", function()
-		Notify(NS.Title,NS.Icon,"Config Created")
+                Notify(NS.Title,NS.Icon,"Config Created")
                 for i,v in pairs(listfiles(configSystem.configFolder)) do
                     Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", ""))
                 end
@@ -3419,9 +3419,7 @@ function library:CreateWindow(name, size, hidebutton)
     
                     for i,v in pairs(library.flags) do
                         if (v ~= nil and v ~= "") then
-                            if (tostring(v):find("Enum.KeyCode") and (typeof(v) == "table")) then
-                                config[i] = v.Name and { v }
-                            elseif (typeof(v) == "Color3") then
+                            if (typeof(v) == "Color3") then
                                 config[i] = { v.R, v.G, v.B }
                             elseif (tostring(v):find("Enum.KeyCode")) then
                                 config[i] = v.Name
@@ -3444,17 +3442,15 @@ function library:CreateWindow(name, size, hidebutton)
             end)
 
             configSystem.Save = configSystem.sector:AddButton("Save", function()
-		Notify(NS.Title,NS.Icon,"Config Saved")
+                Notify(NS.Title,NS.Icon,"Config Saved")
                 local config = {}
                 if Config:Get() and Config:Get() ~= "" then
                     for i,v in pairs(library.flags) do
                         if (v ~= nil and v ~= "") then
-                            if (tostring(v):find("Enum.KeyCode") and (typeof(v) == "table")) then
-                                config[i] = v.Name and { v }
-                            elseif (typeof(v) == "Color3") then
+                            if (typeof(v) == "Color3") then
                                 config[i] = { v.R, v.G, v.B }
                             elseif (tostring(v):find("Enum.KeyCode")) then
-                                config[i] = v.Name
+                                config[i] = "Enum.KeyCode." .. v.Name
                             elseif (typeof(v) == "table") then
                                 config[i] = { v }
                             else
@@ -3468,7 +3464,7 @@ function library:CreateWindow(name, size, hidebutton)
             end)
 
             configSystem.Load = configSystem.sector:AddButton("Load", function()
-		Notify(NS.Title,NS.Icon,"Config Loaded")
+                Notify(NS.Title,NS.Icon,"Config Loaded")
                 local Success = pcall(readfile, configSystem.configFolder .. "/" .. Config:Get() .. ".json")
                 if (Success) then
                     pcall(function() 
@@ -3482,8 +3478,8 @@ function library:CreateWindow(name, size, hidebutton)
                                 elseif (typeof(v[1]) == "table") then
                                     NewConfig[i] = v[1]
                                 end
-                            elseif (typeof(v) == "table")  and (tostring(v):find("Enum.KeyCode.")) then
-                                NewConfig[i] = v[1] and Enum.KeyCode[tostring(v):gsub("Enum.KeyCode.", "")]
+                            elseif (tostring(v):find("Enum.KeyCode.")) then
+                                NewConfig[i] = Enum.KeyCode[tostring(v):gsub("Enum.KeyCode.", "")]
                             else
                                 NewConfig[i] = v
                             end
@@ -3507,7 +3503,7 @@ function library:CreateWindow(name, size, hidebutton)
             end)
 
             configSystem.Delete = configSystem.sector:AddButton("Delete", function()
-		Notify(NS.Title,NS.Icon,"Config Deleted")
+                Notify(NS.Title,NS.Icon,"Config Deleted")
                 for i,v in pairs(listfiles(configSystem.configFolder)) do
                     Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", ""))
                 end
