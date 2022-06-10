@@ -274,7 +274,7 @@ function boxBase:Update()
 
                     if Vis5 then
                         self.Components.Tool.Visible = true
-                        self.Components.Tool.Position = Vector2.new(TagPos.X, TagPos.Y + 42)
+                        self.Components.Tool.Position = Vector2.new(TagPos.X, TagPos.Y + 56)
                         if self.Player.Character:FindFirstChildOfClass("Tool") then
                             self.Components.Tool.Text = "["..self.Player.Character:FindFirstChildOfClass("Tool").Name.."]"
                             self.Components.Tool.Color = ESP.Colors.ToolColor
@@ -296,10 +296,10 @@ function boxBase:Update()
 
                     if Vis5 then
                         self.Components.Inventory.Visible = true
-                        self.Components.Inventory.Position = Vector2.new(TagPos.X, TagPos.Y + 56)
+                        self.Components.Inventory.Position = Vector2.new(TagPos.X, TagPos.Y + 100)
                         if self.Player.Backpack then
 							for i, v in next, self.Players:GetChildren().Backpack:GetChildren() do
-								self.Components.Inventory.Text = v
+								self.Components.Inventory.Text = "["..v.."]"
 								self.Components.Inventory.Color = ESP.Colors.InventoryColor
 							end
                         else
