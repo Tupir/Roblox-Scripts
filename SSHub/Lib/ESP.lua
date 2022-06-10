@@ -272,7 +272,7 @@ function boxBase:Update()
 
                     if Vis5 then
                         self.Components.Tool.Visible = true
-                        self.Components.Tool.Position = Vector2.new(TagPos.X, TagPos.Y + 30)
+                        self.Components.Tool.Position = Vector2.new(TagPos.X, TagPos.Y + 34)
                         if self.Player.Character:FindFirstChildOfClass("Tool") then
                             self.Components.Tool.Text = "["..self.Player.Character:FindFirstChildOfClass("Tool").Name.."]"
                             self.Components.Tool.Color = ESP.Colors.ToolColor
