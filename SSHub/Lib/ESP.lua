@@ -4,19 +4,28 @@ local ESP = {
 	Boxes = false,
 	BoxShift = CFrame.new(0,-1.5,0),
 	BoxSize = Vector3.new(4,6,0),
-	Color = Color3.fromRGB(199, 255, 255),
-    ToolColor = Color3.fromRGB(199, 255, 255),
 	FaceCamera = false,
 	Names = false,
 	Distance = false,
 	Health = false,
     Tool = false,
+	Inventory = false,
 	TeamColor = true,
 	Thickness = 1.5,
 	AttachShift = 1,
 	TeamMates = true,
 	Players = true,
     DistanceS = 2000,
+	Colors = {
+		BoxColor = Color3.fromRGB(199, 255, 255),
+		NameColor = Color3.fromRGB(199, 255, 255),
+		DistanceColor = Color3.fromRGB(199, 255, 255),
+		HealthColor = Color3.fromRGB(199, 255, 255),
+		ToolColor = Color3.fromRGB(199, 255, 255),
+		InventoryColor = Color3.fromRGB(199, 255, 255),
+		TracerColor = Color3.fromRGB(199, 255, 255),
+		Color = Color3.fromRGB(199, 255, 255)
+	},
 
 	Objects = setmetatable({}, {__mode="kv"}),
 	Overrides = {}
@@ -104,7 +113,7 @@ function ESP:AddObjectListener(parent, options)
 		if type(options.Type) == "string" and c:IsA(options.Type) or options.Type == nil then
 			if type(options.Name) == "string" and c.Name == options.Name or options.Name == nil then
 				if not options.Validator or options.Validator(c) then
-					local box = ESP:Add(c, {
+					local box = ESP.Colors:Add(c, {
 						PrimaryPart = type(options.PrimaryPart) == "string" and c:WaitForChild(options.PrimaryPart) or type(options.PrimaryPart) == "function" and options.PrimaryPart(c),
 						Color = type(options.Color) == "function" and options.Color(c) or options.Color,
 						ColorDynamic = options.ColorDynamic,
@@ -156,7 +165,7 @@ function boxBase:Update()
 	if ESP.Highlighted == self.Object then
 		color = ESP.HighlightColor
 	else
-		color = self.Color or self.ColorDynamic and self:ColorDynamic() or ESP:GetColor(self.Object) or ESP.Color
+		color = self.Color or self.ColorDynamic and self:ColorDynamic() or ESP:GetColor(self.Object) or ESP.Colors.Color
 	end
 
 	local allow = true
@@ -217,7 +226,7 @@ function boxBase:Update()
                         self.Components.Quad.PointB = Vector2.new(TopLeft.X, TopLeft.Y)
                         self.Components.Quad.PointC = Vector2.new(BottomLeft.X, BottomLeft.Y)
                         self.Components.Quad.PointD = Vector2.new(BottomRight.X, BottomRight.Y)
-                        self.Components.Quad.Color = color
+                        self.Components.Quad.Color = ESP.Colors.BoxColor
                     else
                         self.Components.Quad.Visible = false
                     end
@@ -233,7 +242,7 @@ function boxBase:Update()
                     self.Components.Distance.Visible = true
                     self.Components.Distance.Position = Vector2.new(TagPos.X, TagPos.Y + 28)
                     self.Components.Distance.Text = math.floor((cam.CFrame.p - cf.p).magnitude) .."m"
-                    self.Components.Distance.Color = color
+                    self.Components.Distance.Color = ESP.Colors.DistanceColor
                 else
                     self.Components.Distance.Visible = false
                 end
@@ -249,7 +258,7 @@ function boxBase:Update()
                             self.Components.Health.Visible = true
                             self.Components.Health.Position = Vector2.new(TagPos.X, TagPos.Y + 14)               
                             self.Components.Health.Text =  "["..math.floor(self.Player.Character.Humanoid.Health + 0.5)  .. "|" .. self.Player.Character.Humanoid.MaxHealth.."]"
-                            self.Components.Health.Color = color
+                            self.Components.Health.Color = ESP.Colors.HealthColor
                         else
                             self.Components.Health.Visible = false
                         end
@@ -266,10 +275,10 @@ function boxBase:Update()
 
                     if Vis5 then
                         self.Components.Tool.Visible = true
-                        self.Components.Tool.Position = Vector2.new(TagPos.X, TagPos.Y - 14)
+                        self.Components.Tool.Position = Vector2.new(TagPos.X, TagPos.Y + 7)
                         if self.Player.Character:FindFirstChildOfClass("Tool") then
-                            self.Components.Tool.Text = self.Player.Character:FindFirstChildOfClass("Tool").Name
-                            self.Components.Tool.Color = ESP.ToolColor
+                            self.Components.Tool.Text = "["..self.Player.Character:FindFirstChildOfClass("Tool").Name.."]"
+                            self.Components.Tool.Color = ESP.Colors.ToolColor
                         else
                             self.Components.Tool.Visible = false
                         end
@@ -282,6 +291,30 @@ function boxBase:Update()
             else
                 self.Components.Tool.Visible = false
             end
+			if self.Player then
+                if ESP.Inventory then
+                    local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
+
+                    if Vis5 then
+                        self.Components.Inventory.Visible = true
+                        self.Components.Inventory.Position = Vector2.new(TagPos.X, TagPos.Y + 3.5)
+                        if self.Player.Backpack then
+							for i, v in next, self.Player.Backpack:GetChildren() do
+								self.Components.Inventory.Text = v
+								self.Components.Inventory.Color = ESP.Colors.InventoryColor
+							end
+                        else
+                            self.Components.Inventory.Visible = false
+                        end
+                    else
+                        self.Components.Inventory.Visible = false
+                    end
+                else
+                    self.Components.Inventory.Visible = false
+                end
+            else
+                self.Components.Inventory.Visible = false
+            end
             
             if ESP.Names then
                 local TagPos, Vis5 = WorldToViewportPoint(cam, locs.TagPos.p)
@@ -290,7 +323,7 @@ function boxBase:Update()
                     self.Components.Name.Visible = true
                     self.Components.Name.Position = Vector2.new(TagPos.X, TagPos.Y)
                     self.Components.Name.Text = self.Name
-                    self.Components.Name.Color = color
+                    self.Components.Name.Color = ESP.Colors.NameColor
                 else
                     self.Components.Name.Visible = false
                 end
@@ -305,7 +338,7 @@ function boxBase:Update()
                     self.Components.Tracer.Visible = true
                     self.Components.Tracer.From = Vector2.new(TorsoPos.X, TorsoPos.Y)
                     self.Components.Tracer.To = Vector2.new(cam.ViewportSize.X/2,cam.ViewportSize.Y/ESP.AttachShift)
-                    self.Components.Tracer.Color = color
+                    self.Components.Tracer.Color = ESP.Colors.TracerColor
                 else
                     self.Components.Tracer.Visible = false
                 end
@@ -317,6 +350,7 @@ function boxBase:Update()
             self.Components.Distance.Visible = false
             self.Components.Health.Visible = false
             self.Components.Tool.Visible = false
+			self.Components.Inventory.Visible = false
             self.Components.Name.Visible = false
             self.Components.Tracer.Visible = false
         end
@@ -348,43 +382,50 @@ function ESP:Add(obj, options)
 
 	box.Components["Quad"] = Draw("Quad", {
 		Thickness = self.Thickness,
-		Color = color,
+		Color = ESP.Colors.BoxColor,
 		Transparency = 1,
 		Filled = false,
 		Visible = self.Enabled and self.Boxes
 	})
 	box.Components["Name"] = Draw("Text", {
 		Text = box.Name,
-		Color = box.Color,
+		Color = ESP.Colors.NameColor,
 		Center = true,
 		Outline = true,
 		Size = 15,
 		Visible = self.Enabled and self.Names
 	})
 	box.Components["Distance"] = Draw("Text", {
-		Color = box.Color,
+		Color = ESP.Colors.DistanceColor,
 		Center = true,
 		Outline = true,
 		Size = 15,
 		Visible = self.Enabled and self.Distance
 	})
 	box.Components["Health"] = Draw("Text", {
-		Color = box.Color,
+		Color = ESP.Colors.HealthColor,
 		Center = true,
 		Outline = true,
 		Size = 15,
 		Visible = self.Enabled and self.Health
 	})
     box.Components["Tool"] = Draw("Text", {
-		Color = box.Color,
+		Color = ESP.Colors.ToolColor,
 		Center = true,
 		Outline = true,
 		Size = 15,
 		Visible = self.Enabled and self.Tool
 	})
+	box.Components["Inventory"] = Draw("Text", {
+		Color = ESP.Colors.InventoryColor,
+		Center = true,
+		Outline = true,
+		Size = 15,
+		Visible = self.Enabled and self.Inventory
+	})
 	box.Components["Tracer"] = Draw("Line", {
 		Thickness = ESP.Thickness,
-		Color = box.Color,
+		Color = ESP.Colors.TracerColor,
 		Transparency = 1,
 		Visible = self.Enabled and self.Tracers
 	})
