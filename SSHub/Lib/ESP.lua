@@ -9,7 +9,6 @@ local ESP = {
 	Distance = false,
 	Health = false,
     Tool = false,
-	Inventory = false,
 	TeamColor = true,
 	Thickness = 1.5,
 	AttachShift = 1,
@@ -22,7 +21,6 @@ local ESP = {
 		DistanceColor = Color3.fromRGB(199, 255, 255),
 		HealthColor = Color3.fromRGB(199, 255, 255),
 		ToolColor = Color3.fromRGB(199, 255, 255),
-		InventoryColor = Color3.fromRGB(199, 255, 255),
 		TracerColor = Color3.fromRGB(199, 255, 255),
 		Color = Color3.fromRGB(199, 255, 255)
 	},
@@ -274,7 +272,7 @@ function boxBase:Update()
 
                     if Vis5 then
                         self.Components.Tool.Visible = true
-                        self.Components.Tool.Position = Vector2.new(TagPos.X, TagPos.Y + 38)
+                        self.Components.Tool.Position = Vector2.new(TagPos.X, TagPos.Y + 30)
                         if self.Player.Character:FindFirstChildOfClass("Tool") then
                             self.Components.Tool.Text = "["..self.Player.Character:FindFirstChildOfClass("Tool").Name.."]"
                             self.Components.Tool.Color = ESP.Colors.ToolColor
@@ -325,7 +323,6 @@ function boxBase:Update()
             self.Components.Distance.Visible = false
             self.Components.Health.Visible = false
             self.Components.Tool.Visible = false
-			self.Components.Inventory.Visible = false
             self.Components.Name.Visible = false
             self.Components.Tracer.Visible = false
         end
