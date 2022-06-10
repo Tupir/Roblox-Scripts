@@ -16,13 +16,13 @@ local ESP = {
 	Players = true,
     DistanceS = 2000,
 	Colors = {
-		BoxColor = Color3.fromRGB(199, 255, 255),
-		NameColor = Color3.fromRGB(199, 255, 255),
-		DistanceColor = Color3.fromRGB(199, 255, 255),
-		HealthColor = Color3.fromRGB(199, 255, 255),
-		ToolColor = Color3.fromRGB(199, 255, 255),
-		TracerColor = Color3.fromRGB(199, 255, 255),
-		Color = Color3.fromRGB(199, 255, 255)
+		BoxColor = Color3.fromRGB(255, 255, 255),
+		NameColor = Color3.fromRGB(255, 255, 255),
+		DistanceColor = Color3.fromRGB(255, 255, 255),
+		HealthColor = Color3.fromRGB(255, 255, 255),
+		ToolColor = Color3.fromRGB(255, 255, 255),
+		TracerColor = Color3.fromRGB(255, 255, 255),
+		Color = Color3.fromRGB(255, 255, 255)
 	},
 
 	Objects = setmetatable({}, {__mode="kv"}),
