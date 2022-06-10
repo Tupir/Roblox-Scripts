@@ -231,7 +231,7 @@ function boxBase:Update()
                     end
                 end
             else
-                self.Components.Quad.Visible = false
+                self.Components.Quad.Visible =	 false
             end
 
             if ESP.Distance then
@@ -298,7 +298,7 @@ function boxBase:Update()
                         self.Components.Inventory.Visible = true
                         self.Components.Inventory.Position = Vector2.new(TagPos.X, TagPos.Y + 56)
                         if self.Player.Backpack then
-							for i, v in next, self.Players.Backpack:GetChildren() do
+							for i, v in next, self.Players:GetChildren().Backpack:GetChildren() do
 								self.Components.Inventory.Text = v
 								self.Components.Inventory.Color = ESP.Colors.InventoryColor
 							end
