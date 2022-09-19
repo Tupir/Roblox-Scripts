@@ -172,7 +172,7 @@ local ReplicatedStorage = GetService(game, "ReplicatedStorage")
 local ScriptContext = GetService(game, "ScriptContext")
 local LogService = GetService(game, "LogService")
 local RunService = GetService(game, "RunService")
-local Lighting = GetService(game, "Lighting");
+local Lighting = GetService(game, "Lighting")
 local CoreGui = GetService(game, "CoreGui");
 local Uis = GetService(game, "UserInputService");
 local Cam = Workspace.CurrentCamera;
@@ -1011,6 +1011,19 @@ if game:IsLoaded() then Bypass() end
 				end
 			end)
 			--Infinite Stamina
+			
+		local oldStamina
+		oldStamina =
+			hookfunction(
+				getupvalue(getrenv()._G.S_Take, 2),
+				function(v1, ...)
+					if (Settings.InfiniteStamina) then
+					v1 = 0
+				end
+					return oldStamina(v1, ...)
+				end
+			)
+		-- #endregion
 		local StaminaTake = getrenv()._G.S_Take
         local StaminaFunc = getupvalue(StaminaTake, 2) 
         
@@ -1021,12 +1034,11 @@ if game:IsLoaded() then Bypass() end
                 OldFunction = hookfunction(v, function(...)
                     if Settings.InfiniteStamina == true then
                         local CharacterVar = game:GetService("Players").LocalPlayer.Character
-        
+						local CharacterVar2 = game:GetService("Players").LocalPlayer.CharacterAdded:wait()
                         if not CharacterVar or not CharacterVar.Parent then
-                            local CharacterVar = game:GetService("Players").LocalPlayer.CharacterAdded:wait()
         
                             getupvalue(StaminaFunc, 6).S = 100
-                        elseif CharacterVar then
+                        elseif CharacterVar2 then
                             getupvalue(StaminaFunc, 6).S = 100
                         end
                     end
