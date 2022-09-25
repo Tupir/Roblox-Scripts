@@ -366,9 +366,12 @@ function library:CreateWindow(name, size, hidebutton)
         window.Line2.BackgroundColor3 = theme.accentcolor
     end)
 
-    window.TabList = Instance.new("Frame", window.TopBar)
+    window.TabList = Instance.new("ScrollingFrame", window.TopBar)
     window.TabList.Name = "tablist"
     window.TabList.BackgroundTransparency = 1
+    window.TabList.Visible = false
+    window.TabList.ScrollBarThickness = 0
+    window.TabList.ScrollingDirection = "X"
     window.TabList.Position = UDim2.fromOffset(0, window.TopBar.AbsoluteSize.Y / 2 + 1)
     window.TabList.Size = UDim2.fromOffset(window.size.X.Offset, window.TopBar.AbsoluteSize.Y / 2)
     window.TabList.BorderSizePixel = 0
@@ -376,6 +379,16 @@ function library:CreateWindow(name, size, hidebutton)
 
     window.TabList.InputBegan:Connect(dragstart)
     window.TabList.InputChanged:Connect(dragend)
+
+    window.UpListLayout = Instance.new("UIListLayout", window.TabList)
+    window.UpListLayout.FillDirection = Enum.FillDirection.Horizontal
+    window.UpListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    window.UpListLayout.Padding = UDim.new(0, 12)
+
+    window.UpListPadding = Instance.new("UIPadding", window.TabList)
+    window.UpListPadding.PaddingTop = UDim.new(0, 12)
+    window.UpListPadding.PaddingLeft = UDim.new(0, 12)
+    window.UpListPadding.PaddingRight = UDim.new(0, 12)
 
     window.BlackLine = Instance.new("Frame", window.Frame)
     window.BlackLine.Name = "blackline"
