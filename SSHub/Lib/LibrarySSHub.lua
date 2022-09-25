@@ -4,19 +4,12 @@ local library = {
 	items = { } 
 }
 
-local NS = {
-	Title = "SSHub",
-	Icon = "rbxassetid://8426126371"
-}
-local function Notify(Title, Icon, Text, Duration)
-	game.StarterGui:SetCore("SendNotification", {Title = Title or ""; Text = Text or ""; Icon = Icon or ""; Duration = tonumber(Duration) or 3 })
-end
 -- Services
 local players = game:GetService("Players")
 local uis = game:GetService("UserInputService")
 local runservice = game:GetService("RunService")
 local tweenservice = game:GetService("TweenService")
-local marketplaceservice = game:GetService("MarketplaceService")
+-- local marketplaceservice = game:GetService("MarketplaceService")
 local textservice = game:GetService("TextService")
 local coregui = game:GetService("CoreGui")
 local httpservice = game:GetService("HttpService")
@@ -30,7 +23,10 @@ library.theme = {
     titlesize = 18,
     font = Enum.Font.Code,
     background = "rbxassetid://7032472167",
-    tilesize = 360,
+    tilesize = 150,
+    cursor = false,
+    cursorimg = "https://i.pinimg.com/564x/02/48/18/0248185c3693b0e51e7a2db57753c497.jpg",
+    imagecolor = Color3.new(255, 255, 255),
     backgroundcolor = Color3.fromRGB(20, 20, 20),
     tabstextcolor = Color3.fromRGB(240, 240, 240),
     bordercolor = Color3.fromRGB(60, 60, 60),
@@ -49,174 +45,204 @@ library.theme = {
     itemscolor2 = Color3.fromRGB(210, 210, 210)
 }
 
-if not _G.LibraryConfg then
-    _G.LibraryConfg = {
-        AccentColors = {
-            Accent1 = Color3.fromRGB(255, 176, 0),
-            Accent2 = Color3.fromRGB(255, 176, 0),
-            TabTextColor = Color3.fromRGB(255,255,255),
-        }
+if not _G.AccentColors then
+    _G.AccentColors = {
+        Accent1 = Color3.fromRGB(252, 255, 255),
+        Accent2 = Color3.fromRGB(255, 255, 255)
     }
 end
 
-library.theme.accentcolor = _G.LibraryConfg.AccentColors.Accent1
-library.theme.accentcolor2 = _G.LibraryConfg.AccentColors.Accent2
-library.theme.tabstextcolor = _G.LibraryConfg.AccentColors.TabTextColor
+library.theme.accentcolor = _G.AccentColors.Accent1
+library.theme.accentcolor2 = _G.AccentColors.Accent2
 
-function library:CreateWatermark(name, position)
-    local gamename = marketplaceservice:GetProductInfo(game.PlaceId).Name
-    local watermark = { }
-    watermark.Visible = true
-    watermark.text = " " .. name:gsub("{game}", gamename):gsub("{fps}", "0 FPS") .. " "
 
-    watermark.main = Instance.new("ScreenGui", coregui)
-    watermark.main.Name = "Watermark"
-    if syn then
-        syn.protect_gui(watermark.main)
-    end
-
-    if getgenv().watermark then
-        getgenv().watermark:Remove()
-    end
-    getgenv().watermark = watermark.main
-    
-    watermark.mainbar = Instance.new("Frame", watermark.main)
-    watermark.mainbar.Name = "Main"
-    watermark.mainbar.BorderColor3 = Color3.fromRGB(80, 80, 80)
-    watermark.mainbar.Visible = watermark.Visible
-    watermark.mainbar.BorderSizePixel = 0
-    watermark.mainbar.ZIndex = 5
-    watermark.mainbar.Position = UDim2.new(0, position and position.X or 10, 0, position and position.Y or 10)
-    watermark.mainbar.Size = UDim2.new(0, 0, 0, 25)
-
-    watermark.Gradient = Instance.new("UIGradient", watermark.mainbar)
-    watermark.Gradient.Rotation = 90
-    watermark.Gradient.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0.00, Color3.fromRGB(40, 40, 40)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(10, 10, 10)) })
-
-    watermark.Outline = Instance.new("Frame", watermark.mainbar)
-    watermark.Outline.Name = "outline"
-    watermark.Outline.ZIndex = 4
-    watermark.Outline.BorderSizePixel = 0
-    watermark.Outline.Visible = watermark.Visible
-    watermark.Outline.BackgroundColor3 = library.theme.outlinecolor
-    watermark.Outline.Position = UDim2.fromOffset(-1, -1)
-
-    watermark.BlackOutline = Instance.new("Frame", watermark.mainbar)
-    watermark.BlackOutline.Name = "blackline"
-    watermark.BlackOutline.ZIndex = 3
-    watermark.BlackOutline.BorderSizePixel = 0
-    watermark.BlackOutline.BackgroundColor3 = library.theme.outlinecolor2
-    watermark.BlackOutline.Visible = watermark.Visible
-    watermark.BlackOutline.Position = UDim2.fromOffset(-2, -2)
-
-    watermark.label = Instance.new("TextLabel", watermark.mainbar)
-    watermark.label.Name = "FPSLabel"
-    watermark.label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    watermark.label.BackgroundTransparency = 1.000
-    watermark.label.Position = UDim2.new(0, 0, 0, 0)
-    watermark.label.Size = UDim2.new(0, 238, 0, 25)
-    watermark.label.Font = library.theme.font
-    watermark.label.ZIndex = 6
-    watermark.label.Visible = watermark.Visible
-    watermark.label.Text = watermark.text
-    watermark.label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    watermark.label.TextSize = 15
-    watermark.label.TextStrokeTransparency = 0.000
-    watermark.label.TextXAlignment = Enum.TextXAlignment.Left
-    watermark.label.Size = UDim2.new(0, watermark.label.TextBounds.X+10, 0, 25)
-    
-    watermark.topbar = Instance.new("Frame", watermark.mainbar)
-    watermark.topbar.Name = "TopBar"
-    watermark.topbar.ZIndex = 6
-    watermark.topbar.BackgroundColor3 = library.theme.accentcolor
-    watermark.topbar.BorderSizePixel = 0
-    watermark.topbar.Visible = watermark.Visible
-    watermark.topbar.Size = UDim2.new(0, 0, 0, 1)
-
-    watermark.mainbar.Size = UDim2.new(0, watermark.label.TextBounds.X, 0, 25)
-    watermark.topbar.Size = UDim2.new(0, watermark.label.TextBounds.X+6, 0, 1)
-    watermark.Outline.Size = watermark.mainbar.Size + UDim2.fromOffset(2, 2)
-    watermark.BlackOutline.Size = watermark.mainbar.Size + UDim2.fromOffset(4, 4)
-
-    watermark.mainbar.Size = UDim2.new(0, watermark.label.TextBounds.X+4, 0, 25)    
-    watermark.label.Size = UDim2.new(0, watermark.label.TextBounds.X+4, 0, 25)
-    watermark.topbar.Size = UDim2.new(0, watermark.label.TextBounds.X+6, 0, 1)
-    watermark.Outline.Size = watermark.mainbar.Size + UDim2.fromOffset(2, 2)
-    watermark.BlackOutline.Size = watermark.mainbar.Size + UDim2.fromOffset(4, 4)
-
-    local startTime, counter, oldfps = os.clock(), 0, nil
-    runservice.Heartbeat:Connect(function()
-        watermark.label.Visible = watermark.Visible
-        watermark.mainbar.Visible = watermark.Visible
-        watermark.topbar.Visible = watermark.Visible
-        watermark.Outline.Visible = watermark.Visible
-        watermark.BlackOutline.Visible = watermark.Visible
-
-        if not name:find("{fps}") then
-            watermark.label.Text = " " .. name:gsub("{game}", gamename):gsub("{fps}", "0 FPS") .. " "
-        end
-
-        if name:find("{fps}") then
-            local currentTime = os.clock()
-            counter = counter + 1
-            if currentTime - startTime >= 1 then 
-                local fps = math.floor(counter / (currentTime - startTime))
-                counter = 0
-                startTime = currentTime
-
-                if fps ~= oldfps then
-                    watermark.label.Text = " " .. name:gsub("{game}", gamename):gsub("{fps}", fps .. " FPS") .. " "
-        
-                    watermark.label.Size = UDim2.new(0, watermark.label.TextBounds.X+10, 0, 25)
-                    watermark.mainbar.Size = UDim2.new(0, watermark.label.TextBounds.X, 0, 25)
-                    watermark.topbar.Size = UDim2.new(0, watermark.label.TextBounds.X, 0, 1)
-
-                    watermark.Outline.Size = watermark.mainbar.Size + UDim2.fromOffset(2, 2)
-                    watermark.BlackOutline.Size = watermark.mainbar.Size + UDim2.fromOffset(4, 4)
+if library.theme.cursor and Drawing then
+    local success = pcall(function() 
+        library.cursor = Drawing.new("Image")
+        library.cursor.Data = game:HttpGet(library.theme.cursorimg)
+        library.cursor.Size = Vector2.new(64, 64)
+        library.cursor.Visible = uis.MouseEnabled
+        library.cursor.Rounding = 0
+        library.cursor.Position = Vector2.new(mouse.X - 32, mouse.Y + 6)
+    end)
+    if success and library.cursor then
+        uis.InputChanged:Connect(function(input)
+            if uis.MouseEnabled then
+                if input.UserInputType == Enum.UserInputType.MouseMovement then
+                    library.cursor.Position = Vector2.new(input.Position.X - 32, input.Position.Y + 7)
                 end
-                oldfps = fps
             end
-        end
-    end)
-
-    watermark.mainbar.MouseEnter:Connect(function()
-        tweenservice:Create(watermark.mainbar, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 1, Active = false }):Play()
-        tweenservice:Create(watermark.topbar, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 1, Active = false }):Play()
-        tweenservice:Create(watermark.label, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { TextTransparency = 1, Active = false }):Play()
-        tweenservice:Create(watermark.Outline, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 1, Active = false }):Play()
-        tweenservice:Create(watermark.BlackOutline, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 1, Active = false }):Play()
-    end)
-    
-    watermark.mainbar.MouseLeave:Connect(function()
-        tweenservice:Create(watermark.mainbar, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 0, Active = true }):Play()
-        tweenservice:Create(watermark.topbar, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 0, Active = true }):Play()
-        tweenservice:Create(watermark.label, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { TextTransparency = 0, Active = true }):Play()
-        tweenservice:Create(watermark.Outline, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 0, Active = true }):Play()
-        tweenservice:Create(watermark.BlackOutline, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 0, Active = true }):Play()
-    end)
-
-    function watermark:UpdateTheme(theme)
-        theme = theme or library.theme
-        watermark.Outline.BackgroundColor3 = theme.outlinecolor
-        watermark.BlackOutline.BackgroundColor3 = theme.outlinecolor2
-        watermark.label.Font = theme.font
-        watermark.topbar.BackgroundColor3 = theme.accentcolor
+        end)
+        
+        game:GetService("RunService").RenderStepped:Connect(function()
+            uis.OverrideMouseIconBehavior = Enum.OverrideMouseIconBehavior.ForceHide
+            library.cursor.Visible = uis.MouseEnabled and (uis.MouseIconEnabled or game:GetService("GuiService").MenuIsOpen)
+        end)
+    elseif not success and library.cursor then
+        library.cursor:Remove()
     end
-
-    return watermark
 end
+
+-- function library:CreateWatermark(name, position)
+--     local gamename = "Criminality" -- marketplaceservice:GetProductInfo(game.PlaceId).Name
+--     local watermark = { }
+--     watermark.Visible = true
+--     watermark.text = " " .. name:gsub("{game}", gamename):gsub("{fps}", "0 FPS") .. " "
+
+--     watermark.main = Instance.new("ScreenGui", coregui)
+--     watermark.main.Name = "Watermark"
+--     if syn then
+--         syn.protect_gui(watermark.main)
+--     end
+
+--     if getgenv().watermark then
+--         getgenv().watermark:Remove()
+--     end
+--     getgenv().watermark = watermark.main
+    
+--     watermark.mainbar = Instance.new("Frame", watermark.main)
+--     watermark.mainbar.Name = "Main"
+--     watermark.mainbar.BorderColor3 = Color3.fromRGB(80, 80, 80)
+--     watermark.mainbar.Visible = watermark.Visible
+--     watermark.mainbar.BorderSizePixel = 0
+--     watermark.mainbar.ZIndex = 5
+--     watermark.mainbar.Position = UDim2.new(0, position and position.X or 10, 0, position and position.Y or 10)
+--     watermark.mainbar.Size = UDim2.new(0, 0, 0, 25)
+
+--     watermark.Gradient = Instance.new("UIGradient", watermark.mainbar)
+--     watermark.Gradient.Rotation = 90
+--     watermark.Gradient.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0.00, Color3.fromRGB(40, 40, 40)), ColorSequenceKeypoint.new(1.00, Color3.fromRGB(10, 10, 10)) })
+
+--     watermark.Outline = Instance.new("Frame", watermark.mainbar)
+--     watermark.Outline.Name = "outline"
+--     watermark.Outline.ZIndex = 4
+--     watermark.Outline.BorderSizePixel = 0
+--     watermark.Outline.Visible = watermark.Visible
+--     watermark.Outline.BackgroundColor3 = library.theme.outlinecolor
+--     watermark.Outline.Position = UDim2.fromOffset(-1, -1)
+
+--     watermark.BlackOutline = Instance.new("Frame", watermark.mainbar)
+--     watermark.BlackOutline.Name = "blackline"
+--     watermark.BlackOutline.ZIndex = 3
+--     watermark.BlackOutline.BorderSizePixel = 0
+--     watermark.BlackOutline.BackgroundColor3 = library.theme.outlinecolor2
+--     watermark.BlackOutline.Visible = watermark.Visible
+--     watermark.BlackOutline.Position = UDim2.fromOffset(-2, -2)
+
+--     watermark.label = Instance.new("TextLabel", watermark.mainbar)
+--     watermark.label.Name = "FPSLabel"
+--     watermark.label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+--     watermark.label.BackgroundTransparency = 1.000
+--     watermark.label.Position = UDim2.new(0, 0, 0, 0)
+--     watermark.label.Size = UDim2.new(0, 238, 0, 25)
+--     watermark.label.Font = library.theme.font
+--     watermark.label.ZIndex = 6
+--     watermark.label.Visible = watermark.Visible
+--     watermark.label.Text = watermark.text
+--     watermark.label.TextColor3 = Color3.fromRGB(255, 255, 255)
+--     watermark.label.TextSize = 15
+--     watermark.label.TextStrokeTransparency = 0.000
+--     watermark.label.TextXAlignment = Enum.TextXAlignment.Left
+--     watermark.label.Size = UDim2.new(0, watermark.label.TextBounds.X+10, 0, 25)
+    
+--     watermark.topbar = Instance.new("Frame", watermark.mainbar)
+--     watermark.topbar.Name = "TopBar"
+--     watermark.topbar.ZIndex = 6
+--     watermark.topbar.BackgroundColor3 = library.theme.accentcolor
+--     watermark.topbar.BorderSizePixel = 0
+--     watermark.topbar.Visible = watermark.Visible
+--     watermark.topbar.Size = UDim2.new(0, 0, 0, 1)
+
+--     watermark.mainbar.Size = UDim2.new(0, watermark.label.TextBounds.X, 0, 25)
+--     watermark.topbar.Size = UDim2.new(0, watermark.label.TextBounds.X+6, 0, 1)
+--     watermark.Outline.Size = watermark.mainbar.Size + UDim2.fromOffset(2, 2)
+--     watermark.BlackOutline.Size = watermark.mainbar.Size + UDim2.fromOffset(4, 4)
+
+--     watermark.mainbar.Size = UDim2.new(0, watermark.label.TextBounds.X+4, 0, 25)    
+--     watermark.label.Size = UDim2.new(0, watermark.label.TextBounds.X+4, 0, 25)
+--     watermark.topbar.Size = UDim2.new(0, watermark.label.TextBounds.X+6, 0, 1)
+--     watermark.Outline.Size = watermark.mainbar.Size + UDim2.fromOffset(2, 2)
+--     watermark.BlackOutline.Size = watermark.mainbar.Size + UDim2.fromOffset(4, 4)
+
+--     local startTime, counter, oldfps = os.clock(), 0, nil
+--     runservice.Heartbeat:Connect(function()
+--         watermark.label.Visible = watermark.Visible
+--         watermark.mainbar.Visible = watermark.Visible
+--         watermark.topbar.Visible = watermark.Visible
+--         watermark.Outline.Visible = watermark.Visible
+--         watermark.BlackOutline.Visible = watermark.Visible
+
+--         if not name:find("{fps}") then
+--             watermark.label.Text = " " .. name:gsub("{game}", gamename):gsub("{fps}", "0 FPS") .. " "
+--         end
+
+--         if name:find("{fps}") then
+--             local currentTime = os.clock()
+--             counter = counter + 1
+--             if currentTime - startTime >= 1 then 
+--                 local fps = math.floor(counter / (currentTime - startTime))
+--                 counter = 0
+--                 startTime = currentTime
+
+--                 if fps ~= oldfps then
+--                     watermark.label.Text = " " .. name:gsub("{game}", gamename):gsub("{fps}", fps .. " FPS") .. " "
+        
+--                     watermark.label.Size = UDim2.new(0, watermark.label.TextBounds.X+10, 0, 25)
+--                     watermark.mainbar.Size = UDim2.new(0, watermark.label.TextBounds.X, 0, 25)
+--                     watermark.topbar.Size = UDim2.new(0, watermark.label.TextBounds.X, 0, 1)
+
+--                     watermark.Outline.Size = watermark.mainbar.Size + UDim2.fromOffset(2, 2)
+--                     watermark.BlackOutline.Size = watermark.mainbar.Size + UDim2.fromOffset(4, 4)
+--                 end
+--                 oldfps = fps
+--             end
+--         end
+--     end)
+
+--     watermark.mainbar.MouseEnter:Connect(function()
+--         tweenservice:Create(watermark.mainbar, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 1, Active = false }):Play()
+--         tweenservice:Create(watermark.topbar, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 1, Active = false }):Play()
+--         tweenservice:Create(watermark.label, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { TextTransparency = 1, Active = false }):Play()
+--         tweenservice:Create(watermark.Outline, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 1, Active = false }):Play()
+--         tweenservice:Create(watermark.BlackOutline, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 1, Active = false }):Play()
+--     end)
+    
+--     watermark.mainbar.MouseLeave:Connect(function()
+--         tweenservice:Create(watermark.mainbar, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 0, Active = true }):Play()
+--         tweenservice:Create(watermark.topbar, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 0, Active = true }):Play()
+--         tweenservice:Create(watermark.label, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { TextTransparency = 0, Active = true }):Play()
+--         tweenservice:Create(watermark.Outline, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 0, Active = true }):Play()
+--         tweenservice:Create(watermark.BlackOutline, TweenInfo.new(0.1, Enum.EasingStyle.Linear, Enum.EasingDirection.In), { BackgroundTransparency = 0, Active = true }):Play()
+--     end)
+
+--     function watermark:UpdateTheme(theme)
+--         theme = theme or library.theme
+--         watermark.Outline.BackgroundColor3 = theme.outlinecolor
+--         watermark.BlackOutline.BackgroundColor3 = theme.outlinecolor2
+--         watermark.label.Font = theme.font
+--         watermark.topbar.BackgroundColor3 = theme.accentcolor
+--     end
+
+--     return watermark
+-- end
 
 function library:CreateWindow(name, size, hidebutton)
     local window = { }
 
     window.name = name or ""
     window.size = UDim2.fromOffset(size.X, size.Y) or UDim2.fromOffset(492, 598)
-    window.hidebutton = hidebutton or Enum.KeyCode.RightShift
+    window.hidebutton = hidebutton -- or Enum.KeyCode.RightShift
     window.theme = library.theme
 
     local updateevent = Instance.new("BindableEvent")
     function window:UpdateTheme(theme)
         updateevent:Fire(theme or library.theme)
+        window.theme = (theme or library.theme)
+    end
+    
+    local updateeventbackground = Instance.new("BindableEvent")
+    function window:UpdateBackground(theme)
+        updateeventbackground:Fire(theme or library.theme)
         window.theme = (theme or library.theme)
     end
 
@@ -362,33 +388,20 @@ function library:CreateWindow(name, size, hidebutton)
     window.Line2.Size = UDim2.fromOffset(window.size.X.Offset, 1)
     window.Line2.BorderSizePixel = 0
     window.Line2.BackgroundColor3 = window.theme.accentcolor
-    updateevent.Event:Connect(function(theme)
+    updateeventbackground.Event:Connect(function(theme)
         window.Line2.BackgroundColor3 = theme.accentcolor
     end)
 
-    window.TabList = Instance.new("ScrollingFrame", window.TopBar)
+    window.TabList = Instance.new("Frame", window.TopBar)
     window.TabList.Name = "tablist"
     window.TabList.BackgroundTransparency = 1
-    window.TabList.Visible = true
-    window.TabList.ScrollBarThickness = 0
-    window.TabList.ScrollingDirection = "X"
-    window.TabList.Position = UDim2.fromOffset(0, window.TopBar.AbsoluteSize.Y / 3 - 3)
+    window.TabList.Position = UDim2.fromOffset(0, window.TopBar.AbsoluteSize.Y / 2 + 1)
     window.TabList.Size = UDim2.fromOffset(window.size.X.Offset, window.TopBar.AbsoluteSize.Y / 2)
     window.TabList.BorderSizePixel = 0
     window.TabList.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 
     window.TabList.InputBegan:Connect(dragstart)
     window.TabList.InputChanged:Connect(dragend)
-
-    window.UpListLayout = Instance.new("UIListLayout", window.TabList)
-    window.UpListLayout.FillDirection = Enum.FillDirection.Horizontal
-    window.UpListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    window.UpListLayout.Padding = UDim.new(0, 12)
-
-    window.UpListPadding = Instance.new("UIPadding", window.TabList)
-    window.UpListPadding.PaddingTop = UDim.new(0, 12)
-    window.UpListPadding.PaddingLeft = UDim.new(0, 12)
-    window.UpListPadding.PaddingRight = UDim.new(0, 12)
 
     window.BlackLine = Instance.new("Frame", window.Frame)
     window.BlackLine.Name = "blackline"
@@ -409,14 +422,15 @@ function library:CreateWindow(name, size, hidebutton)
     window.BackgroundImage.Size = UDim2.fromOffset(window.size.X.Offset, window.size.Y.Offset - window.TopBar.AbsoluteSize.Y - 1)
     window.BackgroundImage.Image = window.theme.background or ""
     window.BackgroundImage.ImageTransparency = window.BackgroundImage.Image ~= "" and 0 or 1
-    window.BackgroundImage.ImageColor3 = Color3.new() 
+    window.BackgroundImage.ImageColor3 = window.theme.imagecolor
     window.BackgroundImage.BackgroundColor3 = window.theme.backgroundcolor
     window.BackgroundImage.TileSize = UDim2.new(0, window.theme.tilesize, 0, window.theme.tilesize)
-    updateevent.Event:Connect(function(theme)
+    updateeventbackground.Event:Connect(function(theme)
         window.BackgroundImage.Image = theme.background or ""
         window.BackgroundImage.ImageTransparency = window.BackgroundImage.Image ~= "" and 0 or 1
         window.BackgroundImage.BackgroundColor3 = theme.backgroundcolor
         window.BackgroundImage.TileSize = UDim2.new(0, theme.tilesize, 0, theme.tilesize)
+        window.BackgroundImage.ImageColor3 = theme.imagecolor
     end)
 
     window.Line = Instance.new("Frame", window.Frame)
@@ -425,9 +439,13 @@ function library:CreateWindow(name, size, hidebutton)
     window.Line.Size = UDim2.fromOffset(60, 1)
     window.Line.BorderSizePixel = 0
     window.Line.BackgroundColor3 = window.theme.accentcolor
-    updateevent.Event:Connect(function(theme)
+    updateeventbackground.Event:Connect(function(theme)
         window.Line.BackgroundColor3 = theme.accentcolor
     end)
+
+    window.ListLayout = Instance.new("UIListLayout", window.TabList)
+    window.ListLayout.FillDirection = Enum.FillDirection.Horizontal
+    window.ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
     window.OpenedColorPickers = { }
     window.Tabs = { }
@@ -450,7 +468,7 @@ function library:CreateWindow(name, size, hidebutton)
         tab.TabButton.Size = UDim2.fromOffset(size.X + 15, window.TabList.AbsoluteSize.Y - 1)
         tab.TabButton.Name = tab.name
         tab.TabButton.TextSize = window.theme.fontsize
-        updateevent.Event:Connect(function(theme)
+        updateeventbackground.Event:Connect(function(theme)
             local size = textservice:GetTextSize(tab.name, theme.fontsize, theme.font, Vector2.new(200,300))
             tab.TabButton.TextColor3 = tab.TabButton.Name == "SelectedTab" and theme.accentcolor or theme.tabstextcolor
             tab.TabButton.Font = theme.font
@@ -557,7 +575,7 @@ function library:CreateWindow(name, size, hidebutton)
             sector.Line.BorderSizePixel = 0
             sector.Line.Position = UDim2.fromOffset(-2, -2)
             sector.Line.BackgroundColor3 = window.theme.accentcolor
-            updateevent.Event:Connect(function(theme)
+            updateeventbackground.Event:Connect(function(theme)
                 sector.Line.BackgroundColor3 = theme.accentcolor
             end)
 
@@ -867,7 +885,7 @@ function library:CreateWindow(name, size, hidebutton)
                 toggle.Gradient2 = Instance.new("UIGradient", toggle.CheckedFrame)
                 toggle.Gradient2.Rotation = (22.5 * 13)
                 toggle.Gradient2.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0.00, window.theme.accentcolor2), ColorSequenceKeypoint.new(1.00, window.theme.accentcolor) })
-                updateevent.Event:Connect(function(theme)
+                updateeventbackground.Event:Connect(function(theme)
                     toggle.Gradient2.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0.00, theme.accentcolor2), ColorSequenceKeypoint.new(1.00, theme.accentcolor) })
                 end)
 
@@ -943,7 +961,7 @@ function library:CreateWindow(name, size, hidebutton)
                         keybind.Main.Text = "[...]"
                         keybind.Main.TextColor3 = window.theme.accentcolor
                     end)
-                    updateevent.Event:Connect(function(theme)
+                    updateeventbackground.Event:Connect(function(theme)
                         keybind.Main.Font = theme.font
                         if keybind.Main.Text == "[...]" then
                             keybind.Main.TextColor3 = theme.accentcolor
@@ -1397,9 +1415,9 @@ function library:CreateWindow(name, size, hidebutton)
                         textbox:Set(textbox.default)
                     end
     
-                    textbox.Main.FocusLost:Connect(function()
-                        textbox:Set(textbox.Main.Text)
-                    end)
+                    -- textbox.Main.FocusLost:Connect(function()
+                    --     textbox:Set(textbox.Main.Text)
+                    -- end)
     
                     textbox.BlackOutline2 = Instance.new("Frame", textbox.Main)
                     textbox.BlackOutline2.Name = "blackline"
@@ -1473,7 +1491,7 @@ function library:CreateWindow(name, size, hidebutton)
                     colorpicker.BlackOutline2.BorderSizePixel = 0
                     colorpicker.BlackOutline2.BackgroundColor3 = window.theme.outlinecolor2
                     colorpicker.BlackOutline2.Position = UDim2.fromOffset(-3, -3)
-                    updateevent.Event:Connect(function(theme)
+                    updateeventbackground.Event:Connect(function(theme)
                         if window.OpenedColorPickers[colorpicker.MainPicker] then
                             colorpicker.BlackOutline2.BackgroundColor3 = theme.accentcolor
                         else
@@ -1798,7 +1816,7 @@ function library:CreateWindow(name, size, hidebutton)
                     slider.Gradient2 = Instance.new("UIGradient", slider.SlideBar)
                     slider.Gradient2.Rotation = 90
                     slider.Gradient2.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0.00, window.theme.accentcolor), ColorSequenceKeypoint.new(1.00, window.theme.accentcolor2) })
-                    updateevent.Event:Connect(function(theme)
+                    updateeventbackground.Event:Connect(function(theme)
                         slider.Gradient2.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0.00, theme.accentcolor), ColorSequenceKeypoint.new(1.00, theme.accentcolor2) })
                     end)
     
@@ -2141,7 +2159,7 @@ function library:CreateWindow(name, size, hidebutton)
                 slider.Gradient2 = Instance.new("UIGradient", slider.SlideBar)
                 slider.Gradient2.Rotation = 90
                 slider.Gradient2.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0.00, window.theme.accentcolor), ColorSequenceKeypoint.new(1.00, window.theme.accentcolor2) })
-                updateevent.Event:Connect(function(theme)
+                updateeventbackground.Event:Connect(function(theme)
                     slider.Gradient2.Color = ColorSequence.new({ ColorSequenceKeypoint.new(0.00, theme.accentcolor), ColorSequenceKeypoint.new(1.00, theme.accentcolor2) })
                 end)
 
@@ -2272,7 +2290,7 @@ function library:CreateWindow(name, size, hidebutton)
                 colorpicker.BlackOutline2.BorderSizePixel = 0
                 colorpicker.BlackOutline2.BackgroundColor3 = window.theme.outlinecolor2
                 colorpicker.BlackOutline2.Position = UDim2.fromOffset(-3, -3)
-                updateevent.Event:Connect(function(theme)
+                updateeventbackground.Event:Connect(function(theme)
                     colorpicker.BlackOutline2.BackgroundColor3 = window.OpenedColorPickers[colorpicker.MainPicker] and theme.accentcolor or theme.outlinecolor2
                 end)
                 
@@ -3401,26 +3419,25 @@ function library:CreateWindow(name, size, hidebutton)
         function tab:CreateConfigSystem(side)
             local configSystem = { }
 
-            configSystem.configFolder = "SSHub" .. "/" .. tostring(game.PlaceId)
+            configSystem.configFolder = "FemWare"
             if (not isfolder(configSystem.configFolder)) then
                 makefolder(configSystem.configFolder)
             end
 
-            configSystem.sector = tab:CreateSector("Configs", side or "left")
+            configSystem.sector = tab:CreateSector("Loadout Config", side or "left")
 
-            local ConfigName = configSystem.sector:AddTextbox("Config Name", "", true, function() end, "")
-            local default = tostring(listfiles(configSystem.configFolder)[1] or ""):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", "")
-            local Config = configSystem.sector:AddDropdown("Configs", {}, default, false, function() end, "")
+            local ConfigName = configSystem.sector:AddTextbox("Config Name", "", ConfigName, function() end, "")
+            local default = tostring(listfiles(configSystem.configFolder)[1] or ""):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", "")
+            local Config = configSystem.sector:AddDropdown("Loadouts", {}, default, false, function() end, "")
             for i,v in pairs(listfiles(configSystem.configFolder)) do
-                if v:find(".json") then
-                    Config:Add(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", ""))
+                if v:find(".txt") then
+                    Config:Add(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
                 end
             end
 
             configSystem.Create = configSystem.sector:AddButton("Create", function()
-                Notify(NS.Title,NS.Icon,"Config Created")
                 for i,v in pairs(listfiles(configSystem.configFolder)) do
-                    Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", ""))
+                    Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
                 end
 
                 if ConfigName:Get() and ConfigName:Get() ~= "" then
@@ -3440,18 +3457,17 @@ function library:CreateWindow(name, size, hidebutton)
                         end
                     end
     
-                    writefile(configSystem.configFolder .. "/" .. ConfigName:Get() .. ".json", httpservice:JSONEncode(config))
+                    writefile(configSystem.configFolder .. "/" .. ConfigName:Get() .. ".txt", httpservice:JSONEncode(config))
     
                     for i,v in pairs(listfiles(configSystem.configFolder)) do
-                        if v:find(".json") then
-                            Config:Add(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", ""))
+                        if v:find(".txt") then
+                            Config:Add(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
                         end
                     end
                 end
             end)
 
             configSystem.Save = configSystem.sector:AddButton("Save", function()
-                Notify(NS.Title,NS.Icon,"Config Saved")
                 local config = {}
                 if Config:Get() and Config:Get() ~= "" then
                     for i,v in pairs(library.flags) do
@@ -3468,16 +3484,15 @@ function library:CreateWindow(name, size, hidebutton)
                         end
                     end
     
-                    writefile(configSystem.configFolder .. "/" .. Config:Get() .. ".json", httpservice:JSONEncode(config))
+                    writefile(configSystem.configFolder .. "/" .. Config:Get() .. ".txt", httpservice:JSONEncode(config))
                 end
             end)
 
             configSystem.Load = configSystem.sector:AddButton("Load", function()
-                Notify(NS.Title,NS.Icon,"Config Loaded")
-                local Success = pcall(readfile, configSystem.configFolder .. "/" .. Config:Get() .. ".json")
+                local Success = pcall(readfile, configSystem.configFolder .. "/" .. Config:Get() .. ".txt")
                 if (Success) then
                     pcall(function() 
-                        local ReadConfig = httpservice:JSONDecode(readfile(configSystem.configFolder .. "/" .. Config:Get() .. ".json"))
+                        local ReadConfig = httpservice:JSONDecode(readfile(configSystem.configFolder .. "/" .. Config:Get() .. ".txt"))
                         local NewConfig = {}
     
                         for i,v in pairs(ReadConfig) do
@@ -3512,25 +3527,25 @@ function library:CreateWindow(name, size, hidebutton)
             end)
 
             configSystem.Delete = configSystem.sector:AddButton("Delete", function()
-                Notify(NS.Title,NS.Icon,"Config Deleted")
                 for i,v in pairs(listfiles(configSystem.configFolder)) do
-                    Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", ""))
+                    Config:Remove(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
                 end
 
                 if (not Config:Get() or Config:Get() == "") then return end
-                if (not isfile(configSystem.configFolder .. "/" .. Config:Get() .. ".json")) then return end
-                delfile(configSystem.configFolder .. "/" .. Config:Get() .. ".json")
+                if (not isfile(configSystem.configFolder .. "/" .. Config:Get() .. ".txt")) then return end
+                delfile(configSystem.configFolder .. "/" .. Config:Get() .. ".txt")
 
                 for i,v in pairs(listfiles(configSystem.configFolder)) do
-                    if v:find(".json") then
-                        Config:Add(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".json", ""))
+                    if v:find(".txt") then
+                        Config:Add(tostring(v):gsub(configSystem.configFolder .. "\\", ""):gsub(".txt", ""))
                     end
                 end
             end)
 
             return configSystem
         end
---[[Not finished lol
+
+        --[[ not finished lol
         function tab:CreatePlayerlist(name)
             local list = { }
             list.name = name or ""
@@ -3647,7 +3662,8 @@ function library:CreateWindow(name, size, hidebutton)
             
             return list
         end
-        ]]
+        ]]--
+
         table.insert(window.Tabs, tab)
         return tab
     end
