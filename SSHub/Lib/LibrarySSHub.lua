@@ -372,7 +372,7 @@ function library:CreateWindow(name, size, hidebutton)
     window.TabList.Visible = true
     window.TabList.ScrollBarThickness = 0
     window.TabList.ScrollingDirection = "X"
-    window.TabList.Position = UDim2.fromOffset(0, window.TopBar.AbsoluteSize.Y / 2 - 2)
+    window.TabList.Position = UDim2.fromOffset(0, window.TopBar.AbsoluteSize.Y / 2 + 2)
     window.TabList.Size = UDim2.fromOffset(window.size.X.Offset, window.TopBar.AbsoluteSize.Y / 2)
     window.TabList.BorderSizePixel = 0
     window.TabList.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
