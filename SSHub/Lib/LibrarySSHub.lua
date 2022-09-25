@@ -369,7 +369,7 @@ function library:CreateWindow(name, size, hidebutton)
     window.TabList = Instance.new("ScrollingFrame", window.TopBar)
     window.TabList.Name = "tablist"
     window.TabList.BackgroundTransparency = 1
-    window.TabList.Visible = false
+    window.TabList.Visible = true
     window.TabList.ScrollBarThickness = 0
     window.TabList.ScrollingDirection = "X"
     window.TabList.Position = UDim2.fromOffset(0, window.TopBar.AbsoluteSize.Y / 2 + 1)
