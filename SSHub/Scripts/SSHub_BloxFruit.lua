@@ -179,6 +179,12 @@ RunService.RenderStepped:Connect(function()
       if getgenv().Settings.ChestAutoFarm then
          local Cofre = ClosestChest()
          if Tweening == false then
+            tt = (Character.HumanoidRootPart.Position - Cofre.Position).Magnitude
+            if tt > 400 then 
+                TweenSpeed = 300
+            elseif tt < 400 then
+                TweenSpeed = 400
+            end
             TeleportTween(Cofre.CFrame, TweenSpeed)
          end
       end
@@ -207,9 +213,6 @@ end)
 MainA:AddToggle("Chest Auto Farm", getgenv().Settings.ChestAutoFarm, function(V)
    getgenv().Settings.ChestAutoFarm = V
 end, "ChestAutoFarm")
-MainA:AddSlider("Tween Speed", 0, TweenSpeed, 500, 10, function(V)
-    TweenSpeed = V
-end,"TweenSpeed")
 MainA:AddButton("Stop Tween", function()
 	TeleportTween(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame, TweenSpeed)
 end)
