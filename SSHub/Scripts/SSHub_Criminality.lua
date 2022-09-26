@@ -1452,6 +1452,7 @@ end)()
 				end
 			end)
 --#region AuraHits
+
 --#region BreakSafe
 local function AutoBreakSafe(Safe)
 	local HitArgs = {}
@@ -1466,19 +1467,19 @@ local function AutoBreakSafe(Safe)
 	HitArgs[9] = Safe
 	HitArgs[10] = Safe.MainPart.Position
 	HitArgs[11] = Safe.MainPart.Position
-	ReplicatedStorage.Events["XMHH2.1"]:FireServer(unpack(HitArgs))
+	for i=1, 4 do
+		ReplicatedStorage.Events["XMHH2.1"]:FireServer(unpack(HitArgs))
+    end
 end
 task.spawn(function()
-while wait(0.07) do
+while wait(1) do
 	if Settings.AutoBreakSafes then
 		pcall(function()
 			local ClosesSafe, ValuesFolder = ClosestSafe()
 				if Character:FindFirstChild("Crowbar") then
-					if ClosesSafe.MainPart then
-						if ValuesFolder.Broken.Value == false then
-							if (ClosesSafe.MainPart.Position - Character.HumanoidRootPart.Position).magnitude < 5 then
-								AutoBreakSafe(ClosesSafe)
-							end
+					if ValuesFolder.Broken.Value == false then
+						if (ClosesSafe.MainPart.Position - Character.HumanoidRootPart.Position).magnitude < 5 then
+							AutoBreakSafe(ClosesSafe)
 						end
 					end
 				end
@@ -1781,13 +1782,6 @@ end,"ChatLogs")
 MainMs:AddToggle("Ez Bypass", Settings.EZBypass, function(V)
 	Settings.EZBypass = V
 end,"EzByPass")
---[[
-local NC = MainMs:AddToggle("NoClip", Settings.NoClip, function(V)
-	Settings.NoClip = V
-end,"NoClip")
-
-NC:AddKeybind("None", "NoClip Keybind")
-]]--
 MainMs:AddSeperator("Doors")
 MainMs:AddToggle("Unlock Nearby Doors", Settings.UnlockDoorsNearby, function(V)
 	Settings.UnlockDoorsNearby = V
@@ -1838,6 +1832,20 @@ MainMs:AddToggle("NoClip Doors", Settings.NoClipD, function(V)
 		end
 	end
 end,"DoorNoClip")
+
+MainMs:AddToggle("Noclip", Settings.Noclip, function(V)
+	if Settings.Noclip == true then
+	   _G.conn = game:GetService("RunService").Stepped:Connect(function()
+		  for _, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+			 if v:IsA("BasePart") then
+				v.CanCollide = false    
+			 end
+		  end
+		end)
+	   else
+		_G.conn:Disconnect()
+	   end
+ end, "NoClip")
 
 MainGun:AddToggle("No Recoil", Settings.GunMods.NoRecoil, function(V)
 	Settings.GunMods.NoRecoil = V
