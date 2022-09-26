@@ -7,45 +7,38 @@ local function Notify(Title, Icon, Text, Duration)
 end
 
 --#region Loader
-local function Load(ToLoad)
+local function Load(Script)
     local Success, Error = pcall(function()
-		ToLoad()
-    end)
+		if not game:GetService("CoreGui"):FindFirstChild("SSHub") then
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Scripts/" .. Script .. ".lua', true))()
+		elseif game:GetService("CoreGui"):FindFirstChild("SSHub") then
+			game:GetService("Players").LocalPlayer:Kick("\nScript Alredy Loaded")
+		end
+	end)
     if Error and not Success then
         Notify(NS.Title,NS.Icon,"Error!, Error Copied",5)
 		setclipboard(tostring(Error))
     elseif Success and not Error then
     end
 end
-local Test = coroutine.wrap(function()
-	print("Testing Loader")
-end)
-local Criminality = coroutine.wrap(function()
-	if not game:GetService("CoreGui"):FindFirstChild("SSHub") then
-	print("[2/2] Game found: "..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
-	loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Scripts/SSHub_Criminality.lua'))()
-	elseif game:GetService("CoreGui"):FindFirstChild("SSHub") then
-		game:GetService("Players").LocalPlayer:Kick("\nScript Alredy Loaded")
-	end
-end)
 
-local BloxFruits = coroutine.wrap(function()
-	if not game:GetService("CoreGui"):FindFirstChild("SSHub") then
-	print("[2/2] Game found: "..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
-	loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Scripts/SSHub_BloxFruit.lua'))()
-	elseif game:GetService("CoreGui"):FindFirstChild("SSHub") then
-		game:GetService("Players").LocalPlayer:Kick("\nScript Alredy Loaded")
-	end
-end)
 
 --#endregion
 local SupportedGames = loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Games.lua', true))()
+local function GetSupportedGame() 
 print("Stage [1/2] Game Checker")
 print("[1/2] Checking...")
-if SupportedGames == 8343259840 then
-	Load(Criminality)
-elseif SupportedGames == 2753915549 or 4442272183 or 7449423635 then
-	Load(BloxFruits)
+	local Game
+    for Id, Info in pairs(SupportedGames) do
+        if tostring(game.PlaceId) == Id then
+            Game = Info break
+        end
+    end return Game
+end
+local SupportedGame = GetSupportedGame()
+if SupportedGame then
+	print("[2/2] Game found: "..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
+    Load(SupportedGame.Script)
 else
 	print("[2/2] No game found!")
 end
