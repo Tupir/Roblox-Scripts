@@ -67,7 +67,6 @@ local Settings = {
 	UnlockDoorsNearby = false,
 	OpenDoorsNearby = false,
 	NoClipD = false,
-	NoClip = false,
 	FullBright = false,
 	CamFovToggled = false,
 	CamFov = 70,
@@ -1832,20 +1831,6 @@ MainMs:AddToggle("NoClip Doors", Settings.NoClipD, function(V)
 		end
 	end
 end,"DoorNoClip")
-
-MainMs:AddToggle("Noclip", Settings.Noclip, function(V)
-	if Settings.Noclip == true then
-	   _G.conn = game:GetService("RunService").Stepped:Connect(function()
-		  for _, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-			 if v:IsA("BasePart") then
-				v.CanCollide = false    
-			 end
-		  end
-		end)
-	   else
-		_G.conn:Disconnect()
-	   end
- end, "NoClip")
 
 MainGun:AddToggle("No Recoil", Settings.GunMods.NoRecoil, function(V)
 	Settings.GunMods.NoRecoil = V
