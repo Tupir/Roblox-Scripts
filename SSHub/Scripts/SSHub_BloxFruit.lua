@@ -182,9 +182,9 @@ RunService.RenderStepped:Connect(function()
         if Cofre then
             tt = (Character.HumanoidRootPart.Position - Cofre.Position).Magnitude
             if tt > 400 then 
-                TweenSpeed = 300
+                TweenSpeed = 250
             elseif tt < 400 then
-                TweenSpeed = 400
+                TweenSpeed = 350
             end
             TeleportTween(Cofre.CFrame, TweenSpeed)
         end
