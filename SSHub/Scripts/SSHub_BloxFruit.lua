@@ -211,6 +211,7 @@ MainT:AddButton("Rejoin", function()
    ts:Teleport(game.PlaceId, p)
 end)
 MainA:AddToggle("Chest Auto Farm", getgenv().Settings.ChestAutoFarm, function(V)
+    TeleportTween(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame, TweenSpeed)
    getgenv().Settings.ChestAutoFarm = V
 end, "ChestAutoFarm")
 MainA:AddButton("Stop Tween", function()
