@@ -180,7 +180,7 @@ RunService.RenderStepped:Connect(function()
       if getgenv().Settings.ChestAutoFarm then
          local Cofre = ClosestChest()
          if Tweening == false then
-            TeleportTween(Cofre.CFrame, getgeenv().Settings.TweenSpeed)
+            TeleportTween(Cofre.CFrame, getgenv().Settings.TweenSpeed)
          end
       end
 end)
