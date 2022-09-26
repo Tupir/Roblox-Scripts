@@ -19,7 +19,6 @@ end
 --Variables Settings
 getgenv().Settings = {
    ChestAutoFarm = false,
-   TweenSpeed = 500
 };
 
 local ESPSettings = {
@@ -159,7 +158,7 @@ local function ClosestChest()
 end 
 
 --#endregion
-
+local TweenSpeed = 500
 local function TeleportTween(Distance, Speed)
    local hm = Character:WaitForChild("HumanoidRootPart")
    local Info = TweenInfo.new((hm.Position - Distance.Position).magnitude / Speed,Enum.EasingStyle.Linear)
@@ -180,7 +179,7 @@ RunService.RenderStepped:Connect(function()
       if getgenv().Settings.ChestAutoFarm then
          local Cofre = ClosestChest()
          if Tweening == false then
-            TeleportTween(Cofre.CFrame, getgenv().Settings.TweenSpeed)
+            TeleportTween(Cofre.CFrame, TweenSpeed)
          end
       end
 end)
@@ -208,11 +207,11 @@ end)
 MainA:AddToggle("Chest Auto Farm", getgenv().Settings.ChestAutoFarm, function(V)
    getgenv().Settings.ChestAutoFarm = V
 end, "ChestAutoFarm")
-MainA:AddSlider("Tween Speed", 0, getgenv().Settings.TweenSpeed, 500, 10, function(V)
-   getgenv().Settings.TweenSpeed = V
+MainA:AddSlider("Tween Speed", 0, TweenSpeed, 500, 10, function(V)
+    TweenSpeed = V
 end,"TweenSpeed")
 MainA:AddButton("Stop Tween", function()
-	TeleportTween(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame, getgenv().Settings.TweenSpeed)
+	TeleportTween(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame, TweenSpeed)
 end)
 MainA:AddToggle("Noclip", false, function(V)
    if V == true then
