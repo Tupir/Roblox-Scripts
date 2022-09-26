@@ -40,7 +40,7 @@ local ESPSettings = {
 			TracerColor = Color3.fromRGB(255, 255, 255),
 			Color = Color3.fromRGB(255, 255, 255)
 		},
-		Distance = 10000
+		Distance = 100000
 	}
 };
 
@@ -177,8 +177,9 @@ RunService.RenderStepped:Connect(function()
       LibraryESP.Colors.ToolColor = ESPSettings.PlayerESP.Colors.ToolColor 
       LibraryESP.Colors.TracerColor = ESPSettings.PlayerESP.Colors.TracerColor
       if getgenv().Settings.ChestAutoFarm then
-         local Cofre = ClosestChest()
-         if Tweening == false then
+        local Cofre = ClosestChest()
+        if Tweening == false then
+        if Cofre then
             tt = (Character.HumanoidRootPart.Position - Cofre.Position).Magnitude
             if tt > 400 then 
                 TweenSpeed = 300
@@ -186,6 +187,7 @@ RunService.RenderStepped:Connect(function()
                 TweenSpeed = 400
             end
             TeleportTween(Cofre.CFrame, TweenSpeed)
+        end
          end
       end
 end)
@@ -272,7 +274,7 @@ end, "PlayerESPsToggle")
 
 PlayerESPsToggle:AddKeybind("None", "PlayerESPsToggle Keybind")
 
-MainP:AddSlider("ESP Distance", 0, ESPSettings.PlayerESP.Distance, 10000, 10, function(V)
+MainP:AddSlider("ESP Distance", 0, ESPSettings.PlayerESP.Distance, 100000, 10, function(V)
 	LibraryESP.DistanceS = V
 	ESPSettings.PlayerESP.Distance = V
 end,"ESPDistance")
