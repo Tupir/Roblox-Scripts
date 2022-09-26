@@ -10,7 +10,7 @@ end
 local function Load(Script)
     local Success, Error = pcall(function()
 		if not game:GetService("CoreGui"):FindFirstChild("SSHub") then
-			loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Scripts/" .. Script .. ".lua', true))()
+			loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Scripts/'.. Script ..'.lua', true))()
 		elseif game:GetService("CoreGui"):FindFirstChild("SSHub") then
 			game:GetService("Players").LocalPlayer:Kick("\nScript Alredy Loaded")
 		end
