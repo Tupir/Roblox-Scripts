@@ -215,6 +215,7 @@ MainA:AddToggle("Chest Auto Farm", getgenv().Settings.ChestAutoFarm, function(V)
     TeleportTween(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame, TweenSpeed)
    getgenv().Settings.ChestAutoFarm = V
 end, "ChestAutoFarm")
+MainA:AddLabel("Lag ⚠️")
 MainA:AddButton("Stop Tween", function()
 	TeleportTween(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame, TweenSpeed)
 end)
