@@ -143,7 +143,7 @@ end
 
 local function ClosestChest()
 	Target = nil; magn = math.huge
-    for i, CChest in pairs(Workspace:GetChildren()) do
+    for i, CChest in pairs(Workspace:GetDescendants()) do
       if string.find(CChest.Name, "Chest") then
         if CChest ~= nil then
                 mag = (Character.HumanoidRootPart.Position - CChest.Position).Magnitude
@@ -154,7 +154,7 @@ local function ClosestChest()
             end
          end
         end
-    return Target
+    return Target, magn
 end 
 
 --#endregion
@@ -177,14 +177,13 @@ RunService.RenderStepped:Connect(function()
       LibraryESP.Colors.ToolColor = ESPSettings.PlayerESP.Colors.ToolColor 
       LibraryESP.Colors.TracerColor = ESPSettings.PlayerESP.Colors.TracerColor
       if getgenv().Settings.ChestAutoFarm then
-        local Cofre = ClosestChest()
+        local Cofre, Distancia = ClosestChest()
         if Tweening == false then
         if Cofre then
-            tt = (Character.HumanoidRootPart.Position - Cofre.Position).Magnitude
-            if tt > 400 then 
-                TweenSpeed = 250
-            elseif tt < 400 then
-                TweenSpeed = 350
+            if Distancia > 400 then 
+                TweenSpeed = 300
+            elseif Distancia < 400 then
+                TweenSpeed = 400
             end
             TeleportTween(Cofre.CFrame, TweenSpeed)
         end
@@ -361,18 +360,6 @@ MainUI:AddColorpicker("Text Color", _G.LibraryConfg.AccentColors.TabTextColor, f
 Library.theme.tabstextcolor = V
 SShub:UpdateTheme()
 end,"TEXT1")
-RunService.Stepped:Connect(function()
-	UpdateChar()
-	LibraryESP.Colors.BoxColor = ESPSettings.PlayerESP.Colors.BoxColor
-	LibraryESP.Colors.NameColor = ESPSettings.PlayerESP.Colors.NameColor
-	LibraryESP.Colors.DistanceColor = ESPSettings.PlayerESP.Colors.DistanceColor
-	LibraryESP.Colors.HealthColor = ESPSettings.PlayerESP.Colors.HealthColor
-	LibraryESP.Colors.ToolColor = ESPSettings.PlayerESP.Colors.ToolColor 
-	LibraryESP.Colors.TracerColor = ESPSettings.PlayerESP.Colors.TracerColor
-   if getgenv().Settings.AutoSetSpawn then
-      ReplicatedStorage.Remotes.CommF_:InvokeServer("SetSpawnPoint")
-   end
-end)
 end)
 
 if Success then
