@@ -145,29 +145,51 @@ local function ClosestChest()
 	Target = nil; magn = math.huge
     for i, CChest in pairs(Workspace:GetDescendants()) do
       if string.find(CChest.Name, "Chest") then
-        if CChest ~= nil then
-                mag = (Character.HumanoidRootPart.Position - CChest.Position).Magnitude
-                if mag < magn then 
-                    magn = mag 
-                    Target = CChest
+        if CChest:IsA("Part") then
+            if CChest ~= nil then
+                    mag = (Character.HumanoidRootPart.Position - CChest.Position).Magnitude
+                    if mag < magn then 
+                        magn = mag 
+                        Target = CChest
+                    end
                 end
             end
-         end
         end
+    end
     return Target, magn
 end 
 
 --#endregion
-local TweenSpeed = 500
-local function TeleportTween(Distance, Speed)
-   local hm = Character:WaitForChild("HumanoidRootPart")
-   local Info = TweenInfo.new((hm.Position - Distance.Position).magnitude / Speed,Enum.EasingStyle.Linear)
-   local Tween =  game:service"TweenService":Create(hm, Info, {CFrame = Distance})
-   Tween:Play()
-   Tweening = true
-	Tween.Completed:Wait()
-   Tweening = false
+local function TeleportTween(To)
+    Distance = (To.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
+    if Distance < 10 then
+        Speed = 1000
+    elseif Distance < 170 then
+        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = To
+        Speed = 350
+    elseif Distance < 1000 then
+        Speed = 350
+    elseif Distance >= 1000 then
+        Speed = 250
+    end
+    game:GetService("TweenService"):Create(
+        game.Players.LocalPlayer.Character.HumanoidRootPart,
+        TweenInfo.new(Distance/Speed, Enum.EasingStyle.Linear),
+        {CFrame = To}
+    ):Play()
 end
+spawn(function()
+    while wait() do
+        pcall(function()
+            if getgenv().Settings.ChestAutoFarm then
+                local Cofre, Distancia = ClosestChest()
+                if Cofre then
+                    TeleportTween(Cofre.CFrame)
+                end
+            end
+        end)
+    end
+end)
 RunService.RenderStepped:Connect(function()
       UpdateChar()
       LibraryESP.Colors.BoxColor = ESPSettings.PlayerESP.Colors.BoxColor
@@ -176,19 +198,6 @@ RunService.RenderStepped:Connect(function()
       LibraryESP.Colors.HealthColor = ESPSettings.PlayerESP.Colors.HealthColor
       LibraryESP.Colors.ToolColor = ESPSettings.PlayerESP.Colors.ToolColor 
       LibraryESP.Colors.TracerColor = ESPSettings.PlayerESP.Colors.TracerColor
-      if getgenv().Settings.ChestAutoFarm then
-        local Cofre, Distancia = ClosestChest()
-        if Tweening == false then
-        if Cofre then
-            if Distancia > 400 then 
-                TweenSpeed = 300
-            elseif Distancia < 400 then
-                TweenSpeed = 400
-            end
-            TeleportTween(Cofre.CFrame, TweenSpeed)
-        end
-         end
-      end
 end)
 
 local SShub = Library:CreateWindow(Name, Vector2.new(400, 550))
@@ -212,12 +221,12 @@ MainT:AddButton("Rejoin", function()
    ts:Teleport(game.PlaceId, p)
 end)
 MainA:AddToggle("Chest Auto Farm", getgenv().Settings.ChestAutoFarm, function(V)
-    TeleportTween(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame, TweenSpeed)
+    TeleportTween(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
    getgenv().Settings.ChestAutoFarm = V
 end, "ChestAutoFarm")
 MainA:AddLabel("Lag ⚠️")
 MainA:AddButton("Stop Tween", function()
-	TeleportTween(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame, TweenSpeed)
+	TeleportTween(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
 end)
 MainA:AddToggle("Noclip", false, function(V)
    if V == true then
