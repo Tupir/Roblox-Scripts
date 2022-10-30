@@ -786,7 +786,9 @@ function library:CreateWindow(name, size, hidebutton)
                     label.Main.Font = theme.font
                     label.Main.TextColor3 = theme.itemscolor
                 end)
-
+                function label:Refresh(newtext)
+                    label.Main.Text = newtext
+                end
                 function label:Set(value)
                     label.Main.Text = value
                 end
