@@ -17,6 +17,7 @@ end
 --#endregion
 --#region Settings
 --Variables Settings
+local sstockk
 local Settings = {
 	GunMods = { 
 		NoRecoil = false,
@@ -126,6 +127,10 @@ local ESPSettings = {
 		Distance = 2000,
 	},
 	RegisterESP = {
+		Enabled = false,
+		Distance = 2000
+	},
+	DealerSESP = {
 		Enabled = false,
 		Distance = 2000
 	},
@@ -285,8 +290,8 @@ local function ClosestDealer()
     return Target
 end
 
-local function ClosestSafe()
-    Target = nil; magn = math.huge
+local function ClosestSafe(Dis)
+    Target = nil; magn = Dis
     for i, Safe in pairs(workspace.Map.BredMakurz:GetChildren()) do
         if string.find(Safe.Name, "Safe") then
             if Safe:FindFirstChild("Values") then 
@@ -301,8 +306,8 @@ local function ClosestSafe()
     return Target
 end
 
-local function ClosestRegister()
-	Target = nil; magn = math.huge
+local function ClosestRegister(Dis)
+	Target = nil; magn = Dis
     for i, Register in pairs(workspace.Map.BredMakurz:GetChildren()) do
         if string.find(Register.Name, "Register") then
             if Register:FindFirstChild("Values") then 
@@ -317,8 +322,8 @@ local function ClosestRegister()
     return Target, Target.Values 
 end 
 
-local function ClosestDoor()
-	Target = nil; magn = math.huge
+local function ClosestDoor(Dis)
+	Target = nil; magn = Dis
     for i, Door in pairs(workspace.Map.Doors:GetChildren()) do
 		if Door ~= nil and Door.DoorBase ~= nil then
             if Door:FindFirstChild("Values") and Door:FindFirstChild("Events") then 
@@ -388,6 +393,14 @@ local function ClosestPlayer()
         end
     return Target
 end 
+local function GetDealers() 
+    for i, Dealer in pairs(Workspace.Map.Shopz:GetChildren()) do 
+        if Dealer:FindFirstChild("CurrentStocks") and Dealer:FindFirstChild("Type").Value == "IllegalStore" then
+            return Dealer
+        end
+    end
+end
+
 
 local function GenerateSeed(Type)
     if CheckIfHoldingMelee(Character) then
@@ -397,7 +410,7 @@ local function GenerateSeed(Type)
             if Type == "Hit" then 
                 GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChildWhichIsA("Tool"), "43TRFWJ", "Normal", tick(), true) 
             elseif Type == "BreakSafe" then 
-                GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChildWhichIsA("Tool"), "DZDRRRKI", ClosestSafe(10), "Register") 
+                GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChild("Crowbar"), "DZDRRRKI", ClosestSafe(math.huge), "Register") 
             elseif Type == "BreakRegister" then
                 GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChildWhichIsA("Tool"), "DZDRRRKI", ClosestRegister(10), "Register") 
             elseif Type == "BreakDoor" then
@@ -626,6 +639,95 @@ local ExpectedArguments = {
 --#endregion
 if game:IsLoaded() then Bypass() end
 --#region Esp Handlers
+		local function DealerSESP(Dealer, Stock)
+			local ItemName = Drawing.new("Text")
+			ItemName.Visible = false
+			ItemName.Center = true
+			ItemName.Outline = true
+			ItemName.Font = 2
+			ItemName.Size = 13
+			ItemName.Color = Color3.new(1, 2.5, 2.5)
+			ItemName.Text = "Dealer"
+
+			local RarityText = Drawing.new("Text")
+			RarityText.Visible = false
+			RarityText.Center = true
+			RarityText.Outline = true
+			RarityText.Font = 2
+			RarityText.Size = 13
+			RarityText.Color = Color3.new(1, 2.5, 2.5)
+			RarityText.Text = "Type"
+
+			local DistanceText = Drawing.new("Text")
+			DistanceText.Visible = false
+			DistanceText.Center = true
+			DistanceText.Outline = true
+			DistanceText.Font = 2
+			DistanceText.Size = 13
+			DistanceText.Color = Color3.new(1, 2.5, 2.5)
+			DistanceText.Text = "Distance"
+
+			local function InfoUpdate()
+				local Iu
+
+				Iu = RunService.RenderStepped:Connect(function()
+					if not workspace:IsAncestorOf(Dealer) then
+						ItemName.Visible = false
+						RarityText.Visible = false
+						DistanceText.Visible = false
+
+						Iu:Disconnect()
+					else
+						local Vector, OnScreen = Cam:WorldToViewportPoint(Dealer:FindFirstChild("MainPart").Position)
+
+						if OnScreen then
+							ItemName.Position = Vector2.new(Vector.X, Vector.Y - 30)
+							RarityText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+							DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
+
+							ItemName.Visible = false
+							RarityText.Visible = false
+							DistanceText.Visible = false
+
+							local ItemDistance = math.ceil((Dealer.MainPart.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
+
+							if ESPSettings.DealerSESP.Enabled == true then
+								if ItemDistance < ESPSettings.DealerSESP.Distance then
+										RarityText.Text = "Stock: "..Stock
+										RarityText.Color = Color3.fromRGB(72, 255, 0)
+										if ESPSettings.DealerSESP.Enabled == true then
+											ItemName.Visible = true
+											RarityText.Visible = true
+											DistanceText.Visible = true
+										else
+											ItemName.Visible = false
+											RarityText.Visible = false
+											DistanceText.Visible = false
+										end
+
+									DistanceText.Text = "["..tostring(ItemDistance).."]"
+								else
+									ItemName.Visible = false
+									RarityText.Visible = false
+									DistanceText.Visible = false
+								end
+							else
+								ItemName.Visible = false
+								RarityText.Visible = false
+								DistanceText.Visible = false
+
+								Iu:Disconnect()
+							end
+						else
+							ItemName.Visible = false
+							RarityText.Visible = false
+							DistanceText.Visible = false
+						end
+					end
+				end)
+			end
+			coroutine.wrap(InfoUpdate)()
+		end
 			local function ScrapESP(Scrap)
 				local ItemName = Drawing.new("Text")
 				ItemName.Visible = false
@@ -692,7 +794,87 @@ if game:IsLoaded() then Bypass() end
 												RarityText.Visible = false
 												DistanceText.Visible = false
 											end
-										elseif tostring(Scrap:FindFirstChild("MeshPart"):FindFirstChild("Particle").Color) == "0 0.184314 1 0.4 0 1 0.184314 1 0.4 0 " then
+										end
+
+										DistanceText.Text = "["..tostring(ItemDistance).."]"
+									else
+										ItemName.Visible = false
+										RarityText.Visible = false
+										DistanceText.Visible = false
+									end
+								else
+									ItemName.Visible = false
+									RarityText.Visible = false
+									DistanceText.Visible = false
+
+									Iu:Disconnect()
+								end
+							else
+								ItemName.Visible = false
+								RarityText.Visible = false
+								DistanceText.Visible = false
+							end
+						end
+					end)
+				end
+				coroutine.wrap(InfoUpdate)()
+			end
+
+			local function BoxESP(Scrap)
+				local ItemName = Drawing.new("Text")
+				ItemName.Visible = false
+				ItemName.Center = true
+				ItemName.Outline = true
+				ItemName.Font = 2
+				ItemName.Size = 13
+				ItemName.Color = Color3.new(1, 2.5, 2.5)
+				ItemName.Text = "Box"
+
+				local RarityText = Drawing.new("Text")
+				RarityText.Visible = false
+				RarityText.Center = true
+				RarityText.Outline = true
+				RarityText.Font = 2
+				RarityText.Size = 13
+				RarityText.Color = Color3.new(1, 2.5, 2.5)
+				RarityText.Text = "Type"
+
+				local DistanceText = Drawing.new("Text")
+				DistanceText.Visible = false
+				DistanceText.Center = true
+				DistanceText.Outline = true
+				DistanceText.Font = 2
+				DistanceText.Size = 13
+				DistanceText.Color = Color3.new(1, 2.5, 2.5)
+				DistanceText.Text = "Distance"
+
+				local function InfoUpdate()
+					local Iu
+
+					Iu = RunService.RenderStepped:Connect(function()
+						if not workspace:IsAncestorOf(Scrap) then
+							ItemName.Visible = false
+							RarityText.Visible = false
+							DistanceText.Visible = false
+
+							Iu:Disconnect()
+						else
+							local Vector, OnScreen = Cam:WorldToViewportPoint(Scrap:FindFirstChild("MeshPart").Position)
+
+							if OnScreen then
+								ItemName.Position = Vector2.new(Vector.X, Vector.Y - 30)
+								RarityText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+								DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
+
+								ItemName.Visible = false
+								RarityText.Visible = false
+								DistanceText.Visible = false
+
+								local ItemDistance = math.ceil((Scrap.MeshPart.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
+
+								if ESPSettings.ScrapESP.Enabled == true then
+									if ItemDistance < ESPSettings.ScrapESP.Distance then
+										if tostring(Scrap:FindFirstChild("MeshPart"):FindFirstChild("Particle").Color) == "0 0.184314 1 0.4 0 1 0.184314 1 0.4 0 " then
 											RarityText.Text = "Rarity: Good"
 											RarityText.Color = ESPSettings.ScrapESP.RarityColors.Good
 
@@ -755,7 +937,6 @@ if game:IsLoaded() then Bypass() end
 				end
 				coroutine.wrap(InfoUpdate)()
 			end
-			
 
 			--SafeESP 
 			local function SafeESP(Vault, RarityValue)
@@ -1474,7 +1655,7 @@ task.spawn(function()
 while wait(1) do
 	if Settings.AutoBreakSafes then
 		pcall(function()
-			local ClosesSafe, ValuesFolder = ClosestSafe()
+			local ClosesSafe, ValuesFolder = ClosestSafe(math.huge)
 				if Character:FindFirstChild("Crowbar") then
 					if ValuesFolder.Broken.Value == false then
 						if (ClosesSafe.MainPart.Position - Character.HumanoidRootPart.Position).magnitude < 5 then
@@ -1634,6 +1815,7 @@ local MainRegister = Visuals:CreateSector("Register ESP", "right")
 local MainTele = Teleports:CreateSector("Teleports", "right")
 local MainT = Teleports:CreateSector("Teleports", "left")
 local MainT1 = Teleports:CreateSector("Closests Teleportation", "left")
+local MainTStock = Teleports:CreateSector("Stock Teleportation", "left")
 
 
 local MainC = Settingss:CreateSector("Credits", "left")
@@ -2057,30 +2239,6 @@ end, "ScrapESPToggle")
 ScrapESPToggle:AddKeybind("None", "ScrapESPToggle Keybind")
 MainScrap:AddSeperator("Rarity")
 
-local LegendaryScrapColor = MainScrap:AddToggle("Legendary Only", ESPSettings.ScrapESP.LegendaryOnly, function(V)
-	ESPSettings.ScrapESP.LegendaryOnly = V
-end,"LegendaryOnly")
-
-LegendaryScrapColor:AddColorpicker(ESPSettings.ScrapESP.RarityColors.Legendary, function(V)
-	ESPSettings.ScrapESP.RarityColors.Legendary = V
-end,"LegendaryScrapColor")
-
-local RareScrapColor = MainScrap:AddToggle("Rare Only", ESPSettings.ScrapESP.RareOnly, function(V)
-	ESPSettings.ScrapESP.RareOnly = V
-end,"RareOnly")
-
-RareScrapColor:AddColorpicker(ESPSettings.ScrapESP.RarityColors.Rare, function(V)
-	ESPSettings.ScrapESP.RarityColors.Rare = V
-end,"RareScrapColor")
-
-local GoodScrapColor = MainScrap:AddToggle("Good Only", ESPSettings.ScrapESP.GoodOnly, function(V)
-	ESPSettings.ScrapESP.GoodOnly = V
-end,"GoodOnly")
-
-GoodScrapColor:AddColorpicker(ESPSettings.ScrapESP.RarityColors.Good, function(V)
-	ESPSettings.ScrapESP.RarityColors.Good = V
-end,"GoodScrapColor")
-
 local BadScrapColor = MainScrap:AddToggle("Bad Only", ESPSettings.ScrapESP.BadOnly, function(V)
 	ESPSettings.ScrapESP.BadOnly = V
 end,"BadOnly")
@@ -2158,11 +2316,11 @@ local Teleports = {
 }
 local function Teleport(Pos)
     if Character.HumanoidRootPart and not Teleports.Cooldown then
-        Character.HumanoidRootPart.Parent.Humanoid:UnequipTools() 
+        Character.Humanoid:UnequipTools() 
         Character.HumanoidRootPart.CFrame = CFrame.new(0,-9e9, 0)
         wait(1.1)
         Character.HumanoidRootPart.CFrame = Pos
-		Character.HumanoidRootPart.Parent.Humanoid:EquipTool(Player.Backpack:FindFirstChild("Fists"))
+		Character.Humanoid:EquipTool(Player.Backpack:FindFirstChild("Fists"))
         Teleports.Cooldown = true
         wait(Teleports.Time)
         Teleports.Cooldown = false
@@ -2203,8 +2361,8 @@ end)
 MainT:AddButton("Fix Air Stuck", function()
 	ReplicatedStorage.Events.__DFfDD:FireServer("__--r", Vector3.new(0,0,0), CFrame.new(0,0,0))
 end)
-MainT1:AddButton("Safe", function()
-local Object = ClosestSafe()
+MainT1:AddButton("Safe (50 Stunds)", function()
+local Object = ClosestSafe(50)
 	if Object.MainPart then
 		Teleport(Object.MainPart.CFrame * CFrame.new(0,2,-2))
 	end
@@ -2221,7 +2379,60 @@ local Object = ClosestDealer()
 		Teleport(Object.MainPart.CFrame * CFrame.new(0,2,-2))
 	end
 end)
+--[[
+local Example:AddKeybind("None", "flag")
 
+MainExample:AddToggle("WW", Toggle, function(V)
+
+end, "flag")
+
+MainExample:AddSlider("WW", 0, Default, Max, 10, function(V)
+
+end,"flag")
+
+MainExample:AddColorpicker(Default, function(V)
+
+end,"flag")
+
+MainExample:AddDropdown("WW", {"Items"}, "Default", MultiChoice, function(V)
+
+end,"flag")
+
+MainExample:AddButton("WW", function()
+	
+end)
+]]
+local sstockk = "Crowbar"
+
+MainTStock:AddDropdown("Select Stock", {"SlayerArmour","SlayerSword","Crowbar","Golfclub","Taiga","Shovel","Rambo","Bat ","Katana","Metal-Bat", "Shiv","Fire-Axe","Bayonet","Chainsaw","Balisong","Uzi","Tommy","MAC-10","G-17","Deagle","M1911","RPG-7","SKS","Mare","AKS-74U","TEC-9","Beretta","Itchaca-37","AKM","VestA_3","VestA_2","VestA_1","HelmetA_2","HelmetA_1","Smoke-Grenade","C4","Stun-Grenade","Flashbang","Lockpick","BodyFlashlight_1","Splint","TheCure","Rage-potion","Medkit","Bandage","PumpkinHelmet","Hammer","CursedDagger","Airstrike","Coal","__NecromancerKit","SB-Launcher","HL-MK2","Antidote","SBL-MK2","Knuckledusters","Nunchucks",}, sstockk, false, function(V)
+	sstockk = V
+end,"StockTable")
+local Stock1 = MainTStock:AddLabel("")
+
+spawn(function()
+	while wait() do
+		local Object = GetDealers()
+		if Object:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value == 0 then
+			Stock1:Refresh("Not Stocked")
+		elseif Object:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value >= 1 then
+			Stock1:Refresh("Stocked!")
+			coroutine.wrap(DealerSESP)(Object, sstockk)
+		end
+	end
+end)
+MainTStock:AddButton("Teleport (Selected Stock)", function()
+local Object = GetDealers()
+if Object:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value == 0 then
+	Notify(NS.Title,NS.Icon,"Stock No Found",3)
+elseif Object:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value >= 1 then
+	Notify(NS.Title,NS.Icon,"Teleporting...",3)
+	Teleport(Object:FindFirstChild("MainPart").CFrame * CFrame.new(0, 2, -2))
+end
+end)
+local ESPDS = MainTStock:AddToggle("ESP Dealer Stocked", ESPSettings.DealerSESP.Enabled, function(V)
+	ESPSettings.DealerSESP.Enabled = V
+end, "ESPDealerStock")
+ESPDS:AddKeybind("None", "ESPDealerStock1")
 --#endregion
 local function TeleportAreaNew(Cframe)
 	local TPCFrame = Cframe
