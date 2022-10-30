@@ -84,7 +84,7 @@ if library.theme.cursor and Drawing then
 end
 
 function library:CreateWatermark(name, position)
-    local gamename = "Criminality" -- marketplaceservice:GetProductInfo(game.PlaceId).Name
+    local gamename = game.MarketplaceService:GetProductInfo(game.PlaceId).Name
     local watermark = { }
     watermark.Visible = true
     watermark.text = " " .. name:gsub("{game}", gamename):gsub("{fps}", "0 FPS") .. " "
@@ -3419,7 +3419,7 @@ function library:CreateWindow(name, size, hidebutton)
         function tab:CreateConfigSystem(side)
             local configSystem = { }
 
-            configSystem.configFolder = "FemWare"
+            configSystem.configFolder = "SSHub"
             if (not isfolder(configSystem.configFolder)) then
                 makefolder(configSystem.configFolder)
             end
