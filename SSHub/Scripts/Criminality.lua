@@ -132,7 +132,7 @@ local ESPSettings = {
 	},
 	DealerSESP = {
 		Enabled = false,
-		Distance = 2000
+		Distance = 10000
 	},
 };
 local CoolDowns = {
