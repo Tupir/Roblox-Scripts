@@ -2406,10 +2406,12 @@ local sstockk = "Crowbar"
 MainTStock:AddDropdown("Select Stock", {"SlayerArmour","SlayerSword","__NecromancerKit","CursedDagger","PumpkinHelmet","TheCure","Hammer","Coal","Knuckledusters","Nunchucks","Crowbar","Golfclub","Taiga","Shovel","Rambo","Bat ","Katana","Metal-Bat", "Shiv","Fire-Axe","Bayonet","Chainsaw","Balisong","Uzi","Tommy","MAC-10","G-17","Deagle","M1911","RPG-7","SKS","Mare","AKS-74U","TEC-9","Beretta","Itchaca-37","AKM","BackpackA_1","VestA_3","VestA_2","VestA_1","HelmetA_2","HelmetA_1","BodyFlashlight_1","Smoke-Grenade","C4","Stun-Grenade","Flashbang","Antidote","Rage-potion","Medkit","Bandage","Splint","Lockpick"}, sstockk, false, function(V)
 	sstockk = V
 end,"StockTable")
+local Stock2 = MainTStock:AddLabel("")
 local Stock1 = MainTStock:AddLabel("")
 
 spawn(function()
 	while wait() do
+		Stock2:Refresh("Re-Stock: "..game:GetService("Workspace").Map.Shopz.Dealer.RestockTime.Value)
 		local Object = GetDealers()
 		if Object:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value == 0 then
 			Stock1:Refresh("Not Stocked")
