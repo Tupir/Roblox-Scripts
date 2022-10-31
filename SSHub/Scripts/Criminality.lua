@@ -2403,7 +2403,7 @@ MainExample:AddButton("WW", function()
 end)
 ]]
 local sstockk = "Crowbar"
-MainTStock:AddDropdown("Select Stock", {"SlayerArmour","SlayerSword","__NecromancerKit","CursedDagger","PumpkinHelmet","TheCure","Hammer","Coal","Knuckledusters","Nunchucks","Crowbar","Golfclub","Taiga","Shovel","Rambo","Bat ","Katana","Metal-Bat", "Shiv","Fire-Axe","Bayonet","Chainsaw","Balisong","Uzi","Tommy","MAC-10","G-17","Deagle","M1911","RPG-7","SKS","Mare","AKS-74U","TEC-9","Beretta","Itchaca-37","AKM","VestA_3","VestA_2","VestA_1","HelmetA_2","HelmetA_1","BodyFlashlight_1","Smoke-Grenade","C4","Stun-Grenade","Flashbang","Antidote","Rage-potion","Medkit","Bandage","Splint","Lockpick"}, sstockk, false, function(V)
+MainTStock:AddDropdown("Select Stock", {"SlayerArmour","SlayerSword","__NecromancerKit","CursedDagger","PumpkinHelmet","TheCure","Hammer","Coal","Knuckledusters","Nunchucks","Crowbar","Golfclub","Taiga","Shovel","Rambo","Bat ","Katana","Metal-Bat", "Shiv","Fire-Axe","Bayonet","Chainsaw","Balisong","Uzi","Tommy","MAC-10","G-17","Deagle","M1911","RPG-7","SKS","Mare","AKS-74U","TEC-9","Beretta","Itchaca-37","AKM","BackpackA_1","VestA_3","VestA_2","VestA_1","HelmetA_2","HelmetA_1","BodyFlashlight_1","Smoke-Grenade","C4","Stun-Grenade","Flashbang","Antidote","Rage-potion","Medkit","Bandage","Splint","Lockpick"}, sstockk, false, function(V)
 	sstockk = V
 end,"StockTable")
 local Stock1 = MainTStock:AddLabel("")
