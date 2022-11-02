@@ -2311,11 +2311,9 @@ local Teleports = {
 }
 local function Teleport(Pos)
     if Character.HumanoidRootPart and not Teleports.Cooldown then
-        Character.Humanoid:UnequipTools() 
         Character.HumanoidRootPart.CFrame = CFrame.new(0,-9e9, 0)
         wait(1.1)
         Character.HumanoidRootPart.CFrame = Pos
-		Character.Humanoid:EquipTool(Player.Backpack:FindFirstChild("Fists"))
         Teleports.Cooldown = true
         wait(Teleports.Time)
         Teleports.Cooldown = false
