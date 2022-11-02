@@ -303,7 +303,7 @@ local function ClosestSafe(Dis)
             end
         end
     end
-    return Target
+    return Target, Target.Values
 end
 
 local function ClosestRegister(Dis)
@@ -403,24 +403,19 @@ end
 
 
 local function GenerateSeed(Type)
-    if CheckIfHoldingMelee(Character) then
         local GeneratedSeed 
             if Type == "Finish" then
-                GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChildWhichIsA("Tool"), "EXECQQ") else
-            if Type == "Hit" then 
+                GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChildWhichIsA("Tool"), "EXECQQ")
+            elseif Type == "Hit" then 
                 GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChildWhichIsA("Tool"), "43TRFWJ", "Normal", tick(), true) 
             elseif Type == "BreakSafe" then 
-                GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChild("Crowbar"), "DZDRRRKI", ClosestSafe(math.huge), "Register") 
+                GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChild("Crowbar"), "DZDRRRKI", ClosestSafe(5), "Register") 
             elseif Type == "BreakRegister" then
                 GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChildWhichIsA("Tool"), "DZDRRRKI", ClosestRegister(10), "Register") 
             elseif Type == "BreakDoor" then
                 GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChildWhichIsA("Tool"), "DZDRRRKI", ClosestDoor(10), "Door") 
-            end
-            if GeneratedSeed ~= nil then
-                return GeneratedSeed
-            end
-        end
-    end
+			end
+	return GeneratedSeed
 end
 --#endregion
 --#region Signal Events
@@ -1655,7 +1650,7 @@ task.spawn(function()
 while wait(1) do
 	if Settings.AutoBreakSafes then
 		pcall(function()
-			local ClosesSafe, ValuesFolder = ClosestSafe(math.huge)
+			local ClosesSafe, ValuesFolder = ClosestSafe(5)
 				if Character:FindFirstChild("Crowbar") then
 					if ValuesFolder.Broken.Value == false then
 						if (ClosesSafe.MainPart.Position - Character.HumanoidRootPart.Position).magnitude < 5 then
