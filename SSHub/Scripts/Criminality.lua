@@ -17,6 +17,7 @@ end
 --#endregion
 --#region Settings
 --Variables Settings
+local stocked
 local sstockk
 local Settings = {
 	GunMods = { 
@@ -393,13 +394,7 @@ local function ClosestPlayer()
         end
     return Target
 end 
-local function GetDealers() 
-    for i, Dealer in pairs(Workspace.Map.Shopz:GetChildren()) do 
-        if Dealer:FindFirstChild("CurrentStocks") and Dealer:FindFirstChild("Type").Value == "IllegalStore" then
-            return Dealer
-        end
-    end
-end
+
 
 
 local function GenerateSeed(Type)
@@ -666,7 +661,7 @@ if game:IsLoaded() then Bypass() end
 				local Iu
 
 				Iu = RunService.RenderStepped:Connect(function()
-					if not workspace:IsAncestorOf(Dealer) then
+					if Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(Stock).Value == 0 then
 						ItemName.Visible = false
 						RarityText.Visible = false
 						DistanceText.Visible = false
@@ -686,7 +681,7 @@ if game:IsLoaded() then Bypass() end
 
 							local ItemDistance = math.ceil((Dealer.MainPart.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
 
-							if ESPSettings.DealerSESP.Enabled == true then
+							if ESPSettings.DealerSESP.Enabled == true then 
 								if ItemDistance < ESPSettings.DealerSESP.Distance then
 										RarityText.Text = "Stock: "..Stock
 										RarityText.Color = Color3.fromRGB(72, 255, 0)
@@ -701,6 +696,17 @@ if game:IsLoaded() then Bypass() end
 										end
 
 									DistanceText.Text = "["..tostring(ItemDistance).."]"
+									if Stock == sstockk then
+										ItemName.Visible = true
+										RarityText.Visible = true
+										DistanceText.Visible = true
+
+									else
+										ItemName.Visible = false
+										RarityText.Visible = false
+										DistanceText.Visible = false
+
+									end
 								else
 									ItemName.Visible = false
 									RarityText.Visible = false
@@ -1806,12 +1812,11 @@ local MainP = Visuals:CreateSector("Player ESP", "left")
 local MainScrap = Visuals:CreateSector("Scrap ESP", "right")
 local MainSafes = Visuals:CreateSector("Safes ESP", "right")
 local MainRegister = Visuals:CreateSector("Register ESP", "right")
+local MainTStock = Visuals:CreateSector("Stock Teleportation", "left")
 
 local MainTele = Teleports:CreateSector("Teleports", "right")
 local MainT = Teleports:CreateSector("Teleports", "left")
 local MainT1 = Teleports:CreateSector("Closests Teleportation", "left")
-local MainTStock = Teleports:CreateSector("Stock Teleportation", "left")
-
 
 local MainC = Settingss:CreateSector("Credits", "left")
 local MainUI = Settingss:CreateSector("UI", "left")
@@ -2395,43 +2400,54 @@ MainExample:AddButton("WW", function()
 	
 end)
 ]]
-local sstockk = "Crowbar"
-MainTStock:AddDropdown("Select Stock", {"SlayerArmour","SlayerSword","__NecromancerKit","CursedDagger","PumpkinHelmet","TheCure","Hammer","Coal","Knuckledusters","Nunchucks","Crowbar","Golfclub","Taiga","Shovel","Rambo","Bat ","Katana","Metal-Bat", "Shiv","Fire-Axe","Bayonet","Chainsaw","Balisong","Uzi","Tommy","MAC-10","G-17","Deagle","M1911","RPG-7","SKS","Mare","AKS-74U","TEC-9","Beretta","Itchaca-37","AKM","BackpackA_1","VestA_3","VestA_2","VestA_1","HelmetA_2","HelmetA_1","BodyFlashlight_1","Smoke-Grenade","C4","Stun-Grenade","Flashbang","Antidote","Rage-potion","Medkit","Bandage","Splint","Lockpick"}, sstockk, false, function(V)
-	sstockk = V
-end,"StockTable")
+sstockk = "Crowbar"
 local Stock2 = MainTStock:AddLabel("")
 local Stock1 = MainTStock:AddLabel("")
-
-spawn(function()
-	while wait() do
-		Stock2:Refresh("Re-Stock: "..game:GetService("Workspace").Map.Shopz.Dealer.RestockTime.Value)
-		local Object = GetDealers()
-		if Object:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value == 0 then
-			Stock1:Refresh("Not Stocked")
-		elseif Object:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value >= 1 then
-			Stock1:Refresh("Stocked!")
-			coroutine.wrap(DealerSESP)(Object, sstockk)
+MainTStock:AddDropdown("Select Stock", {"SlayerArmour","SlayerSword","__NecromancerKit","CursedDagger","PumpkinHelmet","TheCure","Hammer","Coal","Knuckledusters","Nunchucks","Crowbar","Golfclub","Taiga","Shovel","Rambo","Bat ","Katana","Metal-Bat", "Shiv","Fire-Axe","Bayonet","Chainsaw","Balisong","Uzi","Tommy","MAC-10","G-17","Deagle","M1911","RPG-7","SKS","Mare","AKS-74U","TEC-9","Beretta","Itchaca-37","AKM","BackpackA_1","VestA_3","VestA_2","VestA_1","HelmetA_2","HelmetA_1","BodyFlashlight_1","Smoke-Grenade","C4","Stun-Grenade","Flashbang","Antidote","Rage-potion","Medkit","Bandage","Splint","Lockpick"}, sstockk, false, function(V)
+	sstockk = V
+	for i, Dealer in pairs(Workspace.Map.Shopz:GetChildren()) do 
+		if Dealer:FindFirstChild("Type").Value == "IllegalStore" then
+			if Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value == 0 then
+			elseif Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value >= 1 then
+				coroutine.wrap(DealerSESP)(Dealer, sstockk)
+			end
 		end
 	end
-end)
-MainTStock:AddButton("Teleport (Selected Stock)", function()
-local Object = GetDealers()
-if Object:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value == 0 then
-	Notify(NS.Title,NS.Icon,"Stock No Found",3)
-elseif Object:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value >= 1 then
-	Notify(NS.Title,NS.Icon,"Teleporting...",3)
-	Teleport(Object:FindFirstChild("MainPart").CFrame * CFrame.new(0, 2, -2))
+end,"StockTable")
+if stocked == true then
+	Notify(NS.Title,NS.Icon,sstockk.." On Stock!",5)
 end
-end)
+RunService.Stepped:Connect(function()
+	Stock2:Refresh("Re-Stock: "..game:GetService("Workspace").Map.Shopz.Dealer.RestockTime.Value)
+		for i, Dealer in pairs(Workspace.Map.Shopz:GetChildren()) do 
+			if Dealer:FindFirstChild("Type").Value == "IllegalStore" then
+				if Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value == 0 then
+					Stock1:Refresh("Not Stocked")
+					stocked = false
+				elseif Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value >= 1 then
+					Stock1:Refresh("Stocked!")
+					stocked = true
+				end
+			end
+		end
+	end)
+
 local ESPDS = MainTStock:AddToggle("ESP Dealer Stocked", ESPSettings.DealerSESP.Enabled, function(V)
 	ESPSettings.DealerSESP.Enabled = V
+	for i, Dealer in pairs(Workspace.Map.Shopz:GetChildren()) do 
+		if Dealer:FindFirstChild("Type").Value == "IllegalStore" then
+			if Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value == 0 then
+			elseif Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value >= 1 then
+				coroutine.wrap(DealerSESP)(Dealer, sstockk)
+			end
+		end
+	end
 end, "ESPDealerStock")
 ESPDS:AddKeybind("None", "ESPDealerStock1")
 --#endregion
 local function TeleportAreaNew(Cframe)
-	local TPCFrame = Cframe
 	local User = game.Players.LocalPlayer.Character.HumanoidRootPart
-	User.CFrame = TPCFrame
+	User.CFrame = Cframe
 end
 
 local db = false
