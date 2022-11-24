@@ -3,6 +3,10 @@ GameSupport = {
 		Name = "Criminality",
 		Script = "Criminality"
 	},
+	["6152116144"] = {
+		Name = "ProjectSlayers",
+		Script = "ProjectSlayers"
+	},
 	["2753915549"] = {
 		Name = "BloxFruits1",
 		Script = "BloxFruit"
