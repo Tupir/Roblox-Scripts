@@ -205,8 +205,8 @@ local Hitting = false
         ["Giyu"] = CFrame.new(3042.948, 317.109528, -3013.40601, 0.342933595, 0, 0.939359665, 0, 1, 0, -0.939359665, 0, 0.342933595),
         ["Nezuko"] = CFrame.new(3839.87256, 342.214478, -4177.88428, 0.99924922, -3.67285011e-08, 0.0387428068, 3.67143471e-08, 1, 1.07676823e-09, -0.0387428068, 3.46457113e-10, 0.99924922),
         ["Yahaba"] = CFrame.new(1379.59412, 312.892059, -4574.09717, -0.568984509, 0.74243319, -0.353623569, -0.0247124936, -0.445259601, -0.89506042, -0.82197684, -0.500536621, 0.27169317),
-        ["Bandit Zuko"] = CFrame.new(120.362045, 282.207642, -1743.01636, 0.999990761, 2.85735684e-08, 0.00429180823, -2.90243012e-08, 1, 1.04959462e-07, -0.00429180823, -1.0508306e-07, 0.999990761),
-        ["Susamaru"] = CFrame.new(1379.59412, 312.892059, -4574.09717, -0.568984509, 0.74243319, -0.353623569, -0.0247124936, -0.445259601, -0.89506042, -0.82197684, -0.500536621, 0.27169317)
+        ["Susamaru"] = CFrame.new(1379.59412, 312.892059, -4574.09717, -0.568984509, 0.74243319, -0.353623569, -0.0247124936, -0.445259601, -0.89506042, -0.82197684, -0.500536621, 0.27169317),
+        ["Bandit Zuko"] = CFrame.new(120.362045, 282.207642, -1743.01636, 0.999990761, 2.85735684e-08, 0.00429180823, -2.90243012e-08, 1, 1.04959462e-07, -0.00429180823, -1.0508306e-07, 0.999990761)
     };
 
 Plr.Character:WaitForChild("Humanoid").Died:Connect(function()
@@ -226,7 +226,10 @@ spawn(function()
                     local remote = chest:WaitForChild("Add_To_Inventory")
 
                     for _,v in next, chest:WaitForChild("Drops"):GetChildren() do
-                        if not game:GetService("ReplicatedStorage")["Player_Data"][game:GetService("Players").LocalPlayer.Name].Inventory:FindFirstChild(v.Name, true) then
+                        remote:InvokeServer(v.Name)
+                        if v.Name == "Ore" then
+                            remote:InvokeServer(v.Name)
+                        elseif not game:GetService("ReplicatedStorage")["Player_Data"][game:GetService("Players").LocalPlayer.Name].Inventory:FindFirstChild(v.Name, true) then
                             remote:InvokeServer(v.Name)
                         end
                     end
