@@ -1,6 +1,2625 @@
-_, Protected_by_MoonSecV2, Discord = 'discord.gg/gQEH2uZxUk'
+local Name = "SSHub"
+_G.LibraryConfg = {
+	AccentColors = {
+		Accent1 = Color3.fromRGB(255, 255, 255),
+		Accent2 = Color3.fromRGB(255, 255, 255),
+		TabTextColor = Color3.fromRGB(255,255,255),
+	}
+}
+--#region Notify
+local NS = {
+	Title = "SSHub",
+	Icon = "rbxassetid://8426126371"
+}
+local function Notify(Title, Icon, Text, Duration)
+	game.StarterGui:SetCore("SendNotification", {Title = Title or ""; Text = Text or ""; Icon = Icon or ""; Duration = tonumber(Duration) or 3 })
+end
+--#endregion
+--#region Settings
+--Variables Settings
+local stocked
+local sstockk
+local Settings = {
+	GunMods = { 
+		NoRecoil = false,
+		InstantEquip = false,
+		Spread = false,
+		InstantAim = false,
+		Values = {
+			RecoilAmmount = 0,
+			SpreadAmmount = 0,
+			},
+		Removes = {
+			EquipAnim = false,
+			AimAnim = false,
+			},
+		},
+	TpHit = {
+		Name = "nil",
+		HitPart = "Head",
+		Weapon = "Fists",
+		Configs = {
+			Bat = {0.5, 0.1},
+			Fists = {0.2, 0.1},
+			FireAxe = {0.65, 0.1},
+			Chainsaw = {0.13, 0.1},
+		},
+		--|1| When do teleport + Start hit seceunce
+		--|2| When do the hit
+		--|3| When teleport back
+	},
+	Killaura = false,
+	AntiStomp = false,
+	EZBypass = false,
+	AutoBreakSafes = false,
+	DownedChat = false,
+	KillChat = false,
+	KillMSG = "",
+	IsDead = true,
+	AutoPickCash = false,
+	AutoPickTools = false,
+	AutoPickScrap = false,
+	InfiniteStamina = false,
+	NoJumpCooldown = false,
+	SpaceJump = false,
+	NoFailLockpick = false,
+	ShowChatLogs = true,
+	NoFlashbang  = false,
+	NoSmoke = false,
+	UnlockDoorsNearby = false,
+	OpenDoorsNearby = false,
+	NoClipD = false,
+	FullBright = false,
+	CamFovToggled = false,
+	CamFov = 70,
+	Zoom = 10,
+	InfinitePepperSpray = false,
+	PepperSprayAura = false,
+	WalkSpeed = {Enabled = false, Amount = 30},
+	JumpPower = {Enabled = false, Amount = 75},
+	NoBarbwire = false,
+	NoFallDamage = false,
+	NoRagdoll = false,
+	WallBang = false,
+	ElevatorTP = false,
+	TowerTP = false,
+	UIKey = Enum.KeyCode.LeftAlt,
+	NoDowned = false,
+}
+local ESPSettings = {
+	PlayerESP = {
+		Enabled = false,
+		TracersOn = false,
+		BoxesOn = false,
+		NamesOn = false,
+		DistanceOn = false,
+		HealthOn = false,
+		ToolOn = false,
+		FaceCamOn = false,
+		Colors = {
+			BoxColor = Color3.fromRGB(255, 255, 255),
+			NameColor = Color3.fromRGB(255, 255, 255),
+			DistanceColor = Color3.fromRGB(255, 255, 255),
+			HealthColor = Color3.fromRGB(255, 255, 255),
+			ToolColor = Color3.fromRGB(255, 255, 255),
+			TracerColor = Color3.fromRGB(255, 255, 255),
+			Color = Color3.fromRGB(255, 255, 255)
+		},
+		Distance = 2000
+	}, 
+	ScrapESP = {
+		Enabled = false,
+		LegendaryOnly = false,
+		RareOnly = false,
+		GoodOnly = false,
+		BadOnly = false,
+		Distance = 2000,
+		RarityColors = {
+			Bad = Color3.fromRGB(175, 175, 175),
+			Good = Color3.fromRGB(0, 255, 0),
+			Rare = Color3.fromRGB(255, 0, 0),
+			Legendary = Color3.fromRGB(255, 255, 160)
+		}	
+	},
+	SafeESP = {
+		Enabled = false,
+		BigOnly = false,
+		SmallOnly = false,
+		Distance = 2000,
+	},
+	RegisterESP = {
+		Enabled = false,
+		Distance = 2000
+	},
+	DealerSESP = {
+		Enabled = false,
+		Distance = 10000
+	},
+};
+local CoolDowns = {
+	AutoPickUps = {
+		ScrapCooldown = false,
+		MoneyCooldown = false,
+		ToolCooldown = false
+	}
+}
+local Information = {
+	Map = {
+	SpawnedScraps = {},
+	SpawnedTools = {},
+	SpawnedCash = {},
+	Dealers = {}
+},
+Clients = {
+	Characters = {},
+	Client = {}
+	}
+}
+--Silent Aim Settings
+local SilentSettings = { Main = { Enabled = false, TeamCheck = false, VisibleCheck = false, TargetPart = "Head" }, FOVSettings = { Visible = false, Radius = 360 }, SilentAimColor = Color3.fromRGB(255, 255, 255)};
+local ValidTargetParts = {"Head", "Torso"};
+--#endregion
+local Success, Error = pcall(function()
+print("Stage [2/2] Loader")
+print("[1/2] Loading...")
+--#region Libs
+local LibraryHttps = "https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Lib/LibrarySSHub.lua"
+local LibraryESPHttps = "https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Lib/ESP.lua"
+local Library = loadstring(game:HttpGet(LibraryHttps, true))() 
+local LibraryESP = loadstring(game:HttpGet(LibraryESPHttps, true))()
+--#endregion
+-- #region Services
+local game = game;
+local GetService = game.GetService;
+local Workspace = GetService(game, "Workspace")
+local Players = GetService(game, "Players")
+local ReplicatedStorage = GetService(game, "ReplicatedStorage")
+local ScriptContext = GetService(game, "ScriptContext")
+local LogService = GetService(game, "LogService")
+local RunService = GetService(game, "RunService")
+local Lighting = GetService(game, "Lighting")
+local CoreGui = GetService(game, "CoreGui");
+local Uis = GetService(game, "UserInputService");
+local Cam = Workspace.CurrentCamera;
+local Player = Players.LocalPlayer;
+local Mouse = Player:GetMouse()
+local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
+--#endregion
+--#region Functions
+local Character = Player.Character
+local function UpdateChar()
+    Character = Player.Character
+end
+
+local function TableRemove(Table, Item)
+    local Index = nil
+    for i, v in ipairs (Table) do 
+        if (v == Item) then
+            Index = i 
+        end
+    end
+table.remove(Table, Index)
+end
+
+local function CheckChar(Character, Health)
+    local hp = Health or 1; local rt = false
+    if Character and Character:FindFirstChild("HumanoidRootPart") then
+        if Character:FindFirstChildOfClass("Humanoid") then
+            if not Character.Humanoid.Health < hp then
+                rt = true
+            end
+        end
+    end
+    return rt
+end
+
+local function CheckIfCharacterValid(Character)
+    if Character ~= nil and Character:FindFirstChild("Humanoid") and Character:FindFirstChild("Humanoid").Health > 0 then
+        return true
+    else
+        return false
+    end
+end
+
+local function CheckIfHoldingGun(Character)
+    if Character:FindFirstChildWhichIsA("Tool") and Character:FindFirstChildWhichIsA("Tool"):FindFirstChild("IsGun") then
+        return true 
+    else 
+        return false 
+    end 
+end 
+
+local function CheckIfHoldingMelee(Character)
+    if Character:FindFirstChildWhichIsA("Tool") and Character:FindFirstChildWhichIsA("Tool"):FindFirstChild("MeleeClient") then
+        return true
+    else
+        return false 
+    end 
+end 
+
+local function CheckIfToolHasConfig(Tool)
+if Tool:FindFirstChild("Config") then 
+    return true
+    else
+        return false
+    end 
+end
+
+local function CheckIfUserHasFF(Character)
+    if Character:FindFirstChildWhichIsA("ForceField") then
+        return true 
+    else 
+        return false 
+    end 
+end 
+
+local function CheckIfUserIsDowned(Player)
+    if ReplicatedStorage.Values.LegacyDowningSystem.Value == false then 
+        if ReplicatedStorage.CharStats[Player.Name].Downed.Value == true then 
+        return true 
+        else 
+        return false 
+    end 
+    elseif ReplicatedStorage.Values.LegacyDowningSystem.Value == true then 
+        if Player.Character.Torso:FindFirstChild("PointLight") then 
+            return true 
+        else 
+            return false
+        end 
+    end 
+end
+
+local function CheckIfUserIsFriendly(TargetClient)
+    if TargetClient:IsFriendsWith(Player.UserId) then
+        return true 
+    else 
+        return false
+    end 
+end
+
+local function ClosestDealer()
+	Target = nil; magn = math.huge
+    for i, Dealer in pairs(workspace.Map.Shopz:GetChildren()) do
+        if Dealer.Type.Value == "IllegalStore" then
+                mag = (Character.HumanoidRootPart.Position - Dealer.MainPart.Position).Magnitude
+                if mag < magn then 
+                    magn = mag 
+                    Target = Dealer
+                end
+            end
+        end
+    return Target
+end
+
+local function ClosestSafe(Dis)
+    Target = nil; magn = Dis
+    for i, Safe in pairs(workspace.Map.BredMakurz:GetChildren()) do
+        if string.find(Safe.Name, "Safe") then
+            if Safe:FindFirstChild("Values") then 
+                mag = (Character.HumanoidRootPart.Position - Safe.MainPart.Position).Magnitude
+                if mag < magn and not Safe.Values.Broken.Value then 
+                    magn = mag 
+                    Target = Safe
+                end
+            end
+        end
+    end
+    return Target, Target.Values
+end
+
+local function ClosestRegister(Dis)
+	Target = nil; magn = Dis
+    for i, Register in pairs(workspace.Map.BredMakurz:GetChildren()) do
+        if string.find(Register.Name, "Register") then
+            if Register:FindFirstChild("Values") then 
+                mag = (Character.HumanoidRootPart.Position - Register.MainPart.Position).Magnitude
+                if mag < magn then 
+                    magn = mag 
+                    Target = Register
+                end
+            end
+        end
+    end
+    return Target, Target.Values 
+end 
+
+local function ClosestDoor(Dis)
+	Target = nil; magn = Dis
+    for i, Door in pairs(workspace.Map.Doors:GetChildren()) do
+		if Door ~= nil and Door.DoorBase ~= nil then
+            if Door:FindFirstChild("Values") and Door:FindFirstChild("Events") then 
+                mag = (Character.HumanoidRootPart.Position - Door.DoorBase.Position).Magnitude
+                if mag < magn then 
+                    magn = mag 
+                    Target = Door
+                end
+            end
+        end
+    end
+    return Target, Target.Values, Target.Events
+end 
+
+local function ClosestScrap()
+	Target = nil; magn = math.huge
+    for i, Scrap in pairs(workspace.Filter.SpawnedPiles:GetChildren()) do
+        if Scrap ~= nil then
+                mag = (Character.HumanoidRootPart.Position - Scrap.MeshPart.Position).Magnitude
+                if mag < magn then 
+                    magn = mag 
+                    Target = Scrap
+                end
+            end
+        end
+    return Target
+end 
+
+local function ClosestTool()
+	Target = nil; magn = math.huge
+    for i, Tool in pairs(workspace.Map.SpawnedTools:GetChildren()) do
+        if Tool ~= nil then
+                mag = (Character.HumanoidRootPart.Position - Tool.MeshPart.Position).Magnitude
+                if mag < magn then 
+                    magn = mag 
+                    Target = Tool
+                end
+            end
+        end
+    return Target
+end 
+
+local function ClosestMoney()
+	Target = nil; magn = math.huge
+    for i, Money in pairs(workspace.Filter.SpawnedBread:GetChildren()) do
+        if Money ~= nil then
+                mag = (Character.HumanoidRootPart.Position - Money.Position).Magnitude
+                if mag < magn then 
+                    magn = mag 
+                    Target = Money
+                end
+            end
+        end
+    return Target
+end 
+
+local function ClosestPlayer()
+	Target = nil; magn = math.huge
+    for i, CPlayer in pairs(Players:GetChildren()) do
+        if CPlayer ~= nil then
+                mag = (Character.HumanoidRootPart.Position - CPlayer.Character.HumanoidRootPart.Position).Magnitude
+                if mag < magn then 
+                    magn = mag 
+                    Target = CPlayer
+                end
+            end
+        end
+    return Target
+end 
 
 
-,nil,nil;(function() _msec=(function(o,h,l)local q=h[(107+(-#'balls'+(73+-0x63)))];local T=l[o[(-#{(function()return{','}end)();1,1,{},(function()return{','}end)()}+631)]][o[((45738/0x3f)+-#"El pepe")]];local N=(536/0x86)/((-0x1f+(-#"Rip Technoblade but he truly never dies in our hearts"+(-60+0x42)))+0x50)local i=((0x4c-(0x2b21/((0x1c0-259)+-#'monobola')))+-#"suck my balls")-(-78+0x4f)local g=l[o[(-#'pairu sucks dick'+(0x1cc-249))]][o[(-#{(function()return#{('fLMkFb'):find("\77")}>0 and 1 or 0 end);(function()return#{('fLMkFb'):find("\77")}>0 and 1 or 0 end),1}+262)]];local S=(-0x46+((-79+0x3)+147))+(-0x7c+126)local n=l[o[(579+-#{",";1,25,'}';1})]][o[(((1044+-0x6e)+-0x48)+-#[[Should have used luraph]])]]local b=((160-0x83)+-#[[yeah u know what time it is]])-(-#'nico der hurensohn'+(129-(-67+((0x1c9-247)+-#[[I boiled them into scrambled eggs]]))))local c=(-#{93,'nil',{},93;{},","}+10)local t=((-#{33;'}',{};{};'nil'}+114)-105)local s=(-#{27,(function()return{','}end)();67}+7)local w=(-#'hypeblox likes sucking big black cock'+((0x5f5b/(((79360/0xf8)+-#'0nly 1337')+-74))-0x3e))local U=(0x390/(7296/(-#"zxcvbnm"+((12340-(-#{1;",";{};72,(function()return{','}end)(),'}'}+6184))/0x9e))))local x=(-0x38+(((-67+(0x1c5-244))+-#'stfu furry')+-72))local a=(0x79+((-0x712d-(-0x381e+-93))/123))local K=(-0x7c+(-0x24+(-#'algebra'+(0xf1+((-0xa6+43)+0x34)))))local d=(((65+-#{{};77,'}',1,(function()return{','}end)()})+-0x1c)+-#[[Only a to Z 0 to 9 is allowed]])local H=(-#{18;1,(function()return{','}end)(),1,57,57}+9)local P=(((102+-#{1;",";18,178})-81)+-#[[FranzJPresents]])local M=(128+(-0x3a+(-77-(0x42-76))))local F=(30-(((-#'zeynox was here'+((-#"how to find my dad at the dollar store getting milk"+(-0x7b4+957))/13))+171)+-#[[real roblox omg builderman caught playing real]]))local m=(6+-#{",";'nil';'}',(function()return#{('fOKHfh'):find("\75")}>0 and 1 or 0 end)})local p=(-#{111;(function()return#{('mLkmhb'):find("\107")}>0 and 1 or 0 end),90,(function()return#{('mLkmhb'):find("\107")}>0 and 1 or 0 end),90;{},1}+9)local e=(-#[[negus]]+(48-(0x1e45/((0x1d9-(670-0x189))+-#"El pepe"))))local k=(8+-#{'}';",",'nil',{},'nil','nil'})local B=(7+-#{'nil';(function()return#{('hbLMpf'):find("\76")}>0 and 1 or 0 end),(function()return#{('hbLMpf'):find("\76")}>0 and 1 or 0 end),98,(function()return#{('hbLMpf'):find("\76")}>0 and 1 or 0 end)})local Y=o[(1385+-#{1,(function()return#{('kmMBpB'):find("\77")}>0 and 1 or 0 end);(function()return#{('kmMBpB'):find("\77")}>0 and 1 or 0 end);",",39})];local j=l[o[(0x6f36/146)]][o[(-#{1,(function()return#{('HffoLo'):find("\102")}>0 and 1 or 0 end),31,31,34}+430)]];local E=l[(function(o)return type(o):sub(1,1)..'\101\116'end)('LBlLkPlH')..'\109\101'..('\116\97'or'OoHPlblF')..o[(1193-0x26b)]];local y=l[o[(0x4a5-615)]][o[(211275/0xe1)]];local _=(106+-0x68)-(((0x158382/219)/58)-0x6d)local D=((0x208+(-#'zeynox was here'+(-0x11f9/43)))/0xc7)-((0x67+-81)+-#'free pornhub premium')local z=l[o[(291+-0x60)]][o[((0x36b-482)+-#[[Innovative and Im made of rubber so that anything]])]];local f=function(o,l)return o..l end local C=(-#{123,{},1,(function()return{','}end)();'nil','nil';(function()return#{('KLHkbB'):find("\72")}>0 and 1 or 0 end)}+11)*((0x83b0/((0x94+(-0x51f0/228))+-#"gay men"))/0xac)local A=l[o[(43836/(0xb6d/75))]];local O=(-#'Im devastating more than ever demonstrating'+(131+-0x56))*((0xe3d-(1975+-0x7a))/0xe)local I=((0x48e+-97)+-#'Smokey BArbecue BAcon BUford from checkers mm')*(-0x34+((408-0xfe)+-100))local R=((0xa9-(((-#"no h"+(47144/0x8e))-204)+-#[[get good use moonsec]]))+-#[[nerd emoji x7]])local u=((115+(-#'PLEASE HELP MY BOYFRIEND TRAPPED ME IN HIS BASEMENT'+(80+-0x2e)))-0x60)*(-41+0x2b)local r=l[o[(-#{56,38,'nil',38;1;'nil'}+1049)]]or l[o[((0xa7335c/230)/83)]][o[(-#{56,38,'nil',38;1;'nil'}+1049)]];local L=(-#"Only A to Z 0 to 9 is allowed"+(0x148+((-#"pussy day pussy clean pussy fresh pussy pretty pussy fat full of fresh"+(8927/0x4f))+-0x56)))local o=l[o[(0x9ca-1274)]];local v=(function(f)local k,h=1,0x10 local l={j={},v={}}local O=-b local o=h+i while true do l[f:sub(o,(function()o=k+o return o-i end)())]=(function()O=O+b return O end)()if O==(C-b)then O=""h=_ break end end local O=#f while o<O+i do l.v[h]=f:sub(o,(function()o=k+o return o-i end)())h=h+b if h%N==_ then h=D y(l.j,(z((l[l.v[D]]*C)+l[l.v[b]])))end end return n(l.j)end)("..:::MoonSec::..bBfFlLkKoOpPhHmMhMKbBLPpLMblpOlmMKpFFHmfoKoBHLKkBPhbpmkHBmhfbMpFlFmooHoklbMboHfPhbBoPLLpMMmoPmkbMlphlkMBOLopKOBkPPkbKOBOPHkObkpbloMpLoHhKKBhhBPOKMBBhKkmblPkFbbFOhpPoBffhKkhKoBKhokLoMlpmMOlFOHmoFFbbHKFBKPhkBbkmPLlMLOpFMFommpklKFkflhfkKbhblPPkMmFPlLhMlLMmOKmfFhohbKKfLhblMBLPMLOMPpFlfmLOHFKmfokHokfbKphkFlmOPllmLObfMHlKOFmhFkoBBPfLPMhpklkbPObFLHmKMfohOKoBFhpLHbfpHlhMhOkFPmboLfphMKPBOPmkFbhpHLoMKOhlOmkOFFbHkKpBMhlkHLBPFLoMHpplKmHOBlofloBfHhpKKBlPOLmBFmflmMOOKFmmBomfPHkopBPhKklBLpmLlMoOMlfmPhMFBHkKPfhhLkPbMhkpfMMpPloMLOfFKHhOBkbhhKKBLhFLMbhpOLlboOOlLmfOKfhHfKkBhhbkOlHpMLlMOpmlFmOoHllfbKHfOhkKFBbPLLpbMHmlpMLOFFOHHopfKHmffBkhFkbbOpplMMlOOMPmFOBfHHLKKBhhBkkbkPbLHMppBllmPomFOKKKHfphKoFBBPKLPbbpLlmFfOlFOHmOpfohmKfBPMMkBbkpPkoMLOPFMMkHffMHPKoflhfkKbhhBObMhpKlLmHoMFhHOKmKMhOKBBfPmLhbfpklPbpOkFpHMoLfOhmKFBoPHkfbKpMLOMkOPlbmoopfMHlKOBmhFHolHbKLPMhpBlklHbOpOFMLfFbhOkmBFMphoKOmmPklomHOHfkMoplBlLmBOPmkFbopHLfmKHPBlmkoPFbHLMOfLhlkObmfkhhkMbPPLLFHBFpHPobfLfHHKKLfPFBbkpolHMfbpPBlFpofPHbKLfhKbklbhpmLkMoOHlfmKoHFfHOKPfFhLkPbMPpMfMmpkloMfOfFoHhoffkhMPFBLPpLMbOpOlMMFOhobmfoKfhHOKkBhhbKKPPpMLKMOpBlFmooHFfHoKHflhkkmBbPkLpMMhklOMBOFFpHHoffKHmPpBKPmkbbOpplMMlpPpomlohfHHKKKBhhBKobPPbLpMppFllmOomFFHoKHfohKkhBBPkLPBfpLlpMkOlFHHmoFfoHBKfBKhBkBflpPLBMLOpMhmlOffmHKKoBHhfKOPHPBkbMPpklLmpoMLlKLKmfHhoKKBfPmLhfBMolPMPOLFpHMohfOhmFbBohpkfbMphLBMkOPMHmLOofMHhKOBmhFkohkPfkfMhpMlkmHObLLfhKMfMhOKOBFPpLHbfpflhMhOkFHmboKfphMBhBOhOkFBFpHLLMKPhOomKOkFbmbKpfbhlkObOPFkfMHpllKmmOBFkmmobfOhpKoBlhFLmbFLblHMPOKFMmBoofPMbhhBPhfklBfpmLlMopBkkmoOBFBmlKPfBhLKhhbPlLmMmpklomHOfFKphoBfPhPKBBLPmLMblhPlmMKOoFMmfoKfhHBObBhhbkLbPpMLlMOlolFmooHFfHKKhfBhkofBbPLLpbbpolOmmOFpLFmMkoMfBKpBkPPkbLfbPPkkfbfPfLomhOfBfKPBhhBkkLoBBPmkobOLfmOomFFBmmkObfPPfKpfohmKlmoPfLobbOHoKOFfohHKfLMFBhmkKBOPMLmMmOBLFMopffFHOoMFkmkBKPBLkMPmkOllbmfOOlHMfohFkHloLfBkfbBpklPFoMpOPlPMoOBMOKKBoPHkfKLBBhOkpbLlKmLopfMBOmKKMfLHlKfBkbbbkpBlkmPmlOklhmkoOFHPmKlfpHBmpPblhMBOkKmlomkOhFbHKoHfFHLMbPkLfMKOhOLlPmhOHBomfolfKHllmPOLoMHpfOOlHMMOplpmHFPHbkMBlPOPbklbhPkkKbpbMmKokfPHbmKKPfHhoKoBPPHbbOHlfmKHhpblOmlOlfmHOKHKlLOMmpFlomHOffKBPLkfkhPKbBLPpLMblpOhHMKOoFHmfHPOBFfmFOphhkLbppMppkfBBphlpMOOKBpmlokfOHkBFPLLpMMpllOfmFfKoboopfKhhKBLmFbhHkkBoPmLHMHkOmmoofHHfPmoBFLpOKFBOhBLmBBpOLKbOFFHoKHfffHkHBBPkLPbbpLlpbMFbFOHmoFfohHKLBKHhMHbkpPLbMLOplOmloMhHHFKoBHhokKbHPBLkMPploompoMFlHMKmflhoKBLLPKLhbBpHlPMBOLFpMOoLfOhmKlBoPHkfbKBLLBMkOPlBmLopfMmkopBmhLkoBLPfLKMhpBlkmPOFFLHPKMflhOomBFPokbbfpplhboOkFPmboLfmhMKkBOPmkFbopHLfMpOhlFmkoMFbHOKpBMhlkOoLPFLOMHpfpHmHOoFkHmobfLhpKLpBPOklbFPplHMFOKlFmBopkmHbKLBpHBklbppmLKFPOHlfmKOMFBHKKPflbokpbMPlHbMmpllomHMoFomFoBfkhPKbBLHpMPblPblmMpOolbmfpKhoHBKHBPhKkLBkpMLpOfOmlpmopkFfHoKhffhkkMLFPLLpMMPHlOmMOFFhfboffKhhObBkPhkbfLlklMMPOOllmFOPfHHfHHBHhOkkbmPbLLMpPMmbmOOkFFmbKHFLhKKfLhPKkfbbhllpMbOllBHmoKkPhHKfBKHPkBbKpPLlFoOpFMmlbbfmHlKoFHLmkKBFPBLhMPpPlLMbfmFlmbKmlkhokmBfPKLhbLmOlPMbOLLHHMoLfOHfPkBoPHkffPphLfMkOMoFmLopfMlPKOBMhFkoKFPFLMMhpBlkmPObLLKkKMfhhOKkBFPPLHfflFlhMOOklFmbOOfpHLbHBOhkkFFfpHLFMKOHlBmphmFbHLKplOhlkpbmPKOPMHpflKBhOBFKHPoboPhPKKBlPHLmbFpolHpMOKlLmBohfPHbKLBpPpklBBpmLLMoOMlfmHfLFBHmKPLbhLkPbMPLLObfmklomHOfkKHhoffkhMPFBLPpLMKPpOlMMFOopFmFoMfhHfKkBPhboLpkpMLhMOpklFmhoHFfOlKhfphkKfBbPLLpBBmHlpMoOFFHHHoffKhhfpBkhFkbbMppLBMlOOplmlOBfHHFKKBhhBokpKPbLmMppollmHomFFOLKHfhhKKFBBPkLPBfmmlPMpOllMHmoFfohHfPBKhLkBBBpPLfMLpbHomlOBfmBbKoBmhfkobhPLOOMPpblLfKoMFLHOofkkhokHBffmLhbfpkLBoOOLlFHMhlfOhMKFBOPHkklpphLBMkHPlbmkopFFBKKOBmhFHMbHPFLKbflblkMlObKhHpobflhOkmBKMPLHbfpKOFMBOKFPbbfBfpHOKlffPmkpboHFfmMKpklBfhoPFBHLohBMhophbmPFLolFpflomhOLKOHPobfLBBkMBLPOkflkpolHMfbmFhmfokfPFkKkflPMkObOpmLFBoFOlfMfohFOHkoPfbhLmhbMPmLObbpFLFmHOoHkHhohfkBoKbBkPpLMblpHOBMFOoFHfMoKfHHBKpLmhbkLbpMHLlMpOmlKfPoHFfHKMFfBhKkPBbBPLPbPpllMmmOFFoHHoLfKHoKBBKPPkfbLppKfMLpLFmmMooFKHfOKPohBKfbPPhLLMhOMlpMmoMlbHoHHffhokhBfPkLMlFpLlpmMMlFOHMoFfoFFKFflPhkBbkpPLbBLFkFMMBoOFPHFKPBHmfbFbhPmLkbopblmmpOLhHHOoPfFffkHBFPKLHbBppomMbOLFpFOolfphmKKLPPHkfbKbPLBMKOPlblPoPFhHlKOBmhFkofHlmLKbOpBLFmPOkFLMpBPflHkkmfbPokPbfpHmLMBpFFPlboLfPhMKLBOhfpkbopHLfLKOhlfmkOHKOHkoKBMHOkObmPFLmlFpfLFmhboFkHhobFfhpKFLKPOLmbFBMlHMFOKFhlKoKFoHbKLBpPMklfOlpLFbLOHlMmKoMFBMkBKfbHfkpBhPlkFMmhOHPmHOMFKlmoBfKhPKHBLPmpfblpOlmkLOoFmmfoKOfHfoFBPhKkLbppMkkppOmLBmoomFfHKKhlBkfkPBmPLkoMMPFlObbHhFOmhofFohhKBBkPPhkbkPplMMPOOFmmFooOLHfoKBhHBkkbPPbLLPFOMLfmOOmFFHpKHffhokHBmPkkobbPFlpmMOLFpmPoFfMhHKMBKhfKkbKpPLbkPOplbmlOkfmHKPPBHhfkKofPBLKMPpbpPmPOhFlHOKmfFhooHpmPKkObBPFlPMFOLLpKPolFkhmobBohKkfbKpHLfMkOPlKmLOKfMHlFkBmhlkoBOPfLKMhpKMhmPOfFLmoKMfLhOKbBFPhpbbfpKlhMMOkFhmboLlhhMKlBOhbkFbopHLfBBOHlBmkohFbHLKpBMhlkObmPlLPMHpflKppOlFkHPobkKfPHFkOhBLmbFpopbLLbOOHLBhPKmfbMlfkPMklbObbPlkpbkPkkbhMpblfmpOfFokMbMPlLOMmKPlommOfFKHhoBfkmPKbBLPPLMbLpOLbMFPoFHmfoofhHfKkBmhbKLbppMLLMOOMlFmooHFfHKKhfBhkkhBbPLLpMMpllOmmOFllHHoffKkbKOBkPPkbLLBOhfLHbHpKLfMkBLHHKKBhhBpHKbflOokfboPblHbbOolkoBlHhPkhBBPkhokBbhPoOoOHFOHmoFKLfmHOoLfLHLKPbMPLPFOmFMmloOOPFlmhoLkPkPbhPBLkkFBLphlMhMFOHOKmfFFohmKPfOhMlBpOlPMbOLpKlbmPBBHlKFBoPHPkkoBmPoLPbMLkMLopfMHlhBOFFbhOKPfBhbkbMFPLLpbloLFPMBOoLHKKBFPoLHlLbMpHkFMKOmLlmpOhMBKlBOPmKLpopHLfMKpklBmkoPlfokKpBMhlkMbmPFLoBHFmlKmhOBFkHPoKfLHhbMBlPOLmbKpolHMfpOmHmBokfPHoKLBpPMklLMpmLlMoOHlfmKohLBHkKPfBhLkPbMPkLOMmpFlommOfFOHhoBfkhPKbBLPpLMblpOLbMFOhFHmfoKfhmmKkBhhboPbMpMLoMOPPlFmOoHFLHKobklhkkPBbHfLpbbpllOLlOlFHHHoFfKhhKBFkPHkBbpppLlMlplFmbFoofHHKKKfBhBkKbPHbLLMppLllmHomFMHoOHffhKKfBBPhLPbPpLkpmMOlFMHmoOfohmKfBKPhkBbPpPLLMLpbFMbloOfmHoKoffhfkhbhhFLkMPpLlLMFoMFlHOObfFhoKfBfhbLhbBpkLHMbOLlbHMoofOhmKFBmhPkfbhphkPMkOhlbmPopFFBKKOBmhFofbHPFLKbbmllkmPObLfHpobflHPBMBFPHLHbPpKlhMBpoHPmbopfpHFKlBOPmKLpopHLkMKpklBmkoPFkoPKpBMhlKFbmPlLoMMpflPfMOBFkHPopfLhPkMfkkpLmbFpoLKMfOKFhmBpofPHbKLBhPMklbOpmkHMOOHlfmoohFBHkKPfbhLkpBbPpLOMmpFHHmmPHFPHhoBfkBOHBofBMbOblFHLOMFOoFHflMFOLFMHpkbfkhPkMBfhokFpLlFmooHKKlLHHoFFfHbKlMLkLMMpllOFhbfKmlOmFOpFlHFKKfOhKbMpplMMlOOplmloOfHHfKKBhhBokpKPbLkMppbllmMomLOHHKHfFhKKBBBPKLPbBpLlmFfOlFOHmoofohmKfBPMMkBbkpPLOMLOPFMblfLfmHlKoBHhfkObhHKmOMPpBlLMFoMFLHOoffFhhPbBfPKLhbppklhMbhLOpHMolfOHFKFBPPHkffBpHLBMkOhlbmLopfMHlKOBmhFkHbHPfLKFmpBlkmPObFLHpKMflOmkmBFPoLHbfpKlhFBkOFmmboLfpFHHOObOBkObopHLfFpmfPFlKMoOLFMofBMhlkOLPBohPkLMfpoLmbLlKHPobfLhpHLBLPOLmbFpolHMfOKFMmBokfPHBKLBhPMolpLpmLlMoOHlfmhohFKKLKPfBhLKpbMPLLOMmpFlhFbOfFKHhOBfkhhKbBLfbkbbLpOlMMFOoFHbfpLfHHFKkBPhbkpbphMLlMOpblFmpoHFkHKomfBhkkmBbPOLpMMplkOmmOFFPHHoLfKhMKBfoPPkbbOppLbMlOOFmMLoofHHKKKBmhBkkbPhfLLMppLllmpomFFHoKHffhKkMBBPhLPbfpLlpmMOlFPHmoLfoHbKfBKPhkBbKpPLfMLOPFMmlpFfMHFKoBmhfkKbhPfLkMPpblLmpoMFlHOOFfFhokHkKhfLhbBpkOHLLbfpOLFmOkmllHookFBKpbKphLBMkOPlbBFhpFBHLkBfHhFkobHbfPhkhBBpPLHmFpLlhmbOHbpmFoLBOBPbPpKlhMBHOpFlBMKoPFfmoKmFbfBBFpHLfMKmFpkLphmOoFmmkoFFkhmKhoKLofopklKmhOBpHFhmOOOFlKoBlPOLmLbbOPlkbbbPbLkmpObmkobBpPMklLLBHPkLObOOfLFmHppFPmHlPHLkpbMPlpBKFBbpOLPbBpblbHFOLFpmlkLBPHBKoOBLpMFOoFHFfmhOhlBHPoHmHHoKpfBPLKfBHlPmooHFffKmPOlfMHMKOflhofppOlOmmOFpoFmmPOOFMOmBkPPkbbLpplMmlHoFMmooofHHfhpohFFhKolHPkFMpOMllfMMKpBFhhFoPFOHMoLMOhFkOBBpmBpOpFOHmoFKBlbPkKhBHhLbKPfLbMLOpoMLbmppKFompObobKBbhPBLklBbOPKlMmfOOlPMlooFpLLBLPKLhbBmmPlklHOFpHMolFPPPKFBoPHkpbKphLBboOPlbmkopFmHlKOBmhFkobHPfLKMmpBlKmPObFLHpKMflhOkmBFPoKHbfpKlhMBOkFPmloLLbhMKlBOPmpkbopmLfMpOhlLfOoPFbHLPHBMhLkObmBOLOMHpflKmhOBFkMPBhfLhpkMBlPOKbbFhmLfMfOKFhmHokfhHbKhBphFpKbOpmLFblOHlFmKObKlHkKPfbbokpBbPlLOklpllomHOFFKHhoBlkFHKbBLPpLMblpmlmBFOoFHmfoKfhHBoKBPHfkLbpPBLlbLOmlFmooHFfHKKhfBhokPBfPLkbMMpllOmmHkFoHmoffKhhKLLOPPkbbLmHlMMLOOLbOloofHHfoLBhhBkkbPbkLLMPOMlkmOomFFMoKHffhokhBfPkkBbbpLlpmMOLFOmboFfohHKfBKPhkBbkpPLbMKOplFmloOfmHFPOBHhFkKbhBKLKbbpblompoMFlMOBpfFhHkHBKPKkMbBhkmKMbOpFpmlolFFhmOFPlPHkKbKPBLBMPOPkbFKopFlHlKmBmHlkoBMMPLobFpBLBmPObFLHpFoflhmkmBpPoLMbfhKmoMBOPFPmLoLFKhMOlPLPmkOboPBLfMhOhkBFooPFkHLobBMHLkOfbMhLObLpfLfmhOBFkHPFOfLHbkMBhPOkbbFhomOMfOHFhmKokFoHbKLFHhbkObOPFLFMmOHkfoFohFkHkobfbhmkpFLpOLObFpFKFmHOFFKHmoBfpbmKbBLPpopblpplmMKHPFHmfoKkkHBKKBPhbhPbPPlLlMHOmlFmopHpMHKoBfBhPkPBhPLKpMMpllmmmOoFoHmoflKhhKBBPPPkLbLPmlMbkOOFmmpooFHHfKKBhhBkkbPPoLLMPOMllmOomFFHoofffhMkhBfPkLPkkpklMmMOoFOHmoFlokOKfBhPhkkbkPKLbBLFkFMmOoOFFHFKOBHmfPObhPkLkbbpbLOmppBKHHpoLfFHHkHBfPKKhOHpkLFMbOOFpmlolfOfpKlBHPHkpbKpHLBMpHmlbmLopKbHlKpBmhFhmbmPKLKbbpBlkmPPbPfHpolflhmkmBMPoKHbfpKLBMBOPFPmBoLlphMKlBmPmkobohBLfbOOhlBmHoPlbHLKpBMhlkObmPPLoMHpflKmhOBFkHPoLfLHfkMBLPOklPOpolHMfPbFhmfokfHHbKOLHPMklbOhKLFMOOHlfbBoHFBHkKhfbhLkpbMPkLOMmpFOHMpOfFKHhHFoPFOHlKpfhPfKobmPmkFMHpBbHomfhHBKkLmfMHFKoBlPKkHpOlFmooHFfFHKHfBhkkPBbPLLpBMlblOmmOFFoHHoFfKmhhFBkPPkbbLppLBMlOMBlmFopfHHfKKBHhBkPbPPbKlMpOMllmpomFFHoKHlBhKkhBBPoLPbbpLlpbmOlFOHmokfohHKfBKHPkBbkpPLlMLOpFMmlpofmHFKoffhfkKbhPBPfMhpblLmhoMFLHOKmFHhOkHBfPoLhbBpklPMbOLFpmbokfOhmKFlFhbkfbKphOpkOHhobmOopfMHlhHoHFfHlBLPfLKMhhBOomPOBFLHpKMfLhOobLhPOkbbfpOlhMBOkFPOOoLfPhMKKBOhbkFbmlhLfMoOhlomkohFbHLKpfFbKkObmPFLMMHpFlKmhMKFKHhobfLhpkMBlPOBhbFpOlHMFOKFHmBoklLHBKLBphbklbOpmLFMoOHlfmopLFBHkKPMFhPkpbMPlhmkhBFpOLbMHpBmboBfkhPPoKpBPhFpMpOlmMFOoFHmfOKkhPPKkBPhbkLbppMLlFOBHLFmooHFfOpMMmFKkfmOfKKMOhffkbPooLkPpOMfpOBHkKBBkPPpkkmBhPllKMmPbLOmHOMkoKKBhhBkkbPPbKPFplpllmOomFFHoKHlfbKHoBBPkLPbbpLlpBFHlhHmKoFfohHpllpMlOpkbMBpofohHLLmpoOfmHFPHOFfKHLobflMMbFpblLmpHMpFlhmKOKFBHhobKKLhbBpklPMbOLfpBmLKFbhmKFBoBLpMlMMloFflhhhbmLMlFfHlKOBmbPHBoBKbLPMhpBlkFMMMpllkfpflhOkmBFPoLHbpmKPkMOOkFPmbHBoMFLmoFOMMHLKLblLfMKOhlBmkoPLfBLPpFlhlkObmMOhBkPbkoHLLbFpOlMhFoHFFHPKobohllkBlpmkLbpkOmBokfPHbKLBpHKplKLpmLFMoOHlfmKpoKBbFKPfbhLkpbMPlkHFmmFlhmHOfFKLbmpoOFkOpBLPpLMblpklmMlOoFHmfoKfhbBKkBPhBkLBKpMLOMOPblFmooMFfMbKhfBhkkPBbPLLhMMpLlOMbOFloHHoffohhKLBkPHkbbLpplMMkOOFmmFoofHMfKKBhhFkkbHPbkpMpPBllmOOfFFmOKHffhKkhBBPkLHbbpOlpMBOllOHmoFfOhHolBKPmkBFkpPLbMkOplfmlOFfmHFKoBHhlkKbHPBLkMPPflLmpOfFlmOKmfFhokHBfPKLmbBpolPMfOLlpHMolfphmoPBoPMkfFKphLBMKOPLkmLOOfMHlKOBmhLkobHPfLKMhhBlkmPOfFLHhKMFKhOKmBFPoLmbfPmlhMFOkLPmboLfhhMKlBOhbkFBopHLfMoOhlOmkoHFbmLKpBMhLkOffPFLoMHhflKmhOFFkHPobfKhpoMBlPOkbbFpplHMmOKlhmBokfhHbKmBphBklfOpmLFMpOHlfmKomFBMkKPfbhKkpBBPlkLMmPFlomHOFFKmFoBfohPofBLPpkBblPklmMFOolMmfoKfMHBKOBPhbkLBhpMLlMHOmLbmooHFfHPKhfBhokPFOPLLPMMplpMmMOOFoHMoffKhhOBlfPhkkbLPblMMMOOLmmFooFFHfKHBhhMkkfPPbLLbbOMlpmOOlFFmpKHffhMkhBfPkLPbbpLlpmMOHFOHMoFfohHKfBKPhkObkPlLbMLOpFMmloOFlHFKoBHhFkKBbHLLKMHpbkLmpObFlHOOoflhokHBFPKLhbBpklPMbOLFPmBolfOhmKlfbPHkfbKMbPpkObMpBLFmHOlkooBBmhFkokbBLhOLHBBoPFmmbFOHpKMflhOHlBlPOLHbfpKlhMBPkHKmbokfpHbKlBPPmKFlfpmLFMKOHlBmkoPFbmMKPBMhlkpbmPFLoMHpflKmhOBFHHPobfLOHKLBlPOLmlkmmPMLFblpBMOokfPHbKLBpPMklbOfMLFMoOHlfmKohFBOkKhfFhLkpbMffPmKLoPLbmHOfFKfOmfoMFOhbKkfhHFhlpOlmMFOoFHmfHbkhkKKkBPhbkLbppMLlFOPblFmooHFfFHKHfBhkkPBbPLLpBBmHlpmMOFFmHHoffKhhkhBkPPkbbKppLBMlPOHpmFoOfHHfKKfBhBkhppPbLkMpPbllmpomFFHooBkLhKkhBBhKLPbBpLlpLLOLFpHmolfohHKfFKHpkfbopPLbMLOMFMbloOfmHLKoBMhfkobhhFLkMPpFlLmPoMFlHOOmfFhoKbBfPpLhbLpkLHMbOLFmHMokfOhmKFfpPHkfbhphLoMkOPlbMKopfMHpKOfBhFkobHPfLKMhpllkMBObFKHpKMflhOKbBFPpLHbLpKlhMBOkFhmboKfpHbKlBOHoklbopHLFMKOhlBmkoPFbHLKPfBhlkObmOPkfMHpflKFfbbpoFmmLkPFFHlobBHPFBOpolHMfHHpLlMmpKBFOmKoHFFpKKBBKPMLhMlppLbmMOOBMmmkBHBkpbMPlKOLbpFlOmHOfFKHmoBFoBlKBBoPpkbblpOlmMFLBFHmFoKfMHBKoBPhkMmbpPbLlMMOmllmoomFfHPPMfBhkkPBkPLLPMMpoohmmOFFomkoffohhKBKhPPkBbLpPlMMlOOFmbLoofmHfKOBhhBkkbMMFLLMpOMlMmOoMFFHomFffhokhBBPkLPbbpLkhmMOLFOmboFfohHKfFBPHkBbkphLbMLOpFMmloOfmHlKOBHhfkKffhkLkMPpboolPMhOOlPHMKbfOmLkhfkhPkmmpPlkFbOOPlHmKomHBKFBoPHkfkHpHLfMkOPlbmLopFMbmKpBMhFkObHPfLKMhPPlKmPObFkHpKMflhOkmBFPoLHbkpKlhMBHkFhmboLfpfKLhfbPmkFbobFPKLpBbPbLoPHhlHoKpBMhlHKKFfpmhMmpflKmhmpFMHPobfLHhPbBLPOLmbLpolHMfPKFhmBokfPHbKLBHPMklbOpmLlMoOHlfmKohLBHkKPfBhLkPbMPLLOMmpFlomMOfFKHhoBfkmPKbBLPhLMbkpOLfMFOoFHmfoKfhHFKkBPhbkLbppMLlMOOmlFmooHFfHKKhfBhkkhBbPLLpMMpllOmmOllFHHoffKMKKpBkPPkbLhBOhBLMbhpmllmPOfHFoLBhhBkkLBBOhFLmmLpHLPbBpKBPmLoPFFHbOBPkKBbLpLlpmMmlOpLbMKOPbHKLBKPhkBLFbhhbLMpbFMmloOKmFlmpofFbHPlhPOLkMPpbOhlPMPpbBPHMOBfMHoBFbhkFbBpklPkFMpphLLmHohFFOmffPHkfbKmMPOLKbHpBloMmOllkmhPfhpkobHPfplLPMBpKLHblpobmKMflhOkmKOPOLmbfpKlhMBOklPBpokfPhMKPBOPmkFfmPfLfMKOhlkmkohFbHHKpfFbKkObmPFLHMHpFlKMbHlFkHPoblbhpKbBlPOhlblpOlHMFOKFhmBpkmbHbKkBphbklBfpmkLMoOHlLmKoHFBHkKPfbhLkpBbPlLhMmpLlobHOfFKHHoBfKhPKfBLhhLMblphlmMoOoFHmfoKfhHBKKBPhFkLbhpMKlMOOmllmoomFfHOKhFFhkkPBFPLLmMMpllOmmOFFoHmoffphhKFBkHPkbbLpPlMMLOOlbmFOpfHHfKpBhhhkkbPPbLLMpOMlLmOOBFFHpKHffhKkhBFPkLhbbpLlpbMOlFOmboFfphHKPBKhmkBbkpMLbMkOpFMmloOfmHFKpBHhkkKbmPBKkMPpblKmpOBFlHPKmFLhokHBkPKkkbBpklPMbOLFpmBolfHhmKLBohHkfbKpHLBMhOPlfmLomfMHlKOBmMkkobmPfKHbBpBlkmPpmFLHPKMfKhOKfLkPoLHbfhLlhMfOkFMfFoLfphMpKBOPMkFboBFLFMoOhlfmkoPFbMLkhBMhLkObMPFkBMHPllKmhOlFkHhobfLhpkMBlPOLMbFpPlHMlOKLhmBokfhHbKkBphBklBPpmLFMPOHlhmKohFBHkKPfbhkkpBfPlLPMmhFlomHOFFKHHoBfohPofBLPpkfblPllmMFOoFHmfoKfHHBKOBPhfkLbppMLlMPOmllmooHFfMKhmfBhokPBfPLkFMMPkbLmmOKFoHmoffKhhKBBkPPkfbLpmlMMkOOLmmFoofMHfKOBhhFkkBHPbLLMmOMlOmOomFFHoKHffhOkhBLPkLHbbhLlpmMOkFOmboFfphHolBKPhkLbkpMLbMLOpFMmloOFbHFKhBHhlkKBhPBLkMhpblPmpOBFlHOOoflhokHBFPKLhbBpklPMbOLFPmBolfOhmBhfFPHkfbKMfpblhmmpLLOMmOolfmbOBoBkmbHPfLKlmbfppLlbLpombKMflhOkmKKPOLmbfpKlhMBOkLPmboLfPhMKLBOPMkFBopHLfMoOhlFmkoPFbHLKpBMhLkObMPFLoMHPflKmhOfFkHHobfLhpkMBlPOLmbFpOlHMfOKFhmBokfPHBoLBpPMklbpPBLFMoOHolloMmhLHhKPfbhLPboBBLhkkFBkFfmHOfFKHhoBfkPPpMOlhfLMblpOOplFMKoFLlmoOOFkBMffhbkLbpblOHlhbBplLlMfOHHoFpfhhkkPBbbBhOkfbMPOLKMkpFflHKKbKLKkBkPPkbLobHPbkbMmHfMBoofHHfhLoPbKhKKlBhpBkObfpMLOMKOklFkkffLPKbBBPkLPlmbkPKLlhBFOHmoFfohHKfFPMhFlbopPLbMLHhKBMpoPfmHFKokpbolMbmPBLkMPmfKoBLOBFlHOKmkLMOpoBfPKLhbBbhlhMBOLFpHMolfOmmbMBoPmkfbophLpMkhBHFmLoPfMMfKOBMhFkmbHPkOpMhpBlkbOObFkHpOMhbhOkMBFPoLHbHpKKfMkOkFhmboHfpHbKlfbPmkKlPpHLfMKpllBmKoPFlBoKpBMhlpFbmPlLoBHFmlKmHOBFkHPomfLmpMOBlPpLmblpoLBMfPKFhmBoKfPHBKLBhPMolbOpmLlMoOmlfMKohLBHkKPfBhLkPbMPLLOBmpFlommOfFoHhokfkMPKbBLPPLMbhpOLpMFPoFHmfoofhHBKkfOhboLbppMLLMOOMlFmhoHLfHKKhffhkkhBbPKLpBMpllOmMOFFOHHoMfKmhbHBkPhkbbkppLbMlPOHpmFoOfHHFKKfBhBOkkPPbLkMppKllMLomLFKlKHfFhKkhBBhlLPfblBlpMbOlFpHmoKfomHbmBKPHkBbKpPLfMLPpHPmlopfmHlKofhhfoKpoPBLKMPpBlLmPoMLlKLKmflhokmBfPhLhFBbklPMBOLlfHMObfOHfPkBoPHkflBphLfMkOPpkmkoPfMHlKOBmhFoopOPfLoMhpflkMlObLPkHKMfLhOpoBFPOLHbhpKLbFlOkFPmbPMfpHbKlFOLpkFbOpHLfMKpKlBbhBmFbHkKpLOhlkpbmPpLobBmLlKmhOBKbHPoBfLmpbPBlPpLmbFpoLPMfPKhkmBoKfPHBKLBmPMolbOpmLlMoOmlfmOohLBHkKPfBhLkPbMhlLOBmpFlommOfFoHhoffkmPKbBLPPLMbLpOLFMFhoFHmfoofhHOKkBmhboLbppMLLMOOmlFMkoHLfHKKhffhkkhBbPOLpBMpllOmMOFFOHHolfKmhKBBkPhkbbkppLhMlPOHpmFoOfHHFKKBHhBokpKPbLkMppbllmmomkFFoKHfFhKKlBBPOLPfblBlpMbOlFOHmOBfomHbmBKPHkBbKpPLlMLPpHPmlopfmHlKoBMhfoKpoPBLKMPpBlLMOoMLlKLKmflhokmBfPoLhfBlflPMBOLFPHMoOfOMmHFBoPmkfbMphLlMkOPLpmkopfMHLKOBmhFkObHPfLKMhpBlkmPObLlHpKMflbOKPBFPoLHLLbpPmLfbkKmlMMlOkFFmFObfhmfBBpHLfMKmOpflHMOOOlOmMoFfOfObmPFLoMHpflKHhHbMlmlobfLhphkoFfPhOKkBopmLLMhMpmHokfPHbPhKMFFpLKHffhLkBMMPKLPMBlKHMKPfbhLpHKKBLhPLMbkPhLfblkfmfoBfkhPmFoOfhhoKfBbFKMFpmlFmfoKfhBkmhobfmHOKHOoLLoHpolFmooHKolbmmokBOHboffPPMKBmlLBmmOFFofpmKOpFlhBKKfHHlLhpplMMlOOFmmFOhkHKPKhBhhBkkKPBBPmkhBfOOMlomFFHohOOBfphHKHbkhKkBBmpMkBmOlkHmoFfobmmKoPfPPBkMbmPPloMHPBlLMOkmHOKoBHhfpHKLBHhpkbBflkMpoMFlHOhkOoFLhmobfkhLkLMoPpLMbOoplbMkOHkfKMBoPHkfLpBhPfkHbOpLlOHpOolbHmOBbFkMbHPfLKlhbHpKklMLpKlHHlfphOkmBFbopklLbkOhlkfplOmboLfpBLHHoKffpOKBBMhLkPHMpOlMMKOlLloLBMhlkOLLBohhlbbpPbLoMLpolbmmoMHBkMBlPOHbkoBmPfklbppBPloofPHbKLOlfMFKbHpmLFMoBlpFLbbbhLHmKPfbhLPpKmfKhfKfbhPKLPOFloHhoBfkBHHLoLfkhokKbphfLoMhObLkMkOmFfHHobOFKbbppMLlFpBFPKLKHHOPFpmKKkFkHmMoPPLpMMplOfkBHKOHFmmkKhHkKBBkPPpKkpBmpfLObPPllhmPOfBkKKBhhBkkKBPBLLMpOMllmOomLFKlKHffhKkhBBhkLPfkpplpmMOlFmHmolfoHKKfBPMMkBbkpPLLMLOPFMmohhfmHFKokbhfkobhhFbKMPpblLMooMFlHOKmomhokmBfPoLhbBpkkPMbOLFPHMoLfOmHKFfpPHkfbpphLLMkOPlbmLopfMHLKOfBhFkpbHHfLKMhpflkmhOblkHpOMflhOkMBFPOLHBLpKkhMBOkFhmbokfpmkKlBOPmkFbOpHLlMKOhlBmkoPFbHLKpBMhlkPbmPKLoMHpflKfHOBFKHPoboPhPKlBlPOLmbFpokHomOKlBmBoPfPmmKLlbhlklbmpmkoMoOmlfmMohFLBOKPfbhLKMbMPLLObfmklomHOfKoHhoffkhPHkBkPMLMbLpOlmMFPohfmfohfhHkKkfMhboLbppMLOMOpFlFMKoHLfHKKhfkhkKbBbPPLpBMpllOMFOFFHHHOofKHmKBBkhfkbBKpplMMlOOFmmFoHfHHOKKBmhBokbPPbLpMpplllblomLFHoKHfohKKbBBhhLPBfpLlpMKOllLHmoFfohHKfBKhfkBbmpPLfMLPpHPmloMfmHOKoFohfkKfMPfLPMPpLlLMboMLlKLKmfohoKfBfPOLhfKKKlPMLOLKPHMoLfOHPKFBhbbkfbKphOfMkOhlbmLMbFbHOKOfbhFkobHHfMFMhpklkMbObLfHpOMhbhOKFBFPHLHbFpKKfolOklbmbhkfpHbKlfBPmkKlPpHLfMKHHlBmKoPFbFPKPflhlkPbmPFLoBHFmlKMBOBFPHPOHfLMphMBlPmLmblpoLKMfOKpfmfoPfPHBKLBpPMolLPpmLoMopflfbkohlFBMKhfKhLokbMPlLOMmLhloMfOfFmHhoFfkmPbhBLPMLMbOpOLKMFPoHOmfohfhHkKkFbhboLLhpMLOMOpFlFMFoHllooKhfohkKfBbPLLpBMlblOMLOFFMHHOpfKmhLbBkhFkbbOppLlMlpPFmmFOffHmPKKBhhBkkbPPbLHMppOllmOomFFHoKHfOhKkhBBPkLPbbpLlpMlOlFOHmolfoHMKfBKhBkBfbpPLbMLphFMmloMfmHkKoBHhfkKbhPBLPMPpflLmPoMFlHOKmfohokMBfPKLhfBpklPMLOLFMHMpBfOMmHFBohfkfbophLOMkpBMkmLopfMmlKOBMhFkpbHPkOpMhpBlkMPObFkHpKMFmhpkmBFPOLHbfpKlhMFOkFPmbHpFKhMKlBOBbhoKkBBPKkOmMPLlPMPpbFpHmKlhPkObmPFOPkhBbPLLBMlppmlobfLhpkMKpPpLmbFpolHMfOKLhKHokfPHbKLBphbklfObbLFMoOHlfmKomFBHhLBfbhKkpbMPlLpMmpklomHPBFKHhoBfKhPKbBLPpKmblpOlmMLOoFHmfoKlPHBKkBPhFkLbppMLlLLOMlFmooMFfHoKhfBmbkhBbPLLPMMpllOMbOFFoHHoffKhhKBBKPMkbbLppoMMpOOFmmFMBOPlLHhomFLKhBLPbLLMpmfphlpbbOlFPMBoKFOHMpLPHLPbbpLoHLPMHOmlhMKOPpbKKBKPhkBKpbhPfkBMMlKmloOfmmLhoBHhFkKBbPBLkMPhblLmpObFlHpKmflhokHBfPKLmbBpklPMbOLLpHMolfPhmKLBohbkffKphLBMoOPlfmLohfMHlKOBmhkkobHPfLKMhpBlkmPOBFLHHKMfLhOkmBFPoLHbfpolhMBOkFPmboLfpHbKkBOPmkFHPPKLfMKOhollmmhpfFkHHOFfOHPoBOPLMMHpflKfMMHOMlbmmOOFHKkBlPOLmbFPHlHMFOKFhmBokfPHbKLBphBklbppmLFMoPHlfmKomFBHoKPffhLopbMPlLPMmpLlommOfFKHhoBfOhPKbBLPpLMblpOlmMlOolbmfoofhHBKkBPhbkLbPpMLlMOOMlpmooHFfppoffBhkkPLFfBhFklBfPHLopBFoHHofkpFlHfooBhhFKObMhBFLMHpflomhfmHKKKBhhBHpkhBfhBLMbOlPmOomFFBPmOoPfhHpoLfOblBBpLlpmMHKpBFMMLoOFbmkKhfmPFkPBoPMkPbFpHlPlKFlHFKoBHfPHLKMBkhokMbplhmpoMFlBhmHOBFkHfKLfPKFbBpklPMbMPFPmbolfOhmKFBohFpHbophLBMpOPlBmLoPfMHoPhBmhFkoBBPfLoMhpLoOmPObFLMbKMfLhOompMPoLmbfpKlhMFOkLPFfoLfPhMKLBOhLkFbmoFLfMpOhlBmkohFbHkKpBMmFkObmPFLOMHpflKmhmHFKHhobfohpKbBlHOMpbFpOlHMfOKlBmBpkKHHbKkBphbklBbpmLOhmOHlLmKoHFBHKKPffhLkpfmPlLOMmpLlomHOfFKMPoBfkhPKBBLPpLMblbLlMMlOolbmfoofhmFfKBPhBkLbHpMLlMOPmbmmoomFfHoKhfKhkkPBbPLLhMMpLlOmmOFLoHHoffOhhKFBkPMkbfLpplMMkOOlbmFoOfHHfKKBhhlkkbPPbLLMpOMllmOoMFFHPKHfFhKkhfPPKLPbbpklpmMOlFOHmoFfohmKlBKPhkBLPpMLbMLOpohlLMfOhPPolBHhfkKkfBphOklbfPBlMHfOhFmmBomhhkHBfPKLhkKpKlhMbOLFpHMollOkpKFBOPHkFbKpHLBbkHLlBmkopFBHlKOBmhFofbmPfLKMHpBlkmPObFLHpKMfLhPkmBFPoMBbkpKlhMBmFOhlOMFkpHkKlBOPmpoKkbmPlkFbBpLmpoPFbHLKpoLhLkpbmPFLoMHpfkKooOBFKHPoBfLhPkMflMFLMblpolMMfOKFhmBpbfhHbKLBPPMklbOpmLFMoOHlFmoohFBHkkFfHhLkpbMMKPpkPmOPKkFmkpklFmoOfFbHlBoPpLMblpOPlMlOOFHmfoKfhHBokLLhBkkbpPbLlMOOmlFbfomFfHKKHfBhkkPBbPLLpMMpLlpmmOFFoPboPfKhhKBklfpPfkkBBPFkFbLppmkoofHHfKKofhfkKbPPbLLMpOMLlfFoMFlHoKmffhKkhBBHbLhbbpLlPmMOlFOHmoFfohHKFBpPhkBbkBLLpMLOpFMfoMfpBlKHOoPfLhhLPBMmpbFpblLmpHFOHlhMfolFkHbKKKLkLbBpklPlbbBOPLomOOPBFhkkohkkfbKphLBLBOhlBmLopfMHlKOFmhFkobmPfLoMhpllkMPObFLHPKMfLhOkmBFPoLHbfpolhMfOkFPmboLfphMKkBOPmkFbopHKfMKOhlFmkoHFbHoKpFMhlkOBbPFLpMHpFlKMhOBFkHhobfKhpKBBlPOLmbFpolHMFOKFhmBoHfPHbKLBpPMklbOpmLLMoOHlfObOpFBHkKPkLFkHMKoflOpkhbhPLlbbfOhlBmLBbhPKbBLPpLMohkhomMkOoFHmfoKOfHfKkBPhbkLbppMolLOOmlFmoomFfHOKhfBmbkhBbPLLPMMpllOmmOFFoHHoffphhKBBkMPkhbLpplMFLbfpPflMkOkFMhpohfkhPkMOokFMpOMllFhMhOhlomfOlBpHBoLfphlkmbhPHHOOlFOHmoFfoLLFLLKhbkBbkpPLbLPOPFMmloOfmHFKoFHLmkKbhPBLkMPpflLBpmMFlHOKmflhoKbBfPKKkbfpklPMBOLFpHMolfOhmKFBohbkfbKphPPbBOPlbmLhPOolBhhoFFKHhKkfbPmkMPKlmmPObFLBPmoOBBhHmKoBHhBbLpKlhMBOkFPmboLfpHFKlBOPmkFkmpmLfMKOhlBmkoPLbKBKpBMhlkObmPlLofHbflKmhOBFoHPoFfLhpoOBLPOLmblpolHMfOKFhmBokfPHlKLBpPMKpBbpmLFMomlPKLLHOpbFpmmOMhPkpbMPlphkmBLpHlmMkKKmOoBfkhPhFoLfhhlkLbHoMkbbLphLKMLpbPOKhBPhbkLkbBbhbkmbFPkmMoHFfHKKhoKhKkPBbPLLpMMpllOLlOlFOHHoFfKhhKBFkLKkbbkppLbMlOpFmbFflfHHFKKBHhBkpbPHbMBMppbllmpomFkHooHLhhokhBBPoLPbBpLlpbOOLFOHmolfohHKfBKPhkBbkpPLFMLOpFMmLOBfmHFKoLmfPHlLMfBPPkbblHOMooMFlHOHBOBFBHHKKfOpMkkBpPMLObFpBLffMfOhmKFBoPHkfbKphLLMkOPlbmLMbFbHlKOBmhFkobHHfMFMhpBlkmPObFKHppMolhOkmBFPOLHbLpKlhbPOKFPmbokfphMKlBOPmkFbopHLMMKOhlBkLOLFbHLKpkbFfHbKpBoPfLhmMpoklmklbHPobfLbPHHKPfLhFLhbKOpLPbLFHmmokfPHbhKKMffHFKfBpOlkLbpPBLhMppLoBKPfbhLkpbMPlLOMmKklmmHOfFKFfmfOflbHLoobMKLblpOlmFkMOpplKMOoHfFHPKmfMhmKkBohfkbmFPBlOmMOmFhmblhHbkPBbPLOPkHbPPLLFmhOKfpmFOMOMKPBkPPkblkBoPkkbMmOklfHLomlpbPfkhBkkbPMBhFkBbPpOlBmHoblBmPKKhmkhBBPkpfKLBFOKLmMophLmoFHBHFKfBKPhPFkPbmPMLmbkpOmmoOfmHFPOoPfOHFKBbPPLlobOPFMMoMFlHOKmmMhokHBfPKLhbBpklPMbOLFPHMoLfOhmKFFoPHkfbophLfMkpLlbbLopfMHLKOBMhFkHbHHfLKMhpflkmhObFoHpoMflhOkmBFhlLHbFpKlhMBOkFPmboLfphMKllOPmkFbopHLoMKpKlBmkoPFbHLKpBMhlkObmmFLoMHpflKMLOBFpHPobfLhpkMBlPOLmbFpoKHMfOKFhmBomfPHlKLBpPMklbOpmLFMoOHlfBKohFBHkKPffhLkmbMPlLOMmpFlomHOfFKHhPBfkhPKbBLhBLMbopOlmMFOoFHmfoKfhHBKklPhbkLbppMkBMOpflFmooHFfHKKhfBhkkPBbmLLpMMpllOmMOFFhHHoffKhhKBBkPhkbbLpplMMlOOFmmFopfHHfKKPfhBkkbPPbLLMpOMllmpOKFFHoKHkKFomBKpfkpMkOBfpMMfOlFOHmoFomhmKfBKPhkBbkpPobLLOpFMmloPfmHlKoBHHhkobhPBLKMPpblLmppBFlHOKmpfhMkHBfPKpFKkBlOoLMMOpHPfObfOhmKFkBfPHLKPbHPMkpmbPBLpMFOMKmKpOHhpkobHPfpOkBbmPLkBMLpofMolflhOkmKpBHHBkObpMLMKOkFPmbMKoPlkHPKmFfmfBBpHLfMKmBPfLPMlpbBkmoooFBFhBkPFLoMHMbPkFmMkOOlpmOOBhPKkBlPOLmllBBPpFFbLpLlmHPFlHbKLBpblHLKmBKhFlhbkpMlhhhFKHkKPfbBoHpoBBOPpkfoPlHmHOfFKLbmfooFKHLLLhbLMblpOhbLobPPflMmhLKHLKkBPhbHOoFBMPOKopFlFmooHpfFomLOFFOmpBkPLLpMMbKPPLFMlphlfhfFBhhKBBkblhmKoBmPbkfbHKMlhMLkHHPKKBhhBhOKpffhlkMBFpHLKMFpKHoKHffHOmkBfPkLPbMpLlpmMpkFOHmolfoHfKfBKPhkBbkpPLfMLOPFMmloOfmHFKoBmhfkObhPBLkMPpblLmpoMFlHOobfFhhkHBfPKLhKfpklhMbpKmPHMoOfOHhKFBoPHkfhlphLKMkOMlbmLopfMhMKOfFhFkpbHPlLKffpklkMbOblBHpobflHLkmBKMPLHbfpKLoMBOKFPmlhofphMKloOPmklboPMbFMKpBlBmhoPFbHLKpHhhlkMbmPKLoMHpfLOFLOfFHHPopfLhpkMBlKfLmbopoLlMfOOFhmKfLfPHLKLopPMkLbOpmLFMhmblfmKohpBHkKhfbhLHbBbPOLOMmpFlomHPfHFHhokfkHbKbBkPpKMpbpOLFMFOHFHmpoKLfHkKkfbhbKHbpPbLlMhOmlKfPoHFfHKOlfBhKkPBlMoLpMMplkpmmOlFomMFFfKHBKBfoPPkbbLhpmPMlOmFmmoooFpHfoOhHhBkhbPhfLLMpOMkloLomFOHooFffHKkhBKohLPbKpLlMmMOLFOmboFfolFKfBKPhkLbkpPLbMLPOFMmloOfmHFKoBHhfBLbhPKLkbfpblLmpoMLPHOoFfFhokHBFPKLhkKpKLbMbOLFpHMollOkpKFBHPHkKbKpHLBBkFKlbmpopFlHlolBmmOMPbHPKLKfPpBlKmPOFFLHmhfflhOkmlfPoLmbfPOMHMBOPFPMfoLfphMOlPLPmkoboPfLfblOhLFOKoPFkHLohBMhlkOfmlMLobFpflHmhpBFkmBLkfLHBkMBKPOLMbFpplHMfbHFhmBokfMHbKLBpPMoFbOpmLFMoOHlfmKohHMHkoBfbhhkpbMPlLOfLpFlHmHOfFKHHoBfkFBKBBpPpLMblpOlmBFFlFHmKoKFBHBKKBPmbbBbpPlLlMmOmlLmoPFFKHKoBfBMPkPBBPLLHMMpoohmmOFFoBfoffohhKLLOPPkbbLmKlMMLOOLbOlooFfHfoOBhhBkkfPlhLLMMOMlOmOOPFFmpfmffhHkhfFPkLPbbhLmkmMOpFOmloFFohHKomHPhkobkPBLbMkOplbmloOplHFKoBHhkkKbhPBLkpOpblPmpOkFlHOKmfFmMkHBKPKLhbBpKlPMbMPFPmlolfOhmKFBoHHMmbKPBLBMPOPlBmLpphPHlKmBmhokoBBPfKKOopBlPmPOLFLmBKMlpLhkmBoPopobfpolhMlOkFMfFoLfphMPMBOPMkFBpLmLfMhOhLFmkoPFbMLBkBMhOkOBFPFkLMHPlMomhOKFkmHobfLhpoMPbPOklbFpmlHbfOKlfPKokFfHbKLBphbklbppmLFkmOHlfmKObFBHkKPfbKFkpBLPlkbMmpFlomHPOFKmBoBfkhPKBBLPphLbLpmlmMFOoFHmfpKhoHBKPBPhLkLbPpMKlOLOmlomoOfFfmoKhlKhPkPBLPLpPMMpLlOMBOFFhfboffKhhhfBkPhkbbOmHlMMlOOpmmFoOfHmlfoBhhkkkBHPbLLMpPMmbmOOFFFHHKHfMhKKmhfPkkBbbPKlpmMOlLOKpoFfmhHKoBKhhkBbhoBLbMhOplBmlopfmHlKoBHFokKbhPBLpMPpblLmpFHFlHMKmfphokHBfPKoFbBpPlPMbOLFPHMOkHphmKoBohMkfbKphKBOfOPlLmLoMfMmBKOFbKlkoBFPfkOMhpBlkbPfhFLmbKMfphOKmBFPmFFbfpmlhMLOkFhmbokfphMmpBOPmkFbhpHLfMKOhmMmkOBFbHhKpBMhlkOFLPFLHMHpflKmHOBFklBoBfphpkMBlPOLmfFlllHMKOKlBmBoKfPMbBBBphlklbmpmLKMoPHHmmKOBFBHPKPfOhLObBlPlLmMmbPlommOfFpHhoLkOhPKbBLffLMbLpOLfFkOoFHmfMKfhHfKkfHKBkLbMpMkkMOOmlFbofOFfHhKhfkhkKoBbhKbPMMpplObbOFFoHHpfhFhhKKBkhBkbBLppLLhpOOlLmFoOfHHFKKBHhBkkoBPbLLMppFllmOomFFokKHfohKKFBBPkLPbbhhlpMlOlFOHmolfohHHlBoPMkBbkpPLbMLpbMLmloOfmHOKoBmhfkObhPLOOMPpblLMboMFLHOKmFHhOkHBfPoLhbBpklPMbOLFpmboKfOhmKFmPhfkfbKphhLLmbbpHlploFpHlKOBmflhPKbBKhLKbblPLLKMMpKLOopflhOkmkofohBkFBPPBlLMmpblHmpFBhMKlBOPmOobopmLfMKOhlBmkpPFbHLKPBMhLkObMPFkoMHpflomhOFFkHPobfLhpkMBLPOLMbFpolHBfOKFhmfokfhHbKoBpPMklbOpMLFMpOHlFmKohFBHkKPfbhkkpbMPlLOMmpFlommOlFKHhoBMOHfKbBLPppBkLbHOHkBblPkoPoMfhHBKkkmfFHKkPBMOOlhmmlKmooHFfHKmfffhKkPBbPLLpMMhlmLmmOlFoHmoffOhhoBLbPhkBbLpPlMMlOOFmMHoOfHHfKoBhhBkkbPPbLLMpOMLFmOomFFOkobffhKkhKmBKhfLLpmlpmMOlPblHMLOFlbmfKoBMhkoLPkLbMLOpoklOMHKBFPmBoOfkHOKBBMkhMMpblLmpMKpOlbmFPKhhkHBfPKhOkfBpPFolpLFpHMolKBlFmbKOfPHBKbBbpFkLbpPlFLmPpBlohmfKhFkobHMMPokFbMpMLMbLOOFMFHfKhOkmBFbLPmKfLbLBMBOkFPLbmkOFlBmKoFhkkFbopHpfkkbMppLpMlOMlFOFfbhhkObmPFpLkfBLpMFhMfpolMHLfPhpkMBlbHPMKLbMPfkkhflbmBokfPFHHkoBfHmFBLpmLFMoMbPflobFOMFPHMKlFlHOKPfKKHMmpFloMMlhFKHhoBFFhPKbBLhhLMblpOlmMoOoFHmfpKfhHBKkBPhbkLbmpMkkMOOmlFmoOPFfHKKhFFhkkPBbPLkFMMpllObbOFFoHmoffOhhKBBkHPkbbLpPlMMLOOlkmFpofHHfKoBhhfkkBpPbKLMpOMlLmOoMFFHPKHffhKkhBfPkLHbbpLlpmMOlFOHmoFfohHKlBKhbkBbkpPLbBlOplbmlpMhBHFKhBHHBkKbHPBkBMPploompoMFlmoKmflhoKBLLPKLhbBhLlPMBOLFplLoLfmhmKFBoPHkffKBFLBMPOPlLmLObfMMlKOBmhokoBfPfkBMhhBlkmPOkFLHmKMFbhOomBFPokFbfpHlhMPOkFPmboLfMhMKOBOhlkFfopHLfMhOhlkmkOfFbmKKpBMhOkObMPFLoMHPllKmhOkFkHhobfLhpoBBlPOklbFPklHMfOKlfmBokFbHbOBBphbklbMpmLKFPOHlfmKpoFBHKKPflbokpbMPlKoMmplloMMlFFKmBoBfKhPKbBLhhMMblpmlmbBOoFHmfOOhhHBKpBPhHkLbppMLppMOmlFmoOOFfHoKhfFhkkMLFPLLpMMPblOmMOFlpomoffKhhKmBkPPkbbLhhlMMlOOlbmFoofHHfOBBHhBkkbhPbLLMpOMllmOomFlmLKHffhKOOBBPkLPbbpLlpmMOlFhHmoFfohHKfBKphpbmmPbLbMLOpOflhMoOmlHmffkhfkKbhBlhLkHbMPpLmMopfFmkkfKhokHBffmhmkfBkpbMLOLFpHMMlopFKmLoPFhkmbKphLBFMbKphlpMBOblbhhOfFfHpKfbKkLMhpBlkFBMOpFFmhLoHFPmBoKMPhLkPBFPbhlOOFPmboLKKFbmlpHhfkFbopHpkKbbhpkmKOoFbHLKpkfFOHPobBohkKBMLPPLPMlpBlmFmFbhpkMBlbbhFKKmPPLLPbFpbLFmPOOBbKpBpPMklLMbMPMkHbfKbmKohFBHkPpfBhLkpbMPlLOMmPLlomHOFFKmfoBfkhPKbBLPpkBblpplmMFOoLHmfoKfmHBKoBPhOkLfppMLlMPOmlLmoObFfMKKhfBhokPBfPLkkMMpllOmmOLFomboffKhhKBBkPPkBbLpplMMKOOlfmFoofHHfpfBhhfkkfPbfLLbbOMlOmOOkFFmphkfFhMkhBPPkLPbbpLbFmMOpFOmkoFfphHOfPFPhkKbkPBLbbfOpkLmOoOFlHFooBHhFkKBFPBLpFmpblLmpOMFlHpKmfKbPkHBfPKoKbBpKlPBbmKFpmLolfmhmKPBohMPPboPlLBbBOPlbmLopfMHlKMBmhPkobMPfKKMhpBlhmPOkFLmfKMflhOkmBPPoLHbfpKlhMBOkFPmkoLFfhMKkBOHmkFboPFLfMHOhlmmkPBFbHLobBMHmkObMPFLOMHpkopmhOBFkMLobfkhpKFLKPOLmbFHFlHMFOKLhFFokFBHbKpBphKklBPflLlbbOHlHmKohFBHkKPfbhPkpBKPlLPMmhFlomHOoFKmfoBfmhPKbBLPpkKblpOlmMFOoFHmfoKFfHBKmBPhfkLfppMLlMMOmlOmoOpFfmLKhfBhokPFlPLLPMMpplOMfHkFoHHoflPhhKfBkPMpFbLpplMBMOOFMmFOpHmHfKHBhhLkkbPPbKLLOOMlpmOOlFFHHKHffhKkhBoPkLHbbpLlpmMOlFOmloFfphHKlBKPhkBbkPfLbMpOpFMmloOfmHFobBHhfkKbhPBLkMPpblPmpOKFlHpKmfOKmkHBFPKkLbBpKlPMfOLFmffolfOhmKhBoPmkfbKhkLfMkOPlBmLopfMHlKOBmhFkOBkPfLKMhMkLlmPObFLfHmhOFFlHFLoFbhHkmBkPMLpbLpOKlohfphMKlkKfHPkKLBhPHLhKblfLboMFbHLKpkHfLHkKFLmMfOkFPmboLfpmMBppPfmhpkMBlbOPMKLBhPkLLbFpBBfkmfMHbKLBpFkhLKfffkObBOHlfmKHhOflomMoOfoHkKlmkfhbLpFlomHHkOhlMMLOoFpmOfKPpLMblhOmpMFOOFHmfoKFbHBOhfbhbkkbpPFLlMpOmllmoOBKLHKKhfBhpkPBBPLLmlfpllOmmplFoHmoffKFfKfBKPPkbbLpplMBlFLFmmloofmHfKOBhmKMObPPBLLbPOMlLmOOBFFHhhbffhKkhffPkLhbbPKMPmMOLFOmLoFfohHolkbPHkFbkPbLbMLOpFMHKoOfMHFKpBHhFkKfhlHLkMhpblLmpOLFlMOHbfFhOkHBFPKkLbBpkFmMbOkFpmBolfphmOFPlPHkFbKphLBMmOPkbFKopFbHlKpBmhhkobHpLLKMHpBlomPOBFLHpOOfLhOkmBlPoLHbfpolhMBOkFPmboLfphMKKBOPmkFOHpHfkMoHhlKmkoPFbBmmHkFfOhpKfPpLoMHpflKLfOfFkHPobfLhpkMFlLLLmbFpolHMfOpFhbKBOfPHbKLfbPMkLbOpMLFMhmblfmKohFKHkKhfbhLHbBbPlLOMmpFlomHhfOKHhoBfkhmKbBKPpLMBmpplmMFOOFHmfoKfHHHKkBPhbMOBbpMLlMOmKPkfhMfOFFPBbfohkkPBbbLhkkbBHpmkbbkhhmFoffKhhhBKKfHhLKFBmhmMPOOFmmFhPOhlbmLoBflHpFKPbobMmOMllmOHfOhFHmBlHHLkhBBPkpBkOBFpmFLMHpPLBMKkPFLHPoFfbpBbmpPLbMLmfPlLBmpOhlfmBoBkmKHBLPBLkMPmFpHlPbBOLFhMfooFplbBkPKLhbBBHphLObOMompolfOhmPMoKfbhFKFMhPHLKBlpLLKpofMHlKOFbKlkobmPfkfMhpBlkmPhkFkHPKMfLhOkMBFPoLHbfpolhMBOkFPmbpLfphMKLBOPMkFbppHKfMKOhlfmkohFbmBKpFMhlkObMPFLOMHphlKBfOBFkHhobfmhpKbBlhfLmbKmPlHMfOKlLmBoKfPHlPoBpPMklbOpmLlMoOHpomooHFBHkKPfbhLoplbPLLpMmpllomMOfLKHhoBfKhPKBBLhkLMflpOlmMlOoFmmfOBfhMBKkBPhBkLbPpMLKMOhllFmoomFfmoKhffhkKlBbPOOHMMpllOMMOFFOHHokkphhKBBkPPkbbkpplMLpOpFMmFoOfHHfKKFhLHkkbPPbLkMppOllmOMlFlHOKHflhKkhBBmkPPbbpklpMbOlFmHmpFKphHKFBKPhkBbHpPkfFmOPlfmlOBfmHFKoBHKPkKbHPBLOMPpflLbpfPFlHpKmflhoKFBfHKpmbBpKlPMBOLFmHMopMMhmKkBoPHkfbophLfMkOPLMmLopfMHkKOBmhFkokOPFLoMhpllkmhObFLMlobflhOkMBFPoLHbfpKlhMBOKlfmboLfpHbofBOPmkFlmBkhbLPmfppLoMmplBomfooFbhHmBhFLoMHpfoMkBMmOKlOmMomfmhBoFfoHfLFbOPMkkmhllmBokfPfbmloHfoHoKfBHhBfLOHlfmKohFBHkKPfbhkKlbMPlLOLfblPpLlMKpPfhmfOoFMblBmPpLMblmhPkLlbpOmlLMPOBlFmbBMhbkLbpMhPLkfbhKHmooHFfMKBofBhKkPBbPLkbMMplpMmMOLFoHHoffKhhOBPfPPkfbLphlMMpOOllofoofmHfKHBhhfkkbPPbLOFHOMllmOOlFFHOKHfkbpkhBBPkkLbbpklpMLFFFOmboFFBhHKFBKPhkBbpmmLbMLOplomlopfmHKPPBHhfkKBkPBLKMPpbLMmPoMFlHpKmfFhokHKoPoLMbBpKlPMbOLLpKPolfhhmKkBoPmkfbKkOLBMpOPlBmLopfMHlHMBMhokobMPfLKMhhBmfmPOLFLHMKMfPhOompMPokfbfphlhMkOkFPOOoLfHhMKOBOhbkFbmlhLfMpOhLLmkohFbHLKpfFbKkObmPFkhMHpFlKMbHlFkHPobFmhpKbBlPOhlblpPlHMFOKFhmBpkhKHbKoBphfklbppmLFPLOHlkmKoHFBHkKPFfbmkPBlPlLPMmpFlomHlPFKHMoBfPhPKfBLhbMoblphlmbMOoFmmfoofhHLPOBPhbkLfkpMLLMOOmLHmOoHFfHoKhfBhkkPHLPLLmMMpKlOmmOFLoKOoffhhhKlBkPmkbbLkKlMMpOOlbmFoofHHfFlBhhokkbhPbLLMpOMPhmOOfFFHMKHfFhKkhHkPkkbbbpKlpmMOlFOOPoFfmhHKlBKPhkBbkkoLbMhOplbmloOfmHFMbBHhKkKBFPBLKMPpbpPmPOLFlHhKmfFhokHLfPKkFbBpplPMbOLFpHMolFBhmKKBoPHkfbKphLBMMOPlLmLopfMHlKOBmhOkoBkPfLOMhpBlkmPOkFLmbKMflhOOlBFPokFbfHLlhMfOkFMmboOkHhMKlBOmhkFbOpHLkFpOhlBmkPhFbHkKpBMfpkOBLPFLOMHpflKMffpFkmfobLHhpKbBlPpLmbKmPlHMfOKKlmBoKfPHmfLBphFklFHpmLlMopFlfmPhMFBHkKPLlhLkPbMPoOhMmpFlofFOfFoHhoBohhPKKBLPpLMblpOLfFkOoFHmfPMfhHfKkBPMlkkBBpMLlMOOmlFmoMFFfHmKhffhkkPBbPLKhMMpPlOMbOFFoHHoflBhHKBBkPhkbbLpplMMlOOFmmlOofHHfKKOPhPkkbPPbOoLPbHoKLoMpOMlBmBoKokkhfKPPLPbbpLomLmbFpPLBmHFBhHKfBKBFHbKoBkhFkLMPpflOoPfMLfokBHhfkKLfBphlLMmkpmLhbfpoBhmkohFlHBpkPhLhbBpkoMLMblphfFHOFBhmKFBobBHBKkBmOFLKbmpLMPOlfMHlKOkLfoHhkbBKhOKfbppOLbHbFoHpKMflBkhMoFbHkfbfpKlhFLbLppLfhkkpHlKlBOPmpKKKBhhlFpMBlhmkoPFbBhHMOFbKHBKKBMPhkMbKPLmHOkFkHPobOLfPHookfhoObppolHMfmLpPflMfOllbPOkMhlklbOpmOKkKbhPlfOMpFBHkKPfbfPkPBbPlLOMmpFloMHhhFoHHoBFLhPKbBLPphLbLpplmMFOoFHmfpKhoHBKKBPhBkLBOpMKpMmOmllmoOlFfHoKhfkhkkMLFPLLpMMpPlOmMOFFhfboffKhhppBkPhkbBKLPlMMLOOlhmFoofHHfmfBhhFkkbhPbLLMpPMllmOObFFHpKHfPhKKmBBPkLMbbpOlpmMOlFOHmoFfphHKkBKPmkBfkpPLbMKOplBmlOFfmMFKoBHhlkKbmPBLOMPhblLmpOBFlHPKmFbhokHBfPKLmbBpOlPMbOLFpHMolfphmKFBohbkfbPphLBMkOPKkmLoPfMMlhPBmhOkoBfPfLHMhPFoMmhOoFLmfKMflhOkmhhPokFbfpMlhMFOklBKMoLFbhMoHBOPMkFbopHLkFpOhlBmkplFbHkKpFMkbkOBlPFLHMHpplKBhMBFkmBobfkhpKBBlHOPbbFpmlHMKOKlfmBOoKlHBKHBphpklbOpmLFPBOHlomKOlFBHoKPfkLmkpBLPlKoMmpllommOfFPBMoBfkhPoMBLPPLMbomhlmMFOoLmmfoofhMBBfBPhkkLbMpMLMMOhmpFmoOFFfHoKhfFhkoPkfPLkbMMpOlOMlOFlpfkoFfMhhoBBkPPkbbLkFlMMpOOlkmFopfHHoBkBhhKkkFFPbLkMpOMllmHHBFFHoKHlphKkHBBHkMKbbpPlpMlOllOHmPFoohHKoBKPHkBbopPKblKOplLmlomfmHOKofMbPkoBlPBkfMPpblLmploFlHMKmfPhokMBfPHMPbBphlPBMOLFPHMolfOHfPkBoPHkfFkphLfMkPPHhmLObfMHOKOfphFOokHPfLHMhpflkmHObLLfhKMfphOKFBFPmLHBlMblHMOOklfmboLfphMfHBOhlkFBbpHLlMKpfmbmkOBFbbPKpfbhlkObmPKOPMHpflKffOBFKHPpbhBhpKLBlPmLmbppoKHLfOKlfmBoKfPHfKLfbKLklbppmkLMoOmlfmOohFLBOKPfbhLKhbMPLLObfmklomHOfplHhoffkHHfBBLPPLMBfpOlmMFOopomfoOfhHfKkBPhboLbppMLkMOpblFMBoHllHKKhfLhkkMBbPLLpMMpllOMbOFFhHHolfKmhKBBkPHkbbKppLOMlPOFmmFopfHHlKKBMhBokbPPbLKMppBllMkomFFHoKHflhKkMBBPkLPbbpLlpMbOlFOHmokfoHBKfBKPhkBKBpPLBMLPpOBmloMfmHoKofFhfKOLLPfLmMPpolLmpoMFlOfKmfOhoKLBfPOLhbKFMlPMkOLolHMoLfOhMKFBhbbkfbKphOPMkOhlbmOhHfMHlKOkphFkObHHfMFMhpKlkMbObFHHppMolhOKlBFPOLHbKpKkhlFOklBmbopfpHLKlfPbKklBbpHLHMKOhlBmkllFbHPKpfKhlkPbmPOMBMHpolKFmOBFKHPoBfLhmPfBlPOLmLLpolmMfOPKMmBokfPflKLBPPMolpLpmLOMopflfMfohkBFkKPfkhLkPbMPOLOBmMLloMFOfFhHhoKfkHHPOBkhfLMBlpOlmMFOoMkmfoHfhHOKkBHhbkPpOpMLpMOMOlFmOoHFfHKobklhkkPBbBbLpbbplkOopOFFmHHoKfKHhKBlkBPkbbPppLbMlOmFmbFHpfHHoKKfBhBkhbPhfOmMPpKllMLomFFHoKHHPhKKfBBPmLPbfpLLbooOlFMHmmlfohmKfBoPhkLlOpPLbMLMPFMmLoOFfBkKoBHhfhpbhPfLkBPFhlLMboMFOHOopfFMohHBfPHLhbfpkLbMbPLohHMopfOHFKFBmPHKlLbpHLOMkpflbmLopfMoHKOflhFKbbHPlLKbfFplkMBObOmHpobflhpkmBKMPLHbfpKPLMBOKFPmlhofphMKlolPmklbohHmmMKpflBmPoPFKHLppKMhlkMbmPlLobfpflHpfOBFKHPhlfLhPkMBkPOkflkpolHMfHPFhmfokfPmpKkBpPMkLbOpmLFMoOHlfmKoHlBHkKPfbkmKFbMPlLOLLBfPpLobLpKFHmloPPFKLBLPpLMLpbpPpkoMHBBmFFbFKHBKkBPBfhpKBBohKkHbFPLfHmboflBolfBhkkPolflhoKlBBpPLFbLbPmPoffKhhPKKMfOhllPBFhBkKbHoBlPMBOOFkMkBMhBkkbPMHPkkpBmlomOomFFlMmMoFFKOKBLPkLPbbMOhFLMMOmfmFoFfohHmfKofLHFKOphLOMLOpFMlKMopblfmHOBfPHLKBBPkbMPpblLFBMlpofhmFOLFmHkKLBhBpbopklPMbHppolbmkOLFFHKHkhKkfbKphOFkobbplFfmPOplOmPOokmkobHPfLKMhpBFkfppklbHpKMflBbHFoKMPhLkPBFPbkFMPpObfoLfphMKlKMPMklbopHLfMKOhkBofoPFBHLKPBMhokOBmmHLOMmpfLlmhOBFkbBoLfLhpkMBpPOLMbFpPlHMkHpFhmBokFBHbKkBphFpKbOpmLFBOOHlFmKOmmfHkKhfbhMkpbMPlLOkOpFlpmHOFFKHhoBlkhPKbBKPpkBblPLlmbLOoFHmkoKfHHBKkBPhbkLbpPBLlMHOmlLmopHFfHKKmfBhokPBKPLKpMMpllPmmOLFomPoflKhhKBBoPPkfbLPplMMlOOFmmLooFbHfKKBhhBkkbPPBLLMpOMlKmOOfFFHoKHffmkkhBfPkkHPBpLLbmMOOFOHmoFloLLKfBmPhkkbkPBLbbKOpFMmHoOFKHFKoBHhfkKbhPoLkblpblKmppMFlHOoLfFhMkHBlPKLhbBpkLBMbOKFpmBollMhmKFBmPHoBbKpHLBbLOPllfoopfMHlOoBmhlkoBMkFLKbfpBLBmPObFLMpPkflhMkmBOPokLbfpKlhMBOHFPmfoLfphMKlBOPmkObopMLfMOOhlBmkoPFKHLKMBMhlkObmPFLobFpflOmhOfFkmBFkfLhPkMfLPOLMbFpplHMkHpFhmBokFhHbKkBpPMKmbppmLFMOOHlfmKohFBHkKPfBhKkpbMPlOOblpFlomHmLpKlmmkoKfMokBhPpLMblMbhFkBmLphlkMpFbHBKkBPhbhPbPPbLlMOOmlFmopHhmHKKHfBhKkPBfPLkpFOpLlpmmOlFoHHoffKmkKfBkPPkBbLpplMMlOOFmmFoOfmHfKKBhbBkHbPPbLLlobmOKLkMHOmFHobffhKkhBBBhLhbBpLlpmMOlFOmmPHfOhmKfBoPhkBbkpPkpMkOpFMmLoOfmHFKoBHhfkKbmPlLkMPpbpMMboMFlHOMbooFLHhooBhHPbKpklPMbMmpplbmHOPlBOmBHPHkfbKfbPfLobKpLMlopfMHloPhMhFkPbHPlLKMhpBlkpoObFOHpKMflhOkmBFFpLHbLpKlmMBOPFPmlhofphMKlfbPmklboPFOHMopFlBmHoPFBHLKPBMhophbmPFLoblpflomhOBMFHPoffLHbkMBlPOklPOpoLbMfOPFhmfokfHHbKOLHPMklbOPfLFMOOHLlOoohFlHkKmfbhLkpfMLbLObBpFlPmHOFFKHhFmfkhMKbBLPpLMblpObPMFOHFHmloKfhHBKkKKhBkobpPlLlMpOmlFbfomFfHKKHfBhkkPBbPLLpMMpLLOmmOFFoLhObfKhhKBLhflhmkOMbPokkbhPffkMbOkFmHPblhlkkbPPbpfLPbMhFMfomFFHoMlOBFOHKolfkPhkFbpBHMlOlFOHmMFoOFkmlopPHkpbkpPLblfMPpkLfMfpfloHhofhFkHbhPBLklbBkppLobFpKFBLBFFhokHBfMMHBkmbKPOLMMmOmFBMFOolfhFKOfMHkKBPbLBMkOPpHlkMBOHOfKhBmhFkoKpBFPmhMphlkmPObKhFMMFkKFBHKKMBhhMkKBLPkMKOkFPmbHPoPFPmOKmFBMKBbpHLfMKmhPbLOMlplFmmOoHblKBbmPFLolBBBPkLmHFOKlmmLLbhMkMBlPOpfKfBKPMkLkplfmBokfPflHkohfkhOKHmbLFMoOHLlFFohFfHkoPfbhLkpfBPlLOMmpFLBmHOfFKmmoBfkhhKbBOPpLMblPPlmMFOpFHmLoKfhHBOkBPhbkKbpPBLlMPOmkFmooHFlHKKmfBHLkPFbPLLpbBpllPmmOmFoHHoffKhmKBBOPPkbbLpplMMlOpFmmFooFbHfKPBhhBkkbPHOLLMPOMkpmmomFoHopkffhokhBoPkLMlFpLlpmMPHFOHMoFlokOKfBHPhkkbkPOLbBPOMFMmpoOLKHFKOBHhOkKBbMlLkMPpbkmmpObFlMOHbfFhmkHBKPKLHbBPoOlMBOHFpmPolfOhmKFHBPHkobKPlLBMoOPlkKmopFLHlomBmhlkobmPfLPFMpBlkmPpLFLHPKMfobhkmBFPookbfpolhBBmoFPmkoLfMhMKLBOHbphbOPLLfMHOhlBmkoPmOHLobBMhhkOBbPFLmOhpflHmhPpFkHhobfLhpKFLKPOLmbFHBlHMFOKFhlKoKFBHbKLBpPMklfOkbLFMmOHlomKOlFBMkKPfbhPkpBLPlkkMmhFlomHOOFKmBoBFlhPObBLPpkkblPblmbbOoFHmfoKFfHBKhBPhKkLfppMLlMMOmlOmoOfFfmOKhfBhhkPBpPLLpMMPklOmmOOFomKoffKhhoFBkPPkKbLPFlMMlOOllmFooFFHfpbBhhfkkBfPbLOFHOMllmOPKFFHOKHFlKokhBKPkkLbbpLlpbBFlFOmloFFBhHKfBKhmbBbkPbLbbLOpFMmloMmlHFKOBHhhkKbHPBLoMPploompoMFlmFKmflhoKMhFPKLHbBPklPMbOLlhFLoLfPhmoFBoPHkffKphLBMoOPlfmLOkfMmkKOBmhkkoBHPfLKMhhBlkmPOFFLHHKMfphOkmBFPoLmbfpOlhMBOkFPmboLfphMKLBOPmkFbopHLfMKOHlFmkoPFbHkoLBMhlkOLlbfpmLbbKPPkbMppllfMFhmHBkMBlPOPlkhBPPkLlbFpBmKokfPHbKLKmhbkLbOpmLFMoOHkfmKohFfHkKhfbhkkpBMPlLOMMpFlpmHOfFKHhoBfkhhKbBkPpLMblPOlmMFOOFHmloKfhHBKkBPhbkLbpPbLlMOOmlFmooHFfHooFfBhkkPLfPLLpMMpllOmmpKKoKBOLfKhhKBLOFbHfKKbMPHkoPOomlMmOpkFKmOFhfpHOlLHbobMmOMllmOHKOklKmPkfhhkhBBPkpMKbmHPFkFBFFHHmoFfoBPHFolfBKKbhpPLbMLmmpMblHBOKlKMKffhfkKbhbLPMkMbhppMPoMFlHOKmLPhokmBfPKLhbBpkkPMbOLFPHMoLfOHfKFfoPHkfbophLkMkOPlbmLopfMHLKOBMhFkobHPfLKMhpFlkmHObFLHpOMflhOKbBFPpLHbOpKlhMBOkFmmboKfphMKlFOPmkFbPpHLLMKOMlBMooPFbHOKpfLhlkObmhLLoMHpKlKmmOBFkHPoboPhPKLBlPOLmbFpokHomOKlfmBohfPHlKLFpLPklbMpmLOMopflfmKOMFBHPKPfLhLKbbMhkpfMMpOlommOfFKHhoBofhhKBBLhbLMbLpOlmbHOOFHmfoofhHBKkBPhbkLbpPbLLMOOmlFfoOhFfHKKhKbFkHbKmMOhOkmBkPhFhMoOOlMmlpbhMKBBkPPkbkPpPLbMlOOFmmFooFHbhKoBHhBkKbPPbLLMpPOlLmOomFlHoKHffhKkhBBPkLhblpLlpmMBFlbHmoFfofFHKKpFbHbKoHHKPMoOpFMmlMKOFlpkbBmhfkKbhbOOkMhpblLmpmolbHOKmfFhoKhBFPoLhbBpklPMbOLFpHMokfOhMKFBoPHkfbKphLlMkOPlbmLopfMHlKOBMhFkPbHPlLKbmpBlkmmObFkHpKMflmOkmBFPPLHbLpKlmMBPkFPmboOfpHbKlBhPmoFbopHLKMKOHlBmpoPFbHLKpffhlkmbmPLLoMHpflKMbOBFoHPobfLhpkMBlPhLmbkpolHMfOKFhmBokfPHBKLBpPMklbOpmLFMOOmlfmKohHpmlKPfbhLPoKmMpPpkKbMOlLhMLpflhmpoOFkKFBLPpLMblbMlMMlOoFHmfoKfhmBPbBhhBkLbPpMLlMOOmLHmOoHFfHoKhfBhkkmBbPLLpMMpllOmmOFFoHHoffKhHKBBkPPkbBMpPlMMlOpFmmFoofHHfKKBhhfkobPPbLLpFpLllmOompLFOMloOfhmbhMPhLPbbpLPFLMMLpfLbMkFphHKfBKhmBfbkphLbMKOpFMmloOOlHlKpBHhfkKbhPBLkKHpblkmpOBFlHhKmfKbPkHBfPKkObBpKlPbflkFpmLolfphmKFBoPHBMbKPFLBMkOPlbmLopmhHloBBmhokobHPfLKPLpBlhmPOoFLHhKMfpkokmBOPokobfpolhMBOkFMfFoLfphMKMBOPMkFbhMbLfMKOhlmmkohFbHLmbBMhpkObmPFLoMHpfkOmhOKFkHHobfLhpKLhpPOLMbFphlHMFOKFmmBopkmHbKLBphFklbppmLFLmOHlFmKoHFBHkKPfbmKkpBbPlLPMmpFlomHphFoHhoBfKhPKbBLPpLMblpOlmMFOoFHmfoofhHBKkBPHpkkbppMLLMOOmlFmoOkFfHKKhpbhokPBbPLOMlHMOlmmmOFFoLBmFoOFoHkmOPHkbbLppOkllpMFMmFoofHBFbPfohBkkbPBohlkObpppLmMhOklhmkOBFLfpBkPkLPbbbhpMkFMPOhlooOfohHKfoPFLHBkPBpPkbPOMFMmloOOmFlmBoMFLPhbHPBLkMPmfKompoMFlHOlFfFhokHBkPKLhbBPoOlMBOkFpmFolfOhmoLkBPmklbKPLLBMkOPLffmoPFfHlKhBmhFkoBMMPLobbpBlKmPObFLHpMKflhOkmBKPoLmbfpHffMBOKFPmBoLfPhMKLBOPmHObopHLfMKOhlBmkoPOOHLKhBMhkkObmPFkpKKpFlpmhOOFkHPobFKhpkMBoPOklbFpolHMfOKFhmkokfhHbKLBpPMklbOPfLFMHOHlfmKohFBHkKmfbhLkpBlPlLHMmpFlomHpMFKHHoBFoKhKbBHPpkkblpOlmMFLLFHmPoKFFHBKkBPhbkbbpPKLlMPOmlLmoPFFKHKolfBHPkPBBPLLhMMpoohmmOFFoMfoffohhKLLOPPkbbLhKlMMLOOFmpbooFLHfKoBhhBkkbPkHLLbFOMlPmOomFFHoKoffhMkhBFPkLHbbpPmFmMOhFOMOoFfOhHKFBKhbplbkpPLbBbOplbmloHKBHFKoBHHMkKbHPBLkPopblKmpOkFlHOKmfKbPkHBfPKKPbBpKlPMklPFpmfolFohmKlBoPMkfbPmMLBMkOPlMmLoPfMHpBfBmhLkofMPfLoMhpflkmMHFFLHpKMlkhOkMBFPhpbbfpKlhfFOkFhmbpLhkhMKKBOhbkFbhpHLoObOhllmkPBFbHkKpfbhlkHLBPFLoMHholKmHOBFpBmobfLhppBBlPpLmfFlllHMLOKFmmBoMfPHkbmBphfklFFpmLlMoOmlfmPhMFBHkKPlphLkPbMPoOhMmpFloBMOfFoHhOFHKhPKFBLPMLMblpOkmoMOolBmfoOfhHLKkBHfLkLbMpMLlMOOmlFmomOFFHpKhfkhkkhBbhKbPMMpKlOMFOFFoHHpfhFhhKLBkPHkbbmppLBLOOOlFmFopfHHfKKBhBHkKbmPbLpMppbllmOpoFlHoKHfFhKkhBBPkLPbbpLlpbfOlFOHmhFFBhHKfBKBFHbKoBkhFkLMPpflOhOFFHFKoBHBohoKofkPPoMphlLmpoMKHlLmpoofMhmKmbpHbKbBoPblLOpFpHMolKhFkmfooFKoMbKphLBMkOPlbmLopOOHmKOBmhFPpKfHMppKbBbpOLkhpLLhlKMflhOkmBFPolHlBBBLBMBOkFPLbmkOFlBmKfMhOkFbopHOOLhBbollmMlOhFOmholFfMHBPPFLoMHmLPhLmbFOPlOMlKoFmHmKKflHBfmPFlHMfOKomlkMOOMFMHooLBFhHKkBFFPMPOHlfmKHOOflkkFfPhLkpbMbfhoKfhFOPkBbBOplKmkopbPKKBLPpLMLkbmPlkLMHPblpMBFfHBKkBPblhpkPBPPOkPMFlHmooHFfBmmBOLBOHboffPhFkfbOOmMhOFFoHHhoObFpHLLhflHfKoBmOfLhbfpplKFBFBHfKKBhBLHMKPBLHlbfOMllmOmBpKlKmboHfhHbFfMKLPbbpLlpLhOLFOHmoFfohHKfFKPhkBbkpPLbMLpoFMMkoOfmHLKofFhfkKbhPBLkMPpFlLmPoMFlHOOmfFhoKbBfPpLhBBpkLHMbOLFMHMoLfOhmKFBoPHkfbpphLkMkOHlbbLopfMHKKOfBhFKlbHHfLKMhpllkmmObFOHpOMflhOKBBFPPLHBBpKkhoHOkFmmboofpHpKlFOLpkFbPpHLLMKOmlBmkOmFbHKKpfBhlkhbmPFPlMmpflKmmOBFKHPOfhmhpkMBlhBLmbFpolHMfOKFHmBoofPHbKLFpPMklbppmLlMopOlfbKohFBHKKPfBhLkmbMHlLOMmpllommOflbHhoBfkhPKBBLPhLMblpOlmMFOoFHmfoKfhHFKkBMhbkLbppMOfMOOMlFboHMFfHhKhfLhkKhBbhKpFbbpPlObbOFFoHHofmbhhKkBkhfkbbKppkMObOOlFmFoHfHHlKKlfhkkkBbPbKfMppbllmhomFKBPKHffhKoOBBPKLPblmolpmMOlKKHmolfomHhlBKhBkBbppPkBMLphkbmlObfmHHKoBHhfkKbhPBLPMPpKlLmhoMLlHOKmfohoKfBfhoLhbBpklPMKOLFHHMolfOhmKFBohfkfbmphLFMkPPlbmLoMfMHOKOfbhFombHPfLhMhholkmhObFpHpoFkKhOkmBFHMLHbFpKLbFlOkFPmbPFfpHbKlBOflklbHpHLkMKOhlBbkHhFBHpKpflhlKKbmhLLoMHpOlKMOOBFkHPobfLhpKlBlhbLmblpolHMfOKlBmBokfPHbKLBpPMklbmpmLoMoOHlfmPhMFBHkKPLmhLkPbMHlpPMmpoloMBOfloHhOFOhhhKKBLhlLMblpOlmMFOolfmfomfhHFKkFPhbkLbMpMLOMOpMlFmooHFfHmKhflhkkPBbPLLpMMpOlOMLOFFpHHpffKhhKkBkhbkbbKppLHMlOOlLmFhbfHHFKKfBhBkplmPbLLMpHKllmpomFKBPKHffhKppBBPKLPbbbPlPMlOlFHHmoFfomHhFBohBkBbPpPLmMLphFMmlObfmmkKoBHhfkKbhPBLPMPpKlLmPoMFlHOKmfohokmBfPKLhbBpklPMLOLFMHMolfOHlfOBoPHkfBHphLfMkOHlbmOhHfMHlKOFlhFkObHPfKBMHpBlkmhObFLHpKMflhOkmBlhFLHbfpKkFMBobFPmboLMpLKFKBOobombhpHLfMKBFpflMMMFFkMBFPoLHbfpKplOKBFpLlKmhOBpllbMKhmHpkMBlPOpkKoBLpmkbbkpLlLHoOpFMmOkpfbHkKHpMLPMoOHlffpMPpblfHMoMFhHoMKPpLOMmpFoPFFblOolOmkkohPKbBLPpLMblpOlmOHOOpKmkoKfhHBhpolfHhpfPpMLlMOOmpOmOomFfHKKhfBhkoPphPLLPMMpLlOMlOFFmKkoffohhKkBkPhkbbkppLFFKOOFmmFoHfHHFKKfbblkkbPPbKLMppbllmOMlFlHOKHfFhKkhBBHkMKbbpklpMbOllbHmoOhBhHKFBKHhkBbKpPLBMLOmofmloOfmMFKoBmhfkKKfPfLKMPpblLmpoMLlpmKmflhokmBfPHLhBFpklPMfOLlfHMolfOmmKFBoPMkfbOphLkMkpHlbmLoHfMHHKOBmhFKpbHPfLPMhpFlkmPOblKHpKMfOhOKKBFPoLHbfpKlhMFOklbmboKfpHMKlBOPMkFBbpHLlMKpmlBmkohFbHoKpBMhlKPbmPFLpMHpklKmhOBFkhmobfkhpKBBlPpLmbFbmlmMFOKFhmBokfPMbBBBphbklbppmLOMopHKhmooHFBHmKPfbhLkpKLPLLpMmpllomHOfkKFhoBfKhPKKBLhlLMBkLplmMlOolbmfoKfhHBHhBhhfkLbPpMLlMOPmHMmooMFfHOKhfhhkkPbFPLLPMMpklOmMOFFolFoFfohhKfBkPPkbFLbplMMLOOlLmFoOfHHfOBBHhBkkbhPbLLMpOMllmOomFlHOKHffhKFMBKPkLPbbmopPLhHppoLlokfohHKfBKffkfbKpPLbMLOpFMMlhFfMHlKoBmhfkKbhPBKbMhpblLmPoMFlHOKmfFhokHBFPpLhbBpkBmMPOLFpHMhhomfMHMohfLpLKkBohbkobLlkmLopfMBKmoopFfHpoboLkbMhpBlkFPMhOkLFmlOkbmhBkFPHLHbfpKlhhOOkFhmboLfphMKlFOPmkFbOpHLFMKOMlBbkoPFbHkKpfbhlkPbmhFLoMHpFlKmHOBFkHPobfLhpkMBlPpLmbFpolHMfOKFhmfoofPHbKLBPhHklbOpmOOkBbPpkfHMLpFlOmMkFfHHFKPBoOOblpFlomHHLpklpmKoMFfKhBLPpLMflMPlmMlOoFHmfoofhmFPMBhhFkLbhpMLlMOOmMhmoomFfHpKhfFhkKBpOPLLPMMpplOmMOFFOHHokkphhKBBkhBkbbkppLFFKOOFmmFOBfHHFKKBhfKkkbhPbLkMpOMllmOPbFFHOKHflhKkhBBPpOmbbpLlpMpOlFpHmoFomhHKFBKPhkBbkpPLbBKOplbmloPfmHFKoBHHhkobhPBLKMPpblLmpoMFlHOKmfPhokHBfFokkHolOPPfHmLhfOMPBKPokOBOHoobMPokhkKMOOPlbmLMoOllPKhBmhFkobHPfLKmhmbokmMObFLHpMkoLFfmfOlFKhKPmBPHMkBmPKPbPoPfphMKlLhblHLkOBpPKbHpFlBmkoPolllMBolFkPHLmHfLoMHpflKLfOfFkHPobfLhpkMBpLfLmbFpoLBMfOoFhmfokfMBFKLBpPMkobOpMLFMhmblfmKohlMHkKhfbhLHbBbPlLOMMpFlomHPfHFHhoBfkhPKbBHPpkLpFpOlmMFPkFHmFoKfhHBKpLmhbkLbphHLlMpOmlFlmomFfHKKmfBhkkPBklmLpMMplkKmmOlFoHmoffPbMKBBkPPKmbLpPlMMlMMFMmFooFbHfKKBhhKbLbPPbLLbOOMlLmOomFFHhhbffhKkhfbPkLhbbpOoHmMOlFOMhoFfOhHKfKHPhkBbkphLbMLOpFMLLoOfmHFKpBHhfkKbhPBLkMPpblOmpoMFlmPKmfFhOkHBOPKLhbBhklPMbOkFpmbolfhhmoLBoPHklbKpmLBMkOPLfmLopFfHlKMBmhFkoBMPfLKbbpBlKmPObFLHpKMflhpkmBKPoLHbfpKlhMBOkFPmboLfPhMokBOPmkFboPfLfMKOhLFfMohFBHLKmBMhlkObmpkLoMHpflOmhOfFkHPmkfLhpkMBlPOLmbFpoPKMfOKFhmFokfPHbKLFlhbklbOpMLFMoOHlfmKohFBHoKHfbhLkpomPHLOMmpFOLlmMOpLlLMLOPfMHLmoPmLMblpOpFkBbBPBmOoKfhHBKkOOhBkKbpPbLlMOOmkFmooHFlHKKmfBhokPBbPLLpbfpllOmmOlFoMHoffKhMKBBOPPkBbLpplMMlOPFmmLooFbHfKKBhhBkobPPfLLMpOMllmOomFFHoKmffhKkhBBPkLPbbpklPmMOlFOKfoHfohHKfkLfPpFkKBHPfkhbFPBlOohfmHFKoBHfokobHPBLkMPpblLMphOFLHpKmflhokHBfPKKkbfpklPMBOLFpHMolfOhmKFBohKkfbKphkKMpOPlbmLbBObFHmHKLhFkobHPfLKMhOBoLOlOFFLHpKMOffmmLLFPMLHbfpKpfLkMOpMlMMKLhmLoBBOPmkFlPffhlkObBpMLphmOBlfHMOBfLFhBlPFLoMHmLoHLmMfpFlboFfLhpkMBlPOLmbFpoPKMHOKFhmBhopbllmOoOfHOklHBHhpkkPFlPmKohFBlHmpOfFbHHKMBLPhkFhmLBmHOfFKBmMkOpFMHMoFmhPlKlhFlmMFOoFHLmoKfhHBKkBPhbkLfppMLlMOOmlFmoOLFfmOKhfBhokPBlPLLpMMhllOmmOLFoHMoffphhoFBkPPkFbLPBlMMlOOLbmFooFBHfKmBhhBkkbPPbLLMhOMlomOObFFmpKHffhpkhBpPkLPbbhLlpmMOKFOmBoFfHhHOfBKPhklbkpmLbMPOpFMmloOfmHFKPBHhFkKBmPBLkMPpblkmpoMFlmPKmfFhOkHBlPKLhbBpklPMbOLFpmBolfphmKFBoPHkfbKphLBMkOPkbmLopfMHlKOBmhHkoBMPfLKMmpBlpmPObFLMpKMflhPkmBLPokbbfPOlhMBOOFPmKoLfphMokBOPmkKboPlLfMKOhlBmkoPFfHLKmBMhkkOfbPFLobbpfLbmhOBFkMPobfLhHkMBKPOkFbFholHMfOpFhmlokFBHbKLBpPMklbOPBLFMOOHlfmKohFBHkKhfbhLkpbMPlLOMmpFLOmHOfFKlkoLfkhPKbKHfMhkkOFHLfMFOoFHlMmoOFFMohfPhbkLbpMKhOkkMMPBLKMkOkfOmPObFpPPKBfKhmkOpKlOmmOFoLFmMfPPHoKBBkPPpOKBBkPlLPMpppFkMhOhllHhhLhkkkbPPbpokfbmPlkFFKFhHoKHffBlhHKoflhlKlBppmLlFHllHmoFfoBlHKoPMMhOkMBKPlkKMMpHFOoHfmHFKoKBFPHKKBFbLpMPpblLLKMbpolBOlfkhokHBfflPHkoHBLBMbOLFpFFmLOPFLHoohmokKbKphLBkkMhpOLKMHbfHOKOBmhFPmkmBmhhkBhhlmmPObFLfKmboHFKPmKlfpHBoBpMlhMBOkoPlMMoOFlFHHoofhmfBBpHLfMKBFPbLoMkpFlLHPoffOombmPFLobMLhlKmhOBlfHPobfLHhkMBlPOLmbHpolHMfPKFhmBokfPHbKLBPPMKkbOpmLFMoOMlfmKohlFHkKPfbhLKKbMPlLOBbpFlommOfloHhoBfkmPKbBLPPLMbLpOLfMFPoFHmfoofhHfKkfBhboLbppMLLMOOMlFMboHFfHKKhffhkkHBbPLLpMMpllOmmOFFoHHolfKHbKBBkPPkbfLppLbMlPOHpmFoHfHHkKKfLhBokpKPbLpMpplllMKomLOkPKHfKhKohBBPKLPbLpLlmFfOlFOHmpFfohmKfBKffkfbPpPLbMLOpFMblMbfmHoKoffhfkpbhHBLkMPpLlLmMoMllHOOmfFhoKFBfPPLhBbpkkPMbOLlbHMopfOHmKFBoPHkfbhphLkMkpBlbbLopfMHOKOfFhFkMbHhlLKMhpklkMkObFLHpOBflhOKFBFhFLHbfpKLmMBOklBmboKfphMKlBMPmkFbHpHkMMKOHlBmhoPFlBoKpBMhlokbmPlLobBmLlKmhOBLkHPoBfLHhfbBlPmLmbmpolHMfpOHhmBoPfPHfKLBpPMKkpOpmLKMopOlfmKohFKohKPfbhLKkbMPLLObbpFlhFbOfFKHhoHfkhhKbfKkPLMblpOLpMFOoFHmfpOfhHBKkBHhbkLbppMkmMpOmlFmOoHFfHKKhfBhkkPBBPoLpMMplBhMkOFFoHHhpohfHHHopfFpMKFMMLLMlOOFmfPmHomFmmPolhfkMbPPbLLlpbPpLkfMFpLBHHbKfHbkhBBPkLPLPpklPmMOlFOHmoFlohHKfBoPhkfbkpmLbbLOpFMmLoOfMHFKoBHhfkKbhPfLkMhpblLmpoMFlHOobfFhokHBfPKKhbBpklHMbOKFpmfollOhmKFBpPHklbKpHLBbkOPlbmkopFBHlKPBmhFkobHPfLKMHpBlkmPObFLHpKMflhhkmBFPolLbOpKlhMBHmpMLlMLKBFlmopHhokFbopHPmkkMHpLLOMMpfFmmookofhLbmPFLokLBkPPLhblKbbppMOKfPmklffbhKKKBbhfLlbhpMlkMoomFMmFomflHfKHHhPkkKbpKBFPMPOFFMHhOFMLOhFMmLoOFkmLpOLbMHkkFLhFkKMoPBkpbmomKBbpPKkBhKobLlMbOOFpmlKhfhhmKmfooBlhbFPbLBPpKOlkmbomFLhMKLmFhkKlbLLfmmOFFomMBHfKhhKBBoPPkbbLpplMMlOpFmmFoofHHfOKBhhBkKbPPBLLMPOMLkmOomFkHoobffhKkhBBPkLPblpLlPmMOlFOHmoFfohmKfBPPhkBbkpPLbMLOpFMmloOFbHFKoBHhfkKbhPfLkMhpblLmpoMFlHOKMfFhokHBfPKLhbBpKlHMbOLFplOopfOhmKFLPfOhPkhBphLhOpflbmLopKflbmfoFFBHhobPOLKMhpBlkbbObFkHpKMflhOkmBFPoLHblpKlHMBOkFPbboLfpHBKlBPPmkLbohHLfMKOmlBmooPFBHLKpBMhlkhbmPFLoMHpflKmhOBFKHPoFfLhPkMBlPOLmbFpolmMfOKFhmBokfPHbKkFbPMklbOoBkbMoOHlffOMmOkFKmkKffpHBKofKhHkFBLlPmHOfFKHhoBfkHMPblbHbLMblpOOlLhbkpBfoMbOmllmpLmfohmKkBFpPkBbKpkLbHkpLBoFpfKhkkPBbbHpKlKmhKKBMKPlkHHoffKBfHpolBMpkkmBhhfkoHhpklhMlOBfOKKBhhBkkbPPbKOFpbOlhmOomFFfpmfoOFbHMoLBPhHmophlpmMOlkHBBHKKpBFhOkBPHkLbkpPLbFObOpmLkopFlHFKoBHbKPMLBMlpKlhBMlHmpoMFlBHHokKBpPMklbfpLbfphlPMbOLKMLLmOOKlfmkOKhBkfbKphhLLMMmpPKOOkfMHlKOkKFBHmKhBHPhlMbkPokBMLpKpHofflhOkmLPfBHBoBPblhMBOkKHLfmpoPFphKKpflhoLHPkLfMKOhoFLoMbOBlbPmomFFHPflhFLoMHpfbpkMLFmkOmbfmKkOFfOkKPMohkfpbMOpmhlbmBokfPflmloOfPhmbMpmLFMomFpPLLMLplFmlmfkhLkpbMbfhoKbBbpOLOPHFmHhoBfkbmmfolFBhBkLBPhfMFOoFHboohfhHBKkBmhbkkbphFLlMHmBlFmooHFLHKKHfBhppmBbPLLpBFpllpmmOFOmHmolfKhhKBBkPPobOFppLBMlOPFmmMoolHHfKKBmhBkobPPLLLbhOMllmHomFKHoKHffhKkhBBPoLPblpLlhmMPlFOHmoLfohMKffLPhKFbkpPLlMLphFMmloOlbHFKoffhfKlbhPBLkMPpblLmMoMFLHOobfFhokHBfPHLhbfpklPMbPLFpHMopfOHlKFBPPHKlLbpHLOMkpmlbmLopfMoHKOflhFKbbHPlLKbmmplKMfObFMHpKMflhOfKBFPpLHbOpKlmMBOkMombokfpHBKlBOPmkKlPpHLfMKbmlBmKoPLkHpKpBMhlobbmPlLobhpflPfMOBFkHPOKfLhPkMBoMhLmbFpoKOMfOoFhmBmhfhHfKLBpPMklbOhmmBMoOMlfmOohFHHkOPfbhLkhbMPkLObFpFLpmHOfFPHhoLfkhPKbBLPpLMbkpOLfMFOpFHbfoKfhHFKkBHhbKFbphBLlMOpflFMpoHFfHKomfBhkKbBbhfLpMMpllOmmOFFHHHoFfKhmKBBkPPkbbPppLbMlOOFmbFoofHHoKKffhBkObPhfOmMPpKllMhomFFHoKHHPhKKfBBPmLPbfpLLhFoOLlbHmoPfohHKffObLkfbmpPkLMLOpFMMkFpfmHhKofphfkKbhPBLOMPpOlLmPoMFkHOKmoOhoKKBfPoLhbBpklPpOOLFhHMomfOHbKFBoKpkfbophLFMkOPlbmOhHfMHlKOObhFkObHHoLhMhpBlkBpObFkHpoMflhHPBBFPoLHFBpKlHMBOpKmmboLfpBFKlBpPmkFkmpmLlMKOhlBmkoPLbkFKpfBhlkPbmPMLoBHpflKmmOBFoHPoLfLHhkMBlPHLmbKpolHMfOKFhmBoofPHlKLBhPMolbOpmLLMoOMlfMLohlFHkKPflhLKhbMPlLOBbpFloMfOfllHhoBfkhPKbBLPMLMbLpOLbMFOoFHmfoHfhHfKkBPhboLbppMLpMOpllFmHoHllfbKHfOhkoBBbPLLpMMphlOMlOFlbHHolfKHmKBBkhfkbBbpplMMlOOFmmFObfHHlKKBhhBKobPPbLmMppBllmOomFFHoKHfphKkmBBPoLPBfpLlpMoOllbHmoFfohHKfBKPmkBbMpPLfMLOpFMmlopfmHLKoBHhfkPbhPBLkMPBflLmPoMLpkhKmfFhohoBfPoLhbfpklMFFOLFpHMHMfOhMKFBofFkFbOphLBMkOPlbbLBofMHkKOfbhFKlbHHfLKMhpFlkmHObFpHpOBflhOKfBFPhLHbfpKlhMBOkFHmboOfpHBKlFOPmkFbppHLlMKpplBMooPFbHOKpFBhlkObmhLLoMHpKlKMOOBFkHPobfLhpKlBlPpLmbLpolHMfOKlfmBoKfPHbKLFpPMklbMpmLOMopblfMOHLFfHmKPFFhLkpbMPlkBMmpOloMLOfFOHhOFfkhPKKBLhLLMblpOlmMFOolLmfopfhHBKkfHhbkLBFpMLpMOOmlFmooHFfHMKhfFhkkHBbhKLpMMpHlOMLOFFoHHoffKhhKFBkhlkbbKpplMMlOOFMmFopfHHfKKfbhBkkbPPbhKMppbllbMOFFFHoKHobhKkHBBhKLPblmolpmMOlOKHmolfoHBPLBKPhkBKopPLBMLOppLmLoPfmHFKoBHhfoKOpPBLoMPpflLMkoMLlHOKmfLhokMBfPhLhBFpklPMlOLFmHMolfOhmKFBoPMkfbPphLFMkPPlbmLohfMHkKOfhhFKpbHPfLPMhPFlkmPOblKHpKMfOhOKPBFPoLHbfpKlhMkOkFhmboKfphMKlBOhlkFbOpHLfMKPhlBmkOBFbHPKpffhlKPLKPlkbMHPLlKmhOBFkKoobfPhpKKBlPPLmBLpolHMOOKlKmBokfPHbKLBphKklbHpmLFMopMlfmKOLFBHhKPfbhLkpbMPlkBMmpLlomMOflOHhoBfMhPKOBLPpLMblpOlmMLOolkmfoOfhHBKkBPhBkLbhpMLlMOOmkLmoomFfHOKhfBhkkPfpPkLpMMpLlOmmOFFoHHoffKhHKlBkPPkbHopMlMMlOOPflPmHOpFKKofohBkkbPBBPoLHblPfLHMBpfllmhOlMOmPBhPkLPbbMpPpLFMLpHlFHKObFfHMKhhFkBbkpPLbfpOplbmloOfmHFKoFHhfkKbHPBLKMPpBlLMpoMFlHpKmfLhokHBfPKLhbBpKlPMBOLFpHMplfOhmKlBoPmkfbpphLBMkOPlBmLohfMHLKOBmhFkobHPfLoMhpBlkmPObFLHpobfKhOkmBFbHkFbfpKlhFlbLpKlMMKOHMpKHBOPmkFLoBOPFKbbBPFfPHmobHkofBMhlkOLbffHblbBBPFLPbFFPHPobfLhplKBlPpLmbFpolHMfPKFhmBoKfPHBKLBhPMolbOpmLlMoOmlfmoohlBHkKPfBhLkHbMPlLOMmpFlomHOfFoHhoBfkhPKbBLPpkbbKpOlmMFpmlkmfoKfhfBmfKhFOhpKhMlpKlOHmlpmooHFfBOmPOOfPHmLMfFfHblpllOmmHLpKLLmKOpHLKBBkPPkbkbpPLbMlOOFmmFoolHHfKKBHhBkKbPPBLLbpOMllmpomFLHoKHffhKkhBBPKLPbBpLlpmMOlFOHmoLfohHKfBKPhoBbkpPLfMLOhFMmLoOlmHFKoBMhfkObhPFLkbPpblLmPoMFKHOobfFhokHBfPKLhbfpklPMbOOFpHMolfOhmKFBoPmkfbKphLBMPOPlbmLopkPHlKpBmhFkobHPfLKMhpBlomPObFLHpKMflhOkmBlPoLmbfpOlhMBOkFPmBoLfhhMKlBOPmkFbopHLfMoOhlBmkoPFbHLKpfbhlkObmPFLHMHpflKmhhHFkHhobfLhpkMBlPOLmbFpplHMfOKFhmBokfPHbKkBphbklbPpmLFMoOHlFmKomFBHkKPfbhLkpbMPlLpMmpFlomHOfFKHhoffkhPKbBLPMLMblpOlmfMOoFmmfoKfhHBKkBPhbkLbhpMLlMOOmlFmooHFfHoKhffhkkHBbPLLpMMpLlOMbOFFoHHoffKhhKBBkPhkbbLpplMMlOOFmmloofHHfKKfBhBkkbPPbOBMppbllmOomFFHoKHffhKkmBBPkLPbbpLlpmMOlFpHmolfohMKfBKPhkBbKpPLfMLOpFMmloOfmHFKoBmhfkKbhPBkLMPpblLPHOOFlHOKmkOFBHMKKbphBKFBhPbkffPFpHMolfOhmKFboMhMkBBphLBMkMpOMLFmPOhFOHhKMfMHlhPPlLKMhpBoPkLFOFPHpKMflFmHhoFBOhbkHBBLHMBOkFPFFmkpFBhHOohFBhlkMBfplLhbHPklPMmplPHoPBMhlkOKLBohhkPbFPlLBMlOKlKmhOffMmFKhfohfLppolHMfOKFhmBokkPmkKPBpPMklKhffhLkBbPpOObOlFBHkKPkLBMphooflPpKBBkooMBOfFKHhhMoKFoHLfPPhLMblpOPFlHLkFMmfoKfhBkHbhlhlkLbppMPPkhBFpLkKoMFfHKKhoklbpKBbPLLpBBhHlpmMOFFMHHoffKhhKBBkPhkbbkppLBMlOOFmmFopfHHfKKBhhBkkbPPbLoMpOMllmOomFFHoKHflhKkhBBPKLPfkFolpMbOlkMHmolfohmKfBPMMkBbkpPokMLOPFMblfLfmHkKoBMhfkObhHBMfMPpFlLmHoMFMHOplPkhoKbBfmHLhbfpkLBMbOOKHHMolfOblKFBOPHkfkHpHLlMkOPlbmLoplMKbKOfBhFkPbHPhLKbflblkmmObkPHpobflhOkmBKMPLHbfpKofMBOKFPMfFkfpHfKlffPmkFbohHmmMKOMlBmOoPFmHLOpPPhlkHbmPLLobLpfLOFLOfFPHPoMfLhpkMBpoMLmbOpolMMfOoFhmfokfPmMKLBpPMkLbOpmLFMopOlfmpohFKHkKHfbHLkpbMPkLObkpFlPmHplFKHholfkHlKbBLPpKMblpOLBMFOPFHMboKlhHBKkBMhbkKbpPKLlbPOmlFmHoHFkHKKhfBhhlBBbPPLpbfpllpmmOlFoHHpBfKhhKBBKPPkbbLppLPMlOhFmmOoofMHfoKBhhBkobPPoLLMHOMLkmOomFkHookffhKkhFBPkLPbFpLlHmMpfFOMmoFfoHBKfBOPhkObkPHLbMLOMFMMboOfmHFKmMFhfkHbhPBLkMhpblkmpoMLFHOKmfFhOkHBfPKLhbHpklmMbOPFpmBolFOhmKFBpPHkpbKpMLBboOPlbmoopFoHlKOBmmFkobHPLLKMMpBLlmPPbFLHpoFflhPkmBPPokMbfpKLBMBpFFPmboLFbpLKlBMPmklbopmLfMoOhlBbLoPFbHLKPBMhlkObmkhLobbpflHmhOFFkmPPpfkhhkMBhPOkBbFpoPFMFOpFhmFokfPHbOLPkPMkKbOPBLFMPOHLlOoohFLHkobfbhLkpbMKBLObFpFlpmHOfFKHhfMfkhMKbBpPpLMblpOpoMFOPFHmfoKfhHBKklphbkobppMLlMOOmlFlmomFLHKKmfBhkkPFbLBLpbfpllhmmOkFoHHFOfKHbKBBkPPkbbLpppOMlOhFmmFoofHHfKKlPhBkObPPbLLMpOMllbFoMFFHoKmffhKkhBBPkLPbbpkLlmMOlFOhkoOfohHKfLHfLhHKpBbhffbpLFMmloOoBlFHOOlFbhhKbMlPKkmbohlMkoMFlHOHBOFfOmlobBhhbLLBLPpLhboPOmlolfOhmmKKOBMhmkhfPLKMkOPlbFLmPpBFOmKOffHKlbHPfLKlMBBpKkfMmOpFmhMoHFLHFokbHkpbfpKlhllbkOhLKMFoMFFhKKhFbhlKofbFpbFOhlBmkHmpbFkMBoHfOhHLbfLPHLmbkfMMfOBFkHPmOOFFHHlokfHbKbkpolHMfmlOHLBPffPHbKLFpFlkLbppmLFMopflfmKohFBHoKPfbhLkpbMHlLOMmpLlomMOfFoHhpBfkhPKfBLPhLMbhpOLlMFOoFmmfomfhHfKkBHhbkOlHpMLlMOpLlFmOoHFkBpKhfBhkKpBbPkLpBBLLlOmMOFFhHHoffKmhFhBkPhkbbkppLoMlOOFmmFopfHHFKKBhhBokbPPbLKMppBllMFomLFHoKHflhKkmBBPoLPbbpLlpMfOlFOHmoFfohHKfBKPHkBbOpPLBMLOmofmloOfmMmKoBmhfoKpoPBLKMPpblLmMoMFlFMKMfLhokHBfPKLhfBlflPMfOLFhHMoLfOmmbMBoPMkfbOphLlMkpBoPmkoPfMMBKOBMhFkpbHPkOpMhpBlkboObFkHpOBHLhOkMBFPhLHbfpKkhPhOkFhmbokfpHoKlBOPmkFbppHLFMKOhlBbkoPFbHKKpfBhlKFbmHFLoMHpllKmmOBFOHPobfLhpKfBlPOLmbFpolHMfOKFHmBoOfPHBKLBmbfklbOpmKmMoOmlfbKfoFBHKKPfbhLkMbMPlPMMMpLlomHOfFKHhpBhfhPKfBLPhLMbLpOkmoMOoFMmfoOfhHKKkfBlHkLbPpMKoMOOMlFmpoHFkBpKhfBhkoMBbPkLpbFmKlOmmOFkFHHoFfKHmffBkPhkbbOpplMMlPObOmFoOfHHFKKfLhBkkbPPbLKMppbllmOomLFHoKHflhKkmBBhbLPfbpLlpMBOlFPHmopfohHKfBKPMkBbkpPLbMLOpFMmlopfmHkKoBmhfkKfkPfLkMPpBlLmpoMFlHOKmfFhoKfBfPKLhBOpppBMmhfmhlhHOkOmlKkBoPHkfKLBBhofBpBlbmLopKfBpmPKMFbhHpFPoHoOBmlHBBpBoMLbKKLlhfLMHOLLMbmhfPblhMBOkFPLFokfphMKlBOPmkFBppHLfMoOhllmkoPFbMLKpBMhLkObMPFLpMHPllKmhOFFkmbobfLhpoBBlPOkBbFpOlHMfOKlmmBokfMHbKOBpPMklbOpmLFMOOHlkmKohFBHkKPfbhLkpbMPlLpMmpFlomHOfFKHHoBfkhPKbBLPpLMbLpPlmMFOoOfmOoKfhHBPmolFlPLkPfBhohhpFlFmooHoklKhlopFpkMBbPLLpMMbplpmMOFFoHHoffKmhbHBkPhkbbkppLBMlpOKomloOfHHFKKBhhBkkfLPBLLMppbllmOomFFHoKHffhKKOBBPkLPPmPflpmMOlKhLFMLOpFfmboPbMHLKLbmPPkohLllmloOfmfkmbohFfmBpbPHLkMPpbomLkMPOOlbHMoMBPmBoBfOhBLopklPMbOLFpHMKlkoPoKFBoPHkfbKphLBMkkmlFmLopfMfBHpomHOkHbHPfLKLfbfPfkbMLFkmoKMflhOPlKhfkhBloBbPmklbpKmlommOkFFhOflPmkFboMlPKkPHMpOlMMKOllKHMoHofkHbmPFLoLBBPPKLBHBFMHPobfLfHHmokfoHFKKBBPPLKLLlBmBokfPlbHkoFFBHKOHPfLFMoOHPOLOmHpBbmKPfbhLKhPoPlLOMmpMlomHOfFKHhoBfKhPKbBLPpLMflpOlmMlOoFmmfoHfhMBKkBPhBkLbPpMLkMOPmlFmoomFfHoKhfphkkPBbPLLPMMpklOmmOFFoHHoffKhhKBBkPHkbbOpplMMlOOKFmFoOfHMfhOBhhkkkbMPbLHMpPBoHmpOLFFmfKHffhKkhhpPkkbbbphlpMBOlLOKpoFfHhHKKBKhFkBfhPbLbMpOplmmlopfmHkKofBbLkKbhPBkLMPpBlLmmHfFlHOKmLohokmBfHKpmbBpPlPMlOLlfHMOkKfhMKpBoPmkfbKphLBpMOPlLmLOBfMHkKOFmBLkoBfPfLhMhpOlkmPMkFkmBKMfLhOkmBFPoBkbfphlhMoOkFHmbpLhkhMKOBOhFkFbMpHLfPlOhlKmkObFbHLKpfLLBkOBlPFoHMHpFlKMBOBFpBmobfLhpplBlPpLmfFMplHMOOKlbmBomfPmfOkBphoklbppmLFMoOHlfmKOFFBHMKPffhLopbMPlkbMmpploMLOfFKHhoBfMhPKBBLPpLMblpOlmMpOolkmfoOfhMBKkBPhKkLBBpMLPMOhllFmoOlFfMpKhffhkKbBbPOOHMMpllOBBOFFOHHokkphhKBBkHMkbbkppLFFKOOFmmFPhfHHFKKFhBFkkBfPbLOMppKllMPHKFlmBKHfFhKkhBBPkBlbbphlpMoOlFPHmpFKphHKOBKhFkBbmpPLbLPOPlomlopfmHFKoBHKPkKBFPBLMMPpflLbpfPFlmbKmfphoKlBfhLoBbfpplPflOLFPHMoPfOHfPkBoPHkfFPphLfMkpHMBmLOBfMHMKOBmhFookhPfLmMhpolkMoObFLHpKMfhhOKbBFPoLHbfpKlhMoOkFHmboKfphMKlBOhkkFbhpHLfMKOhlBmkOlFbHkKpBMhlkObmPFLMMHpPlKmHOBFkOoobfPhpKlBlPOLmbOLmlHMfOKllmBoKfPHfKLBmbfklbOpmLPMoOmlfmKpkFfHkKPfBhLkpbMPlLOMmpFlOmmOfFKHhofFLhPKbBLMPHBKBBohbkhHhpflFMFOBlFPPkmBbkobppMLlMOblllmOoHFfHKKhfBHkpLBBPkLpbbpllOmmOFLfHmoffKhHKBBkPPkbbLpplMMLOhFmmFoolFHPKKBhhBPkKKBBhmLMBBoOFhHmooHmKHffhKpMobffhpKfBoFfMpOlFOHmHKOpfmHLKhfmplKLBKPMkKOMFMmloOfmpPKoBmhfkKbhPBLkBPpblLmPoMFLHOKMfFmokHBfPoLhbfpklHMbpLFpHMoLfOHBKFBoPHkfbKphLBMkOhlbmLopfMHlKOBmhlkmbHPfLKLfpffMmPMpFOHpKMflBKhMobBHMBBbpKlhMBmOpolMMboMffHKoPfFhoKkMlpKlblLlomkoPFbBpmoobfkHLKFBKpHblpflKmhHMpLfmmHOlFLHlBmPOLmbFhomOMfOoFhmBokfmHbOPBMPMkLbOPfLFMOOHlkmKObKlHkKPfbhOkpBbPlLHlBpFlomHOPFKHHoBfkFBKBBkPpLMblpOlmBFFlFHmFoKfHHBKhBPmkMobpPbLlbfOmllmoomFfHPPMfBhkkPBOPLLPMMHlpOmmOFFomfoffOhhKBFbPhkbbLpPlMMlOOFmmFoofHHFKOBhhBkkopPkLLMpOMOOLhMFpLfBmBPkHlkhBBPkplKFmPPhLoMOpKlfMkKMFkmkKMhOkBbkpPKbhlOplbmloOfmHLKoBHhfkKbMPBLkMPpblLbpoMFlHhKmfkhokmBfPKLhbBpKlPMFOLFhHMopfOhmKlBohlkfbophLfMkOMoFmLopfMHPKOBMhFkhLbPfLKMhpPlkmhObFLlbKMfLhOkMBFPoLHbfhOlhMfOkFHmboLfpHFPKBOPmkFBlpHLFMKOhpKmkohFbHLKpBMhlkOFbPFLOMHpllKmhOBFkMLoBfLhpKbBlPOLmbFpolHMfOKlOmBokfPklolBpPMklLfBhPOkBbPpPLPMBollpHhoHfmHoKbPLLHMmpFloklMFpbLbbBfKffKbBLPpLMblpOkkFFlBlKmfoKfhFoHPoMFLHLobBbhbkmbFmhmOoHFfHKhMbOHlkPBbPLOHkKbLPPlMMkphlfMlkoFbHLKPBMpbbMpplMMlmbpFLKHPOfllmHoLflhPKKPbLLMpOMllmOmKKFfHoFffhKkhkBBKhHkLBFPmkmOMFOHmoFKlFhHLKofoPBKfbhhOLpbhlbmPoOfmHFhooOfFmbKBfFhOBBpOlLmpoMKKlBHMOLfOHbokBhhmfHpklPMbOLpbmboLfOhmKFBoPHofpFphLfMkOhlbmkopLLHOKOBMhFkHbHPFLKMMpBlpfmObFLHpolflhpkmBKMPLHbfpKKFMBOKFPmbmPfPHbKlBpPmkFbohHplMKOHlBmKoPFoHLohkohLkhbmPMLoMHpflKpLOBFKHPoFfLhhkMFlLLLmblpolmMfpfFhbBfffPHBKLBPPMKBbOpmPOMOOMlfmoohFBHkOPKfhLkhbMPkLObkpFLpFkOFFPHhoHfkhPKbBLKFLMbkpOLfMFOpFHbffFfhHFKkBHhbKbbphMMbMOpblFmpoHFOHKOhKFhkkHBbPKLpbBpllOmOOFFpHHolfKhmKBBhLpkbbkppkoMlOpFmmFooFBBLKKBhhBKMbPPBLLBpFPllmhomFlHooKffhHbPBBPOLPBOpLlPmMOlFOmfhkfohHKfFbPhkfbkpMOFMLOpFMbFoOfMHFophmhfkpbhPkLkMPpblLMFObFoHOobfFhokHflPKLhbkpklMMbOLFpHMolfOHBKFBHPHklbKHhLBMkOmlbmPopFoHlKHBmhFkobHHOLKMHpBlholObFKHppBflhpkmBlPokBlLpKlhMBPoFPmBoLfmBfKlBOPmopbopmLfbOlHlBmOoPFLHLKpBMhlhMbMPKLoMMpflKmhpFKMHhoLfLhmkMBlPOLmPhpoLbMfOhFhmFokLPFbKLBHPMkpbOPKLFMobFlFmoohFlHkKPfbhLfBbMPkLOMmpFlomHOfOBHhoffkhPKbBLPpLMFFpOlMMFOoFHmfoKfhmPKKBPhbkkbppMLlMOOmlFmoomFLHKKhfBhKKbBbPLLplHbLPkLFbkoHmkoffKhhhBofBhHOkpBhOllKmOOFmpoofHHfhLKHfmhPKmMMhFbFOMllmOomomHOKmffhKkhBBPkKPbbpLlPmMOLFOmboFFohHKfBoPhklbkpPLbMLOpFMmLoOfMHFKoBHhfkKbhPFLkMPpblLmppMFlHOobfFhpkHBlPKKhbBpklHMbOKFpmfolFOhmKFBOPHkFbKpmLBMkOPlbmLopFbHlKOBmhFkobHPfLobbpBlkmPMpFpHpKMflBfmBLpfHhPBopPlhMBOkoMlMMlOkkFofBOPmkFlmBkhbLPmfppLoMmplBomfooFbhHflhOLoMHpfoHLLMMOpfBmOOKFHmFLKfBhKkMbhplLpbbOMlOhMOmBBoOBpPMklfObbLFMOOHlfmKObFBmohlfBhokpBBPlLOMmpFbBmHOFFKHMoBfohPKkpmPpkbblpMlmMlOoFmmfoPkMHBKkBPhkkLbPpMLoFhOmlFmoOmFfHoKhlBBokPBBPLLpMMpolObbHhFOmboffOhhKBBkPPBObLpPlMMKOOlbmFpoKMHfKoBhhfkkbmPbkKlFpblKmOoMFFHoKHffobkhBfPkLmbbpKlpMLFFFOHMoFFOhHKFBKPhkBbpmmLbMLOpLbmlopfmHFHmBHhFkKbHPBLkMPpbkKmpObFlHPKmfFhoKBLLPKLhbBPOlPMBOLFplLolfphmKFBoPHkfbKhmLBMKOPlfmLopfMHlOFBMhFkobmPfLKMhpflkmPObFLHpKMflhOooBFPoLHBopHlhMBOkoBlOMBOmFlmkkmhokFbopHOokbbmpkFOMbpflPHMOBLoKkbmPFLolpBBPLLBbpKOlpmMOBfmHmoPfKkbbFLBLBMfOKFhLomKOlllpbfPPMklbObbPokobOpPlpmHpLFPHMKFFOHOoBBLhbkFhmlHmHOfFKlhmfoMFHmFlbhoLMblpOOlLhbkpBfoMbOmllmpLmfohmKkBFfOMOOmlFmooHFfhKPPlhHBkPBbPLOPKlBoPoFmMhOPloHKOKFMKfBhPPkbbLmMhLLObKPfLklKfmmoKmBhhBkklmbpOOlpMOOOFhlhFMHoKHffbomBoLfLpPkOboPLFfMLphlkhFfmhHKfBKbLHllpBbPBLOLolomloOfmfbHOolFbHbobfkPpkbFllHmpoMFlfOmHOkFBmBKPfkhpOLpMlPMbOLOBlmMkOllBmFKOfbhKPfphLBMkOPlbmLOmkMHLobBmhFkoLHBmPoKLbkPoLmmLFmHpKMflbhHkKlfpPmkLBPPBkFBLlPmboLfpBKmOokBMHBKKBkPklObPPbLpHPOBlKmmlphMkObmPFplkhbLpoLomBpfFhMOopFhBoBmPOLmbFmMPfkkmppBLFMhOlFFHpOOhPklbOpmpkkoMmPOLLMBOLBomHoLfkhmklPMLOMmpFoMLfbkKpllmpOffMmfKpfoOPblpOlmMFMmFmmfoKfhHBKkBPmbbBbppMLlMOOmLBmoPFFKHKKhfBhPkPBBPLkkMMpoohmmOFFomfoffohhKLLOPPkbbLmLlMMLOOLbOloofHHfKmBhhBkkbPBPLLMPOMlLmOomFFMoKHffhokhBfPkKFbbPKlpmMOKFOMboFfohHKfBKPhkfbkpmLbMKOpLMmloOfMHFKOBHhFkKfhPBLkMhpblkmppoFlMOKmfFhOkHBFPKKkbBpklPMbOkFpmBolfOhmKFBoPHkfbKphLBMoOPllmLopfMHlPfBmhlkobHBoLobBpBlkmPObFLMpBPflhmkmBoPokhbfhHHMMBOPFPBOoLfPhMKoBOhfpkbopHLfFbOhlfmkoPOkHkKMBMhLkObmPFKoOOpflhmhOkFkmMoblLkkkMBOPOkFbFPMlHBfFFFhmkokFbHbopBpHMPkbOPFLFMHOHlpmKOmKpHKoffbHPkpbMPlLOPKpFlHmHOOFKHmoBlkkKKbBpPpklblPplmBFFlFHmooKFbHBoKBPhboobPPlLlMmOmlOmopHhmHKoBfBhPkPfbPLobMlpllmmmPLFoHmofFphhKLLOPPkbbLhhlMMLOOlffkoofHHfPbBhhfkkbPBkLkMMOMlkmOomFFMoBOffhhkhBkPkkLbbhLmkmMOOFOmFoFfPhHOoppPhkkbkmlLbMkOplFmloHKBHFKoBHMPkKbHPBLkkBpBlpmpOBFlHOKmlFklkHBKPKkBbBPblPfbMLFpmlolfhhmKMBoPHhoboPBLBMKOPlbmLppoBHlKmBmhokofLPfkOlLpflHmPOkFLHpKMflofkmBoPoklbfpOlhBBFfFPmLoLfMhMKMBOHmMMboPfLfMhOhlmmkpPofHLKMBMhOkOBbPFLoPppflmmhOLFkHPobfLfkKbBOPOkLbFpOlHblloFhmkokFbHbKLBpHBpHbpPlLFbBOHlfmKohflHkobfbhKkpBbPlLOklpllHmHOlFKHhoBlkkKKbBpPpklblPFlmfFMoFHmKoKfMHBKpBPhkBPbppMLlbOOmllmooMFfHPPMfBhkkPfbPLLPMMplkFmMOFFoHmoffKhhKBBoPPkbbLKHLkMlOOFmfkMKOPlbHhKMFLPPBoPbLLMpMBpOLKMfOolpHbOkfhHhoBBPPMbOpLlpmMOlOMHMoFfohHKfBKPhoBpfpPLbMLOpFMmkoOlmfLKoBHhfkKbhPfLkbBKklLmhoMFlHOKMfFhPkHBfHkLhbBpklhMbOLFpHMpFfOhmKFBpPHkfbKphKbMkOPlbmoopfMHlKOKphlkobHPlLKMHpBlkbLOBFLHpobflhOkmBFPoLHbfpolHMBOkFPKlOofphMKlkffhhOKBBPPPkPbBOBlPMPpbFpmhKfFlHPkMfhLPMHpflKmhMKFKHhobfLhpkMBlhOOoblpOlHMFOKFhmBoklLHBKLBphbklbOpmLFMoOHlfmKOlFBHkKPFoppFpFBoMLfpbLLbobLlofpHOLLOmfbMpHLFOkFblpOlmkpMOpkLkFffhHBKkBPhbkLMpmmpPKkHHKolklKbMFMFhoPhOkPBbPLhoklBPoOMoOFFoHHhKOFFBmKKKfMhMKKMmOMLmOMFmmFooKbBomOKHfmhPfpPbLLMpOMppmpomFFHoKHffhKKfppPkLPbbpOlpMbOlFpHmoKkPhHKfBKhbkBbKpPLlFoOpFMmlpKfmHlKoBHfokobhPBLKMPpblLbpfPFlHOKmfFhoKlBfPHMLbBpklPMOOLFPHMoLfOHfPkBoPHkfBbphLfMkOMoFmLopfMMfKOBMhFkoKFPFLKMhpFlkmPObFPKFKMflhOohBFPOLHbFpKLbFlOkFPmbpFfpHbKlBOflklbopHLLMKOhlBmhflFbHLKpFHhlkpbmPlLobBmLlKmhOBLlHPoBfLhpHLBlPOLmblpolHMfOKpHmBokfPHfKLBpPMklbOpmLFMopBlfmKohlFHkKPfBhLKfbMPlLOBmpFlommOfFoHhoKfkHHKbBLPhLMbLpOlmMFppFHmfopfhHkKkBPhbKKbppMLoMOpblFmooHFfHKKhffhkkMBbPLLpMMpllOmmOFFoHHoFfKHmKBBkPPkbbopplMMlpPoKmloOfHHkKKBhhBkkMmPbLLMppBllmpomFFFmKHffhKkhBBPkLPbbbMlpmMOlFPHmoFfohHohBoPhkBbKpPLbMLOpFMmloOfmHPKoBHhfmokbOlMPOkklmLbhhMHMmFLLhkFoppkfFMBhobpOlPMbOLpollMPOLhmKFBoPHkfbKOhObOMpBlbmLopKfBpmPKMFbhHklMkmfkooobBOolBMLbLokflhOkmkKfKHlkKBOpblBHkFMmboLfplkHLofFfofbopHLfMKbflfmkoPFbHLKpBMhpbobmPFLoBPpflomhOBFkHMhFfLhpkMFfPOLMbFpoPFMFOKFhmfokfPHbOLPkPMklbOpmLFMMOHloobohFBHkoFfbhkkpBbPlLHlBpFlomHOpFKHHoBfpbmKbBLPpKHblpplmMFMmFmmfoKfmHBKkBPhkMmbppMLlBKOmllmoomFfHPPMfBhkkPfmPLLPMMplpMmMOFFomboffKhhKKPLPPkbbLPOlMMLOOFmmFohKbHfKKBhHbkkbhPbLOFHOMllmOphFFHOKHfffHkhBBPkLhbbpLlpmMbLFOHmoFfphHKfBKPhkBbkpPLbMOOpFMmlOPfmHFKOBHhKkKbhPBKkMPpblkmpObFlHhKmFLhokHBlPKkfbBpklPbfOLFpmfolfphmKFBohMkfbKPbLBMoOPlbmLopfMHlKpBmhKkobHPfLKMhpBlkmPObFLHPKMFkhOkmBFPokLbfpKlhbFHMFhmBoLfmhMKlBOPmLkbopHLfMOOhlfmkoPOkHLKpBMhlkObmPFLokKpflKmhOFFkHPobfLmlKbBlPOLMbFpolHMfOKFhmBoKFhHbKLBpkokPbOpmLFFpbhPplhMMobllkFfOhLkpbMbohPLMbkpHLMbLoklpHkfhhPKbBLbmhmkPBbPpLolBlfmfoKfhBFmLOFfLHooOPOLlMOOmoKLBbbpkFompolfPPpKmKFkbMMpllOFkMoOOlOMkoMOMKoBkPPkbLOBhPbLKMmPbLkMfFBHfKKBhBLHLKpBhHlbfOMllmOHkOoFOmOOkfMPPKMKlklbbpLlpFLMLOhlFhkoOFphBoLLbkobkpPLbFpbopblkMLOFFKpFfFhfkKbhbLhLkpbhOlLokfFhHOKmfFbhHkoLfPPHkMbOPbLpOMFpHMolkMfMHkKHbbhFKlBBhFLKMblOmLopfMflmLKMFhhHKMMKpplhMklPmPObFLfombOBfmmBmkPMLHbfpKOpLfbFpbLFHlOoMhKlBOPmkFKMpHLFMKOhlBmkoPLbHLKpfbhlkpbmhfLobHpflKmHOBlBHPobfLhpkMBlPpLmblpolHMfOKFhmBoofPHbKLBpPMolbOpmLLMoOMlfMkohLBHkKPffhLkhbMPkLObmpFlommOfFmHhoFfkhPKbBLPPLMbLpOlmMFOoFHmfoOfhHBKkBPhboLbppMLkMOpblFMKoHLfHKKhfFhkkHBbhkLpbMpllOmMOFloHHolfKhhKBBkPhkbbkpplMMlOOFmmFopfHHfKKBhhBokbPPbLKMppBllMoomLFHoKHflhKkmBBPMLPBbpLlpMbOlFMHmoLfohHKfBKPHkBbKpPLbMLOpFMmloPfmHFKoBHhfoKbhPBLoMPpflLMOoMLlHOKmfLhokMBfPhLhBBpklPMBOLlKHMokfOhmKFBoPmkfbophLBMkOPlbmLohfMHlKOBmhFoobHPfLOMhpFlkMpObLLHpKMfkhOKbBFhlLHBfpKlhMfOklFmboKfphMKlBOPMkFbOpHLfMKOhlBmkoHFbHLKpBMhloObmPFLpMHpllKMPOBLkHPobfKhpKBBlPpLmBFpolHMFOKlbmBoofPHbKLBphbklbppmLFMoOHlfmKomFBHkKPfbhLopbMPlLPMmpLloMhOfLKHhoBfohPKfBLhlLMBlpOlmMlOolPmfoOfhHBKkBPhBkLbPpMLlMOPmlFmoomFfHoKhflhkkPBbPLLHMMpllOmmOFLoHHoffphhKlBkhpkbfLpplMMKOOlBmFOFfHHfKKBhhfkkbmPbLkMpOMllmOomFFHOKHffhKkhBBPkLPbBpklpmMOlhHmPoFfohHPFohFbHbLkBlPFkbmHpfLkmpOmHkKoBHhfkKKfPfLKMPpblLmpoMllBFKMflhokmBfPKLhbBhblhMbOLFPHMolfOhmKFBoPHklbHphLBMkLPlbmLopfMHlKObmbfKmBLPfLKMhmOPPLoMBpFlOmoooloKlBFPoLHlpbhpHLHbppFMkOpfphMKlLMfKHBkhMFPPkObMPLfOMFOOlBHmkmfpphKpBlhPKblPLLmhOBFkfBmOOFfmPLKHfPHBKKmPPLLPbFpbfBOkfPHbKLkfFlHBkpBhhfkBbBOlLkMPpLfkHhOfFOoLbMPlLOblPolOmMOfFpHhoffkhhKbBOMHLMblpOLBMFOOFHMlHbfHHFKkBhhbkLbppMPpMOpBlFmooHFfHKofhbhkkPBbhmLpbbpllOmmOKKPHHoffKmLKBBKPPobLKppLFMlOOFmmoooFMBPKoffhBkhbPPbLLMpLollmHomFOHoKMffhHbLBBPpLPbhpLlPmMOLFOmfhkfohHKffFPhkfbkpMOFMLOpFMMHoOfMHFOokMhfkPbhPBLkMMpbLKFFObFpHOobfFhokHBfKbLhbLpkLBMbOKFpmLBHfOHfKFfpPHkFbKpHLBMpHmlbmLoplBHlKpBmhKpPbHPfLKBLpBlKmPPbHBHpoFflhOkmBLPoKHOmpKLbMBOpFPmFoLfpPMKlBHPmkKbopHLfMHpplBmpoPloHLKPBMhkkOBfMkLoMHpfLMmhOfFkHMhFfLhpkMfHPOLMbFpoPFMfOpFhmfokfPHbKLFhPMkKbOPbLFMoOHlfbBoHFBHkKhfbhLkpbMPlLOMmpllpmHOfFKHHoPfkhPKbkOBPHBkPbmhflFMOpMLkhKFbHBKkBPbHhkKFBHLoMOOmlFmoMFFFHoKhfBhkkPBbHLMkMMpLlOmMOFFpHHOfkBhHKfBkPhkbbLpplMbmOpFmmFoOfHHfKKBHhBkkbPPbLLMpOMllMLomFFHoOFfphKkhBBMmHbkHbkPoLmMHOHPBomfohHKfLmfBHLlOBFPOkBMmPBlOMKllHhKoBHhfppKlBfhoLhbFPOlMbBhomBKmfFhoPHoBfphLKLbMPpLmfPFpHMolfOhmKFfoMHKoBbphLBMkbopBlhMoOolommoffoLbBHPfLKMhmOPPLoMBpFlOmoooBPHHoffhpHkFBOhbloOkFPmboLfphMpoLOKhkKbopHLfkLbBPOLpmblLHLKpBMbpHfKhBKOmkkBlPpkbHlOmllmhoOBOHLLKfLPMKkBPhhbbOKFhmBhhOlFmHOkbfoHkKhffOkkbbkpmlPfbFKHkKPfbbHhMKbfbhHkkHBlomHOflOoHoBfkhPKOBLPpLMblbMlMMlOoFHmfoKfhMBhoBPhBkLbPpMLkMOOmhLmoomFfHOKhfFhkkMLFPLLpMMhMlOmMOFLoKOoffhhhKLBkPmkbbPlOlMMOOOkOmFoOfHHfKKfbblkkbPPbobMppbllmOMlFlHHKHfFhKkhBBPhpkbBpOlpMPOlFpHmoofoHBPLBKPhkBBfpPLBMLOmofmloOfmMmKoBmhfoKpoPBLPMPpllLmHoMLlfPKmfohoKfBfhBLhBFmMlhMKOLFPHMolfOhmfhBohfkfbmphLFMkpBHMmLoMfMMMKOBMhFkobHPkOpMhpBlkBkObFkHpOMhbhOKFBFPhLHbLpKkhlFOklbmbopfpHpKlfPbKklbMpHLOMKOhlBmkllFbHpKpfkhlkPbmPOMKMHpKlKBKOBFKHPobfLhmPfBlPOLmfmpolmMfPKHomBoPfPHlKLBHPMolpLpmLoMopflfmoohLBKfKPfLhLkMbMhbLObhMoloMfOfkfHhoffkHbKbBOMHLMblpOKOMFOOFHbffFfhHkKkBMhbkobphMMbMOpFlFmHoHFOHKOhPHhkKbBbPpLpbFpllOLlOlFmHHolfKhhKBFkLKkbbPppLLMlpbFmbFflfHHoKKffhBkpbPPbKoMPplllmmomFOHoOHPmhKKBBBPPLPbkpLKbmlOlFmHmpPfohmKfBMPhkLlOpPLbMLhfFMmLoOFfBkKoBHhfOfbhPfLkMPbklkmMoMFKHOKmfFmobOBfPHLhbLpklmMbOLfHHMoOfOHbKFBOPHkoPHphLBMkpblbmkopFBHlKHkBhFkobHPKLKMHpBlkbLOBFLHpobflhOkmBFPhLHbfpKlHMOOkFPmbHbOFFPmbKpFFHLkOmMFmloLlLMkPKkmBBlpLfFhlkObmfpPOkkBkloMBOBFkHPMboofPHPobhPLmbFpoLMpFOKFhmBoOfPHbKLfhbokLbppmLLMoOHlfmKoKFBHkKPffhLkhbMPpMoMmpFloMmOfFoHhoBfkhMPFBLPpLMBLpOlMMFOopFmFoKfhHBKkBPhboLpkpMLlMOOmlFmOoHFoKkKhfBhkkPBbPkLpMMpllHFBOFFoHHoffKhHKBfokhkbbLppLFMlOOFmmOLmfHHFKKBhhBkKbPPlLLMpPmllmOomFlHoKHffhKoPBBPkLPbfpLlpmMOlLoHmoFfoHbKfBKPhkBfLpPLbMLOmFMmloOfmhkKoBHhfkObhPfLkMMmFlLmpoMFlHOKMfFhooKBFPKLhbfpklPMbOkFpHMolfphmKFBoPHkfbKphLBBpOPlbmLpbFpHlKOBmBLhHKlBPhpKbbkPoFbmFoLkmoFflhOkmkKBHHLKkKhlhMBOkFPmboLfphMKLfBPmkFboMBPPkpBbpfLlmmOLLloFBMhlkOoLffhpkoBLPKlHMlOPHmobfLhpkMBlPOoflFMHLLMfOKFhFBMLOmFOmOoFfmHfBMPLLFMoOHOoLbMMOpFomKoLLOKpbMPlLOlkBoPLlmbbpklLmLKoFpHMoObphbKkBHlMMhOoFHmfhpOlFfmoKhfFHOkMfBHFMHOmlFmoMbOKlbmoffhhkPBbPLOhKBBFPlLFbBMkmFoffKhhhKKKfKHLkpBHmFbfOOFmmFhmOklbHPkffpHoKmflOokfboPblHPOFlHoKHffBMkHBhPkLPbbMBPOLfMLpLfmmMoOlkHKoOkLkfbkpPLbLbhLlfmloOfmlBHHOlkhkoMlPpLkMPpbPflPMkpflfMfOofhHfkKhPLhbBpkpfLMbKpklFHoOoflHhKHFlHfKkBmhLlkbppOLFMmBKHhKOBmhFHhKhfLhPkmbpPlLfpkFpHpKMflBMhMKMfHhfkHpKKOMBOkFPmboLfpbFPlOohLkFbopHOKkLMHpFLfMbOlKmoBBMhlkOLmBMPOKkbKPOLMKOFHHPobfLfbHlKKfHhHKLHpfbMmOKFhmBHHohFOmOkbfmHklhBkPhklbBkHmoohFBHkHlPlHBkpbMPlpfKBmlPkLbMKppLbMbOoBpHkOlhfLMblpOOPLlbBpPFfmoOmlLLmBMhbkLbpBhPLkHbkpHMboHFfHKHBoMboHHKMfbPMkHohlpmmOFFoFpoFFBhhKBBkMMhOKobHPmkfbKpFlkMhhfHfKKBhHFLKbPPbLLMMOMllmOpmFFHoKHffhKkhFbPkLPbbpLlhmMOlFOHmoFfohHKfBKPhkFbkpHLbMPOpFMmloOFmHFKOBHhFkKBbMlLkMPpbLLmpObFlHOmlflhokHBFPKLhbBHkkKMBOLFpmKollBhmKFBoPHkfbKpmLBMkOPKbmLopfMHloBBmHPkobHPfLKMhpBlOmPObFLbpKMflhOkmBPPoKLbfpKlhMBOkFPmloLfphMOlBOPmkFbopHLfBPOhlBmkoPFbHLKhBMhLkOBfPFLoMHpfHPmhOfFkHPmkfkhpkMBOPOLmbFhooMMfOKFhmBoklbHbKLBpPMkkbOpmLFMoOHkfmKohFFHkKHfbHFkpfBPlLObfpFkomHOfFKHhoBfkhHKbBOPpkBblhOlmMFOpFHmloKFFHBKkBPhbkLbpPBLlMpOmlOmooHFFHKOKfBhKkPBBPLLmlfpllOmmpmFoHmoffPbMKBBkPPmmbLpPlMMlMMFMmLoofmHfKKBhHFmhbPPFLLBkOMllmOpmFFHoobffhpkhfFPkKPbbpLlmmMOlFOmHoFlohHKfBhPhkBbkhOLbBLOpFMmOoOFFHFOBBHhfkKbhPlLkbbpblKmpOMFlHOobfFhMkHBLPKLhbBpklHMbOKFpHMolFPhmKFBPPHKmbKphLBBkOPlbmoopFfHloPBmmFblbHPkLKMhpBLLmPPbohHpolflhOkmFBPoKHbfpKLBMBOPFPmFoLfphMKlBhPmkobopMLfbKOhlBmooPFKHLKHBMhlkObmPLLobbpflKmhpFFkHPoFfLmkkMBlPOKmbFpoLbMfOpFhMFoklPHbKLBmPMklbOPHLFBoOHlfmhohFBHkOOfbmLkpbMPOLObFpFlmmHOfMbHholfkHbKbBKPpkMFmppLbMFOMFHmLoKfhFKKKBHhbkkbppMLlfOfBlFmpoHFpHKOlfBhkkPBbPKLpbBpllOmmhFFoHHolfKHlKBfmPPkbbLppLBMlOhFmmFooLHHfKKBmhBkmbPhoLLbhLbllmPomLlHoKHffmKboBBPoLPbfpLLLmMOlOMHMokfohHKfBKPhoBLopPLFMLOHFMMfoOlbBhKOffhfoKbhPBLkMPLOlLmHoMFOHOobfFmobOBfPpLhblpkLfMbOLpbmboofOHlKFBoPHofpFphLLMkOMlbbboplMKbKOffhFkhbHhfLKBhFHlkmMObFOHpoOflmOOPBlPhLHbkpKkOMBpoFPmboPfpHoKlBOPmkFbopHLkMKpflBmooPLbHLKpfFhlkHbmPpLoMHpflKmMOBFOHPolfLmpkMBlPhLmbkpokBMfOKFhmBoofPHfKLBhPMklbOpmLkMopllfmKohLBHkKPfFhLkHbMPLLOBmpFloMbOfFpHhOPfkMBKLBLPHLMLLpOlMMFpPFHmkhpfhHBKkkhhbkkbpPFOKMOOmlFkhoHFFHKKhoKhKkmBbPhLpMMplkOopOFFPHHoLfKhHKBFkLKkbboppLfMlOHFmmOKkfHHlKKOOhBkKbPPFLLMmmfllmOomPbHoKmffhKHfBfPOLPbBpLlpmMhlPhHmokfoHLKffpPhkBbkpPLFMLOhFMmloOLmHFKofbhfkMbhhlLkMPpblLmHoMFKHOKmfFMokHBfPpLhbOpkLmMbOLpbmboKfOHBKFBoPHKlLbpHLLMkphlbmLoplBoLKOfFhFKmbHPfLKMhLmlkMBObFKHpKMflhOkOBFPHLHblpKlmMBpoolmBoPfpMfKlBOPmkFBPpHLkMKpblBmhoPlbbMKPffhlkPbmPKLoMHbolomMOBFkHPobfLmpbPBlPhLmbkpoLpMfPKHomBoOfPHFKLfkPMolpLpmLkMopblfMmohLKHPKPfFhLHLbMPLLOBkpFlhFbOfFKHhmhfkhhKbBOMHLMblpOhfMFOOFHmfmHfHHlKkBHhbkLbpHMHKMOpBlFmpoHLlHKKhfBhkkmBbPkLpMMplKOmmOFFPHHopfKHMKBBkPPkbboppLBMlOOFmBFoofHHLKKflhBKObPPbPPMPpfllmhomFFHopHofhKkMBBPmLPBFpLlmFfOlFOHmBKfohmKfBKffkfbOpPLfMLOpFMBlbhfmHkKoBMhfKFbhPBLkMPpFlLmPoMFlHOpmfFhoKbBfPMLhBOpklPMbOLFHHMokfOhmKFloPHkfbpphLOMkPFlbmLMbFbHKKOfBhFkobHmfPKMhpllkMFOblHHpoFkKhOkmBFlhLHbFpKlhLKOKFmmbokfphMKllOMbklbPpHLpMKPllBmkoPFbHoKpfBhlkObmmFLoMHpLlKMlOBlmHPobfLhpKfBlPhLmbFpoKHMfOKFMmBomfPmoKLBmPMklbOpmmKMoOmlfmKMfFfHOKPfBhLkpbMmlKLMMpkloMLOflMHhoBfkhPKFBLPhLMblpOKmMFOolbmfoMfhmOKkBPhbkLbHpMLKMOOmlFBooHFfHpKhfOhkoFBbPLLpMMpKlOMfOFFoHHpffKhhKlBkPmkbfOpplMMlOOlBmFopfHHFKKfbhBkkbPPbmOMppbllmOMlFlHpKHfFhKkhBBmkHmbbpKlpMKOlLBHmoFfohHKlBKPmkBbkpPobMLOplBmlOBfmmPKoBHhfkKbmPBLOMPpblLBpoMFlHPKmfPhooLBfPKKkbfpklPMBOLFpHMolfPhmKFBofKkObKphLBFObppmLFmMOflokBfPhFkobHblPhkpbLpPLHmFpOFMmMOlfmHfffPoLHbfpKPfMfOKFPmboLfphMOlPLPmklbopmLfMOOhkBFooPFBHLKPBMhLkOBloOLobbpflKmhOfFkmFobfLmOkMBlPOLMbFpolHMfPkFhmBokfHHbKLBpPMoFbOpmLFMPOHlfmKohLbHkKPfbhOkpbMPlLOKlpFlomHOfFKHhoBfkmpKbBLPpklblpOlmMFPKFHmfoKFfHBKkBPhbolbppMLlbbOmlFmooHmPHKKHfBhOkPBfPLLpPhpllOmmOlFoHHoffKmkKfBkPPkBbLpplMMLpmFmmFoomhHFKofFhBkkbPbkPmkHbopkLLMFPFHokLfkhKkhBBfHhHkBBLFfMoOlFOHmmkOKFMmBohFbhpKlBbhMMOOpFMmlHHOFlPmhOhhpkKbhPBpokbbKpmLHbFOOlPkkfphokHBfbkHBKLBfPlLmMphmmlolfOhmPkoKfOHBKOHKLKMkOPlbFoMmOblommOBHOkhbHPfLKlfBbPlLMMhFLHpKMflhOkmBFMolLbOpKlhMBHppHlBMhOFFHHPHKhlkFbopHOLLhbpPLlPMHhkHLKpBMhlkObmPKOofppflKmhOBFkHPKbklKFKLBlPOLmlkBKPOkBbOkMMOokfPHbKLBpPMomlOfHLKMoOHlfFpMLpPFPHbfFhLkpbMffPmKLkBLbmHOfFKfbmpOOFMHBoFBHhllkpOlmMFppflmfoofhHmKkBPhboLbppMLLMOOMlFMhoHllHKKhfFhkKBBbPLLpMMpllOmMOFFpHHolfKMhKBBkPhkbbKppLfMlhOFmmFoOfHmbKKBHhBOkbPPbLkMppKllmpomkFHoKHfFhKKKBBhfLPFbpLlpMbOllhHmOLfoHMKfBKPmkBBKpPLbMLPpLfmLoPfmHLKoFBhfKObhPBLOMPPblLmpoMlkHOKmfKhoKhBfPKLhBFpklPMLOLlOHMolfOhmKFBoPMkfbhphLFMkpPlbmLoPfMHHKOfbhFOobHPfLoMhpKlkMfOblKHpKMfkhOKPBFPoLHffpKlhMFOkFHmbOOfpmBKlBOhBkFbmpHLfMKOhFhmkoHFbHKKpfBhlOOkmPFLpMHpllKmMOBkkpBobfKhpKHBlPpLmFFpolHMlOKllmBoKfPbbKLBphBklBlpmLMMohHlfmKomFBmOKPFfhLKhbMPlLhMmPllomHOfLKHhoBfOhPKFBLhmLMBkpOlmMKOolHmfoKfhmFKkBPhLkLBOpMLlMOPblFmoOFFfmkKhfBhkkPBbPLLHMMpplOMbOFloBKoFfOhhKpBkPmkbFLmmlMMkOOllmFOffHmlKKBhhlkkBoPbLLMpPMllmOOBFFHPKHFkhKKmBBPkLMbbpPlpmMOlFOHmoFfPhHKlBKPmkBFkpPLbMoOplBmlohfmbFKoBHhLkKBpPBLKMPHblLmpOfFlmBKmflhoOHBfPKLMbBPBlPMhOLkpHMolfhhmokBohMkfBOLHLBMpOPLBmLopfMMlBLBmhKkoBBPfkPMhPFoMmhOLFLmpKMflhOobLhPOkFbfPklhMBOklHfOokFBhMoFBOPmkFbokkLfMPOhlomkoHFbmLPlfbhKkOBKPFLhMHHfpKmhOlFkmBobFphpKLmpPOkfbFpolHMFOKllmBoklpHbKLBpPMklbOpmLFkmOHlfmKohFBHkKPfbFPkpbMPlLpMmpFlomHboFKHhoBfohPKbBLPpHLblpOlmMkOoFHmfoKlPHBKkBPhBkLbppMLlBoOmlFmooMFfHKKhfBmLkPBbPLLHMMpllObbmkFomfoffhhhKBBkHPkbbLpMlMMOOOlfmFoofHHfKHBhhLkkbPPbLLMpOMlOmOObFFHpKHffhKkhBkPkLhbbpklpmMOlFOHmoFfOhHKfBKPhkBbkpPLBbKOpFMmlopFfHFKoBHBKpPKLBmpPMhpblLmpmooOmMKmfFhoPbKpBoHbllbmphLmbFOMlPHloplbHookFBpoKObHPmLPHPlOmLopfMflmLKMFhhHKMMOhhkLbPlPmPObFLfMhFoHFkpbKHhpLHbfpKoMLOMKpMffmkOhBMHLoPfFHBKhMFhlLobOpkmKObFbHLKpkLFkhpKPBokmbBpflKmhHlOmFhMlkLhmkMBlPOPBkhffPfOPOpFhmBokOOFLmhFbhKklbOpmpFkKBbpPLPMLpbllbMfPhLkpbMbbhokBblPlFHMmOoLLmkOooPKbBLPpLMblpOlmMFbflOmfoKfhflHmopFKpoKfBbholLbHppLPfBFOHKKhfBBkHKKBfmPMKBBKPlmMmOFoHmoOfKhhKBkhflHFkmbhPPLOhPFmmFoofHFoKoBHhBkkbPPbLLbpHOlLmpomlBHoKHffmHMMBBPkLPBPpLlPmMplFOmfhkfohHKfFfPhkfbkpPPkMkOPFMmLoOfmHFOolhhFkobhPfLkbppbkLmpoMFLHOKMfFHlkHFfPKLhbfpklhMbOOFpMMolfOhMKFBOPHkpbKhhLBMkOhlbmkopFkHlOOBmhFkpbHPFLKMMpBKkmPObFKHpOBflHOkmFFPoLHblpKlHMBOhFPbboLfpHfKlBpPmkkbohHLfMKOMlBmOoPFPHLohHbhlkHbmPoLoMHpfkKooOBFpHPolfLHlkMfkkpLmbopolmMfOKFhbBfffPHLKLBMPMkmbOpmLkMopflfmoohFFHkOPPhhLKbbMPLLObBpFkooOOfFHHhoKfkHlKbFLLkLMbppOLlMFOpFHmflbfhHLKkfBhbkKbppMMhMOpBlFmPoHFkHKohLPhKkHBbhbLpbfpllHFBOFFoHHPFfKhHKBFhlmkbbLppobMlOpFmMlooFBBLKKBhhBOKbPPBLLMpbLlLmpomFlHoKHffmKhBBfPKLPbBpLLOmMPlFOHmolfohmKffFPhoBbkpPLBMLOPFMmooOlmHFKoBmhfkobhPOLkBPpblLmPoMFLHOoLfFmokHBfPOLhbfpklmMbhLFpHMokfOmbKFfOPHofbKphLFMkOhlbmPoplMHlKOfBhFkObHPLLKBhpBlkmmObFoHpopflHPkmBFPhLHbKpKlhMBPkFPmboOfpHFKlfFPmKLbopHLKMKpOlBmkoPlfHLKpfLhlKkbmPFLobMpflKMFOBlFHPobfLHhkMBlhBLmBbpolHMfOKFhmBopfPHoKLBhPMklbOpmLkMopblfmPohlBHkKPffhLKLbMPKLOMmPHlOmHOfFoHhoBfkhPKbBLPpkbbkpOlmMFBKllmfoKfhBkmlKhffHBkMBFfKbfOmlFmomlOFlFmKKlFkHbKLBOLmMMpllOmmMOFOHmoffKhhKBBkHPMhbLpPlMMLOOlbmFOokKHFKoBhhfkkbPPbLLBlpbllmOoMFFHoKHffhKkhBBPKkBbbpLlpfMOMFOHmoFKkFhPooFBHHlkmbHPBkFbBBfmooOfmHFhkKmfMhhKKPBBLMhMLlMmpoMFlBMmpolFPHLKKBPpFLkmMoPMKOLFpHMhOOKfMHLolffhkBbphLBMkPPHhmLoPfMHlKOfbhFompbPfLoMhpOlkmhObFpHpoFkKhOkmBFhbLHbFpKlhLKOKFhmboLfphMKlFOLpkFbOpHLFMKOHlBbhBmFbHkKpfKhlkpbmPKLobBmLlKmhOBFmHPoBfLMphMBlPOLmbOpoLbMfOKLkmfokfPHBKLBpPMklbOpmLFMOpblfmKohmMmFKPfbhLpmKofKhHLMBBpPLfHLpkloMbOoPFKkBLPpLMlKBoPpkfbpPboPObfhHBKkkPfhhkoFBlhkFmMBOFmHoHFfHKKhMOhkkhBbPLLpMMplkOmmOFFOHHoFfKhMKBFkPPkbbkppLbMlOPFmMFoofHHFKKBHhBkkbPPbLLMpOMllmpomFFHoKHffhKkhBfPoLPbbpLMFMKOlFOHmHBOKBMHKKpfPhpKfkOLKMLOpFMfPMmOhfbmKoBFLkPbhPBLkMPbklkmPoMFlHOKmfFmobOBfPoLhbfpklHMbpLKlmboLfOhMKFBoPHkffBpHLBMkOhlbmLopfMHlKOBmhlkPbHPfLKKPpmlkmPOboolpMBoOfpHfLlfLhpKBBhPpkLphlfmboLfpBkmOoKbPHfkhfbkoMHOhlBmkmBOBlBmMolFKkmbmPFLoMHKplKmHOBFkHPobfLmpkMBlPpLmblpolMMfPKFhmBoKfPHBKLBHPMKlbOpmLlMoOmlfmKohFBHkKPfbhLkPbMPlLOMMpFlomHOFFKHhoBfkhPKbBLPpoHblpOlmOhpbFHmfoKKMFlmoKhFbppLHMMMHbHOmlFmomlpBlOmooLBpHpkkBmPMKkBlPokbbKoolhmPOLlboKffPPkbbLMhPbkkbfPfLhhflHBOmkoPfLbMbhPbLLMpMopmMOomFFHohLOKFlhHKMfLhlklMKPOLmbooOFMMLOhHbKfBKPhkBbkpPolFLBOlhmloOfmBMHHolfKHLKbBfhoKlmMPFLkboMfmKKmfFhoPFKPfLhblKbMPHkFbOKHlKmHOLFfPFBhPHkfbKbMPkLMbKppmhopfMHlhMoKFkHBkMBmPhmlpPlkmPObKOlFMfoKFoHhoBBHhbKkKpLBMBOkFPfFMlOkFmmkfMhKkFbopHPMLobFpMlMMMpLFOHMLMhokObmPFppLmBlphHlOHFkHPobkmFHPbofBhhFKkBhPhklmkpfOMoKfPHbKLKLBlkhbOpmLFkhbhPLLPMmOpllmfFkhmkpbMPlOhkkblPplmMLpPlBMFbmhhKbBLPpPhkmPllmMFOooOLBmpoHFHhkoKfBHmkMfBHFbfOmlFmoblpBlOmKOlFkhhKFBpKbbPpllOmmmLOOlMmPOPlLPloLfKhMKKBHffMoOOFmmFMLomlkHMPbhOkkbPPbOhkObmpoFoMhOMLBLbfmhKkhBBbHPhkOBOObLmbkKhlkmhOlFBOHFHPhkBbkHPKbfLhoKbBhPHkBblphFHMFoKFhHMopBPHbkLBPpMklbKpMLPMhpblFmPKhFfhkKPBmhOLpbMplHfHKKFBoPHpmkhBFPkklMMpBLKbFlLHhKOBmhFphKkfLhPLHbMpOLbMplkHpKMflBPhMoLfBHBKPmBkhFHMPpflmmpomFbmkOfFHkKbopHLflPbBPOLpKFFoHLKpBMBBhmoBBPpoLmBlPPkPOfFkHPobKHFkkMBlPOLmbFpoKBFflblFmBokfPfkHpKHFFHFKPmbMhMhOHlfmKHFpblLHMMFhhkpbMPlOmkhblppLOMKOPBhoofkhPKbkLfkhbKHbmhbkkfHFmKooKfhHBKkBPhbpFlpBOLhMOOmlFFoMhpLlbMbopFLHOkLPHLpMMplOPlMbLOHfhMbOFlLHPlkPPkbbLHpkMfLPOkmBBPOkLbkpplHMLokFPHmokFfHFKKBphfLFboOHLFmKOHFBmkoOFBHHKmffhLkHMmPFLkMmpplPmMOfFphPobBLBpFMhhOLfmHFKokMfFHOKLfLhMFLhbOKlPbBOOOKokfFhokHkfBohmKLbMpmLhMpPOmfolfOhmmBKHFllFbKphLBboohlbmLopllHlKOBmmFkobHPfLKMhpBLLmPObFLHpoBflhOkmBFPoLHbfpKlhMBOoFPmfoLFbhMKlBOPmKFbopmLfMoOhlLfOoPFbHLopBMhLkObmBOLOMHpflomhOBFkbPOhfkhpkMBmPOoObFpolHMfOKFhmFokfPHbpLBpPMklbOPoLFfFOHlfmKohFBHkKmfbhLkpFMPlLOMmpFLfmHPHFKHhoBfkhPKbBOPpLMblhOlmMFOoFHmfoKFKHBKkBPhbkLbpPBLlMpOmlKmooHFfHKLhfBhKkPBbBPLPMMpllmmmOFFoMHhlfKhhKBBkPPkfbLpplMMlOPFmmFoofHHfOKBhhBkobPPfLLbfOMLkmOomFKHoOhffhKkhBBPkLPbfpLlmmMOkFOMmoFfohMKfBOPhoObkpPLbMLOpFMmkoOfMHFKmBHhfkobhhhLkMhpblkmpOFKKHOKmfFmFkHBFPKkbllpklPMbkMFpmbolfOFlKlBpPHkFbKphLBbofBlbmoopLBHlKOBmmFkobHPLLKMMpBKlmPPbFLHpoFflhOkmFFPoKHbfpKLBMBOkFPmloLlphMKlBmPmkoboHlLfMKOhlBmOoPFLHLKhBMHlkObmPLLofLpflpmhOBFkHPoffLhhkMBlPOKbbFpoLbMfPOFhmBoklPHbKLBHPMkKbOHhLFBoFOlfmPohFBHkOPfbmLhBbMPOLOMmpFlhmHPfFKHhokfkHbKbBPPpLMblpOLBMFOHFHmloKFhHBKkBHhboHbpPfLlMOOmlFmpoHFLHKKhfBHokPBbPoLpfBpllOmmPFFoHHoLfKhMKBllPPobbLppLFMlOOFmbFoolHHfKKfBhBkkbPPlLLBpOMllmmomFoHoOmffhKfLBBPOLPbLpLlhmMplKFHMoLfoMLKfBpPhkBkhphLfMLOPFMmloOLmLkKoBMhfKBbhHhLkMPpblLmhoMFkHOKmfFMokHBfPOLhbPpkKkMbOLFpHMokfOHBKFBoPHOfbKphLFMkpLlbBboplBmoKpfbhFKMbHPfLKBhpBlkmHObFKHpooflhOkmBFPPLHbfpKlhMBPkFPmboofpHfKlFoPmoFbopHLLMKOMlBbmoPFbHLKpfFhlkMbmPFLoBHpflKMbOBFpHPpLfLmpkMBlPHLmbKpokBMfPKFhmBopfPHlKLfhPMolbOpmLKMopBlfbbohlFBMKhfkhLkMbMPlLOMmLhloMBOfFHHhoFfkmPbhBLPmLMbopOKkMFOokbmFopfhHlKkBMhboLpkpMLKMOpBlFMLoHFfHfKhfFhkkHBbPKLpMMbplpMBOFFMHHoffKmhbHBkPmkbboppLbMlPOHpmFoPfHHLKKlbhBohBbPbLoMpmmllmpomLOHooBkLhKkhBBbLLPbBpLlmFfOlFOHmLFfohmKfBKffkfbOpPLKMLOpFMblfLfmHkKofbhfkobhHBMfMPpFlLmHoMLbHOolFBhokMBfbhLhbfpklmMbOOKHHMolfOfFKFBOPHkklpphLBMkkllbmkoplBoLKOfBhFKObHPfLKMhKmlkmMObFLHpKMflmOkmBFPhLHbkpKLlMBpoFPmboPfpmmKlBOPmkFbopHLkMKpflBmooPLbHLKpfFhlkHbmPPLobMpflKMfOBkFHPobfLhpkMBlPHLmbOpolMMfPKFhmBopfPHlKLfkPMklbOpmLkMoOMlfmOohLKHkKPfFhLhhbMPLLOBopFlhFbOfFKHhmFfkhhKbBOMHLMblpOhhMFOOFHmfmHfHHlKkBHhbkLbpHMHoMOpBlFbkoHFLHKKhfBhkkmBbPKLpMMpllOmmOFFhHHoOfKhhKBFkPPkbbOppLFMlOpFmbFoofHHkKKfbhBKhbPHbLLMppFllmHomLkHooHffhKkMBBhfLPblpLlpmMOlFhHmopfohHKfFKPhkBbOpPLFMLOPFMbloOfmHkKofbhfKMbhHKLkMPpFlLLpoMFLHOplfFhhPbBfPKLhKBpklhMbOOKHHMolfOlLKFBOPHkfkHpHLlMkOhlbmLopLMbkKpfBhFKfbHHoLKMhpBlkmmObFKHpKMflMOkmBFPPLHbhpKKfMBOkFPmboofpHfKlBOPmOFbopHLLMKpklBbhoPFlHLKpBMhlfObmPlLoMHbolomMOBFKHPobfLMppBBLPhLmbHpoKoMfOKFhmBoOfPHfKLBpPMOlbOpmLkMopKlfBfohFBHkKPfFhLkHbMPlLOfmpFloMbOflBHhphfkhMKbBLPpLMhlpOlMMFppmmmfopfhmfKkBPhbkLmKpMLoMOOmlFmooHLfHKKhfLhkkMBbPHLpBBpllOMlOFLKHHoffKhhKBBkPMkbbPppLBMlPOFmmFohfHHkKKflhBKobPPbLPMphhllmOomFFHoKHfkhKKfBBPoLPfbpLlpMFOlFHHmoMfohHKfBKPMkBbopPLfMLhbFMmlohfmLmKoBmhfOBbhPLOOMPpblLKLoMFLHOofkkhokHBfLHLhbfpklPLkOkFHHMokfOhmKFloFBkfbpphkMMkhKlbmLopfMHKKOfbhFkobHPfLKMhpLlkMfObFLHpOMflhOKfBFPhLHbFpKkhMBOkFMmboOfpmLKlFOPmkFbhpHLkMKpplBMkoPFbHoKpfPhlkHbmPFLoMHpLlKMFOBFkHPpbfLhpKfBlPhLmblpokHMfOKFMmBoOfPMOKLlbPMklbhpmMfMoOmlfbHohFLBOKPfbhLbObMPLLOMmbOlOMbOfFoHhoBfkMPpfBkPHLMbmpOKlMFOoFHmfopfhHFKkBPhbOLbppMLKMOpolFbmoHFfHKKhflhkkmBbPLLpfMpllOMBOFlfHHpofKHbKBBkPPkbhLppLbMlOOplmloPfHHFKKBhhBOkFHPBLoMppOllBlomFFHoKHfLhKkmBBPkLPFbpLlpMfOllFHmpmfohHKfBKPMkBbOpPLbMLhpFMmlohfmHHKolohfkPbhPBLkMPkblLmPoMFlFMKMfkhokMBfPKLhFBBplPMFOLLoHMpBfOhmKFBohbkfbOphLBMkOPlbmLomfMHPKOBmhFoobHPfLPMhpLlkmhObLLHpKMfohOKfBFhmLHffpKlhMLOkFMmbpbfpHMKlBOhBkFBlpHLkMKOhlBmkomFbHhKpBMhloObmPFLPMHpLlKmHOBLkHPobfohpKfBlhbLmfOpolHMLOKMkmBoKfPMkKLBmbfklbOpmbHMoOmlfmKMfFfHOKPfBhLkpbMmloPMMpkloMKOfLHHhoBfkhPKFBLPhLMblpOKmMFOolbmfOBfhMKKkBPhbkLbHpMLKMOOmlFBooHFfHpKhfPhkOBBbPOLpMMpllOpmOFFOHHofoHhHKlBkPhkbbLppKMKKOOlBmFOffHMHKKBhhBkkbmPbLKMpOMllBOomFFHPKHfhhKOKBBPkLPbbpolpMfOlFOHmPFfohHKLBKhkkBFBpPLbLPOPlfmlohfmHFKofMmfkKBbPBkkMPpblLMhoMFlHmKmFlhokHBfPKLhbBphlPMfOLFpHMolfOhmKoBoPMkfbOphkFMkOPlkmLOHfMHlKOBmhFkoBBPfLPMhpKlkMPObFLHHKMlfhOKfBFPhLHbfpKlhHBOkFhmboLObHbKKBOPMkFbopHoffOOHllmkOLFbbbKpBMhlkOBBPFLpMHpflKBhOBFkHmobfMhpOpBlPOLmbFpPlHMLOKFhmBPkfPHbKoBphOklFlpmLKMoOHlfmKkhFBHKKPfbfPkPBfPlLpMmpFloBHpmFoHMoBFbhPOPBLPpLMblphlmMLOoFHmfPKfhHBKOBPhpkLFLpMLlMOOmlkmoObFfHKKhLBhkkPBFPLklMMhMlOmmOFFomboffPhhKBBkHPkbbLpHlMMKOOlOmFoofHHfKpBhhFkkbhPbLOMpOMllmOkmFFHOKHfffHkHBFPkLhbbpLlpBMBKFOmboFFfhHOHBKPhkBbkpHLbMKOpFMmlPOfmHFKpBHhhkKFKPBLkMPpblKmpOfFlHOKmLFhokHBlPKkkbBHBlPMbpMFPHMolfphmKFBoPHklbKphLBbhpolbmLopoBFOmKoffoHpkbfkPhkhBBpPlMbMFhHpKMflbhHHoBfkhfkLBPLPMBOkFPmbmPfPHbKlBOPmkFbohHmmMKOHlBmKoPFBHLOpKBhlkpbmPlLoMMpflHhfOBFOHPobfLhPkMBhPOLmffpolHMfOoFhmBokfPmMKLBpPMkkbOpmLFMoPhlfmKohFlHkKPfbhLoObMPlLObfpFlomHOfpHHhoBfkhPKbBLPpLMfFpOlmMFOHFHmfoKfhMbKkBPhbkPbppMLlMOPHlFmooHFOHKKhfBhkflBbPkLpbfpllPmmOFMLHHoffKhHKBBkPPkbBMpPlMMlOpFmmFoofmmKKKBhhBlmbmPbLLMpmBPFkBkFFFHoKHffhKkhBLMkPbblpLlpmMmoOmLkMKHfhmboBKPhkBbkpPLbMLHpHFmKoOfmHFmkofFOmobhPBLkMPpblLHphmhoHHKmfFhoPFoBfLHbHlpPlPMbOLKHlmMbOolbMfBMPHkfbKMPhkkpbKpOLFmMmHHoKOBmhFHMKMBFhKfKpolkmPOboPlFMfoHfPHpKobHkkbfpKlhLlbLpHlMMpOmFomfKmBFkpbopHLfFPbmpfLHMlOmFhHbBMofkMbmPFLolbbKPLkbMkpoLpokfLhpkMLKfohpKfBpoblOOKFhmBokfPHbOMLpBlkobOpmLFlhBkPflhMkFOHkKPfbbOHFoffoPpkhbkpHoBOkFKHhoBKOFlmpKpMhLMblpOkbHpOoFmmfOLfhHBKkFPhbkLbPpMLLMOpllFMpoHFfHOKhflhkkPBbPLLpMMpLlOMbOFFpHHPffKhhKfBkhKkbBlppKMMlOOFMmFOofHHkKKlhhBkkbhPbLMMppFllBOomFFHOKHfphKKBBBmkLPbbpklpblOllPHmOLfohHKlBKhHkBbkpPKbboOPlBmloPfmHOKofMhfkKbMPBLHMPpblLMhoMFlHHKmfLhokHBfhOLhbBpPlPMfOLFpHMolfOhmKLBohfkfbOphkBMkOPlBmLOFfMHkKOlmhFkobmPfLpMhpflkMHObFLHhKMFfhOkmBFHoLHbfpOlhMFOklBmbOKfphMKKBOhBkFbopHLfMfOhlFmkoHFbHKKplMflkOBbPFklMHPBlKBhLKFkHHobFLhpKFBlmOLmbFpplHMhOKlbmBPkfPHbKKBphKklbmpmoFMoOHllmKpBFBmoKPFfhLkpBfPlkpMmpFlobHOfFKHMoBfOhPKkBLhhLMblpHlmMpOoFHmfOOfhHBKPBPhfkLbppMkkMOOmlOmooMFfHKKhfBhkkPBFPLkbMMpklOMmhHFOHMofFbhhKlBkmPplbLphlMMKOOLBmFOpfHHfKpBhhMkkbPPbKLMpOMlKmOOBFFHmKHFlhKkhBLPkLmbbpLlpmMOlFOmBoFfphHKlBKmhkBbkpmLbbBOplmmlPOfmHFKPBHHfkKBbPBokMPpblompOOFlHHKmLFhokHBLPKklbBpPlPfbOLFpmfolFmhmoLBohMBFbKPbLBbKOPlbmLpphPHlKHBmhKkoBFPfkOlLpflPmPOKFLHpKMFkBfkMBOPoLMbfpKlhbFHMFhmKoLfhhMKlBOPmBhboPBLfMmOhlFmkOPkpHkKHBMhHkOBfPFooLHpflpmhOlFkmMobfPpbkMBoPOLmbFpOlHMpOKFhbbokfPHbKLBpPMklbOflLFMoOHlfmKohFBHkMBfbhLkpBbPlLOMmpFPmmHOfFKHmoBfkhPKboPPpLMblphlmMFOoFHbBoKfhHBKKBPhbkLbphmLlMOOmlLmooHFfHKOPfBhkkPBFPLLpMMPkOhmmOoFompoffKhhOBBkPPkLbLpMlMMMOOFmmFooFFHfKPBhhBkkbPPbLLMMOMlkmOObFFHoKHffhhkhBfPkLhbbpLlpmMOlFOHMoFfohHKfBKPhkBbKpmLbMLOplbmHoOfmHFhhoMfFhpKBfFhOlpbmhlMBoMFlHOHfOLfOHbKKfOhMpppMlPMbOLoplPmLpfFFmLLHBbPfBbphLBMkOPOPmkoPfMHlKOBmhFoobHPfLoMhpflkmmOblLHpKMfLhOkMBFPoLHbfpKlhMfOkFhmboLfphMKlBOhbkFbopHLfMKPhlBmkoHFbHKKpffhloObmPFLpMHpllKmHOBlkHPobfkhpKBBlPPLmbFpolHMfOKFHmBokfPHbKLBpPMkLBOpmLFMobKlKmKohFBBhmKohFBPfKOPmLOMmpFomLkblOhfMmkOolBHLoKPPkoblpOlmlBbKoMlFmmOblbmfoKhBkObppMLlKbMMphLhfBFKHKKhfBbhHKKhfBOmHfphlOmmOFoklhhkOklFHMKPBMBmbPpplMMlmBoKFKHpKlffPKfHhBkkbPBKPpkmbHpLLkMFOkFOmOomFlHBoLBmhpklpklmmMOlFOfbhPKbFLoofBPhkBbkMOPMFKMPPBlkbbOKlLHHFFhKkKbhPBPLLphHKfLhfLFlHOKmfFhokHbfMkoobfHFlPMbOLbpkKlKfOBbLPBhPHkfbKMfPHkfmFBFMBopfMHlhKoHbOhOKOBmOPLHbmpKLfMLoOHpKMflHPOKBlPpLHbppKlhMBOkFPmboKfpHbKlBPPmkFbopHLLMKOhlBmkoPFbHLKpfFhlkObmPFLoMHpflKmMOBFkHPoBfLMbKlBlPPLmbPpolmMfOOFhmLhOfPHbKLffPMkLbOPfOkMoOHlfMhohFfHkOPPhhLkmbMPKLObppFkmMfOfFPHhoHfkhhKbBmPpkFlKpOlmMFplFHmFoKFbBlKkBPhbKpbpPbLlMOblllmhoHFfHKKhfBmkbKBbPOLpbFplLFmmPOhPHHokfKBpKBBKPPkHbLpmOfMlOOFmFBoofmHfoOhHhBkpbPPlLLMpOMLkFfoMFoHooPffhKkhBBPPLhblpLlMmMOlFOHmPffoHBKfBKPhkBbkpMOFMLOpFMFfoOfMHFOmffhfkObhhOLkMhpblKmpOFKKHOKmfFmbkHBFPKkbllpklPMbPBFpmbollOkpKFBhPHkLbKPoLBBhfmlbmOoplPHlKpBmhokoBBMLLKMhpBkfmPOBFLHmhfflhOkmFFPoLmbfhKmoMBOpFPmFoLFkhMOpBmPmkKbohHLfMoOhlfmkoMKFHLKpBMmlkObMPFLhlbpflKmhPPFkHhobfLFbKbBoPOLmbFpolHBfFFFhmLokfMHboLBpmLkObOPfLFBHOHlFmKOOFBHpPmfbhLkpFlPlLpMmpKoPmHOfFKfpoBfKhPofhkPpkFblpHlmMFOolMfPooFBHBolBPhbkLbpPlLLMHOmlomooHFfHKpPfBhpkPBbPLLpMMpoohmmOFFofPoffohhOKBPPPkfbLHKlMMLOOlbmFohKbHfKKBhmmkkbhPbLOFHOMllmOPMFFHOKHlfkFkhBLPkLmbbPBlpBLfKFOmfoFLOhHKFBKhKkBbpmmLbMLOpKbmlopfmHKPPBHhfkKlBPBLKMPhbmBmpOFFlHhKmfMhoOFBKPKkbbBHPlPMBOLlBHMookhhmKFBoMfkfbophLLFOOPlbmLhOfMHLKOBmfOkOBBPfLKMhpBlkbPfhFLHmKMfohOKBBFHmkfbfpPlhfPOkFhmbOffpHFPKBOPmkFlfpHLFMKpbolmkoPFbfFKpfbhlKPPMPFLhMHpklKmhOBlofloBfphpKHBlPOLmbFpHlmMkOKlBmBokfPHbplBphFklbOpmLFMopBoLmKohFBflKPfBhLObBlPlLPMmmLlommOfFOHhoLkOhPKbBLMhLMbLpOLfFkOoFHmfHLfhHfKkFPLhkLbmpMLKMOpplFbmfbFfHPKhkMhkkhBbhlLpbFmKlOmmOFokHHoFfKhhHKBKPMkbbLpplMMlPOHpmFohfHHkKKffhBohBbPbLOMpmOllmpomlbHooBkLhKkhBBbbLPbBpLlmFfOlFOHmHBfohmKffOkHkBbppPLlMLOpFMMkHffMHoKofPhfkKbhPBLPMhpllLmMoMFlHOKmLfhoKBBfPKLhbBpklPLkOkFmHMoLfOhmKFBoKpkfbhphLBMkOPlbmLlBfMHpKOBmhFkobHPfPBMhpLlkmPObFLHpKMLFhOKfBFPoLHbfpKlhbPOKFPmbokfphMKlBOPmkFbopmLHMKOhlBMhOlFbHLKpKkFFHPKOfkhoLmbLphbfOkFkHPobOLfPHookfhLMbmpolHMfHmpBLLhOOFFOmBKmFBhOKKkHLlhPpLlfmKoholFOmHoBFLpMkfblpmblpFlomHHopbloMLoPFHKBBOPpLMblfbhbLlbofLmPoKfhHBHOopFfHlKMfFPHkKbFLOMfoHFfHKhFokFpPmKLfKHbkobKpmphOpFoHHofkhFpHfKofKhLkOBlLPMlOOFmFkMoomlOmLoBfLPkKlBhPpkHPOllmOomFFFmKmfFhKkhBBPkLPfblBlpMbOlFpHmoofoHHphBoPHkBBbpPLbMLhbllmloOfmHOKoBmhfkPbhPLOOMPpblLMboMFLHOofkkhokHBfHbLhbfpkLHpBOLFPHMokfOhmKFBofokfbOphLfMkOPlbbLopfMHkKOfbhFKBbHhlLKMhpLlkmhObFLHpKMflhOKbBFPhLHblpKkhMBOkFHmboKfpHLKlFOPmkFbppHLlMKpKlBbkoPFbHKKpfBhlkhbmPFLoMHpllKmMOBFkHPobfLhpKbBlPOLmbkpoLBMfOKFhmBOHfPHBKLfhKbklbMpmLPMoOHlfbKhFFBHhKPfkhLKBbMPlLOMmpplomMOfFKHhoBfkhPKkBLPhLMbkpOlmMFOollmfohfhHBKkBPhbkLBbpMLkMOOMlFmmlFFfHoKhFfhkkhBbPKLpbFmKlOmmOFlOHHoFfKhhoPBKPPkbbkpplMMlOOFmmFoofmHLKKBhhBPPBFPbLLMpmFpHLhbfOllkmboKMfKLBBPkLPllbmPHkFMLpKlBmoKPKkKPBKPhkBLkBKPBkmMMPBfOHhKmHOKoBHhfkKKfPfLKMPpblLmpoMllBFKMflhokMBfPKLhbBbhlhMBOLFPHMolfOmmbMBoPmkfbophLlMkpPKpmkoPfMHLKOBmhFkofKPFLKMhpflkmPObFLHpKMflhpKkBFPoLHmppPlhMBOkpOlLMHOmPKKOBOPmkFKlBhhOLhbmoBmMoPFbHLPHoKfLHPkMBkhhkfBlHPMKOBFkHPhlomFHHMobBpHKLBbOPpLKhflKmBokfPBKHpombfhhKfBpPKkpbfPbBfObFBHkKPkmfkHKKlFLLOMmpFlomHOffKBPbbfOhPKbBLfHHlkkhHlmMFOoLHbpoKfmHBKkBPhfkLbppMLlMPOmlLmooMFfmOKhfBhOkPBBPLLpMMpllOmmOKFoHHoffKhhOBBkPPklbLpmlMMOOOFmmFooFBHfKOBhhkkkbMPbLLMpOMklmOoMFFMoBOffhMkhBoPkkBbbhLhFmMOhFOmkoFfphHKfBKPhkObkpHLbMKOpLMmloOFkHFobBHhpkKBmPBLkbLpblhmpoMFlHOKmfFHFkHBfPKLhbBpklPMbOHFpmpolfPhmOFBoPHkPbKphLBMoOPlbmLopFoHlKPBmhLkoBFPfLKblpBLOmPOBFLmFKMfobhkmBFPoKbbfpolhMLHOFPmboLlOhMKLBOHmMMboPLLfMmOhlLmkpPlbHLofBMhhkOBbPFLoMHpflMmhOFFkHHoblLhpkMBhPOkkbFPblHblOKFhmPokFfHbKLBpPMklbOPOLFMoOHlfmKohFBHkoFfbHbkpBBPlKOMmpFLBmHOfFKHmoBfkhPKbBmPpkBblpPlmMOOoFHmpoKlPHBKKBPhOkLbmMfLlMOOmkfmoomFfHPPMfBhkkPFbPLLPMMhlmLmmOlFomloffphhKKhhPPkFbLPBlMMLOOlbmFohKbHfKKBhhokkbhPbLLBhOMlLmOObFFHoKHffmBkHBBPkLhbbpLlpmMOlFOHmolfphHKfBKPHkkbkpPLblObpoKlHMHBkHOKoBHhfPmKBBfhkkpbmlOmpoMFlHOmlflhOkHBfPKLhbBhkmKMbOkFpmbolfphmoFLfPmkFbKpmLBMkOPlbMMoPfMHlKpBmhFkobHPfLKMhpflKmPObFLoFoKflhOkmLoBfOMKPBKpHklbOFmmboLfphMHpBpPMkFbopHLfMKphKPmKohFbHkKpBMhlkOfoPlLoMHpFlKmhOBFkHPobfLhPKfBlPOLmkHPBlHMfOKoBLfMPOllbPkoofoHBBMPLLFMoOHoOLhMpKmlLHMOFbLKBbMPlLOLbboPLLhboOhlMokfkhPKbBLOfLMbLpOlmMFOoFHbfoKfhHfKkBhhbkKbphMLlMOOMlFmOoHFLHKohfBhkkhBbPkLpMMpllOmmOFFoHHoFfKhhKBBkPPkbbLpPLBMlOOFmfFOKfHHfKKkLfMhhKlBmPmkmblOKLHmMpblBmPoFKfkhBBPkLPbbpLlpmMOMFOHmoFfoFFKFBOPhkBbkpPLbBLFkFMmkoOFbHFKOBHhobkbhPFLkbbpblkmpoMFlHHhBfFhokHBKPKLHbBPoOlMBOLFpmBolfOhmKFKmPmklbKpHLBMkOPlbpfopFfHlKOBmhFkobHkOLKbbpBlkmPObFLHpHOflhPkmBFPoLHbfpKKPMBOoFPmboLfphMKlFFPMkFbopmLfMKOhlBmkoPFbHkKMBMhlkOoMPFLoMHpflKmhOBFkBmmpFFhpkMBlMMhKKBbhOFLPbOpMLLhOOFFOmBKmfOkpbOpmLFlbbfpFLFbbOOfPoFfbhLkpLKfOhkLMBBPKLkMklHHhoBfkMBbFBLPpLMbKpOlMMFOpFHmkhpfhHBKkBmhbkkbpPFOKMOOmlFMPoHFFHKOhKFhkkhBbPLLpbfplLPFKOlFPHHoKfKhhKBBkKlkbbkppLfMlOPFmmOfBfHHFKKfLhBkKbPPBLLMmmfllmOomFhHoKmffhPpMBBPkLPBFpLlPmMPloPHmolfohHKfBpPhKFlMphLFMLOMFMmloOfmohKoBmhfkpbhPFLkBPFhlLmPoMFLHOoffFHkBHBfPoLhBBpklhMbOkFpmFhKfOhmKFfoPHkFbKPbOlMkOPlbMoopFbHlKOolhFkObHPFLKMhpBlkbHObFkHpoBflhOkmBKMPLHbfpKkBMBOKFPmbmPfpHbKlBOPmkFbopHKlMKOHlBmooPFbHLKpFOhLkObmPlLoMHpflKmhOBFkHhOofLhpkMKmhPLmbFpoObkBbLPbLFmKomllmlohFfollpBpPokpBBlhmpohFBHkPFkbHpbhLbLMLOMmpFMoBlfMMLBHLlfphPKbBLbohbKBbmlMMoOoFHmfHPOLlLmfobBLkObppMLllfbBPfLkObFfHKKhbOPfKMOKMkfHBfpllOmmPMLofkMLlKFLHMFkfMhokphphfLObPPlloMpLPOfKKBhhBkklKHKofFPbPllmOomFFHFFFLfboHoBBPkLPPbfLhkkHHLLBHmoFfofHoKKOFopfLHpPLbMLMppOfOBOkMbbKoBHhfPKolOPHhFhhPLBmpoMFlfoMLOBfHHMFfMohokkBoPMMpHKFpHMolmBmkofOhMmMobKphLBPkBbHflkhPFfHlKOBmhPPmpBFoOoPhpBlkmPOhlfmoBLkLbPkmBFPoLHbfpKppFBBLlBmboLfpflmKKmFbphkhhLLfMKOhhOmbpOPoBkKPfphlkObmMKPHKFBLkKfHMHOPlHMlfMhPKOBlPOLmLbBKPBBfHopolkMoOMHpHLBpPMklfOlpLFMOOHlfmKpBFBMhobfbhkkpfPPlLpMmPbloMBHLFKHhoBlfhPKBBLHpMPblpplmMFOoLfmfpHPMHBKKBPhKkLbPpMLHMOpfokmooHFfHmKhffhkkMLFPLLpMMhblOmMOFLoKOoffohhKBBkHbkbfPFHlMMLOOlOmFoOfHHhKKfbblkkbPPbkbMppbllmHHBFFHoKHFmhKkHBBHkMKbbpklpmMOllmHmpOfHhHKFBKHokBbKpPkkMLOmofmloOfmmMKoBmhfoKpoPBLKMPpblLMMoMLpkhKmflhoKMBfPoLhbopklMFFOLFpHMOkfOhMKFBhbbkfbKphkHMkOhlbbLfkfMHLKOBmhFKHbHHoLhMhpflkbKObFkHpObflhHPBBFPoLHBmpKlHMBPkHKmbokfphMKlfmPmoOOPpHLFMKPLlBmKoPlfHLKmkfhlkObmhhLoMmpflPfMOBFkHPOhfLhPkMFlLLLmblpolHMfphFhbKBOfPHBKLlfPMkLbOPhLFMhmblfmKohLOHkKhfbhLHbBbPLLOMmpFlomHOfPoHhoFfkhhKbBLPpKMblpOLbMFOpFHmKoKfhHBKkBmhbkkbppMLlBOOmlFmPoHFLHKoffBHokPBbPOLpBKpllOmmPFFoHHoKfKhhKBBpPPKfbLppLLMlpBFmmFoofHHfKKfbhBkpbPPkLLbhOMllmmomlKHoKHffhKkhBBPKLPbLpLlPmMOoFOHmoFfofhKfBoPhoBpfpPLBMLOpFMMOoOLlHoKoBmhfOLbhPfLkbPpblOfHoMFlHOphfFhOkHFfLFLhbfpklPMbppFpbLBKfOhMKFLfPHkFbKpMLBMpHmlbmLopkOHlKpBmhFhmbmPFLKMhpBlkmPObPkHpoBflhpkmBFPoKHbfpKlmMBOoFPmLoLfphMKlBhPmklbopHLfBKOhlBmOoPFFHLobBMHkkObmPKLoMmpflKmhPBFkHPoLfLhpkMBoPOKbbFpoLFMfOMFhmBokfPHbKLBmPMkobOPlLFbpOHlfmhohlLHkKPfbhLkpbMPLLObFpFlOmHOkFKHhoBfkfpKbBkPpKMpbpOlMMFOoFHMKoKLfklKkBhhbpFbpPbLlMPOmlKfPoHFfHKPpfBhKkPBlMoLpMMplommmOlFoMHBmfKhHKBBkPPKLbLHbLlMlOpFmfooofmHfopBhhLpObPPbLLFMOMlLmOpmhMHoKmffhKkhfkPkoBbLpLlPmMHOFOHMoFFFhHKkLpPhkBbkMbLbMkOplFfKoOfmHFhOBHhFkKbhBKLKMhpblLmpoMFlHOMMfFhpkHBFPKLhbBhklPMbOKFpmBolfmhmKFBoPHkLbKpHLBMkOPkbmLopFfHlKhBmhOkoBMPfLKbbpBLHmPObFLMpKMflhmkmBFPokBbfPOlhMBOhFPmooLfphMKlBOPmkKboPBLfMHOhLFmkoPFLHLomBMhlkObmPFLoMmpflhmhOfFkHMobfLhpkMKFPOLMbFhomOMfOoFhmBoklbHbOPpHPMkLbObHLFMOOHlmmKObKlHkKPfbflkpBbPlLOklpllOmHOfFKHhoBfkfmKbBKPpkbblpOlmBFOoFHmloKfmHBKPBPhbkLbpPfLlMpOmlFmopHFfHKKMfBhOkPBkPLkhMMpllHmmpfFoHHoflKhhKBBPPPkbbLpmlMbkOOFmmOooFLHfKKBhhBkkbPPlLLMmOMlpmOpbFFHoofffHPkhBBPkLPbbpLlPmMOOFOHMoFfomKKFBKPhkfbkpPLbMLOpFMmlopfMHFKoBHBKkMbhPBLklkbOPBLkMbpOlPHMfkhokHBfPKhfbfpKlPMbOLFpHMOlkFhMKlBoPmkfbKphLBBbOhlbmLoPfMHlKOBmhFkobHPfkBMhpBlkBkOoFLHpKMKlFomBKhfhhkKBBLbpMLOkFPmbHfoPFomfhfhKkFbopHhOkkbmphLOMPOBFoHMKlHLkObmPFPMkfBkPLlHMmOPFmmBOBFkHhKOfHhkKfbhoMMfOKFhmBokfPHbPLFfPMklbOpmLFMopLofhMOFFBHkKPkLFFhPKBfbPmkflhlMmHOfFKfmmfOMfmHBoofmOMbppOlmMFbHpPLfmooMFhmfBPhbkLbppMLlmOHHKBmooHFfmOpLffhKkPBlPLLpMMpllOmmOlFoHmoffOhhKBBkPPkfbLpplMMlOOFmmFooFbHfKKBhhBkkbPPbLLMhOMllmOoMFFMoBOffhpkhBFPkkLbbpLPbMbOoFOHmoFfohHOfPFPhkLbkpMLbMKOpLMoboOFfHFKhBHhOkKBflpLkMMpbLBmpObFlHpKmfKbPkHBfPKkobBpKlPMlHoFpHMolLfhmKlBohMBFbKPbLBMOOPlbmLObKpHLKhBmmhkobmPfLPMhpLoOmPObFLbFKMfLhOOlpkPoLmbfHblhMfOklFmboOkHhMKlBOmKkFbOpHLfLHOHlLmkohFbHLKpBMhmkOBFPFLpMHpflKmhOBFkmBobfKhpkMBlHOLmbFpmlHMoOKllmBokfPHbKOBphLklbPpmLOMoOHlkmKPLFBHKKPfbhLkmLfPlLOMmhhlommOfLKKooBfphPKfBLPMLMblbMlMMoOolbmfoKfhHBKOBPhLkLbPpMLkMOplHhmoOfFfMLKhffhkkhBbPOOHMMpllObhOFFOHHokkphhKBBkmlkbbkpplMLpOpllmFohfHHfKKBhKmkkBfPbLOMpOMllbOfpFFmbKHfKhKkHBBPkBlbbpPlpMKOlFPHmOFkfhmKlBKhfkBbhpPLbLPOPlLmlomfmHFKofMKFkKBFPBLMMPpblLmplhFlmBKmfLhokHBfPKbpbBpHlPMoOLFpHMoloFhmKOBoPHkfbKphLBfLOPlkmLopfMHlKOBmfOkOBBPfLhMhpBlkmPlKFLHMKMflhOkmBFPoPKbfpPlhMBOkFPmboLLOhMKoBOPmkFbopHLfBBOHlBmkohFbHLKpBMhlkObmPlKBMHpflKHkOBFkHPobfLhpoFLlFpLmbFpolHMfOKLofBfMfMHbKLBpFFhHkhBOkObbOHlfmKHOOfFMmOKbfkHhoFKlLOMmpFlomHOfLPBhmPfmhPKbBLbphmKKBfhfLhbKpPKkomfhHBKkKFbHpHLfmBoffphOlhmooHFfBOmmokfKHkkFBkhbklfLlOmmOFFoHHoflKbhPFBkPPkbbLpplMbhHOOFMFoofHHfFpOMoFBkhmFfBKOOkfhkpPfoMkLpFMhpoKkhBBPkLPbbpLLpfMOLlFHmoFfoBFHPoOfBPlkPBHhkLpbhlBmlMFFLHFKoBHbLHOKPfoPoLhBffMmpoMFlHOKmfFPophLfPHLhbBpkOFLBbFOmlPmOHlhmKFBoPHkfbKphOBfFOPlbmLopfMHlOPLmoBkmbHPfLKKBbMPklhMFpbfMoLflhOkmLofmhfKbBPPMHOOMFPmboLLhbfphLfBopOkbmboLoHOhlBmkoPFbHLpbLMlFKKbmPFLolFbPPLLbHKOMlHMFOObHHKKHfLhfHopolHMfOKFhmBomkPMMKLBpPMklKOpMLlMoOHlfmKohkBHkKPfBhLKpbMPMLOBbpFlomMOfFpHhoBfkhPKbBLPhLMbLpOLbMFpoFHmfoofhmFKkBHhbkLbppMLkMOOmlFmooHLfHKKhfFhkkHBbhHLpBBpllOMfOFlKHHoffKhhKBBkPHkbbOppLBMlpOFmmFoOfHmPKKBmhBOkkPPbLkMppPllMMomFFObKHflhKkHBBPkLPBfpLlpMfOllBHmoFfohHKfBKPmkBbopPLfMLppFMmlopfmHlKoBMhfOKbhPBLKMPpplLMooMFlHOKmfLhokHBfPKLhfBpklPMfOLFhHMOhfOmbKFBohBkfBkphLBMkOPlbmLohfMHoKOfbhFoobHPfLOMhpFlkbFOblKfFobfohOKMBFPoLHbfkblhMFOkFMmboKfpHMpmBpPMkFbppHLlMKPhHHmkoHFbHLKpfFhlKOloPlLOMHpPlKmmOBlkBLoBfkhpofBlPOLmfFlllHMlOKFhmBopfPMbBBBphBklbPpmLOMopHKhmooHFBHPKPffhLoppPPlLPMmpFloMBOfLKKooBfohPKfBLhbLMBlmFlMMlOoLlmfoOfhmFPMBhhfkLBppMLlMOPbohmOObFfmFKhfBhkKHLOPkLmMMPllOmmOFFhfPoffOhhOMBkPhkbbLBbLbMpOOlbmFoofHMfpFBHhKkkBBPbkpMpPMllmOOlFFHmKHfOhKohBBPkkBbbpPlpMhOllPHmoFFbhHokBKPhkBbkpPLbMmOplbmloOfmHFKoBHhpkKBLPBLkMPpblLmpOLFlHOKmflhoKBFkPoLmbBhPlPMBOLFpMOoLfOhmKlBoPHkfbKphLBMkOhlBmLopfMkooLBmhFkoLPfBOHLHbHPffMMBpfFPmkoOhhkmBFPoLHkopolHMBOkFPmboLFpbOKLBpPmklbopHLfMKPklfmkoPFBHLKpBMhlkObmPFLobfpflKmhmoHplPPHfMpBMPOHKOhpOMkhkHpfhOHhOFlkppHkKLBpPMpKlMfbPlkLbfOKmpohFBHkmOoLFhHkBMbhOfPfkPkmfmLflbHhoBfkhPmFBkPpLMblpOlmMFppFHmfoofhHlKkBPhboLbppMLLMOOMlFmhoHllHKKhfFhkkHBbPLLpBBpllOMBOFFHHHoffKHmKBBkPMkbbkpplMMlOOFmmFoOfHHkKKBhhBkkbPPbLLMpOMllmpomFFHoKHffhKkHBBPkLPbbpLlpmMOLFPHmoFfoffKPBKPhkBLOBoPBkBbkomLfMLpKHlKMBHhfkKLMBfPhkbmLOoFpOFFlHOKmfFfmkmBFPKLhbBpklPBbFBFpmbolfphmKLBohHOhbopHLBMKOPlbmLoplOHLKOBmhlkobHPfLKMhpBlkmhpfFLHpKMmfHFkmBFPoOMKlbhPbFmMKpkLLMKplbMKoBOPmkFkmBkhbLPlLlkmkoPFblLHPooFkHhMkPOLoMHpfOPlHbFOHlbMlMoHbkMBlPOPlklBlhfLKbpFHmOokfPHbhfKPfoHfLObMhLkhLPlkmKohFBlFHhoKFFFHBoPlLOMmBpPKLMMHpplhmfoOFblFBOPpLMblMKpMkbMHpKmPoKfhHBhFKhfKHFKFfFhOLHbFbBMkoHFfHKhfopFlhMLkBmhhKfBoohLkMhpllBkpfMhhKBBkbPhMKoBFhFLHbophlHoPfHHfKKkOffHkhOPPLLMpOMoPlmbfKklbmkomfPHmKkflblbopLlpmMmkOmlLmhOPlBHKoOplklbkpPLbkfMPpkFOOOfmHFKokLFKHlkHBMhLklblOKLOMmpofOHMOLFhfPBoPKLhbBBOPMkfMmpolkPBfOhmKFfpbOkfbophLLMkOPlbMKopfMHlKOfLhFkobHhlLKMhpflkmmObFLHpOBflhOKbBFhbLHbfpKkhMBOkFHmboKfpHhKlFOPmkFbppHLlMKOHlBbkoPFbHKKpfBhlKKbmPFLoMHpllKmMOBFkHPobfLhpKbBlPOLmbkpoLBMfOKFhmBphfPHBKLfhKbklbMpmkLMoOHlfbKfoFBHhKPfkhLkhbMHlMLMmpploMfOflbHhOFkMhhKoBLhOLMblpOlmphOolFmfoMfhHFKkfBLMkLBbpMKpMOOMlFmooHFkBpKhfBhkOBBbPkLpBMMklOMlOFFHHHoHfKHmPpBKhFkbbppplMMlOOMKmFomfHHpKKBmhBkhplPbLPMpPkllmpomFlHooBkLhKkhBBhHLPbBpLlmFfOlFOHmpOfohmKfBKffkfbhpPLbMLOpFMblFPfmHOKofFhfKobhHBLkMPpklLMboMlbHOOmfFhoKlBfPhLhbKpkkPMbOLlBHMoPfOHpKFBoPHkfbHphLKMkpflbbLopfMHpKOflhFKfbHhlLKMhpKlkMPObFLHpOBflhOKlBFhoLHbfpKLmMBOklfmbohfphMKlBMPmkFbmpHKoMKOHlBmHoPFlBoKpBMhloMbmPlLobMLFlKMfOBlkHPobfLHhbMBlPMLmbppolHMfpOHhmBoPfPHlKLBpPMkpPMpmLlMopKlfmoohFFHkKMkFhLkpbMPmLOMMpFLpOmOfFoHhoLfkhPKbfKkPLMbkpOLfMFOoFHbffFfhHFKkBHhbkpbppMhFMpOMlFmPoHFfHKKhFPhKkPBbPkLpMMpllOmmOFFoHmoLfKhhKBlBhlkbbLpppFkFboppfkMKOOlBmOOPhKkkbPPbOokObPPFLPbBPfmBKHffhKPhKHBKHlkLBKoMlfmlFmHmoFfohHlpBKPHkBbkpPLbMLPpFMmlopfmHlKofbhfoKbhPBLKMPpBlLmhoMllHOKmflhokmBfPKLhbBpklPMbOLFPHMolfOhmKFBoPHkFBPphLBMkPBlkmLopfMBkmPoHfmhHKPOpkfMhpBlkFfMLpOBHmKoHFLHfoLBHhPHLPLlhMBOkoBlOMFomBLHHoPFBHKlPBLPPkFbbLKmmoPFbHLhKobfHHKLmBlhpKBmflHmhOBFkfMmBOKFBHloomlkKbFpolHFMMopFlMmMOMlLHOKMHLkmbOpmLFFpbMpKlPHOOflBMbOfFMobBMPlLOMmmPPHLpMFpLlPmpopBHHMolfmpMkLBPhfOhOhFHmfoKKMFfHhobmPkObppMLlkkMMppLklPFKHKKhfBBhhhKhfpPMbbpHlOmmOFpMlhMlOfFMmBKKBmhLpmPblMMlOOPBLKMpOklbHmlKhOkkbPPbpLkOBfpHLHMKpflkFPfohKkhBBbhPhkhBppMkfFHFhHmoFfoFpHFKmplkLbkpPLblFMPphlOMFFBHFKoBHbMhoKhLpLpMPpblLLbMopfFHmofohokHBffKPHkpBoPmflOLFpHMOkKLhmKlBohfkfbKphkFMkOPlbmLOlfMHlKOFbhFkobmPfkPMhpBlkMHObFLHhKMFbhOkmBFHoLHbfpOlhMFOklHmbpLfphMKkBOhbkFbMpHKfMKOhlFmkoHFbHKKpBMhlkOBbPFLPMHpflKmhOBFkHhobfLhpKfBlPHLmbFpolHBMOKFHmBOoHhHbKPBphhklbOpmKFblOmlomKOfFBmOKPlbhLkpBkPlLmMmPlloMMOfFKmloBfMhPKbBLPpLMblpMlmMPOoFMmfoHfhHBKhBPHfkLbPpMLLMOpfokmooHFfmOKhffhkkMLFPLLpMMHBlOmMOFLofMoffHhhKkBkPmkbBKMFLbMhOOlHmFoofHHfFbBhhKkkBFPbLKMppLmFmOOlFFbLKHfFhKkhBBPpOmbbpLlpBhOlFpHmoFomhmKoBKPhkBbkpPKbLhOplLmloMfmHPKoFHhfkKBfPBLhMPpmlLbpoMFlmbKmfohoKBBfHKLhbBpHlPMKOLloHMolfOhmKOBohFkfbmphKBMkOPlkmLObfMHpKOFbhFkoBFPfkKMhpBlkMHObFLmbKMFlhOkmBFhpLHbfpmlhMPOkFPmboPfphMKpBOmfkFbOpHLOMKpbolmkoPFbMOKpfbhlkHLBPFLoMHhMlKmHOBLkKKobfPhpKlBlhoLmfFlllHMoOKlfmBoKfPMbBBBphLklbMpmLmMopFmBmKOfFBbbKPfBhLkpbMPoOhMmpFloBKOfFoHhoLkOhPKbBLmKLMbLpOkbplOolFmfOKfhHBKkfHkbkLBbpMLmMOOmlFMpfHFfHhKhfkhkkPBbPPBbMMpLlOMoOFFOHHolfKHbPlBkPPkbbMppLbMlpPmMmFoOfHHKKKBhhBKoPhPbLKMpplllmOomLFKlKHflhKkmBBhLLPbbBllPMbOlFhHmoFfohHohBoPhkBbKpPLbMLOPFMmloOfmHFKoBHhfoFbhPBLkhmpPlLmpoMKLlmMfOfBoHkKLffPBKBBOPKMbOLFpHMolfOmfPFoFPHFLbMphLBMkmPpMLoMFpFFHmoohLKkMbHPfLKlhbHpKklMLpKlHHlfohOkmBFfMPmkPBPbpMpOkFPmbHhOOlBHMohfmhlkPBfMPMmOhlBmkHPKOBoHOKFBbPooHPMLoMHpfOPLPbbpfBmmMOlFkHFoFFbhhfmpmlHMfOKoLLlhpObFBHOOOhLklbOpmOokmbfPbLPMMLhHMKPfbhLpHKKBLhPLMbkPhLfblbPHHbbfhhPKbBLbbhoKbBHPFkLlBlfmfoKfhlBHKolFfHolpPOLlMOOmoOLBMMOKfpmBOFFhHbofKFkpMMpllOFkbopLFmMbOkFLHLkofphMKOMpPbkkbHMhmmoofHHfhFoPflhKKKbbhBLPBopOLPbHlBHoKHffbHHLKMBppBkOBKPHkFHKpBlKmMohpbKmBKPhkBLOBPPBkhboplloHHOHlfmlObLkKBbhPBLklfbLPOFHMlpklMmKokfHfPfoPKLhbBmhPlLmMOobloMkOhlfPkobfkhmkPbFPOLMMmpofmMHKbbBKOBmhFkobHPflKFPmBLFmPObFLBPMlOoFoPmKhBPhoLkBkPPLHbOFhmPoLfphMPPKmFfpkKbBkPmLPbmpkLlKFFOHLKpBMBBhpKLfBhBKBBKpPLBlMlKHPobfLBhHlolfLhKkkbOhBLKMPoMLLMLOHFBHhKMFmkhbOpmLFlLbfPLlMHhOflomMkFhLkpbMPlPMMMpFlomHOfFKHhpBhfhPKbBLPpLMBhpOKlMoOoFHmfohfhHfKkfohbkOlHpMLlMOpFlFmOoHFkBpKhfBhkpHBbPkLpBBLLlOmmOFlKHHoffKhhHhBkPhkbbkpplMMlPOFmmFoOfHHFKKFBhBKobPPbLoMppkllmOomFFHoKHfFhKkMBBPoLPfbpLlpMbOlFpHmOBfomHKfBKPHkBbKpPklMLPpFMmlopfmHlKoFkhfkKbhPBLKMPpflLmpoMFlHOKmfFhokHBfPOLhbLpklPMbOLKpHMoLfOhmHOBOhfkfbKphLBMkPPHhmLoMfMHOKOfohFomBfPfLhMhPklkmhObFoHpoFkKhOkmBFhHLHbFpKLbFlOkFPmbhLfpHbKlBOflklbHpHLFMKOhlBbkBbFbHpKpflhlkmbmHFLoMHpKlKMBOBloHPpbfLhpKlBlPmLmbMpokHMfOKlBmBoPfPmFKLfhPMklBbpmklMoOHlfmKohFBHPKPfKhLkhbMHlLOMmpoloMfOfFPHhpBfkhPKkBLPmLMBppOkbMFOolLmfpFfhHBKkBPhbkLBbpMLhMOpblFbofOFfHHKhfKhkkMBbPLKHbbpOlOMFOFFmHHpfhFhhKkBkhbkbBMppKLmOOOlFmFpmfHHFKKBmhBkplmPbLLMphLllmpomFKBPKHffhKphBBPKLPbbbPlPMlOlFPHmoFfomHbmBKhBkBbPpPLBMLPpHPmlomfmHoKofkhfoHBBPBLPMPhhlLmPoMFKHOofkkhokHBfmFLhbfpklMFFOLFpHMhlfOhMKFBofFkFbhphLFMkOPlbbLfkfMHOKOfFhFkObHmfPKMhpklkMlOblfHpKMophpKFBFPOLHbfpKkhlFOklbmbopfpmlKlfPbKklbMpHkHMKOhlBmkllFbHpKpfkhlkPbmHFMlMHpKlKMBOBlBHPpbhBhpKlBlPmLmbPpokHllOKlBmBoPfPmbKLFpBBklBbpmLKMoPFlfMOHLFfHMKPFhhLkpbMPlOmMMpploMkOfFKHhoBlHhPKLBLPpLMbLpOkbplOolfmfoHfhHBKkfHbOkkBbpMkPMOOmlFmoobFfHhKhfFhkkhBbPLhbbbpOlOMbOFFoHHpfhFhhKkBkhbkbbkppKMLlOOlFmFOBfHHLKKffKKkkbPPbkLMppbllmPomFKBPKHffhKKhBBPKLPbbPMlPmMOlFpHmoFfohHKlBKPhkBHOPfLbMLOpofLFMKOhFoHPOBmHKlbhPBLklHbLPFlmMlpkfhMfooFoHHKKBPkLbBpklPMbMPFPHMolfOhmKFBoHHMmbKphLBMkOPlfmLppoBHlKOBmhFkobmPfLHHfpBlomPObFLHPKMfKhOkmFfPoLHbfpolhMBOkFPMMoLfphMKkBOPmkFbohhLfMKOhllmkoPFbHLHkfbhlkOBbPFLOMHpfkBmHOBFkHhobfLhpkMBlPOLmbFpmlHMfOKOBmlokfPHbmFKMFkPOBBpmLFMomppFLbMpoBFKmHOllkkpbMPlLOMmpFlomHppFKHhoBfkhPKbBLMpMLblpOlmMFOoFHmflKHLHKKkBPhbpoLbfBPLkkbFLLmooHFfHKmfffhkkPBbPLLpMMpllhmmOFFoHmoffOhhOBPfPPkBbLpplMMkOOllKhoofmHfKHBhhfkkbhPbLOFHOMllmOOlFFHOKHfkbpkhBBPkkhbbpklpmMMpFpHMoFfOhHKfBKHhKMbKpHLbMLOplBmlpOfmHFKpBHhlkKBfPBkoMPpblompOLFlHOKmlFhokHBLPKLMbBpKlPbfOLFpmFolfhhmKFBohMkfbKPBLBMpOPlbmLOhfMHlKMBmhokobHPfLKMhpBlOmPOkFLHhKMflhOkmBLPoLMbfpplhMBOkFPmBoLfhhMKLBOPmKHbOpHLfMoOhlBmkoPFbHLKpfbhLkObmPFhfbhpflKmhmBOPlPMbopFhhfolfPPMKhmOhfklMoFMmBokfPHbHPBPhbklbOpmLFMopHKhmooHFBHKKPfbhLkpfOPLLOMmpllomHOfFKHhoBfkhPpfBLPpLMbKpOlmMFOoFmBkOkkhLbKhBPhbkLLHflPkKbMMPhPPOpFfHKKhkpFfHKKLBhPPkPhlOOLKbHPfFmHOfKhhKBPkhpOmPKkpPPMlOOFmoFboFhFLFKPbhHkkbPPbpOkfBBpHlMbfLFfPMBOBFOHBKHPkLPbbbLlFOBBHMOoOoFfohHFfKKHmhOlkfhLbMLOpOMBmlOHmOFpLBHhfkKohFBKhFPkbLHmpoMFlKOHhFKKpfHOFPKLhbBlkboOolKMplPolfOhmLFboMPmMhKOkLBMkOPbbmLoplKBlplfLhFkobHMphbkbbkOLkbblbpHpKMflpOkmHMHfOHhfpKlhMBMkkOHOPLkpoHKMBOPmkFlPbmPoLhhOoHLLmmOPFpmhFKhlkObmFFHoOBfFbKBKOpFkHPobKhfPmBKObBhHKoBPPfBHOhFhmBokKMFMmhKMFBFObOpmLFOoBLBPkhlhHhHkKPfbkLFPofFHBOOfpllomHOfKkbOoBfkhPMbhoMMBbhlkKLBMFOoFHLbmhpFfoKkBPhbbLbblObLPOLmlFmooHHfHBloFLbkoFBbPLLpKMoMoFOMLFmFHHoffKphoLBfkofbPbpplMMlFOpOlkFpmHPhKKBhhBmkbPhhkLFppfllmOomMFPFbKKOoKfpBoPkLPbbmPpPLfbopoLbMhmohHKfBKPhffPofpBbFKOpFMmllOOfFOomLHkHkKbhPBPkLPblOMfpMPFlHOKmpFoopBKFKKKlbBpklPKbOLpfmMhlLlHOKFBoPHpOkoBMKBlObMpBLOMFOmlfflBmhFkooHLfkokhkBHhmPObFLLpMhKFKpfmKMPoLHbffKPllFBKMPoPoLfphMFlOOmkhhholBLoMKOhlBfOHBpfFkmKolhLKFbmPFLoLFbPpOLBPmKOlFmLooFLhkBlPOLmmFMommKMLKKmmBokfPKboOlmKBflBMPkLFMoOHohLhMpOhfMHhOffOmPbMPlLOOmhOpbOMLfhmHhoBfkhPHkBkPpLMblpOlmMFPmlfmfoKfhHLKkBhhbKpbpPFOKMOOmlFmhoHFFHKobklhkkPBbhfLpbbpllOLlOlFoHHoFfKhhKBfofKkbbkppKhMlOOFmbFoofHHFKKBHhBobbPhfLLMppBllblomFFHooMffhKkMBBHPLPbbpLLhmMOlFHHmopfohHKfBKPhkBbKpPLlMLOpFMmloOfmHFKoBHhfkobhPLLkMPpblLoboMFLHOKmoOhOkHBfPKLhbBpkKBMLOLFpHMOLfOhMKFBPPHkklpphLBMkphlbmkopFFBKKOBmhFofbHPFLKMhbKlKmPObFkHpKMflHPHpBFPOLHfMpKlhMBPkFPmbokfpHbKlFFPmKLbopHLlMKPLlBmkoPlfHLKpffhloLbmPFLobMpflKMbOBLhHPobfLhpkMBlPpLmbKpolHMfOKFhmBokfPHbKLBPPMkobOpmLFMoFFlfmoohFBFhKhfbhLkpbMPlLOflpolomHOfLLHhoffkmFKbBOMHLMblpOkhMFOOFHmkhpfhHBKklfhbkkbppMPpMpOmlFmOoHFfHKomoHhkkhBbmfLpMMplkOmmOFFOHHoFfKmkKBfoPPkbbKppLoMlOOFmMLoofHHLKKFHhBkkbPhfLLMppFllbbomFFHoKHffhKkHBBPpLPbbpLlpmMOlFOHmoFfohmKfBPPhkBbkpPmkMLOPFMmlmMfMHFKoBHhfkKbhHKLPMPpblLBLoMFLHOphfFhhPbBfPKLhfhpklhMbOOKHHMolfObfKFBOPHkfkHpHLBMkOhlbmLoplBlbKOBMhFOLbHPfLKBhpBlkmhObFkHpOOflHPkmBFPpLHbmpKlhMBpoFPmboofpMPKlBOPmKLbopHLkMKpOlBmkoPFbHLKpfbhlkHbmPFLoMHpflKmhOBFkHPoBfLhmkMBlPOLmOOpolmMfOKpfmfokfPHbKLBpPMopbmpmLFMoHLlfmoohFFHkKMkFhLkpbMmhLOMMpFlhFbOfFKHhhffkhhKbBLfbkbblpOlMMFOoFHMlMFfhHfKklohbkLbphMLlMOOMlFmOoHlhHKomfBhkkHBbHlLpMMplLPmmOFFPHHohfKhhKBfoPPkbbOppkLMlOOFmmFoofHHFKKfbhBkkbPPbLLMpOMllmOomFlHooBffhKkhBBlhLPbBpLlpLLOLFOHmoFfohHKfFHlMkBbkpPOHMLOPFMMkoOFfBkKoBHhfPlbhPfLkMPbklkmpoMFLHOKmfFHpHOBfPoLhfmpklPMbPLFpHMoLfOhMKFFfPHKlbKphLFMkOMlbmLoplBHlKOfBhFKkbHPfLKbmpBlkmMObLmHpKMflhOkmBFPOLHbkpKlhMBOkFPmboLfphMKlBpPmkKbopHLfMKFflBmKoPFbFPKPBMhlkObmPFLofFFLlKmhOBoMHPoBfLHOkMBoMhLmbFpopkMfOoFhmBmhfhHbKLBPPMklbOhbPMMoOmlfBlohFBHkOPfbhLkPbMPLLOBopFLpmHOfFOHhPFfkhPKbfKPpLMbKpOLMMFOoFHMloKfhHLKklphbkLbppMLlMOOMlFmhoHFfHKKhfBhkkPBbPLLpbbpllHmmOFFoHHBofKhHKBBkfBkBbLpplMMlOOFmbOoHfHHfKKKOhBkKbPPkLLMmmfllmOomObHoKmffhPpMBBPkLPkkpLlPmMOlOMHMoFfohmKfBKPhKFKfpPLBMLhKFMmloOlmHFKoBmhfkobhhPLkbHpblLmhoMklHOKmfFHpkHBfPpLhfopklPMbpKFpHMoofOHFKFBoPHkfbKphLfMkOMlbmLopfMHlKOBmhFkobHPFLKbbpBlkmPObhPHpobflhOHlBlPoLHbfpKlhMBPhlbmboLfpFOKlBpPmoPboPBOLMKOhlBLboPFBHLKmkfhlkObmfkLoMmpflKLfOfFkHPoBfLhpkMfkfLLmblpoKpMfOKFhbBokfPHBKLBPPMKmbOhbLFMoOMlfBBohFBHkoHfbhLkHbMHlLOMmpFLpmHOfFPHhoOfkhPKbBLPpLMbLpOLfMFOoFHmfoKfhHBKkBPhbkkbpPFLlMOOmlFKmoHFFHKKhoKhKkPBbPLLpMMplkMoBOFFoHHbBfKhHKBFoPPkllopplMMlBoFmmloofHFoKoBhhBkKbPPbLLbhbPllmpomkbHoKHffmKkhBBPKLPbBpLklmMpkFOHmoLfompKfBKPhKFbkpPLFMLPmFMmloOlbHFKofBhfOfbhPBLkMPpblLmPoMFoHOKmfFhokHBfPKLhbBpklhMbOOFpHMolfOklKFBOPHkfkHpHLBMkOPlbmLopLLkKKOBmhFMFbHPFLKBbpBlpfmObFLHpbpflhpkmBFBmLmbfpKlHMBOkFPMfMBfpHbKllkPmkFbohHLfMKOHlBmKoPlpHLohBMhlkPbmPmLoMHpfLOmhOBFOHPObfLhpkMfkPOLmbKpokbMfOKFhmBokfPHBKLBmPMklbOpmLFMoOHlfmKohFfHkKMfbhLkpbMlpLOMMpFloLFOFFKHhoBfkhPKbFPlHLMblpOmlMFOOFHBFoKFbBlKkBPhbMPbpPbLlMOblllmooHFFHKKhfBHoBhBbPkLpfhpllOmmPFHlHHoFfKhHKBFbPPKflmpPLBMlPKFmmFooFMBPKoBMhBkKbPPbLLbhmolLmHomLkHoKHffhKPBBfPKLPblpLlpmMOlkbHmoFfohHKfBoPhkBfbphLbMLOPFMmloOfmHFKoBHhfkMbhPBLkplpPlLmpoMKhFmHMoMFhHLLLfkhoKbBooPMoOLFpHMhkOolkPkoKfOHBKOBkLKMkOPlbfoMOOPlFmPOBfHKBbHPfLKlhbHpKklMLpKBMHfKlbOKOBFPoLHLkBOpHLlMPpHfFMlOkFmmkllhPkFbopHOkkbbMPLlKMOOFFpPHomFbHoobKBkBMHpflKlbbbpLlKhFOlFkHmokMOkKbFpolHlbMopOlkhOOpFhmlohmhklbOpmLFMhOmlfmKohFBHkKPfbhLkpbMPlLpMmpllomHOfFKHhoBfKhPKbBLHpLMblpOlmMFOolbmfoKfhHBKKBPhfkLbppMKlMOOmllmoomFfHPKhlBhkkPBBPLLPMMpKlObmOFFoHmoffohhKFBkhPkbbLpplMMkOOFMmFoofHHfKKBhhfkkbPPbKLOkOMllmOomFFHPKHffbLkHBfPkLHbbpLlpbMOlFOHMoFfOhHKkBKHhkBbkphLbMkOplfmlpOfmHFKOBHhFkKBlPBkkMPpblLmpOKFlHpKmfFhokHBfPKLHbBpklPBbOLFpHMolfOhmKkBoPHkfbKpHLBMoOPlbmLppfMHlKpBmhlkoBBPfKKMhpBlKmPOBFLHHKMllkLkmBlPoLmbfpHlhbBmfFhmboLFbhMKLBOPmkFbopHLfMoOhlBmkpPFbHLKpBMhlkOBBPFLoMHpflomhOFFkHPoblLhpkMBLPOLMbFphlHBfOKFhmfokfhHbKoBpHMklbOpMLFMOOHlFmKOhFBHkKPfbhkkpBbPlLOMmpFlomHOFFKHhoBlkhPKbBLPpLMblphlmMFHkFmmFoKfmHBKkBPmbkLbpPbLlMpOmlKmopHFfHKKHfBhKkPBFPLKpMMpllpmmOlFomlofFKhhKBBkPPkKbLpPlMMlOOFmmFoofmHfKKBhmBkkbPPbLLMpOMlKmOomFFHoKmffhOkhBBPkKPbbpLlPmMOLFOmfoFlohHKfBoPhkfbkpmLbBLFkFMmLoOfMHFKHBHHfpBbHPBLkbbpblkmpoMlmHpKmfFhOkHBfPKLhbBpklPMBOKFpHMolFMHpKFBoPHpPKLBMhLLKbOPlfpMPplFHmOhKhpkobHPfOmKBbMOFLpMlpoHmKMflhOkmKOPOLmbfpKlhMBOkLPKhoLfPhMKLBOhbkFBomKLFMoOhlfmkoPFbHLOlfbhlkObMPFLoMHpflKmhOBFpMMobfLhpPBBlPOLmbFpolHfbHKmKmBokfPHbKLBpHFploppmLFMoOHlfmKPfKBpOKmfbhLkpLKBHhHkopOlomHOfKpffMFoKFoHLlbhpLMblpOBBKkLpmHpLbOmmKbFOOHofMMhHFBBkpBBHlhmooHFfbOpMLOMMhLLkbHoHFflMlOmmOFFoHHoflFbhoOBkPPkbbLpplMbhHOBBmOoofHHfmhopFBhKkmBPkHMpOMllmOomFFmoPHKOhKkhBBPkLPbbpLlpoFOoFOHmoFOMfmHPoPplKBbkpPLbFHbMphlLMKOHFhHhkMFBHkobbBPKkHBlpMmmoMFlHOMfohFLHfpkPmLhbBpkpBLLMopmlmMkLhfFKkBoPHkfKLBBhombOPlbmLopfMHlOPLmhlkmbHPfLKlBBKpPLOblpobLokflhOkmkPbLpLlpHOKpffmPlkmboLfpBkHOoHbBhPKBBOPkkObBpMmKOLFbHLKpkLfHHPKFbkPHkMBophLmfLFMHPobfLbHHKKLfPPMkkBhPfklfPlbmBokfPFmHpOfFFlhBBpmLFMomLPKLlmHOMlLmlolFBkpbMPlLOMmpFFofhMHFKLHoBfkhPKbBLPpoFllfplmMFOoFHmfoKlhBBMKBPhbkLbppMLlbBHmpHmhoHFfHKHbObFLHKkLPmLpMMplOPLKMppbLBpfkoFmHmkPhlkbbLppPhLLbbphlhMhpfFkHhoohBkkbPPbLLMpOMolHBpFFFHoKHkoFbHpKLMhhlKfBoPmFfMhpflpmKKKFFPLoFBHHlKOphLoMLOpFMFlMopBFhmhokFBHLofPBLkMPpbpPmPOFFlHOKmfFhooHpmPKkbbBpplPMmOLLpKPolfHhmKKBohfkfbKBfLfMPOPlBmLopfMmkhfBMhOkoBBPfLKMhpBlBmPOLFLHhKMfkhOobhlPokFbfPllhMBOkFPOHoLFBhMKkBOPmkFbopbLfMHOhlFmkohFbHLmbfbhpkObmPFLoMHhfmFmhOKFkmBobFFhpoMPbPOkLbFpolHbbOKLhKHokFfHbKhBphlklBPLMLFbbOHLfmKohFBMkBKfbhHkpBKPlkpMmPLOBmmOPFKmooBfkhPofLmPPkOblhPlmMFOolMfPooFKHBofBPhbkLbpkoLlbBOmlmmooMFfHKflfBhHkPBKPLkfMMPloFmMOOFomfoffmhhoFhKPPkkbLPKlMMlOOFmbpoOFlHfKpBhhBkkbPPbLLbbOMlkmOoMFFmpKHffhHkhfOPkLPbbpLlpmMOPFOmboFfohHOfBKPhkobkPfLbbpOpFMmloOFLHFKpBHhpkKBbPBLkMPpbPLmpObFlHOmlflHFkHBLPKLhbBphOkMBOMFpbbolfphmKmBohBpLbKphLBBKOPlBmLomKfHlKOBmFFkobmPfKKOopBLBmPOpFLMBKMfpkokmBmPohHbfpolhMBOkFMfFoLfphMmlBOPMkFfolOLfbfOhlPmkpfFbMLhhBMhMkOBOPFKPMHPlObmHOmFkMlobfLhpkMhHPOkObFPLlHMlOKlfobokFkHbmLBphbklbOpmLKFPOHlfmKMhFBHKKPfbfPkPBpPlLOMmpFlobHFOFKmKoBFBhPKmBLHpLMblPllmMmOokBmfpKfhHBofBPhpkLfBpMKlMOOmlMmoOOFfmLKhlBhkkPBhPLkkMMholOmmOFFomoofFfhhKHBkHPkbbLPLlMMMOOLMmFpmfHHfofBhFBkkbhPbLkMppFoKmOomFFloKHfFhKkhHkPkkkbbpLlpmMOlkOpkoFFFhHohBKhfkBBopPLbbBOplmmloOfmmFKoBHhHkKfmPBkfMPpblLmpOPFlHOKmfFhooHBfPKkobBPflPBFOLlhHMolFKhmOfBoPHkfbKphLBbfOPlmmLohfMmlKOBmhmkofPPfkFMhHBlkmPOPFLmLKMfPhOKmBFPokobfpOlhMkOkkPmboLFLhMKHBOHOkFbopHLfbFOhlBmkoPFbMLKpBMHbkOBpPFKoMHPflKmhOhFkmFobFBhpoMBlPOkpbFPflHbOOKFhmBokFKHboBBphbklBOpmLFbFOHLMmKOoFBMkKPfbHBkpBOPlKbMmPFlomHOHFKmmoBFfhPKbBLPpkPblpOlmMFOoLHmfoKFoHBofBPmbkLfppMLlbLOmlMmoPBFfmKKhfBHBkPfhPLkkMMhllOmmOMFomKofFmhhKBBkPPkhbLPklMMLOOLmmFooFOHfoFBhmLkkBPPbLLbLOMlKmOOpFFHoKHffHFkhBLPkLPbbhLlpmMpbFOmpoFFPhHOfBKPhkHbkPKLbbOOpLMmloOFpHFolBHHokKBmPBLkbOpblMmpoMFlHOKmfFHKkHBHPKLhbBpklPMbpFFpmmolfOhmKFBoPHkmbKphLBMKOPlbmLopFPHlKHBmhFkofHPfLKbopBLfmPpFFLMpKMflHLkmBMPoKBbfhKlhMBpfFPmhoLlbhMokBOPmKBboPKLfMKOhlBmkoPFMHLoLBMhlkObmPFLobPpfLkmhOBFkHPobfLHkkMBlPOLMbFpolHMfpFFhmLokfPHbOLBpPMKbbOPpLFbPOHkfmKohFHHkoKfbHOkpfMPlLObppFLlmHpoFKmmoBfkHOKbBMPpLMblpOlmMFpKFHmHoKfhHBKkBPhbKFbpPmLlMOOmlFmooHFmHKKhfBhKkPBbPLLpbPpllHmmOFFoMHoffKHoKBffPPKFbLhplMMlpLFmmMoolBHfOKBhhBKfbPPhLLBbOMLkmOomlBHooKffhKkhBBPkLPbMpLLLmMOlFOHmoFfoHPKffkPhkBbkpPLbMLpkFMmloOfMHFKmHFhfkHbhhmLkMhpblKmpOFKKHOKmfFmLkHBFPKLhkKpKLBMbOLFpHMollOkpKFBmPHkobKPpLBbkHLlBmPopFlHlKHBmhFofbmPfLKMHpBlkmPOBFLHpKMfLhOkmBFPoLHbfpKlhBoOkFPmbokfPhMKlBOBOMKbhpHLfMKbOpfLpMFKbHOKpBMhlPHKFfPhhkKpFlKmhOBOFlLoPfLhpkMkbfohBklBlOHLmMoPLlkMoHlHhKLBpPMpHKhmMhBLPbfPLLPMPpFfLmBFkhMkpbMPlOHkKBkpPLhbbpLlBmlOpbPKmBLPpLMlpBfPhLKHmpkLlMppbBlHmolfhhOLMPkLlMOOmoLlOMBoBlLmoOpBPKkBbPLLpLBbLPPLKbKPBBKpfkOfHHLpphKkbbLpppkLLbfPffOMKOMBLHMoLfHhpohPbLLMpOMllmOhfKFhbolffhKkhkBffPhKObpPhkfFHlOHmoFfoBLmKolBHhMKLBlPllKbOpmLoHOoMlLmhHPhPkKbhPBhFLhbKPFLFbFpOFHmFMKhOpmBfopklbBpklPlbMkphLFmHohFpHoLohLkfbKphOLLMbmPllkMoOfFOplfKhFkobHMLPMLHBFpKlmblOplhobFohOkmBFbMhhKlBFPblLbLOBlOmppBFMmFoPFfPFKKBkhbkPollomkoPFbfPHMofFoHoobmLlbblpflKmhmKOMlmmOoKFkHlMhPhLmbFpooMLFMPmLMLokfPHbpLFpMbolFphmolBohHkfBophkfMkphlbMkopFMHlLpMMpFlomHmpkfmooBfkhPhfKkfhhoKoffOBkfblphLlMppPHLKkBPhbhokMBohblmpBlFmooHpbFhMFHMhmkPBbPLpKklBKPBFmMlppLBkpfohhKBBkBloHbLpplMMlOOFmbKhoBKHfKKBhhBkkbPmmOLklplllmOomKklKmOOBFOmPBOPkLPbbMopHkBMLpOfFHkKoKkKOBKPhkBlPBOPBLKbkplloFfFkHFKoBHBfHkKMBphpklbMPFkOOKFlHOKmOKFKmbokfOhLkMbHbOMOOLFpHMMPOolbHmoPfHhFkpBBmMMkOPlbMKFPfMHlKOlLhFkobHHfpOMhpBlkmPObFPHpKMophpKbBFPoLHbfpKlhppOkFPmboKfpHBKlBMLHkFbopHLOMKOHlBmkoPFlBoKpBMhlKbbmPlLobBmLlKmhOBlKHPoBfLhpHLBLPOLmblpolHMfhKLomfokfPmKKLfPPMklbOpmLFMoOMlfmKohkBHkKPfbhLoBbMhLLOMmpFlomHOfFpHhoBfkMPKbBLPpLMBPpOLMMFOoFHmfoKfhHLKkBPhboLbppMLlMOOmlFmMoHFfHKKhfBhkkHBbPkLpbFpllOmmOFHLHHoFfKhhHKBKPPkbbppplMMlPOobmFoofHHfKKFBhBkkbPPbLKMpOMllmOomLFHoKHflhKkmBBPmLPBfpLlpMFOlLKHmoFfohHKfBKPmkBbppPLfMLPpFMmloPfmHLKolfhfkKbhPBLkMPpflLmPoMFpHOKmflhooOBfPoLhbfpklMFFOLFpHMpbfOhMKFBhbbkfbKphmoMkOhlbmLMbFbHkKOBMhFkobHhlHHMhpllkbBObFLHpOMflhOKBBFPPLHBMpKkhMBOkFMmboLfpmOKlFOPmkFbHpHLfMKPPlBbkoPFbHpKpflhlopbmPFLoMHpLlKMBOBFoHPObfLhpKBBlHmLmbkpolHMfOKFmmBoofPHbKLfhPMklbhpmkOMoOHlfbKohFBHOKPfFhLoKbMHlMLMmpKlomHOfLBHhpBKHhPKLBLPpLMfFpOkmMFOolfmfohfhHHKkBPhbkLbHpMLOMOpblFMooHFfHOKhlkhkkmBbPLLpMMpklOMBOFFoHHOlfKhhKlBkHBkbbLppkMMlOOlBmFoPfHmMKKFhhBkkbMPbLLMpPOllbOomFFHHKHffhKoPBBHkLPbbpplpMlOlLOHmoFmBhHKLBKhBkBbopPkbfMOPlBmlpmfmHkKoBHfokobmPBLKMPpblLBpBfFlHPKmFphoKmBfPKLhbBpolPMfOLFpHMPlfOhmKLBoHlkfBophLBMkOPlfmLoHfMHlKOlmhFkobMPfkmMhPflkMHplFkHhKMfkhOkmBFHoLHbfpOlhMFOkLKmboLfphMKKBOPmkFbopHKfMKOhllmkomFbMFKpFMhlkOBBPFLPMHhKlKmhOBFkHMobfPhpkMBlHOLmbFphlHMkOKlOmBpkfPHbKOBphFklbmpmKFMoOHlkmKObFBmpKPlbhLkpBFPlLHMmpmloMMHPFomfoBFlhPKbBLPpBoblpHlmMOOoFMmfpKhoHBKpBPhlkLfMpMLlBhOMlkmoObFfHPKhlBkfkPBFPLLHMMPFlOmmomFoHMoffOhhKFBkPPhkbkpHlMMPOOFmmFpohOHfKpBhhlkkfmPbKLOkOMlKmOOBFFMhKHlohhkhBlPkpPbbpklpMMOlFHfBoFfohHhfBKPHkBbpmmLbMLOphhmlopfmHFHmBmhLkKBFPBLkMPhbmBmpOfFlHhKmlkhooHpmPKLMbBpOlPbFOLlbmHolfPhmhOBoPmkfbpphLLFOOPlbmLmbfMHLKOffbkkobHPfHHMhpflkMHlBFLHHKMlphOkmBFPohFbFpPlhMBOkFPmbpLKhhMKoBOhfkFBbpHkllbOHlKmkpOFbHLKpBMKHkOBfPFLmMHpllKbhBOFkHMobfOhpKKBlhPLmbFpmlHblOKFhmBokfPHbKOBphLklbPpmKFMoOHlkmKObFBMoKPfbhLkpBfPlLPMmpLloBFOfFKHMoBpFhPKBBLHFLMbomhlmMFOoPpmfoofhHBHhBhhFkLbhpMLlMOhmhKmoObFfHpKhfPhkkPBbPLLHMMpklOmmOFFoHHoffPhhKoBkPPkbfLpplMMoOOlfmFpPfHMfKKBhhLkkbMPbKbMpPMllmOOfFFHhKHFphKKhBBPkLmbbhKlpMFOlFOHmoFfPhHKOBKPhkBfkpPLbMoOplfmlphfmMFKoBHhLkKbMPBLMMPhklLmpOfFllOKmflhoKHBfPPOMbBpklPkbOLFPHMookhhmKFBoFlkfbophLBLhOhlFmLoPfMHlKOlmMLkOBbPfkmMhPBlkmPObFLHHKMfkhOkmBFmoLHbfpplhboOklPmboLfphMKKBOhBkFbopHofMKOhllmkpfFbmLKpfFhlkObmPFHLMHpFlKmhMKFKHmobfkhpkMBlmOmBbFpPlHbOOKlHmBokfPHbKoBphBklbOpmoFMoOHlLmKpFFBmKKPfbhLkpBfPlLhMmpFloBHOfFKHMoBFHhPoBBLPphLbLphlmMkOoFHmfOOlhHBKpBPhBkLbppMkkMOOmlomoPFFfHKKhfBhkkPBkPLLhMMpllOmmOFFomfoffOhhKFBkhHkbbLPblMMoOOFmmFoofHHfKPBhhLkkBBPbkLMpOMlKmOOBFFHhKHfkhKkhBBPkMobbpklpmMMpFpmBoFfOhHKfBKmhOFbKpmLbbhOpLbmloOfmHFKPBHhlkKbhPBokMPpblomppkFlmpKmfFhokHBLPKLMbBpklPfbOLFpmfollbhmolBohBkfbKphLBOFOPlBmLopOLHLKhBmhlkobHPfoKBopflOmPpKFLmPKMflhOkmBkPoLMbfpKlhfBOkFPmFoLlBhMoLBOPmkFboPbLfMpOhlBmkPPFbHLKHBMHPkOBMPFLoMHpflpmhOLFkHPoblLhpkMBKPOkBbFpMlHMfOKFhmlokfHHbKkBphFklbOpmLFOLOHlFmKohOKHKKHfbhkkpbMPloOoBpFlpmHpOFKmHoBfkhPKbBKPpkBblpOlmfFOoFHmloKlFHBoKBPhbkLbpPBLlMhOmlFmoPHFfHKKmfBHHkPfBPLLpBOpLlOmmOlFoHHoffKhmKBBkPPbOBfpplMMlmPpFLBmhOfllhpObfkHkKPBLPOhHpkllmOomKklKmPObfhhMoLhLLPbbpLlpLLOLFpHmoFfohHKfFKLokBbKpPLBMLOPFMblHPfmHlKoBmhfkObhPKfhMPpFlLmpoMFLHOokfFhoohBfPKLhbfpklPMbOLLOHMolfOHbKFBoPHkffkphLBMkOmlbmLopfMMFKOBmhFkhbHPfLKMhBKlkmPObFLHpKMflhOoHBFPoLHbKpKlhMBOkLpmboLfpHLKlBOPmkFfKpHLfMKpFlBmkoPFbomKpfbhlkhbmPLLoMHLMlKmhOBFKHPobfLhpoOBLPOLmblpolHMfOoLBmBokfPfLKPBpPMkllhBFhBkhbfPlBfOfFBHkKPkFFlHkKmfkohKHpKlomHOfoPLLMBoPoOKKBLPpLMloBPpMkpbBpPlOLpfMHBKkBPfmhpoBfmLPMOOmlFFKbfpklFmLoMfPfPBbPLLpMMpllOMfHFmfHHBofKhhKBBkPPkbMLmOkKMlOOFmmFoofHMhPKokhLkkbPPbhhkhbbPlbboMHhmbKHffhKPbKpfOhMkBBFpHLlOLFHHmoFfofbHPOBfBKKbHpPLbMLMbpoLKMfObFMHHhkhkkKbhPBOhkpbmPOfpOoFlHOKmokFKHMoBfhHbkpBlPbOPOLFpHMolfOhmKFLofKkKbKphLBFObpphLlMhpmHoKOBmhFPhKffphPKPpklkmPObooFHMBoLFOPbBFPoLHBlomlhMfOkFMmboLfpmMKlBOPMkFbOpHLKMKpmlBmkoHFbmOKpBMhlkObmPFLOMHpllKmmOBkkHPobfkhpKmBlhBLmFFpolHMFOKFHmBOffPbbKLBphbklbMpmLMMohHlfmKoHFBmkKPFfhLOpbMPlLpMmPBloMKOflOHhoBfohPKfBLPpLMflPhlMMLOoFMmfohfhmFKkBPhFkLBFpMLlMOPblFmoOBFfHmKhfBhkKHBbPLLMMMpPlOmmOFFoHHoffOhhKkBkPHkbBLpplMMLOOLBmFopfHbfKKBhhfkkBMPbkpMpPBllmOObFFHhKHffhKohBBPkLHbbpKlpMlOllPHmoFfPhHokBKPhkBbkpkLbMKOplBmloPfmbFHoBHhlkKBPPBLmMPHbbPmpOBFlHpKmfMhoOHBfPKLmbBphlPMhOLkpHMolfPhmoFBohMkfFKphLBMoOPlmmLOlfMmkKOBmhkkobMPfLKMhhBlkmPOFFLHHKMfOhOobBFPokBbfPblhMBOklHmboLfMhMKPBOPmkFBppHLfMHOhlomkoPFbHLKpBMhKkOBlPFLpMHPfoBmHOFFkmmobfohpOMLoPOkbbFPhlHMLOKlmmBokfmHbKOBpPMklfOpmLFMPOHlLmKOBFBmoKPfbhOkpfFPlLOMmpFlomHOLFKHmoBfohPpbBLPpkfblPolmMPOokHmfoKfMHBKKBPhhkLFppMLlMhOmlOmoOOFfbKKhfBhOkPfbPLkhMMHllOmmOkFomPofFBhhoFhKPPklbLphlMMlOOLmKMooFBHfKPBhhkkkBHMOLkMMOMlHmOomFFmphkfFhHkhBoPkLPbbPKOFMbOPFOmLoFfohHKfHbPhkLbkPfLbMKOplMBmopFBHFoPBHhkkKFhBBLkMmpbLOmpOhFlHMLlfFhhkHBfPKLHbBpmlPMbPlFpHMolfOhmKFBoPHHobKphLBMkOPlbmLoppLHlKOBmhlkobHPfLKKfpBlkmPOfFLHpKMflFMkmBFPokbbfpKlhMBPLFPmboLfPhMKlBOPmofbopHLfMOOhlBmkoPlMHLKpBMhKkObmPFkpLbpflhmhpfFkHPoblLhpkMBOPOkFbFPFlHMfOKFhmKokfMHbKLBpPMklbOPFLFMpOHllmKohFBHkobfbhkkpBbPlLOMmpFlomHOFFKHhoBfkhPKbBLPPkbblpOlmhkpfFHmfoKKflkmfoKbfHKKFBkPhkHpBlFmooHFfFHKHffhkkPBbPLLpbMHmlpmMOFFOHHoffKhhoPBKPPkbbkpplMMlOOFmmFoofHHFKKBhhBMpBlPbLLMpmfphlpbbOlFPMBoKFOKbBBPkLPbbbPlPmMOlFpHmoFfomHbmBKPhkBbkpPLBMLOppOmloOfmHFKoBHhfkKfkPfLkMPpBlLmpoMFlHOKmfFhOkMBfPKLhkPpHlPMbOLoBLlMfKkFHHKoPBfkhbKphLBFMbOPFLOmPOHloPpoKFbkhbHPfLKMhbKlKmhObFLHpKMflmObpBFPOLHbFpKlHMBpkKLmBokfpHBKlBOPmkFffpmLfMKOHlBmkoPFbHLKpBMhlKKbmPFLoKhpklKmhOBpFFhMloHlOKKBlPOLmLFBKhbLPbPpLLbMlLkHOKLBpPMHPKofbPmkPbHpFlpMBlKmBKPfbhLPBKlfoOhkkbhPlLBblOhlpOKfphPKbBLffHlkPbmMKMMOoFHmfHpOhFfmHoOfLhOlhfBPOLpbfLhKhOkFfHKKhkmfKHfKmBmhmKlbopmfmOKFoHHofOlfHHoollMkkbLpplMFpbfppLKmHOMObKhBhhBkkKPBBPmkhBfOOmhomFFHompoFfmoffBPkLPbbmHPMLhMLpKlHmhohBMmBokFbPBkKBHhlhopbFMmloOofFlmpolfKHPfmPBLkMPPfMMmpoMFlmKKmfFhoKMBfPKLhbBpKlPMbOLLpHMolfOhmKFBohfkfBOphLBMkOPlOmLopfMmkKOBmhFkoBoPfLKMhPFlkmPOBFLHHKMflhOomBFPoLmbfpolhMPOkLPmboLfPhMKLBOhlkFfopHLfMoOhlfmkoMFbHLKpBMhLkOBbPFLoMHpflKmhOBFkHPobfKhpKFBlPOLmbFhLlHMFOKkfmkokfMHbOfBphbklBbpmLKFPOHlfmKpOFBHKKPfbfPkPBlPlLOMmpFlobHfmFKmBoBfPhPKHBLHpMPblpmlmMoOoFMmfpKhoHBKhBPhlkLbhpMLlBhOMlomoOfFfHHKhlBkfkPBLPLLMMMphlObbFFFomfofFFhhKBBkhHBBbLpMlMbbOOFmmFOpHmHfKHBhhpkkbPPbLPboOMlOmOpoFFHOKHfohKKbLlPkLPbbPMlpMbOlFHfBoFfohHoMBKPHkBBoLhLbMpOplPmloOfmmLBoBHhKkKBLPBLkMPPfmLmpOFFlmKKmfFhoKFhoPKLhbBPflPMBOLFhHMookhhmKFBohOkfbophkFpKOPlbmLOofMHlKOBmmLkobHPfLOMhpBlkmPppFkHpKMfLhOkmBFPoLHbfpKlHMkOkFPmbMBfphMKlBOPmkFMomhpKMmOhlBmkHMOMlhHMOBBoPOmBPMLoMHpfOPLmMfpllmMbokFhHlofBhHKpmpolHMfOKFhmBokfPkLKkfpPMklbOpmmHMoOmlfmKohFBHkoPfbhLkPbMPkLOMmpFlomHOfFoHhoBfkhPKbFLPpLMbLpOlMMFOpFHbooKfhHfKkfkhbkkbpPlLlMHmBlFmooHFHHKKHfBhkHBBBPkLpbbpllOmmhFOoHHoFfKhMKBBpPPkbkPpPLbMlOPFmmFooLHFfKKBHhBkObPPlLLMmmfllmOomlfHoKmffhKHfBfPKLPbBpLlpmMhlOOHmolfoHbKfBoPhkBkhphLBMLOhFMmloOLmFFKoBmhfkpbhPfLkMPPplkmpoMFLHOKmfFhokHBfPKLmbKpklPMbBlFmHMolfOFhHoObFBkLbKphLBMkOPlbmLopkMmlKOBmhFpOKMBOOpkPBkPlLMmfOplPMloHFPHFKKbHkBbfpKlhFfbopfLFmMFbhMKlBOFfHhKoBfhBLHOMlBmkoPFbHLKpbMbFoKbmPFLobMmPlommOBFoHPobfLhpHKBlPhLmbFpolHMfPKHomBopfPHBKLBHPMkpMKpmLkMopllfmoohFLHkKMkFhLkpbMPPLOMMpFloLFOfFpHhoBfkhPKbBLHhLMbKpOLbMFOoFHMlFofhHlKkBhhbkLbppMBBMOpflFmooHFfHKKhophkKbBbPpLpMMpllHFBOFFoHHOkfKhHKBfokhkbbHppLlMlOOFmmFlLfHHPKKfFhBkkbPPbLbMppKllmPomFLHoOHPmhKKLBBPKLPblpLlpMbOLlfHmohfoHFKfBHlOkBbmpPkFMLOPFMmHoOFfBkKoBHhfKpbhPfLkMMmFlLmpoMloHOKMfFmoLoBfPOLhbFpkLBMbOPMbHMoKfOHOKFBOPHklbKPbOlMkOPlbMbopFbHlOOPphFkPbHPFLKMMpBlhFBObFoHpOOflhpkmBLPokBlLpKlhMBPbFPmBoLfmBfKlBOPmKmbopmLfMKHblfmOoPFbHLKpBMhlhMbmPkLoMmpflKmhOBLoHPoFfLhhkMBlPOLmBHpOlHMfOoFhmBokfPHbKLBphbkLbOpmLFlHpPlfmKohKflPmMoMbKHhKlBLhlLBblpmLfbLFpHhoBfkhPHkBkPPLMblpOlmMFpoKKmFoofhHfKkBPhbkLflPbLlMOOMlFmooHFfHKKhfBhKKbBbPLLpHfpolOmmOFpMlMmFOKbhKOBkPPkbLobHhBLLbOoFFkHollHFPKfLhBkkbPBFhlkhbmPOLHMKpBFHmKfOhKkhBBMPhOkBbKPkLlMolLHmoFfohHHoBoPHkBbkpPLbMLPpHPmlopfmHlKoBMhfoKpoPBLKMPpBlLmMoMLpkhKmflhoKoBfPoLhblpklMFFOLFpHMoMfOhMKFfpkmkfbophLLMkOPlbbLhBfMHLKOBMhFkObHPfLKMhpFlkmhObFLHpKMflhOkMBFPpLHblpKlhMBOkFHmboLfphMKlBOPmkFbOpHLlMKOHlBmkpLFBHLKpfbhlkObmPFLoMHpfloMbOBFkHPMMFFhpkMBlMMhKKBbhOFLPbOpMLLhOOFFOmBKmHLkMbOpmLFlLbfpmlhMBKllfmloLFFHmKOPoLOMmpFOhLhbBpFBhOKfkhPKbLPfFhHkomMPKkLbPPBfLmMOLFHHpKffohmkHBKOHkhHMLKmooHFfMKhmfBhKkPBbPLLmMMPkOfmMOkFomboffKhhKBhMPPkBbLpHlMMkOOllofoofmHfooBhhfkkbPPbLOFHOMllmOOMFFHOKHlfBOkhBfPkLPbbpOlpbBHHFpmBoFfPhHKfBKPhBpbkphLbMoOplBmlpOobHFKOBHhFkKbHPBkollpBlompOBFlHOKmfFoBkHBFPKLMbBpolPMkfmFpmbolFKhmKlBoPmkfbPmMLBMkOPlmmLoPfMHoPhBmhFkoBmPfLoMhpBphmPOBFLHPKMflhOkmFLPoLmbfpOlhMBOkFMfFoLfphMoKBOPMkFboBFLfMoOhlBmkoPFbHLOhBMhLkOBbPFLoMHpfkBmHOBFkHhobfLhpkMBlPOLmbFPblHMfOKflmkokfPHbHlKOmhOBKPlfLkMoOHlfLLMBpokpoBfbhLkpLlfpPmkhBKPPkhOhFKHhoBkhFlmfKpbHhlKkBMPFkLbfllmfoKfhfKHPKmFlHlKhmfOkMOOmlFmooHFfHKKhpbhHkPBbPLPOLmmooMLlHKKhFfoofKhhKBLObBHfkkBKPlbKOOFmmFooMkHfKKBhhBkkbPPbKLMpOMllmOomFFHPKHlfhKkhBBPkLPbbphlpbMOlFOHmoFfohHKkBKhmkBbkpHLbMkOpFMmlOPfmHFKPBHhKkKbhPBKkMPpblompOfFlHPKmFLhokHBkPKkfbBpklPbfOLFpmlolfMhmKFBohMkfbKPfLBMhOPlbmLopmoHlKhBmhOkobMPfkOpHpBlpmPOoFLHpKMllkLkmBKPokBbfpOlhbFHMFhmLoLFbhMKlBOHbphbOPFLfMHOhlBmkOHKOHkoBBMhpkObmPFLolfpFlPmhOoFkHPobfLMBkMBlPOLmbFpOlHMfPBFHmBokfhHbKLBpPMklbOpmLlMOOHlfmKMklfHkKPfbBpHoKPfFPhkOmKPKLhblppfpmkoKFHHfomPHLMblpOlmLOOOFmmfoKfhHBKkfPMpkkbPpMLLMOOmlFmopKFFHKKhffhkkPBbPLLpMMpllpMlOFFoHHHKfPhhKBBkBfhBkmBmoMMmOOFmmFhMOflkhpoBFFHhKlBFPpBbphllmOomoLFHmPokfhHmklfphbKbBLpMLFkKlbHmoFfoBbmBoOfBpoKPBlFoMhOpFMmlhmOhFlHpoOfKhPFKPMLkMPpboPLFMHOoBMmKOLFPmBLLBMhLkHbpLoMbOLFpHMPOfphMKFBoPHkfbKhhLBMkOhlbmkopFfHlOOBmhFkObHPFLKMHpBlkmPObFkHpoBflhpkmBFPoLHbFpKlHMBOkFPbboLfpHbKlBpPmkLboPMLfMKOMlBmpoPFbHLKpBMhlkpbmPkLoMMpfkKmhOBFKHPoBfLHbkMBlPOLmbkpolMMfOKFhmBokfPHBKLBHPMkkbOPmLFMoOmlfmhohFBHkKPfbhLkpbMPLLOMmpFlOmHOfFKHhoBfkhPKbBmPpLMblLfLhMFOoFHFLMbOoFkmloMbBhmKKMfhFkLbHPLBFOLFfHKKhKBFLHmKOfOhFkmBflhmmOFFoHHoffKbmPBmPPPkbbLpplMMlOOFmFooMfHHfKKKffpHOKlBfhBLMHMlKmOomFFlkmfOOMfKFBBPkLPLkbppHkFbFpPBbfhFFhHKfBKbfPbLhMmPLkObmpoLfMbpBHlKHBHhfkKlMfbhfkpBfLMmpoMFlHOmlflhokHBfPKLhbBhkmKMbOLFpHMolFBhmOFPlPHkfbKphLBMPOPlkKmopfMHlKMBmhlkobmPfLPFMpBlkmPOkFLHPKMfobhkmBFPoKkbfpolhMBMhFhmboLfPhMKlBOPmpfbopmLfMKOhlBmkpPFbHLKPBMhLkOBkPFKoMHpflomhOfFkmbobFLhpkMBlPOkFbFpOlHMfOKFhmBokfhHbKLBpPMklbOpMLFMoOHlfmKphFBHkKhfbhkkpBbPlkOMmpFlomHOPFKHHoBfkhPKbBLPpkbblpOlmMFOoFHmFoKfmHBKkBPhbkobpPbLlMpOmlLmoOMKMHKKmfBhHkPBbPLKpMMpllPmmOLFomFofFOhhKBBOPPklbLpplMbkOOFmmKooFbHfKKBhhBkkbPPfLLMmOMlkmOomFFHoKmffhokhBFPkkPbbpLlpmMOkFOHMoFfomKKFBKPhkfbkpPLbMLOhFMmloOmhHpKoBHhfppKPBMhlkbbFPOPHOhFlHOKmKLfHHPKkBhhmLlBpPbkbbLOMlFoHfOhmKFBofFkFbKphLBMkOPlbbLfkfMHlKOBmhFkpbHHfpOMhpBlkmPObFkHpoLMphOKbBFPoLHbFpKlMMBOkLpmboLfpHbKlBOPmkFfKpHLfMKOmlBmkoPFbMlKpBMhlkhbmPFLoMHMmlomhOBFoHPoBfLhpoOBLPOLmblpolHMfOKFhmBokfhHBKLBpPMFKBopmLFMomkPblHMLOMFMmMoLBoHmKbfBhfkhbllPmHOfFKHhmKfKhhKbBLPpLMblPOooMlOOFHmFoKfhHBKkFLhBkLbpPbLlMOOmllmooHFfHKKhfBhkkPBpPLLpMMbmLbmmOFFofbMlOklFHFKKfHlObLhbLKMlOOFmFFMKpbFPmPoLFbHlFkhbLLMpOMohLmMPOllkmhoPfPPmobfLhMLbbkPhkFHlFMHmoFfobMmlokfKhkKlLkLbMLOpFMmloOlfBFMKfPhfkKbhMKPMkObloPLFbBpKlHhBoPFBHOKkfBklbBpklPFHMkpFlHHloplbmKhBhfkfbKphpKLKbKPLlpPLFoHlKOBmFbhOKlfbhbKbBkppLbpPFLHpKMflmhkmBFPoLHbfpKlhbFOkFPmBoLFbhMKlBOPmkFbopHLfMOOhlfmkoPFbHLKhBMhLkObmPFKoMHpflOmhOFFkmfobFKhpkMBoPOLMbFpolHMfOKFhmFokfMHbKKBphLklbOPbLFBfOHlFmKohFBHpPmfbhLkpfOPlLpMmhFmlmHOlFKHHoBfPhPObPBPpkBblpPlmMhOokFKLoKfmHBObBPhBkLbhpMLoFhOmlFmopKFfHoKhlBkfkPBfPLLpMMphlObmfMFoHMoffOhhKlBkPPhkbkpHlMMLOOFmmFpohOHfKpBhhlkkbMPbKLOkOMlKmOOBFFHPKHffmpkHBFPkLHbbpolpbMFbFOmboFfphHKhBKmfLkbkpHLbbhOplbmloMfmHKPPBHhfkKfFPBLKMPploompoMFlMFKmflhokHKoPoLmbBpolPMbOLFpOholfhhmKFBoPHkfbKOMLBMoOPlfmLoPfMHlOFBMhFkobmPfLKMhpBlpmPObFLbLoHflhOkmLlfHHBKBmOPmLkMKpkFFmkObFlmKfMhFkFbopHhfLpMHpHLfPoFbHLKpBMhlkOMmMfHKbBpflKmhboOKllMlFKhpkMBlhPbMbFpolHMkOKFhmBOoKlHBKkBphfklbOpmLFMFOHlfmKomFBHoKPfkklkpbMPlkpMmpllomHOfFPBMoBfkhPoBBLPPLMblbMlMMFOoFHmfoKfhMBBfBPhbkLbppMLLMOplHhmooHFfmBKhffhkkhBbPOOHMMpllOMoOFFOHHokkphhKBBkPPkbbkppkBpLOOFmmFopfHHfKKffOKkkbhPbLLMppbllmhomFFMKKHffhKkHBBPkLPbbhllpmMOlFPHmoFfohHOBBKPhkBbOpPLbMLOpFfmloOfmHLKoBmhfkPlMPBLkMPpblLmPoMFlMFKMfFhokmBfPKLhbfpklPMbOLFpHMolfOHoKFBoPHFLBbphLBMkmmPblkmHOlBmmmoPFFLBbmPFLmMhpBlkFLbLpflpmoOfFbfhBPPoLHbfmMhBLmMKpOlMmmomMpoOBOPmkFlmBkhbLPmfppLoMmplBomfooFbhHLHBOOPkObFPpLMKOFMHPobfLbHHKKLfPPMkkBhPfklHKlKmBokfPBFHHKPfHhPkmbBhKLOBBpKhMOFFBHkKPKbFBhPooBOhPKBFKLFmHOfFKfoMboOfhHhkLfkhbKHbmhbFFpfFHmfoKKFFkmpkmfLHKobBoPKLmPblFmooHFfFHKHfBhkkPBbPLLpBMlblOmmOFFoHHoFfKMfKkBkPPkbbpppLbMlOPFmmKhPfHHfKKfBhBkKbPPlOoMpOMllMpomFlHoKHoohokhBBPKLPbbpLkplBOlFOHmoFfoHKKffObLkfbopPLoMLOpFMmllffmHFKoBMhfkObhHBMfMPpblLmpoMFHHOOmPMhokHBfPKLhbKpkkPlfOLFpHMolfOHFKFfpbkkFbOphLLMkOPlbmLlFfMHlKOfbhFkpbHHfpOMhpBlkmPObFhHpOBkHhpKbBFPPLHbfpKlhlHOKFPmboKfpHbKlBOHoklbopHLFMKOhlBmKObFbHLKpOmhMkObmPFpfKfbMPKFmMkpKLbmLOoFmOpflPOLmbFMHhbLKbOoLlMMkpbllhoKMFBHpKfBBPobmpKlfmKohKoFPmMKFfpHhoLBHPhkFplLBmHOfFKfMMBoKfmHLLMfMhhKlkKLLMFOoFHlLMkOpFMHPKmFlKfbppMLlMOBHlFmOoHFfHKKhfBHkkPBbPkLpbFpllOmmOFFoHHoFfKhHKBBkPPobbLppLbMlOpFmmkooFMHfKKBMhBkobPPbLLMpOMllmpomFkHoKMffmKkhBBPKLPbBpLlPmMPlFOHmolfohmKfBhPhkKHhpPLFMLOpFMmLoOFbHFKoFhhfkKbhPBLkMPpblLbOoMFlHOKMfFhokHBfBFLHbfpklmMbOkFpHMOmfphmKFBOPHkfbKphLBMkOPlBmKopfMHllhfOhFkobHblPhkFbpPOLMMLpKBMHfKlLHKkBFPoLHlkBbPMkLMKpOlFmpfmhMKlBOPmhObOpmLfMKOhlBmkpPhhHLKPBMhLkObMPFkoFKpFlomhOFFkHPobfLmlKbBlPOLMbFpolHMFOKFhmBoKfPHbKLBpPMklbOpmKpMoOHlfObOBFBHkKPKkfkHkolBOmHMMpFlomHmPpfHHOKfhhPKbBLMHhmKbBohbfkmHlBmfoKfhFlHPolfhpLBFpMLlMOmBpPlOMMOFFpMbokFoOoBbPLLpMMpllOBfHFfbmLoffKhhPLKMfmHlkkBoPfLOmmlLmFoofHBKmLKHfFHfKbBlppMPOMllmOmkPfHOKHffhKhOKPPMLPbbpLPKLbMPpKlKMKOHFBHKOkhokBbkpPpKLkbFPFfpMopbBkmbokfmhPMlPOLkMPpbOflPMopffOHMOLFhlfBfPKLhbBpklPflHLmFmKolfOhmhFoKFbhPKPBLhbklKblbmLopfMHlKOKbbFPHBBPfLKMhMLpPkFblkbmlKMflhOPfKoBOhOkKBOOMFkmOoPoOohfphMKlKMFbHfKLMMOOFOHhlhmkoPFbfBmOoffLHLLmBMPOKkbKPOkPOPFkHPobkOFFmfKKfohhKBbHPbkkkhFhmBokfPHbKLBpPMmLbOpmLFMoOHffLkhhOPmFKPfbhLpHolfkhPkFBBPhlbbkpkFMmhOOfbKBBLPpLMLMkKLLMFOoFHFLMPOPFlmBLLmbMObHpMLlMObhpoLMplFfkPohfBhkkPLofphKkbBfPoLKMKoplhMBOPBhHfoofMHMbOpplMMlbkOMLKMbHkmkKKBhhBPHKpffhBLmMFPFFMMKOolMmHOBFOmbkBfLhlkmBOBHMkOlFOHmHOOBlbHPKOfohkoKpPLbMLOpFMmlhKkmFHKHBHhfkKlMfbhfkpBfpMMooMFlHOhlohFkHBLofbhmKlBpomLoMmpklFfHFBhmKFBoFBHBKpfbhFLMbOpKFpOBfMHlKOKlfohPoBfBhOfmbPlHmPObFLfpmPoLlfHFoLfPbLbfpKlhMBMhFhmboLfphMKlBOHmPLbopHLfMKOhkLmkOHoOHkKhBMHHkObmPFLoMHpflKmhOFFkHHoblLhpkMBlPOLmbFhhlHMfOKFhmFokfhHbKLBpPMklbOpmLFMpOHllmKphFBHkKPfbhLkpBbPlKMMmpFlomHpkFKHHoBFHhPKlLoPpLMblPHlmMlOoFHlooofhHBKoBPhbkLFphPLLMOOmklmoppFfHKKhfBhkkPBFPLLpMMHllOmmOFFoMmofllhhKBBkPPkbbLpmlMMlOOkmmFoofHHfOoBhHmkkbPPbLLMpOMlOmOomFFMoKHffhKkhBBPkKBbbpLlpmMOlFOmboFfOhHKkBKPhkBbkLfLbMkOpFMlpopfmHFKmBHhfkKfhMKLKMPpblLmppMFlHOKmfFhpkHBfPKLhbBhklPMbOKFpmBollHhmoLBoPHkkbKPpLBMkOPlbmLopFBHlKHBmhLkofHPfLKMmpBlomPpbFLHpKMflhOkmBLPoLmbfpHlhMBOKFPoBoLfPhMKlBOhfpkbopHLfOoOhlfmkoPOkHkKhBMhkkObmPFkpoFpflpmhPKFkHPoblLhpkMBKPOkBbFhllHBfOKFhmLokfPHbKMBpHMklbOPFLFMoOHllmKphFBHkobfbhpkpFBPlLOMmpFlPmHOKFKHmoBFkhPKbBKPpkMblphlmMFOoFHmloKfMHBKkBPHfkLbpPfLlBMOmlFmopHFfHKKMfBhOkPfhPLKpOPpllHmmOFFomKoflKfFKBBPPPkbbLphlMBlOOFmmoooFfHfokBhhBkkbPPFLLMMOMlkmOOmFFHoKMffHKkhBlPkLPbbpLlhmMOoFOHmoFFphHKfBpPhoKbkpPLbBLOpFMmKoOFBHFOlBHmfkKbhPLLkMPpblMmppMFlHOoFfFhokHBlPKKhbBpkLbMbOpFpmkolfOoKKFBPPHkKbKpmLBbkHLlBmKopFMHlKhBmhFhmbmPlLKMmpBlkmPhbPoHpoBflmpkmFbPoLHbfpKlmMBOOFPmboLLphMKlBPPmolbohpLfMKOhlBmooPFlHLKpBMMlkObmPLLoBmpfklmhpFlpHhoffLmOkMBlPOKmbFpolMMfOOFhmkokfPHbKLBHPMklbOpmLFBoOHlfmpohFlHkoOfbmLkpbMPKLObBpFLomHOfFKHhoLfkHfKbBLPpKMblpOLfMFOhFHbOoKlhHBKkBMhbkObphlLlBOOmlFmhoHFkHKoffBmkkPBbPOLpbFplLkmmpLoBHmoofKmpKBBkPPkbPmppLFMlOMFmmLoolHkmKKfbhBkpbPhbLLMphflLmhomFkHooBffmKboBBPOLPbFpLLkmMOlFlHmoLfohMKfBOPhkBkhphLFMLpfFMmloOlmkMKofbhfkpbhhlLkBPFhlLmHoMFKHOoKfFmmbbBfPpLhOopklhMbOoFpmFhKfOhmKFpMPHkFbKphPKMKOmlbmHopfMHlOOPphFkPbHPLLKbMpBkkoKObFoHpofflHBkmBOpkLHblpKHhMBOKFPmFoLfmBfKlBOPmMFbopmLfMKbflfmOoPFFHLKpBMHkMPbmPKLoBopflKmhOBFkHPoLfLhPkMBlPOLmbFpoLBMfOPFhmkokFPHbKLBHPMKkbOPfLFMoOHlfmpohFlHkKPfbHKkpbMPoLObfpFlomHPfFKHhoLfkhMKbfOPpKBblpOLFMFpOFHmfoKFmHBKkfBhbKHbppMLlbPOmlFmMoHlOHKKhfBhkflBbPOLpbkpllPmmpFKfHmoLfKmMKBBpPPkbkPpPLfMlpBFmmFoolHkmKKBMhBkObPhFLLBpFPllmhomFkHookffmHMMBBPOLPkMpLlPmMOKFOmfhkfohHKfokPhkfbkpPPkMkOHFMmkoOfmHFpolMhFkpbhHfLkMmpblLmpoMFKHOoBfFhokHlfPKLhblpkkhMbOoFpHMolfOHBKFBhPHkfbKHhLBMkOmlbbkopFfHlKHBmhFkobHfKLKMHpBlkLBOBFoHpoBflhOkmlFFPLHbLpKkHMBPFFPmboLfpHfKlBhPmkFboHHLfMKOMlBbKoPlHHLKpBMhlkhbmPKLoMHpfKKmhOBFOHPpBfLmKkMBlBMLMbkpoLBMfOKFhMFhMfhHlKLFlPMklbOhbblMopflfbhohFBHkKPHHhLKbbMPkLOMmpFlomoOfFhHhoFfkhHKbfKbFkbbppOLOMFOoFHmfOpfhHLKkBMhbkPbpPMomMppBlFMpoHFkHKKhoKhKkmBbPkLpMMpllOLlOlFhHHoPfKhhKBBhlokbboppHBMlOpFmmKooFBBLKKBhhBmobPPBLLMmmfllmOomPhHoKmffhKHfBfPOLPbfpLlpmMhlkPHMokfommKfBpPhkBbkpPLFMLOHFMmloOLmHFKofbhfoobhPlLkMPpblLmHoMFoHOKmfFMokHBfPpLhffpklmMbOOFpHMolfOKLKFBOPHkfkHpHLlMkOHlbmLopLMbkKpfBhFoObHhMLKMhpBlkmmObFoHpKMflMOkmBFPPLHfFpKkOMBOkFPmboofpHFKlBOPmOFbopHLLMKPHlBbFoPFlHLKpBMhlBbbmPlLoMHbolomMOBFoHPobfLMppBBLPhLmflpokpMfOKFhmBoOfPHFKLBpPMOlbOpmLkMoPmlfblohFBHkKPfFhLkmbMPlLOfmpFloMbOfLoHhOmfkhMKbBLPpLMpPpOlMMFOopFmFopfhHFKkBPhbOLfkPbLKMOPMlFbLoHFfHKKhflhkkmBbPLLpfMpllOMBOFLOHHOMfKhhKBBkPmkbbOpplMMlhOFmmFoPfHMFKKFOhBkkbPPbLoMpplllmOomLFHoKHfLhKkMBBhhLPbbpLlpMfOlFPHmolfoHBKfBKPhkBpHpPLBMLOppLmLoPfmHLKoBHhfOKoMPBLoMPhBlLbKoMFlHOKmfLhoKbBfPKLhFBpklPMfOLLPHMpBfOhmKFBoPMkfbPphLBMkhPlbmLohfMMLKOFPhFkofKPFLKMhpflkmPObFLHhKMflhOBKBpPoLHbfmpPPLMblpblFMOMHHhKlBOPmPLkHBPPkLhbmOlLpMbpblLHMoFHLkObmPFLokFpFlomhOBFkHPoblLkkkMBLPOLMbFpplHBfmOFhmfokfhHbKkBphLFpbOPBLFMoOHlFmKOkFBHkOpfbhLkpBbPlLOMmpFkKmHOfFKHmoBfkhPKbFlPpLMblphlmMFOoFHbBoKfhHBKpBPhbkLbphmLlMOOmlomooHFfHKMffBhkkPBbPLLpMMplkommOFFomFoffKhhKBFLPPkbbLPBlMMlOOFmbfoofHHfKMBhhBkkbPhMLLMpOMlHmOomFFHoFkffhokhBlPkLHbbpLbKmMOlFOHMoFfohHKfFBPHkBbkphLbMLOplBMOoOfmHFFkflhfkKbhbKPMkmbOpKLkMlbKmBKmfFhoPBKPfpHbkfBlpmLLfOFmHMolfOfBHhOffffBbofHLBMkOPlbmLopfMBlKpffhFkobHfOhOLHBBOPmMObFLHphLOFFKmfpKhBLHbfpKpMkbboppLLMOOFFHHOOOPmpFbmpHLfMKmbpklKMKOLlKbmfkhlkObmbfhHKBbmPbLpMkPKHPobfLhpkMBlpOOHfmphlHMfOKOblkMmOMBfKLBpPMklbOpmLKFoholkmKohFBfpMlObfpfpbMPlLOMmpFloBKHfBMmBoBfkhPPFolfkhmKkLfLlMFOoFHfLmhOplLHPoHhBkobppMLlkKbFPpLfOlFfHKKhkLFohhoKBmhokkfFlMmmOFFofbMBOFFPmFlOMMkbbLppkBHPOOlbmFOhfHHfKKFhhBkkbHPbLKMpPfllMPomFFHPKHfMhKkhBBPkLPbbpKlpMBOlFPHmPFfohHKlBKPHkBbMpPobMLOplBmlOPfmHKKolHhfkKbmPBkBMPpllLBpoMFlHPKmfphoKfBfmKLhbBpolPMFOLlpHMOkfOhmKkBoHfkfbKphKBbOOhlFmLoHfMmKKOFbhFkoBBPfkFMhpBlkMHObFLHMKMFfhOkmBFhpLHbfpHlhMMOkFPmboLfphMKKBOhlkFbppHkfMKOhlFmkOhFbHoKplMhlkOBbPFkLMHphlKMmOBFkHmobFOhpkMBlHOLmbFpPlHMLOKlMmBOofPHbKOBphhklbOpmLFMFOHlLmKomFBHoKPLbfLkpBfPlLpMmphloBHLoFKHMoBFohPKlBLmpLMblphlmMmOolBmfPKfhHBKOBPhKkLbMpMolMOOmlkmoObFfmKKhFFhkkPBlPLkMMMpllObmOFFomBoffPhholBkhHkbbLpMlMbbOOFmmFOpfHHfKHBhhMkkbPPbkKMpOMlPmOOhFFHoKHffhKkhBLPkkfbbpKlpMMhmFpmBoFFOhHKkBKmhpLbkpmLbbfOplmmlOPfmHFKhBHHkkKbhPBKkMPpblOmpOFFlmhKmFLhokHBKPKkObBpklPMbOLFpmFolfPhmKLBomHkfbKPbLBMKOPlOmLPpfMHlKHBmHLkoBBPfoKMhpBlpmPOPFLHmKMLlhOkmBKPoklbfphlhfBOkFPmloLfHhMolBOHbBlboPfLfbhOhlBmkpPhhHLKMBMhOkOfBPFkplkpFlHmhOHFkHPobFKBFKbBPPOkhbFpolHblmbFHmOokFOHbKLBpPMBHbOPFLFbbOHllmKOhkPHKKMfbHkkpBlPloOLmpFlhmHOMFKHmoBfhpBKbBpPpLMblpplmMHOoFHbBoKfhHBKkBPhbkLbpfLLlMOOmlFmooHFfHKMffBhkkPBBPLLpMMplPMmmOFFoHMoffKhhKBohPPkbbLpHlMMlOOFmLOoofHHfKPBhhBkkbPhMLLMpOMlLmOomFFHoOhffhKkhBFPkLPbbpLkOmMOlFOmBoFfohHKfFkPhkBbkpMLbMLOpLBFKoOFlHFobBHhfkKfhPBLkbBpblPmpOLFlHOKmfFhMkHBKPKLhbBpklPMbOPFpmBolfPhmKFBoPHkobKpHLBMKOPlbmLopfMHlKpBmhFkobHPfLKMhpfLLmPObFLpHoFflhOkmkKFBhHkKLblMMBOkFPfHmkOpoHKOBOPmkFKobmPPkObMMMMBoPFbHLhBolFophKkBhhlkBBlphLpBbFPHPobfLfbHbobfmhFmPphlHMfOKPFLFmKOPFpoFBpPMkllMBKhBLhmFpPLOMMpLBOmFoOFBhmKOhBLOMmpFoPkfblpOlBmMOpBmmlolBHhpKKOBLoMFOoFHfkmhoHFHHPoHBFppLHMMPmMmOmlFmombOplkmhOPPbkPBbPLLpMMplFOfHBlFoHHoffKhhKBBkPPBmbmpplMMlMhpHLLMKpflkmbopfkHbBfPbLLMpmlPflpMbOMFHmBPkHFkhBBPkplkhBBpMLkMLpLFBMKOKFMHKlKPhkBbkpPPkMkOPFMmloOfmHFOoPOhfkobhPfLkblpbLLflObFLHOohfFhokHflkbLhbfpklmMbOLFpHMolfOHbKFBOPHkfbKhhLBMkOHlbmKopFBHlOOBmhFkpbHPlLKbkpBkkmPObFKHpoBflhHkmBFPoLHblpKlMMBOkFPmboLfpHbKlBOPmkkboPBLfMKOhlBBFoPFBHLOpKBhlkMbmPoLoblpfLOFLOfFmHPoBfLhpkMBlKfLmbOpoLLMfOOFhbBfffPHkKLfbPMkObOHlLoMopFlfMOohFfHkopfbhOpHbMPlLOBbpFlOmHOkKpHhoBfkMoKbBkPpKMLkpOLlMFOHFHmOoKFmMfKkfFhbkHbppMLlMOOmlFmmoHFpHKKmfBmkkPBbPPLpbLplLbmmOFFoHHopfKhmKBBkPPkbbLppLLMlpBFmmLoolHHfKKffhBkhbPPLLLfbOMllmMomlMHoKmffHFkhBLMOLPbbpLkkmMOLFOmfhkfohHKfFlPhkfbkpMOFMLOpFMBBoOfMHFOokMhfkHbhPkLkbfpbLKFFObFhHOokfFhokHBfKbLhbKpkLFMbOKFpMMHkfOHlKFBmPHkObKphPKMKpFlbmKopfMHlKOHKhFkmbHPpLKMmpBkkoKObFPHpoLflhmkmfBHHLmbHpKKOMBOKFPmkoLfmBfKlBOPmObbopmLfbOlHlBmhoPFHHLKpBMmlhobmPOLobFpflHmhOBFkHPoKfLhHkMBlPOLmbFpoLFMfOOFhmFokfPHbKLfBPMkObOpmLFMoOHlfmMohFFHkKPfbhLkpbMPpLObkpFlOmHOomHHhoffkHkKbBkPpkBblpHOBMFOoFHmHoKfHHBKkFLhBkLbpPbLlMOOmlFmooHFfHooBfBhkkPFPhbLpMMplOLLHMkOOlOHfOFfHmpKPfHbObmpplMMlHhpkllMpomFLmPoBFFFOBPPbLLMpmKPOLkmMpBlKmkokBOHPobfppPkBBKPmfMOpFOHmoFkPBFmlKofOhkKbPfLbMLOpoMLbmppKFompObhOkKbhPBLkkBpBlkmpoMFlHOKmlFklkHBFPKLHbBpPlPBbFBFpmbolfphmKlBoHHMmbKpHLBMKOPlfmLpphPHlKpBmhlkoBbPfkKFkpflKmPOlFLHpKMflmFkMBFPoLmbfpKlhMBOkFPmbokfHhMKlBOPMKbbopHLflObBplLLMlOhBkmKohFFHmKhfKHKbFpflKmhmKOKlKMLopFHhlBPPOLmbFmMhfkbmlpPlLMOFbHbKLBpPMFhbOpMLFMoOHlfmKphFBHkKhfbhkkpBfPlKOMmpFlOmHOFFKHmoBFkhPKbBkPpkbblpOlmMFOoFHmfoKfHHBKkBPhbkLbppMLLMhOmlFmoKLFKHKKhfBFpHFKLffPMfppMlOmmOFoHlHmkoolbHkkpfFhLKfbMmFbBOOFmmFMhomFlmpObfkHmKMBFhlkkbmPkMbomFFHoKHLKhKkHBBPkLPbbpLkpmMOlFpHmolfohmKffKPhkBbKpPLFMLOpFMmloOfmHlKoBmhfkKbhHBLkMPpBlLmPoMFkHOKmfFhokmBfPOLhbfpklPMbOLFpHMoLfOhmKFBoPHkfbKpHLfMkOPlbBbOffMHlKOkhFfphKhfOhLkBbLlOmPObFLHpmLfLhpkmBFPoLHbfPKokMfOKFPmBoLfphMKlFFPMkFbopmLfMKOhlBmkoPFbHkKhBMhlkOlmPhLoMHpfOmlHMHpBfmMbopfMHFPHPMLmbFpoomLMbkPBlMMpfMHbKLBpPMhpbppMLFMoOHlfmKphhHHkKhfbhkkpBbPlkOFopllOmHOlFKHhoBfkmLKBBLPpkbblpOlmMFOoFHmfoofMHBKkBPKmkmbppMLllObpplkBMfplBhhMKBkMKlBbPLLplHbLPkLFHkpKlOMBOOFkKKBkPPkbloBOPPkFbPPBmooofHHfKKMlhBkKbPPbLLMpOMklmOomFlHoKmffhokhFBPkLPbBpLlPmMOKFOmmoFfohmKfBOPhkBbkpPLbMLOpFMmLoOfmHFKoBHhfkKbHhFLkMPpbKfmpoMFlHOKmfFhopHkoPKfMbopklPMbMPphlmMBKPBLPLFbPHkfbKphLBMkoPKMpFomfMHlKOkFFBHHKpPlLoMHpPlkmPObKoFPmHkKFoHpKMfBhBkKPHLlMBOkFPfHmkOmFlmkofBMhMHHpHLfMKOhlBhkMpKbbboBBMhlkOklBoPPKBBBPOBMBblfHPobfLBmmBKLfKHBKFbOPMLKbLOMLpllfMHbKLBpBfhHoFBFmKMPOHlfmKMpOklHkFfohLkpbMMLhKkBbPPKLMMKOPlooBfkhPKbBLPpoFllKhLlMFOoFHfLMkOolbmolmFMkpbppMLlFhbHpMLKMMPBmBKhfBhkPBKMfKPHklmpPfLFMMOhMFoffKhhpBKkPPkbbLPolMMpOOLbOloofmHfoBBhhBkkfPlhLLMPOMlLmOOPFFmphkfFhOkhBfPkLPbbPKOFMbOKFOmHoFfohHolkbPHkLbkphLbMLOpFMOHoOfMHFKhBHhlkKBhmPLKMPpbLBmpObFlmPfMfFhOkHBKPKLhbBhkmKMbOkFpmbolFBhmOFPlPHkFbKpHLBboOPLbBMoPfMHloBBmhlkoBMkFLKMHpBLkmPObFLMpBPflhpkmBlPokbbfPOOLMfOoFPmOoLfphMokkfPMkkboPkLfMKOhLFfMohFlHLoFBMhlkObmkhLoMmpflPmhOFFkmPPpfkhpkMfLPOLMbFHopHMfOKFhmookfHHbpLKpPMklbOPOLFMhOHlfbBoHFBHkKhfbhLkpbMPlLOMmpllOmHOfFKbKomfkhPKbLkfMHFKFMOPKLkbFOBLBMkOollKOBPhbkLbpBLLLMpOmlFmooHFfmKPkffhKkPBBPLLpMMplkFmMOFFoHmoffKhhKBBkPPkbbkphlMMlOOMhmPoofHHfPPoLFlHpkhBmPoLMlolPmOomFFfPHmoofhPBklbkLMbbpLlpmMMpFpHMoFfohHKfBKHhMHbkphLbMkOplBmlOOkoHlKOBHhFkKbhPBLkBLpBlLmpObFlHOKmfFhokHBfPoLHbBpklPMBOmFpHMolkHFFHlolffHllhMMpBMOOPlbmLopOLHLKpBmhFkobHPfkKFkpflKmPOBFLHpKMflmFkMBFPoLmbfpKlhMBOkFPmbokFPhMKlBOfokKbopHLflPBLPBlPhPFLHLKpBMBphpKpfoPHLfPblKmhOBKhllmmoOBbHookfhHflkBbPkLmMPBbmfBpfMHbKLBpFkHkkpBmfoMoOHlfmKohFBHkPPhOhpkpbMPlhOLMbhPpkbPHlbHhoBfkffHMoKfLHfKlbpPBLolBlLmfoKfhlLmLoOFLHfkhBlhkbMpLlFmooHKKlLHHoFFfHbKlKFkBMMpllOlBMlOmlfhKKpBhMbfbPPkbbLMBPlkomhpFLLMmOkFLHhKBhhkkbPPbOhLMBFoKLBMKOMFhmMoKFLhBBlPkLPbbMfpPLMBFlFHmoFfobMmlKhfbpmkKBkhLkKBlPmmHoOfmHFHPohFlHkoBfLPMkObLPBmpoMFlHOKmfFHbpHlLPKLhbBpkPBMBOkFpHMolfOhmOFPlPHkFbKpHLBbBOPLbBMoPFbHloFBmhFkoFFlLLKMhpBKomPOBFLHmKMfobhkmBFPooMbfpolhbFlKFPmBoLFBhMKlBOPmhmbopMLfMoOhlBmkpPFbHLKhBMhkkOBpPFkpMHpflPmhOOFkHPobfLhpkMBkPOkfbFpplHBfOKFhmFokfHHboFBpHMklbOPbLFMpOHLBmKphFBHkKHfbhKkpBhPlLOMmpFlpmHOLFKHhoBfkhPKbBkPpLMblphlmMKOoFHmfoKLhHBKKBPHfBkbpPLLlbfOmlFmopHLfHooFfBhPkPBFPLkhMMplLfmmOlFoHHoffKhhKBBHPPkObLphlMBlOOFmmpooFlHfKOBhhBkkbPPkLLMhOMlkmOPlFFHooFffmbkhBfPkkBbbpOoHmMOlFOMKoFfOhHKkLpPhkBbkhhLbMkOpLBOLoOFlHFooBHhfkKfhlHLkbBpblPmpOlFlHOmlflhMkHBlPKLhbBpklkMbOPFpmBolfPhmKFHLPHkObKPBLBMkOPLffmoPFKHlKMBmhFkobHbmLobfpBlmmPOBFLHmhfflhOkmlFPoLmbfPOMHMBOhFPmOoLfphMOlpBPmkpboPfLfMpOhLFmkoPFOHLKPBMhlkObmPFLoblpfLbmhOFFkMPobfLHBkMBPPOkbbFpolHMfOHFhmFokfHHbOPBpPMkpbOHmLFMOOHLFmKObKlHkKPfbMLkpBbPlkPpMpFlmmHpfFKHhoBlkkKKbBPPpkLblpmlmMFMmFmmOoKfmHBKkBPhbkbbpPLLlMPOmlLmooHmMHKoFfBhPkPBbPLkhlopLLBmmplFoHHoffKfoKfBhPPkobLpPlMMplMFmmlooFHHfKoBhhFkkbMMFLLMpOMLlmOoMFFHoOKfFhKkhBfPkLPbbpLlpmMOlFOmFoFfohHBPBHPhkBbkmmOkkKMPphlOLhFBHFKoBHFbhhoFHmhHPOFMLMBOhlOHOOMMOmHhBPLOOoblPFkkfblkpFkKOBfBmKLKFFfBPHkfbKphhlMKOPlbmLopfMHloPBmhFkObHPFLKMhpBkkmPObFkHpobflhPkmfLPoLHblpKLbMBOkFPMfoLfpHfKlBhPmkFboPMLfMKpblBmPoPFbHLKpBMhlkpbmPKLoMHpflKmhOBFkHPobfLhPkMBlPOLmbFpolmMfOKFhmBokfPHbKLLPPMklbOpMLhMoOHlfFBbBOmlkhPoMFhhMoBloLHMmpFloFObBOplKhBfhhPKbBLbMhHKbBoPBLmhFlPmfoKfhfKmLoKFLHfkMMKPHkHBBPfLHMPOkbfoffBhkkPLkflhBllBfpHlFOhFoHHofKmfHHHoBbmHbkpbMPFOmOOLlMboofHHfPMoBffhpKmBohlkmMfPFLmMhOKkhofffhKkhLhflhpkfHKBMmMOlFOHmoFOfhLPfhbhPkBbkpPOMkLMMpHfoMoOHlLmPkPfKhoKmBFhMfkpklLmpoMKHlhhfoofOHBmLhbLhbBpkOPLhMkPFllMkKblFHhphhPkfbKphOKLMbOplfPMFpBlKmHkBfPHBKOBkBLbMpBlkmPHOpFlbmoOfFfmfKobohfKfBKPBkFmOpPLfmkpFpfKHBOPmkFlPBOhBLpbKOLlMMoOLfpofBMhlkOLkfohLLmBbPkLLMLlHHhHLfPhpkMBlMmHlkoBkhBkLlblFmBokfPfbmBKPFohOKPfBPHbLOHlfmKHFOHlLHHoBFBPHKKBLPHkHBpPPLKOoFKHhoBKpFpHKKhfkhlbLPklmMFOooblFMlKflbmhkMfMhhKBBPPOLHPllPmooHFfBPmPObFopHKBfoPMOFpplOmmOFKPFmmMkHFPmKBKhFkbbLppOhkFbmPBlohMofBPPKfkhBkkbPMkPmkhblOKlmbbpOFHmMbphmkhBBPkhBKfBlPKlBHPKPMloHfohHKfLHFBhHKfmHhfLmbBpKLoMFFfHFKoBHbFHlKOfbfObhpblLmpmlpflLmHokFFPBoBfkhmKlMlPbLBbKOhLobLfOhmKFBoPHkfkKmhPPMmOPlbmLHpOmlKmfOffhHKKPlkkbMhpBlklfMMpKlLMfOlfpHBKoMokBbfpKlhlbbkpblmfmFLhMKlBObLhoKhMbPpkbbopLLoMbOmkPKpBMhlkObmPFloFhbhLfmhOBFkfKmMoofPHPklfLPMKhbHPMokOHFhmBokkmFMmBoOFBOKlOPlLFMoOHOoloMopkFPmmohhLkpbMPlLOMmMhookhOHFKHhoBKoFbHHolfmhllOBMPFkBbhPhmmoKfhHBhkobFbHLkMfBoBkhbmPLlObkbLHmKhfBhkPbKmBkPhkPbOpHpmOFFoHHoffKhhOHLkHBkobLpplMlbbfpLlPMhOklbHmokhMkkbPPbplkMBFpoLoMHpLBOmpolFbHBKMfplFbkpLlpmMmbpolBmmoHFBFbfKPhkBbkMFhLkfMPpHLFMfOffLmKohFkPKkHfFhpKppLlLmpoMKolomHOLFPhfBhPKLhbBmoPHLOMhpfLFMfomlBmkHkhFkfbKphOfkFbpPLLFMmmHHOKOBmhFPmkmBmhhkBLMlOmPObFLfKmbOlBmKhBFPoLHlpBbhbLmMKpHlPmpOhffmFomfhhKoKPFLfMKOhOKLLMKpLlfHMPFhHkObmPFOPkLbFPOlHMlpplbMfFHhpkMBlPOLmbFPhoHKBOHFhmBokoblbHOKPFFhOFlPOLFMoOHooLbMBOHFphpokBPHFKlfPkMbopFlomHHOOhLbHloPFHmkKmBHhlpMpOlmMFOoFHkfHokhHfKPBPhbkLKpBbPHkPBBLOMBoHFfHKhOoffHHOKOfOhMkFbOFBMlOFFoHHhLooFOHkooBhkBbkpplMMlMMFMmFoofHHfKKBhmBbfbPPbLLMpOMLPmOPlhkHoKHffHfkhBfPkkHbbpOoHmMOlFOmOoFfOhHKfKHPHkBbkphLbMLOpLMPKoOfmHFKoBHmlkKfhPBLkMPpblLmpHbFlHOKmfFhOkHBfPKLhbBhklPMbOkFpmbollfhmoFBoPHkfbKmoLBMKOPllmLopfMHlooBmhlkobHBoLoMhpBlKmPObFLMpBPflhOkmBFPoKMbfhKmoMBOkFPmboLkPhMplKOPmkFbomOLfFLOhlBlhohFbHLKpBMhlkOfmlMLoMHpflKmhpmFkbBBFfLhpkMlkPOLMbFPplHMkHpFhmBokLHHbKkBpPMhpbppmLFMOOHlfmKphMPHkKPfbhLkplhPlkPMmpFlpmHhbFKHhoBfkhPKbBLPpkBblpPlmfFOoFHmfoKLMHBOPBPhbkLbppMLlMpOmlFmopHFfHKKhfBhkkPlHPLkhMMpllPmmhBFoHHoffKhhKBBkPPkfbLphlMflOOFmmFooFHHfplBhhBkkbPPbLLMPOMllmOpmFFHoKHffhKkhlmPkkHbbpLlhmMhfFOHmoFfohHKfBKPhkFbkpHLbfLOpFMmloOFFHFofBHhfkKbhPBLkMhpblLmppMFlHOKmfFhokHlMPKkmbBpklHMbhFFpHMolfOhmKFBoPHklbKpmLBfkOPlbmLopllHlobBmhFkobHPfLKMHpBlkmPPbFLHpKMflhOkmLbPokMbfpKlmMBhlFPmboLfphMKlBOPmkLbopMLfbOOhlBmKoPLKHLKpBMmlkObmPlLoMmpfkFmhpFFkHPoffLmpkMBlPOKbbFpoLbMfPKFhmBokFHHbKLBmPMolbOpmLFMoOHlfmoohFLHkKHfbHLkpbMPlLOfHpFlOmHOfOHHHoBfkhPKbBLPpKMpbpOlmMFOoFHbBoKLfklKkBPhbHbbpPbLlbPOmlKfPoHFfHKmKfBhKkPBbBPLPMMpllOmmOFFoMHBmfKhhKBBkPPkhbLHbmfMlOOFmlmoofmHfKmBhhLpObPPbLLkLOMlLmOpbmlHoKHffbkkhBBPkLPkPpLlPmMOLFOHmoFlohHKfBoPhkfbkmoLbbKOpFMmKoOLbHFKoBHhfkKbhPfLkMmpblKmppMFlHOKMfFhOkHloPKKhbBpklhMbOkFpBBollOhmKFBOPHkFbKHbLBMkOPlbmkopFBHlKOBmhFkobHPfLKMhpBlomPOlFLHpKMflFfkmBlPoLHkopoLBMBOKFPmboLlpmpKlBmPmkobohBLfBKOhlBmPoPFLHLpbBMmlkObmPoLobfpfobmhPBFkHPoLfLhMkMffPOKbbFpoLlMfhoFhmBokfPHbKLBMPMkPbOPbLFBoOHlfmhohFkHkOhfbmLkpbMPpLObfpFLkmHplFKHhoOfkmFKbBLPpLMblpOLlMFpbFHmloKlhHBKkfBhbkPbpHbLlMOOmlFmHoHFKHKoffBmkkPBbPpLpblploOmmPOFoHHoKfKffKBBKPPOpbLpmOfMlOOFmFOoofmHfKPLMhBkkbPBOLLMPOMklFPomFoHooBffHLkhfFMMLhbKpLKfmMOlFOHmFhfoHfKfBmPhkFbkhPpfMLOMFMmOoOFhHFopkkhFkmbhmBLkMPpblLpFoMFOHOoLfFhpkHFfLFLhbkpkLbMbhpFpbLBKfOHFKFoBPHkFbKPmLBMpHmlbmLopOoHlKpBmmFPpbHPKLKbbpBLlmPpfKmHPokflHhkmBFPoLHPPpKLBMBOHFPmfoLlpfBKlBmPmkoboPPLfbOmLlfmHoPlkHLKpBMhlffbmPoLoblpflOmhPBooHPoLfLhMkMfMPOKblhpOLlMfOpFhmBoklPkhKLffPMkobOPbLFMoMOlFmhohFOHkKhfbhPfbbMPlLOlFpFlOmHOlFKmbhlfkhPKbLpPpkbblpOPlMlOoFHmfoKfhHBOkPKhbkLbppMLlblOmkOmHoHFfHKmhfBhKkPffPLLmlfpllOmmbFFoHmoffPbMKBBkPPblbLpPlMMlMMFMmFoofHHfKKBhmBbfbPPbLLMpOMLbmOPlhkHoKHffkPkhBfPkkfbbpOoHmMOlFOofoFfOhHolhoPhkBbkmpLbMLOpFMlMoOfMHFKOBHhfkKfhPBLkMhpblkmphhFlmPKmfFhPkHFlPKLhbBpklPMbOkFpmfolfPhmOFBoPHkFbKpHLBfhOPkbmLopFbHlKpBmMLkofHPfLKMHpBlKmPPlFLHpKMflhpkmBLPoLHbfpKlhMBOkFPmboLfhhMKoBOPmkFbolMLfMoOhlBlhohFLHLKPBMhlkOfmFpLobfpflhmhpLFkMPobfLhMkMBOPOolbFholHMfOhFhmkokklHbOLBpPMkObOPFLFbkOHLlmKohFoHkphfbhLkpbMPlLObFpFlMmHOlFKMhoBfkHbKbBpPpobblhOlmMFOmFHmkoKFpHBooBPhbkHbphKLlMOOmlFmooHFoHKolfBhokPFbPLLpbLpllMmmPlFoHHoffKHBKBBPPPkkbLhplMMlOmFmmoookHHfOHBhhBkPbPLfLLMPOMKmmOOfKkHoKHffkOkhBfPkKPLfpLlMmMOoFOmhoFFpBkKFBmPhoObkpPLbMLLFFMmOoOFLHFKpBHmfPObhPkLkbbpbLFmppBKHHpoLfFmPkHBfPKLhPppkLbMbOhFpmBollOkpKFBHPHkKbKmBLBBhfmlbmpopHBHlKpBmhpkoBBMLLKMhpBmomPOBFLMpHBflhmkmBKPokPbfPOOLMfOHFPMFoLfphMKlHfPmkoboPlLfMOOhkBFooPFLHLKMBMHfkOfbMhLOblpfLHmhOBFkHPFOfLhMkMBPPOkbbFhoOMMfOhFhmkoklkHboKkFhbkPbOHBLFMoOHkfoFohFOHkKMfbhmkpbMBbLpbFpFLbmHOFFKmfFKfkhPKbOlPpkbblpPlmMKHPFHmfoKpPHBKKBPhbhPbPpMLlMOOmlFmopHhmHKKhfBhkkPBhPLobOfpllOmmLoFoHmoffmhhKLLOPPkbbLkMlMMLOOFmlOoOfHHfKOBhhBkkfPmbLLMpOMllmOhKFFMoKHffhKkhBBPkkObbPKlpmMOkFObOoFfohHKfBKPhkBbkpHLbMKOplLmloOfmHFfoBHhFkKbHPBLpFmpblLmpFMFlHpKmfKbPkHBfPKfBbBpKlPMbMPFPHMolfOhmKFBoHHMmbKphLBMkOPlMmLPbhfHlKOBmookobmPfkOMhpLoOmPObFLOMKMfLhOkmKOPOLHbfpolhMBOkLPKhoLfphMKlBOHfkFfolOLfMKOhlBmkPBFbMLBkBMhlkObmPFOBMHhfmFmhOBFkHPobLbhpoMPbPOLmbFpolHBbOKkhlBokfPHbppBpmoklbOBlLlMoOHlFmKohFBMkBKfbhLkpbMPlkHMmhFmlmHOfFKHhoBlhhPObPBPpLMblpOlmfhOoLHKmoKfhHBKkBPmPkLfplPLlMOOmlFmoPKFfMKhmfBhkkPBbPLKLMMPkOfmMOLFoBooffKhhoFLMPhkFbLHFlMMlOOFmFMoOfHHfKpBhhfkkbPBkLkMpOMllmOomFFMoBOffhKkhBBPkkKbbhPHHmMOlFOhloFfOhHKOBKhbplbkpPLbHPOplbmloOOlHlKoBHhfkKbhPBKkOKpblLmpoMFlHMKmlFklkHBfPKLhbBHflPBkfoFpHMolbbhmKlBohMkfbPmMLBMkOPBKmLoPfMHlHMBMhFkobMPfLKMhhBhFmhObFLHpKMLHhOomBFPoLHbfpKlhMMOklHmboLfhhMoLBOPmkFbopHLfMKOhlFmkoHFbHLKpBMhLkObmPFLoMHhflKmhOfFkHhobfPhpoMBlPOLMbFpOlHfkOKlhmBokfPHbKPBphbklbOBlLlMoOHlfmKohFBMkBKfbhLkpbMPlLpMmhFmlmHOfFKHhoBLfhPOkBpPpLMbloklmMlOolMmfoPkMHBKkBPOHkLbPpMLoFhOmlFmoKFFfHoKhfBfhkhBbPLLhMMpllObmBbFOHHoffKhhppBkHPkbbLpplMMlOOlhmFOpfHHfKOBhHfkkbPPbLLMpOMllmOObFFHpKHffhKkhBfPkLPbbpLlpbMOlFOHMoFfOhHKFBKHhkBbkphLbMkOpKFmlOOfmHFKoBHhFkKbHPBLkkBpBlLmpOBFlHOKmlFMokHBfPKLhbBPFlPBbOLFpHMolfOhmoBBohMkfbKpmLBBbOPlbmLopfMHlKOBmhLkobMPfLHMhpBlkmPKmFLHPKMfLhOKfLkPoLHbfOLlhMfOkFMfFoLfphMKlBpPMkFboBFLFMKOhlFmkoPFbMLBkBMhlkObmPFkLMHhfOOmhOBFkHPobFFhpoBLHPpkbbFhflHMfOKFhOpokfPHbKKBphBklfOlpLFMoOHlfmKhFFBHkmBfBhkkpbMPlLOMmhFmlmHOFFKHHoBfphPoblMPPLMblmBlmMlOoFHlooofhHBKoBPhbkLfplPLlMOOmlFmoOpFfMKhmfBhkkPBbPLkoMMPkOfmMOLFoMKoffKhhKBhMPPkbbLphlMMkOOLmKMoofHHfKKBhhOkkbPBkLkMPOMllmOomFFMoBOffhokhBfPkLMbbPLolMbOlFOBkoFfOhHKfFBPHkBbkphLbMLOpFMmloOfmHlKOBHhfkKFKPhLkMPpbOFLOHLpbFpMBoPfphmobBmLMbBpklPMbMPFPmbolfOhmKFBohHOhbopHLBMKOPlbmLoplOHLKOBmhlkobHPfLoMhpBlkmPObFLHpobfkhOkmBFkBkbbfpKlhFpbOKhfboOfphMKlkHfHHfKlPkLfMKOhkBFooPFBHLKpBMhLkOfbMhLObbpflOmhOBFkHPFOfLhPkMBKPOkbbFpmmkMfOoFhmKokfhHbKkBphFpKbOpmLFMmOHlFmKObKlHkKPfbhHkpBbPlLOklpllOmHOfFKHhoBfkoOKbBkPpkbblpplmMFPfFmmfoKfHHBKkBPhBkKbppMLlFOpolFmooHKLFMmLoHfpphKlBOPMkFpLLbmmOFFofbMBOLFpHkKOfMkkbLpplMBlFLFmmloofHHfKoBhmBPobPPBLLMPOMlkmOOlbOHoobffhKkhBfPkLhbbpLkOmMOlFOHmoFfohHKfKFPHkfbkpmLbMkOpFMMmopfmHFKOBHhfkKbhPBLkMPpBlKmpoMFlBOoLfFhokHLKfLPHkFBfPbLlKHlFHMolfOBomooLfHPfKkfFPkkoOMlbmLopfMFpKpBMhFkobHPfLKBhFHlkmhObFkHpoBflHOpoBlPOLHbFpKlhMBOkLLmBoLfpHbKlBOPmkFbopHLfMoOMlBmkoPOpHmKpBMhlPOKpBlHBkfBlohFMmBlhmBobfLhphFoFfohpLfBkKoMkOKFhmBHpOpFMmBfFPMklbOpmpmMOOmlfmKohFBHkOPfbhLkPbMPLLOMMpFLomHOfFoHhoFfkhPKbBLPpLMbLpOlMMFOoFHmfoKfhHFKkBPhbkLbphMLlMOpblFmpoHFFHKOhfBhkkHBbPKLpbBplLOmmOFFOHHoLfKhmKBBkPPkbbLppLbMlOOFmmFoofHHfKKflhBkkbPOoLMMpOMllfmMpOolmHmOkFkHmkLbkfmbFpLlpmMbfOmLLOPflKkkFmObOhFlkkPpKBoKLFokfFFhhoLFooOhfkKbhPBLkMPObolkOOFFlHOKmOpfOHkokMKkfbBpklPFFHPphlbMBomMPfObPPpFkKMlfHpPkPPlbmLopfMFpKpBmhFkobHPfLKbfFplkmPObFOHpobflhpkmBKMPLHbfpKLbMBOKFPmlhofphMKlFoPmklbopHPoMoOhlBmKoPFbHLOpPPhlkObmPFLoMmpflHoLOBFkHPoOfLhPkMBLPOkflkpolHMfpbFhmfokfMBFKLBpPMoFbOpMLFMobFlFmKohFFHkKPfbhPbFbMPlLOBHpFlOmHOFFKmbhlfkhPKbFlPpkbblpOPlMlOoFHmLoKfhHBKhPphbkLbpPMLlMpOmlFmoOBKLHKKhfBHkkPBBPLLmlfpllOmmPfFoHmoffKFfKBBkPPkBbLpplMMlbpFmmFoofMHfKKBhhBkkbPPbLLMmOMllmOpbFFHoKmffhmkhBBPkKPbbpLlPmMOLFOmboFFphHKfBOPhkLbkpPLbbKOpFMmKoOFBHFKoBHHlkKbhPLLkbFpblLmpoMFlHOKMfFhhkHBfPKLhbBpklPMbOLFpmbolFPhmKFBoPHkobKphLBbomllBmkopFlHlKOBmhFLPbHPfLKMmpBlKmPObOPHpKMflhOkmBFPoLHkhpKlhMBOoFPmboLfpmOKLBOPmklbopHLfMKOhlBmkohFBHLKpBMLokMbmPFLoFmBkPlFBmlokHmobfLhpkMKpPpLMbFpolHMfOKlhBPoKfhHbKkBpPMklbOhoLlMoOHlFmKohFBHkKPfbhLkPbMPlLOMmpLlomHOfFKlkoBfkhPKbBLPpLMblhFlMMFOoFmmfoKfhHBKkBPhbkkBfpMLlMOPllOmooHFfBHmLoHFpHbofhPkkMMpllOlBbFOOLlMbohFbPFoofbhBkOLFLPMlOOFmFkMoomlOmLoBfLPkKlBhPpkHFFlpmOomFFfoHmOlfhHpoLMkLmbbpLlpFhMLpOoKObfohHKfkpfhhfKHBOPLLOmHpfLkmpOmlkomfOhfkKbhblhkLhBKPFlMMFoolomHoMFPHKBHPKLhbBMOPPLBbhpollmokhfMmkobmkkfbKphKBopOPlBmLopfMHoKOBmhFkobMPfLKMhpBlkbPObFLHhKMfkhOkMBFHoLHbfpOlhMFOkFHmboPfphMKLBOhPkFbOpHLlMKpbolmkoPFbmfKpfbhlkOKlPlLOMHpFlKmhOBFkbBoBfKhpKBBlPOLmfFpolHMlOKFmmBoPfPMbKLBphBklbPpmLPMoOHlfmKoMFBHkKPfbhLkpbMPlLpMmpklommOfFPBMoBfkhPOoBLPPLMfllLlmMlOoFHmfoPfhHBHhBhhfkLbppMLlMOPmHMmooMFfHOKhffhkoPphPLLhMMpklOMLOFFmkpoffohhoLBkPhkbbKppLFFKOOFmmFOhfHHFKKfbblkkbPPbKbMppbllmOMlFlHOKHfFhKkhBBPkoBbBpKlpMBOlFOHmpFfohHKlBKPmkBbPpPKbMLOplBmloPfmHpKoBHhfkKbMPBLkMPpblLmpoMFlHpKmfkhokmBfPPOMbBpklPBoOLFPHMplhLhmKlBoPHkfbPphLBLhOhlfmLopfMHlKOFmLMkobMPfLOMhpflkbPfhFLHhKMfkhOKBBFPmmpbfpolhBFOkFhmboKfpHFPKBOPmkFfppHLFMKpbolmkoPFbMHKpfbhlkOKlPlLOMHpFlKmhOBFkbBoBfKhpKBBlPOLmfFpolHMlOKFmmBoPfPMbKLBphBklbPpmLOMoOHlfmKoMFBHkKPfbhLkpbMPlLpMmpklommOfFKMkoffkhPKBBLPpLMblpOlmMFOOFMmfoKfhplKMBPhbkLLlflhBkOmmPfLMMfpllBoffBhkkPLBffhOKlBfPHMfOFFoHHofoHhHKfBkPPkbbLppkMObOOFMmFoOfHHFKKfhMPkKbhPbLKMpOMllmOpoFlHoKHfFhKkhBBPkLPbbpLlPMbOlFOHmOOFkhHKfBKbpHbLbfbPHkLHHpmLFMLOflfmMoPhLkKbhPBLkkBpBlkmpoMFlHOKmFFbfkmBFPKLHbBpklPMbpMFPHMolfphmKFBoPHkfbKphLfbfOPlbmLFlFbLFKMBmhFkoLBfBhmkpbkppLLOOFLHpKMkKFBhMoLbPHBkFBPPMHOplFPmboLKbFomfKHblhhKpfbhkFpblppLfmMhLHLhMfOhlkObmbFhKkkBbPPFoMpOHlFMlLbhMkMBlPOPlklBlhfLKfPlBmBokfPflmlohFfHFhKPKLFMoOHoLlMmHpFFKHmOlfpHhFpPpLOMmpFOmlmMmphlBMlKPHmKbBLPppPkOBbpMLkBBoBLBMmOpFpmlofBFHmKHfFPOkkHmlKmooHFffLHHomfPOLBbPLLpMMbplpmMOFFoHHoffKmhbHBkPhkbbkppLOMlPOHpmFoOfHHFKKfKhBokpKPbLkMppbllMbomLOHHKHfFhKKFBBPKLPbLpLlmFfOlFOHmopfohmKfBPMMkBbkpPkkMLOPFMmlmMfMHlKoBHhfkKbhHBMfMPpBlLmPoMFKHOOmPMhokMBfPKLhbHpklPMBOkFPHMoLfOHbKFFoLOkfbophLfMkOHlbbLfkfMHLKOBMhFkMbHHoLhMhpflkMPObFkHpobflhHPBBFPoLHBfpKlHMBOpKmmboLfpmfKlBpPmkFkmpHLFMKOHlBmkoPFbMKKpfbhlkPbmPFLobBmLlKmhOBLMHPoBfLhpHLBlPpLmbFpolHMfOKLmmBoKfPHfKLBpPMkolhpmLFMohklfmoohFBFhKhfBhLkpbMPlLOBmFMlommOfFoHhoPfkmPbhBLPPLMbLpOLOMFPoHOmfoofhHfKkffhboPOHpMLLMOhKlFmOoHFFHKobklhkkPBbHmLpbbplkOopOFFOHHoffKHLKBFkmPkbbkppLbMlpBFmbFoofHHFKKBHhBkpbPhfLLMppfllmMomFFHoKHffhKkHBBPOLPbfpLLbmMOlFpHmpKfohmKfBoPhkLlOpPLbMLPmFMmLoOFfBkKoBHhfombhPfLkMPbklLmPoMFLHOKmfFhooMBfPoLhbFpklPMbOOKHHMolfOMKKFBOPHkfkHphLfMkOPlbmLopfMMkKOBMhFkpbHPfLKMhPPlKmPObFkHpKMflhpkmBFPoLmbfpKlhMBOkFPmboLLOhMKlBOkKklbopHLflMBPlOmkoPFbBOmFOfFohpKhBkPHkKpolKmhOBohFhmhOpfMmfPHPpLmbFpopkKBpLFhmBokKBFOmFKmbLhHKPfBhKFPbLpPLFMbmMHmKPfbhLPpKmfKhfKfbhPKLPOLFKHhoBfkhPKbBLMpMFBbpOlmMFmMOmlPMPKflbmoLmfohmKkBFfOMOOmlFmooHFfMPPhpBhKhbBoPLLpMMMOPKFbbLpKlomKOLPlKHBkPPkbLKbPhBLHbHPKBHpoKllBmkobOlkMbPPbLLlHbhpLLLMpoflkmOOPFFkhBBPkLPbbpLFpfmpplbHmoFfofbHFKHfBpkLOMPFoMmOpFMmlbbOHlLmFObFfhokMBkmPMPKFlOmpoMFlfHmFOPFhfPBkPKLhbBbOPbLObBLbmkolfOhmPLoBflPBKLBohpmbOPlbmLopfMHlKHLmpPkmbHPfLKFMBbPfLpbfkoLOooflhOkmobBOhlKbBbhbkkMppbFLoPfphMKlLPFbHfKFBfhbkBOHlBmkoPoPbbKMBMhlkOklBlhlKfbKbLmMOBFkHPmmoplBoLBhPOLmbFBhPhkLbPpmlpMlOffLKpBpPMkllhBHPMkKbMHkMfohFBHkhKoMfohPKPblhLLMBhpHLMMmFKHhoBfkhPKbLFMpPlbPpOlmMFmmpflLMPOPlFpohlHbkLbppMOhkmbPplLkMhOPFPhmObFLHMkbBkhhKFkfLbmmOFFoffMboofmHHKPBMkFbLpplMMlOOFmmFoofmmkKKBhhBPHKpffhBLmMFPFFMMKOolMmHOBFOmbkBfLhlkmBOBMmMOlFOHmoFfoHLPfBohkkBbkpPOlLmbHpfLFMKOhFoHPOBLkKbbhPBLkFmbopkLhMbOKlHmFOLKFkHBfPKLhbBpkKMFbLFlBHMolfOflHhoPfkhlKFBBflbfOPlbmLHhOblkmfOfFhpffHblPokmbkokMKObFLHphoOKbpHhKkBHHbKkBkPmlbMhkkmloLfphMmBKpFfhPBmPlLfMKOhOBLfmhpOFpmhOffmkpbmPFLoLpPolMmhOBFkfomBomFoPMKLfPHfmMpolHMfpOfHmBokfPmbKLBpPMolbOpmLFMoOHlfBfohFBHkKPffhLkpbMPlLOMmpFlomHOfFOHhoFfkHBKbBLPpLMBkpOlMMFOOFHmkhpfhHBKkfHhbkkbppMPpMpOmlFmOoHFfHKphplhkkPBbHmLpBbpllOmmOFFoHHolfKhhKBlkPPkbbLppKoMlppFmmFoofHHfKKBMhBkkbPmbLLMpOMllBfomllHoKHFohKkhBBPpLPbbpLKpmMOlFOHmphfoHmKfBKPhkBbkpPLLMLOpFMbloOfmHFKoBHhfoHbhPBLkMPpblLmhoMFLHOoffFhokHBfpfLhbfpklPLkOkFpHMopfOhmKFFoMMkfbKphLBMkPMlbmLopfMHkKOBmhFkobHHfLKMhpFlkmHObFpHpOBflhOKfBFmKLHbfpKlhMBOkFHmboOfpHBKlFOPmkFbppHLlMKpflBmkoPFbHLKpfBhlkpbmPOLoMHpFlKbOOBFKHPoBfLhmPfBlPOLmfbpolmMfOPKMmBokfPPFKLBPPMklkMpMLLMoOmlfmKohlFBMKPfFhLopbMPlLOBmpFloMbOfFpHhOhfkmPKbBLPmLMblpOlMMFPoFHmfohfhHBKkBMhboLbppMLOMOpFlFbKoHFfHKKhflhkKbBbPKLpbMpllOMbOFFmHHoLfKhhKBBkPHkbbKpplMMlpPFmmFoPfHMfKKBhhBokbPPbLoMppfllblomLFHoKHfkhKkhBBPKLPfbpLlpMlOlFOHmoKfomHKfBKhBkBbPpPKoMLOpFMmlohfmHoKoBMhfKKbhPBLoMPpklLmHoMFlHOKmfLhoKbBfPKLhBFpklPMFOLLpHMolfOmmKFBohbkfbpphkhMkPPlbmLomfMHlKOBMhFoobHPfLhMhpBlkmMObLLHpKMfOhOKFBFHPLHbfpKlhMlOklbmboKfpHMKlBOhbkFbmpHLLMKOhlBmkoHFbHOKpBMhlKPbmPFLPMHhflKmhOBLkHPobfohpKfBlHlLmfFpolHMkOKFhmBoKfPMbKLBphlklbOpmLKMoPHlfmKOBFBHPKPfOhLkpbMPlLhMmpolomMOflKHhoBfohPKkBLPHLMblpOlmMLOoFmmfoKfhbBKkBPhfkLFFpMkLMOOmlFmooMFfHOKhfBhkOPBbPLLhMMhHlOMMOFFoHHoffOhhKlBkPPkbFLpplMMkOOkKmFOOfHHfKKBhhFkkbMPbLLMphMllmOObFFbBKHFFhKKmBBPkLHbbHBlpmMOlLOHmoFfphHKlBKhMkBbkpPLbMoOpFMmloOfmMFKoBHhLkKbMPBLPMPPflLmpOlFlboKmfFhokHBfPKLMbBpPlPMfOLLpHMolfhhmKkBohFkfbKphLBMpOPlKmLopfMMlKOBmhKkoBBPfolMhhBlkmPOlFLHmKMlfhOomBFPokBbfpPlhBoOkLPmboLfmhMKoBOhkkFBppHLfMHOhkfmkoPFbHLKpBMhokOBlPFLpMHhflKmhOLFkHMobfPhpkMBlPOkBbFpPlHMkOKLhmBokfmHbKoBpHkklbOpmLFMpOHllmKomFBHkKPfbhokpBKPlLOMmhFlomHOLFKHMoBFLhPObBLPpkfblphlmBLOokFmfoKfMHBlHBPhBkLBlpMLoFhOmlFmoklFfHoKhfBfhkhBFPLkfMMpllObmfMFomboffphhobBkHPMhbLpHlMMKOOlbmFomBPHfKOBhoMkkbhPbLoMppFoKmOomFFpkKHfFhKkhKKPKLmbbpmlpmMOlLMKBoFfPhHMKBKPHkBbHpPLlFoOpFMmlbmfmHlKoBHfokobMPBLoMPpblLBpOKFLHhKmFLhoKOBfPKLhbBpOlPMfOLFpHMOkfOhmKKBoHFkfbKphKBMkOPllmLomfMmMKOFbhFkoBfPfKpMhpBlkMHObFLmbKMFOhOkmBFhpLHbfpmlhBlOkFPmboLfphMKoBOhLkFbppHkfMKOhllmkpoFbHOKpBMhlkOBBPFkbMHpflKbhfHFkHmobfohpKmBlHOMpbFpPlHMLOKlOmBphPmHbKoBpFPklbppmLHMopBoLmKohFBLfKPfBhLkpKLPLLhMmpllomHOfkKLMoBfOhPOOBLhlLMblpOlmMkOoFMmfoKfhbBKkBPhFkLFFpMLmMOOmlFmoObFfHpKhfBhkOPBbPLLHMMhHlOMoOFFolFoFfphhKLBkPPkbFLbplMMKOOkKmFOffHHkPpBhhBkkPlPbLkMpOMppmpOBFFHOKHffhKOhOlPkLmbbhmlpbbOlFOHmoFfPhHKlBKPhkBFkpPLbMoOpkomlOpfmHFKoBHhLkKbMPBLkMPHblLmpOfFlbfKmFlhokHKoPoLMbBpplPMbOLkpFMolfhhmOhBohmkfbPmMLBMkOPmOmLoPfMHlHMBMhkkoBkPfLKMhhKHOmPOFFLoFKMfLhOOFBFPhpbbfpKlhOpOkFhmboLObHbKKBOhbkFbopHofMMOHllmkOHFbMMKpBMhlkOBBPFLpMHpflKMmOBFkHMobFPhpkMBlHOLmbFphlHMkOKLKmBOofPHbKpBphHklbOpmkLMoOHlomKpMFBHkKPFfhLkpBkPlKhMmpFlomHOfFKmboBfHhPKfBLhpLMblphlmBbOolBmfoKfhHBKOBPhokLbppMKlOLOmlkmoObFfmkKhlBkfkPBFPLLHMMPolOBlOoFombofPMhhKfBkhLkbbOmHlMMlOOHkmFoOfHHkPpBhhBkkphPbLkMpOMppmpOBFFHOKHffhKOhOlPkLmbbhmlpMOOlFOHmoFfPhHKlBKPhkBFkpPLbMoOpkomlOFfmHFKoBHhLkKbMPBLkMPHblLmpOfFlbfKmfHhokHKoPoLMbBpplPMbOLkpFMolfhhmOhBohKkfbPmMLBMkOPmOmLoPfMHlHMBMhkkobmPfLKMhHBhOmPOFFLbFKMFLhOkmBFPokbbfpOlhMBOkkPmboLfHhMOHBOhMkFbopHLfMpOhllmkoPFbbLKpBMhKkOFKPFkOMHpfpHmHOlFkHMobfLhpOMKlPOkBbFHBlHbFOKFhlKoKfmHbKOBpPMklBPMKLlMhOHLPmKohFBmofhfbhpkpfPPlLOMmpFbLmHOoFKHmoBfkhPKbBbPpklblpPlmMLOolMfPooFfHBplBPhbkLbphfLlMHOmlKmoOFFfmKPkffhOkPffPLLmMMplpMmMOkFoHHoffKhhOBPfPPkFbLpHlMMKOOLmKMooFbHfKpBhHOkkfPlhLLMHOMlKmOpoFFMmofffhpkhhOPkLhbbPklpMFHKFOHmoFmbhHKFBKhbplbkpPLbPoOplbmloOOlHlKPBHhLkKbhPBokPPpblomppBFlmlKmfFhokHBLPKLHbBpklPfbOLFpmfolLfhmKHBoPHkfbKpMLBMoOPlbmLPpfMHlKhBmmhkoBKPfLKMhpBlOmPOFFLHpKMLlhOkmBkPookbfPBlhMBOkFPmFoLfmhMKlBOmmkFboPbLffbOhlPmkoMFbHLKpBMpMkObMPFLokFpFlpmhOlFkHPobLLopkMBKPOKbbFhblHMfOKFhmlokfhHbKLBpmMklbOPBLFfBOHLFmKohFBHkKmfbhKkpbMPloOMmpFlPmHPPFKmHoBfkhPKbBoPpkfblpOlmfFOoFHmLoKLLHBoKBPhbkLbpPfLlMHOmlFmoPHFfHKKMfBmMkPfBPLLmMMpllOmmKmFoHmoffKFfKfBOPPkBbLpplMflBhFmmkooLkHfooBhhBkkbPPFLLMhOMllmOPmFFHoobffMbkhffPkLPbbpLlHmMOKFOHmoFLohHKfBpPhopbkPhLbMLbblbmKoOFfHFKoBHMfhKbhPlLkflpbLkmpOFKKHOKmfFPFkHBFPKLhkKpKlmMbOkFpHMolLOLBKFBPPHoPbKPHLBMkOPlbmoopFBHlKOBmMFkobHPLLKfLpBLKmPObFLHpofflhhkmBFPooHbfpKlMMBPMFPMBoLfpmLKlBhPmkKbopHLffKOhlBmOoPLOHLoPBMhlkObmPkLobfpflKmhPBFkHPoFfLhHkMFpPOLmbFpoLbMfOOFhmfokfMHbKLBpPMlMbOpMLFMobFlFmOohFfHkKPfbMLmHbMPkLOfKpFLOmHOfFKHhoFfkhHKbBLPpoMblpOLbMFhBFHMFoKfhHBKkBHhbkobppMLlfOOmlFmpoHLPHKoHfBhkHBBBPKLpbFpllOmmhFOoHHolfKMLKBfKPPkbBMpPlMMlOpFmmFoofHHlKKBhhBKhBfPbLLMpmfPFLKMhOoFPMBkfHlkhBBPkpHkLBFpmLlbkohLfmoOoFHHKKPhHkBbkpPLbLPOPlbmloOfmHFKoFHLmkKbHPBLKMPpflLbpmBFlHpKmflhokmBfPHFfbBpOlPMbOLFPHMomfOhmOfBoPHkfbophLBMkOPLMmLopfMHkKOBmhFkofhPfLKMhpllkmPObFLMOKMflhOKfBFPoLHbfhklhMBOklbmboLfphMmpBOPmkFbopHLfMKOhkbmkoPFbHPKpBMhlkOfHPFLoMHpOlKmhOBFkMpobfLhpKKBlPOLmbFhKlHMfOKlLmBokfPHbfmBphbklbhpmLLMoOHMMmKohFBHKKPfbhLkpfOPLLOMmpllomHOfFOMfoBfkhPOPBPPpLMblmhPHLMbKpMBLooFbHBKkBPbkHlKofFfKMHOmlFmomBpPlKmBohhkpPBlPLLpMMMKppLlMooHmFoffKhhhlopBhHlKpBHMoMoOOFmmFMMOMFFmKBHhLkkbPPbpokFBOpOmhomFFHoKHffhKKbLBMkLmbbpLlpLHMOPbBmohfohHKfKpfPHFKLfbhlLmboplmKoOfmHFKoBHhfLKlPOPLkMPpblLmpoMLmBOpOfohokHBfMphPkHBLPHBhOkLfHMolfOhmKFBoPHpfboPlLBMkOPollmMHpFFLmKoBfoOFBlPfLKMhMbPPLMMhOmlomlfLHbkmBFPopBKlbohFLpblpflpoPfphMKlLhfFHBKhBfhlMopFlBmkoPokFmmHoofkHLKFhOLhMHpflKlbMkpmlMHLfLhpkMfkpbLmbLpokbMfOKFhbBokfPHfKLBhPMkmbOhbLFMopblfMHohFBHkKPfbhLkhbMPkLObbpFKomHOfFOHhOkfkhMKblLPpLMbkpOkfMFpKFHBfoKfhHFKkfHhbKlbpHMLlMOpblFmpoHlfHKphfBhkkHBbPHLpbhplLPmmOFFPHHoFfKhhKBFkhmkBboppLfMlpFFmMLoofHHkKKfohBkkbPhfLLMpplllMfomFFHooMffhKKfBBPMLPbbpLlpmMOlFhHmoOfohMKffKPhkBbopPLmMLOHFMBloOfmHLKoFFhfkhbhhFLkMPpFlLMHoMFlHOOmfFhoKbBfPpLhbPpkLHMbOLFmHMOpfOhmKFBoPokfbpphLFMkOHlbBLmpfMHKKOFFhFkhbHmfBHMhpllkMMObllHppMflhOKBBFhpLHBBpKKhMBOkFmmboKfpHMKllOPmkFbPpHLpMKpOlBMooPFbHOKpfbhlkObmHFLoMHpklKMbOBlbHPOffLhpKlBlhLLmbFpoLMMfOKlfmBoMfPHbKLfhPMklBbpmLhMoOHlfmKohFBHpKPfKhLkhbMhlOFMMpkloMPOfFPHhPBkphPKFBLHbLMbKpOkbMFOolBmfOpfhHBKkFPhbkLbmpMLoMOpolFMpoHFfHhKhFKhkkPBbPLLpMMpolOMbOFFpHHPffKhhKLBkHbkbbOppKMMlOOlfmFOhfHmBKKlhhBkkbMPbkKMppmllBOomFFHhKHflhKKhBBmkLPbbpOlpMKOllkHmOLHOhHKKBKPHkBbkpPKbboOPllmlomfmHHKofMhfkKBfPBkfMPpblLMhoMFlmbKmfhhokHBfhOLhbBpmlPMOOLFpHMolfOhmKoBohLkfbOphkBMkOPllmLOofMHOKOlmhFkoBBPfkHMhpKlkMHObFLHMKMFKhOkmBFHoLHbfphlhMkOklLmbOKfphMKpBOHlkFbopHLfMfOhlkmkoHFbHKKplMflkOBFPFkHMHpklKBhLKFkmbobFOhpKmBlmOLmbFpHlHblOKlPmBPkfPHbKpBphBklBOpmoFMoOHlKmKOlFBmFKPFfhLkpBLPlLpMmpFlobHOfFKmfoBfhhPKpBLhhLMblPblmMMOoFHmfOOfhHBKmBPhOkLbppMkkMOOmlhmoOkFfHKKhfBhkkPBkPLkFMMpklOMmhHFOmfofFLhhKKBkmPhbbLpMlMbpOOlMmFombFHfKHBhhBkkbhPbLMMpOMkFmOomFFHoKHffhKkhoKPkLPbbpLlpmMOlFOLloFfohHKlBKPhkBbkfBLbMLOplfmloOfmHFmmBHhfkKBbPBLkMPpbPPmpoMFlHmKmfFhokHFBPKLhbBpKlPMbOLFpMmolfOhmKLBoPHkfbKhPLBMkOPlFmLopfMHlmMBmhFkobmPfLKMhPFOOmPOKFLmLKMflhOomBFPoklbfpmlhMoOkFPmboLFfhMKpBOPmkFbopHLfMmOhlFmkoHFbHLKpBMhPkObMPFLOMHpflKmhOBFkHhobfLhpkMBlPOLmbFPflHMfOKHbmLokfPHbhFKPfhhOlOPLLFMoOHoLLkMpOKFMmfOFhkKfbMPlLOlBbPpOLkbbppFHMokkHfKbBLPppKkHBHOmLlbpPBmFohfhHBKkkMFbpHKFfFMMMOOmlFmooHFfHKPhkBhOkPBbPLOhkbBooOMLOFFoHHhoObFmHkLKFFhLmHpMlMMlOOollhMPpBlLoHffhBkkbPbKPpLPbMPFLKmOFFHoKHffomkhBBPkLPbbpLlpmMOlFOHMoFfOhHKfBKHhkBbkphLbMkOpllmlpOfmHFKOBHhFkKbHPBLkMPpblLmpOBFlHPKmfFhokHBFPKLHbBpklPBbOLFpmbolfphmKoBoHHkfbKpHLBMKOPlpmLPbfMHlKpBmhmkobmPfkbMhpLoOmPObFLmLKMfLhOKfLkPoLHbfhflhMfOkFPlkokfPhMKkBOPmkFboBpLfMOOhlBmkoPFbHLKpBMhKkObMPFLoMHhflKmhOlFkHmobfphpoMBlPOkBbFpPlHMkOKFhmBokfMHbKkBpPMklfOpmLFMhOHlkmKOBFBMkKPfbhOkpBFPlLPMmhFlomHOkFKmboBfMhPKbBLPpklblpplmMFOoLHmfoKFBHBKPBPhLkLfppMLlMmOmlomooMFfMKKhfBhPkPBLPLkFMMhllOmmOoFomfoffHhhKBBkPPkBbLpMlMMLOOlfmFoofHHfHBBhhfkkbPBkLkMPOMlLmOomFFMoBOffhokhBfPkkbbbhLmkmMOLFOHMoFFfhHOoppPhkfbkHPLbMkOplKmloHKBHFKoBHMfkKbHPBLkkBpBlkmpOBFlHOKmfFFLkHBlPKLhbBpklPMbOLFpmfolfphmKFBoHHkfbKpMLBMOOPlLmLppfMHlKhBmhkkoBBPfLKMhpBlpmPOBFLHpKMllhOkmBKPokBbfphlhBBOkFPmloLfmhMKkBOHmkFboPBLfMPOhlOmkoPFbHLKMBMhLkObmPFKoMHpflhmhOkFkmboblLhpkMBOPOkFbFpplHBfOKFhmkokFbHbKHBpHMklbOPFLFMHOHlomKohFBHkKhfbhpkpBbPlLHMmpFlomHmhFKHHoBfkFBKBBkPpkbblpOlmBFFlFHmFoKfHHBKPBPmbbBbpPbLlMpOmlHmoPFhLHKKHfBbPkPBBPLLHMMpoohmmOFFoffoffohhKBKhPhkBbLphlMMlOOFmLboofMHfKKBhhBkkbPPbLLMHOMlLmOomFFMoKHffhpkhBlPkkbbbhLlpmMOKFOmBoFfhhHKfBKPhkLbkphLbMLOpLMmloOFfHFKhBHhKkKfhPBLkMMpblOmpOBFlMOKmfFhhkHBkPKLMbBpklPMbOpFpmbolfOhmOFBoPHkKbKPBLBMPOPkbmLopFlHlKmBmhLkofHPfLKbBpBlPmPOFFLMpKMflhmkmBoPokFbfpKlhMBOKFPmLoLfPhMKoBOPmkFbobKLfMoOhlBlhohFBHLKPBMhlkOfmlMLoMmpflomhOkFkMPBhfLhPkMBLPOkobFhmLfMfOoFhfhokfhHbKhBphFpKbOpmLFlFOHlFmKObKlHkKPfbBMkpBbPlLOklpllOmHOlFKHhoBfkBpKbBKPpLMblpOlmMFOoFHmLoKfHHBKkBPmbkLbpPfLlMhOmlomopHFfHKKMfBhOkPBlPLLpMMpllHmmOlFoHHoflKhhKBBpPPklbLpMlMBlOOFmmKooFBHfKOBhmBkkbPPlLLMmOMlPmOomFFHoofffhokhBBPkKPbbpLlMmMOOFOmFoFlokOKfBhPhkkbkpHLbBLFkFMmOoOFFHFKMBHmfbFbhPkLkbbpblPmpoMObHpKMfFhHkHBFPKLhBPpKlPMbOkFpHMolfOhmKFBoPmkLbKphLBoppllbmLopKMlbHpOKfoHpLfbLpKPppplkmPObKPFPmfoObhhMobbKhPBoPBlhMBOkoBlBmooMBfHLokfFHLkOPkLfMKOhlBlBohFBHLKpBMhlkOfmPFLoMmpflomhOfFkmPobfLhPkMBkPOLmbFpolHMfOoFhmfokfPHbKLBpPMkkbOpmLFMoOHkfmKohFFHkKHfbhkkpfMPlLObbpFlpmHOlFKmhoBfkhhKbBoPpkBblpOlmMFOoFHmFoKfhHBKkBPhbkLbpPmLlMOOmHKmPoHFfHKmOoffHmpBkPLLpMMmpPfLpbKOHlMkpFbhhKBBkFfhMKKBLhfklMppBloMfFBHfKKBhfOHPKfBLPMMMOMllmOMmOllBmMOLbpkHBpPkLPbbMfpPLkbfpfLfMoohFflLBHPhkBbkMMPBkKbBplLoFfFOHFKoBHbOhhobMlPmklbhpOLhMlpfBOokfFhokHLMBhhMkOMkphkfbOmFmFolfOhmmbKOFBhphLPhLBMkOPooLpMKOblfmooKfKPpKhfBhPlhbfPoLMflFHHpKMflBOHHokfBHBkPBkPpMfpfFPmboLKHFMHLObfhhokhMHPPkFbBPlMhoMFbHLKpohfLHbKhHKLoMHpfLOpkOBFkHPoofLhpkMfkPOLmbFpoLoMfOKFhbBokfPHbKLBpPMkobOhbLFMoOHlfMkohFBHkoHfbhLkpbMPOLOMmpFLpmHOfFoHholfkhPKbFLPpLMbLpOlMMFOpFHbfoKfhHfKkBhhbKFbphMLlMOOMlFmOoHFPHKKhfBhkkhBbPKLpMMpllOmmOFFoHHoffKhmKBBpPPkbbLppkmMlOpFmbOBPfHHkKKfPhBkKbPPkLLMmmfllmOomlfHoKmffhPpMBBPkLPBMpLlPmMOlOMHMoofohHKfBKPhoBkHpPLLMLOMFMMboOlmHFKoffhfkhbhPmLkBPpblLMboMFoHOoofFmokHBfPHLhbKpkLoMbOLFpHMoOfOHFKFBmPHofbKphLkMkpblbmhoplBHlKOfFhFkObHPfLKbmpBlkMbObFkHpKMflHPkmBFPmLHBBpKlhMBOhFPmbopfpmPKlBpPmkOboPBOLMKOhlBbfoPFBHLKmkfhlkObmHfLoMmpfLOOHOBFPHPoBfLhpkMfkLOLmbopoLhMfOKFhMFfkfPHlKLffPMklbOPlbOMoOHlfMFohFfHkKHfbhOpHbMPlLObppFlOmHplmoHhoBfkHFKbBLPpLMfkpOlmMFOpFHmfoKfhmPKKBPhbkkbppMLlMOOmlFmoomFKHKKhfBHHkhFPhBLpMMplOHkbMlpkLbMfooFmHkolBmHObkPllMMlOOoFlMmHpFFFmPoPFFPpLPlkLLMpOMllmOomfFBKPMffhKkhBBPkLPbbpLLpmMOlFOHmBHfohmKfBKPhkBbkPPLbMLOPFMmKoOfmHFKoBHhfkobhPBLkMPpbkLmpoMFLHOKMfFhPkHFoPKLhbfpkLkMbOkFpmbolfHBBKFBoPHkHbKpHLBMkbBlBmkopFbHlKOBmMFhobHPFLKMmpBlPmPObOPHPobflhPkmBFPooHkfpKlHMBOoFPmLoLfmBfKlBOPmKfbopmLfMKbflfmKoPFBHLKpBMMlhObmPlLoMMpflPmhOBOhHhoBfLhhkMBlPOomkFpolmMfOOFhmLokfPmpKkBpPMkLbOpmLFMoOHlfmKoHFlHkKPfbHPKBbMPlLOFMbhPLfmbbpblOmPfHhPKbBLbhhlKBBohlLobPHBmOoKfhHBPHObfmPfKOBFhKMmOmlFmooHbpHKKHfBhkkPBbPLKpMMpllpmmOlFomboflKhhKBBKPPkBbLphlMblOOFmmloofmHfKKBhhBkkbPPbLLMPOMllmOomFFHoKHfFhOkhBBPkPbbKpLlpmMmKOpllmokHfbhfMMhFkBbkpPOfLmbBomLfMLpKHKKoBHhfkKKfPfLKMPpblLmpoMLlKLKmflhokmBfPoLhBBmblhMBOLFhHMolfOhmoHBOPHkfbophLBMkOPlbmLopFbHLKOBmhFpoBOPfLKMhmfPPLMMMoLlFmfoMbhhMokfbkbbfpKlhMBMhFhmBoLfphMKlBOhmOHbOpmLfMoOhlBmkoPlpHkKpBMhLkObmPFLOMHpflKmhOBFkHPobFBhpkMBlPpkFbFpolHkfMopLLFMOmOHFKLBpPMpHKhmMMHMOHHlhmKohFBBHmbOlBohMoBfphfkBboKFMlOfFKHhHBOffhmOKpfhHfLOPblmMFOooBlKMppblFmLOlmPkpbppMLllMMMpMLHMfloHMKhfBhkpHKBfoPMlMbLPPkffKlBHHoffKbMHOKKfHhBkoBmPlkkBolOmFoofHBOHhObblhmKlBhPOkhblPfMMOOFFHoKHkmFkhMKfffpPkhbkhFLlbkMKmKoFfohHPFoLFbhpLOBMPMkfbpLmmloOfmHFHmBmhfkKbhPBLkMPhbmBmpoMFlHOKmfphoOFpLPKLhbBhllPMBOLFHHMookhhmKFBoHPkfbophLBLhOhlbmLoPfMHlKOFmLMkobHPfLKMhpHlkBBOLFLHpKMfHhOkMBFPPLHbkmplhMBOkllmbokfpHFPKBOPmkFfkpHLFMKpmMfmkoPFbHkKpBMhlkOKOPFLOMHpllKmhOBLkHPobfkhpKbBlPHLmBLpolHMLOKlBmBokfPHbKLBphbklbhpmLLMoPHlfmKoHFBHKKPfPhLopbMPlLpMmplloMkOfLKHhoBfKhPKBBLhlLMblpOlmMlOoFMmfoKfhHBKkBPhbkLbppMLkMOpflFmooHFfMFKhffhkoPkfPLLMMMpolOMbOFlpfkoFfmhhKOBkPPkbbLkFlMMOOOlLmFopfHHoBbBhhkkkfLPbLkMppbllmHHBFFHoKHFhhKkHBBPpOmbbpLlpbPOlFpHmpFKphHKKBKhbkBbhpPLbmoOpllmloPfmHlKofFKokKbhPBkpMPpBlLmhoMFoBhKmfFhooBBfPoLhbBhblhMbOLFPHMolfOhMKhBoPHkfOPPbLBMkOPomlkMKOlMMoFBmhFkoLlBKhPlMbkPokBMOOoFMobfphOkmBFMhhhKOBLPBLLHklfmboLfpBMmbKpFKhoKpfbfLMmOhlBmkhmOoFkmookfOhHMkPhLoMHpfooLpbLOMfmMlOlFKHMkOhlLmbFpoOOkBMpOHlHHkOKFBmmKMFBmFBfpmLFMombpploMmollpHhOlFoHlBkPlLOMmmkPKLPbbOhFMMLFphPKbBLPpoHblpplmMFOoFHmfOKfhHBKKBPhkkLbppMLlMOOmllmoomFfHKKhlBhkkPBBPLLPMMphlOmmOFFoHMoffOhhKBBkHPkbbLphlMMkOOlbmFOpfHHfKPBhhLkkbPPbLLMpOMlkmOOfFFHpKHlfhKkhBFPkLHbbphlpbMOlFOmboFfphHKFBKPhkBbkphLbMkOplBmlpOfmHFKOBHhFkKbMPBKkMPpblKmpObFlHmKmlFhokHBlPKLmbBpMlPMkkPFpmFolfOhmKlBohbkfbKffLBMkOPlBmLopfMHlOoBmhFkobHPfLKMhpBkLmPObFLHhKMflhOkmkMPOLMbfpPlhMfOkFPMpokfphMKLBOPmkFbopHLfMKOMlkmkoPFbkOooBMhlkOLKfkOhkfBLppLBMMOpFhmmOOBOHLlbPOopblkkLBMfOKFhfPMPOolbKkfoPMklbOMhhflfBfpMLKhMpblLmKolFlmBKHhPLOMmpFkoFMOfFpHhoBfkhhKbBLfbkbbOpOlmMFOoFHmflbfhHlKkfbhbkKbpPLMFMOpBlFMooHFFHKKhfBhppmBbPLLpbMpllpmmPOhPHHoFfKHhKBBKPPklbLpmOfMlOOFmMFoofmHfOHfBhBkobPPpLLMPOMlkmOOfKkHoKHffHBkhBfPkLMlFpLlpmMplFOHMoFfoFFKFBpPhkfbkpPLbBLFkFMmKoOFBHFKHBHmokhbhPlLkbppblkmpOfFlHHhBfFhokHfBPKLHbBppomMbOLFpmMolfphmKFFfPmkfbKpHLBMkOPlblPoPFfHlKPBmhFkobHkMLKbbpBlkmPObFLHpFhflhmkmBlPoLHbfpKbOMBOhFPmfoLfphMKlBmPMkkboPFLfMKOhlBBLoPFFHLKpBMhlkObmhHLOMHpflomhOBFkHPphfKhpkMBLhlLmbFpoOPLFblpBfkHOkmFMmBoOFBhmffpmLFMomMpKlmMLpllpmbOfbpPHLMbohokLbpPlLfPfoflBMpooFlHmKOpfKbblpOlmlLMHpHlmMboMFfmpobflPoKmBmhkLpbLpoMmOOFfHKKhKlFkhhoKfFPMkFmkPPLFMlOhhLOofKhhKBLpflHFkkbhPPLOmPOMlpmhOhFmmFFhbhhPolBfPmkobFhFmMomFFHoHbOKfOmFKffMhLbMpLlpmMmKpflpmoOklBPFobfOPLKLBfPKkBMMLLmOoOfmHFPmokFLHPKMHhkFMPpblLFFMPpbFmmLolFloHkffbHkKPbKoPMoOLFpHMHoomFpHooofhHlKPhfLLMkOPlbfkMhOklKmFfphFkobHMohkKfhBOOLbblpOlFmHoPFhKBBFPoLHbfpKbhkMHkKPmLoLfphMhoKpfKhpkOlBkBMKOhlBfMMOOkFmmoooFohmkBfKPOkpbPPLlHMPFhHPobfLbHHmoBBPPMKKBfLKMfOKFhfomPOMfFHpohFLhHkhBFHfbfOHlfmKHLpLFOmFoBfohPFhmKObmkpMlomHOfoplBmHoPfmmlFLbHHFKFbhPOLMlmFbHMLPplkKMMHPfpkpbppMLlkPbKppLbbBoKmlKhfBhkpmoLfKhhklBfPHFBMlpLlfMloobhKpBkPPkbLOBhPbLKMmPbLkHKOPpLKmBhhBkklmffhlKBbBpLLPffFhHoKHffboHbKLbphpkKbhPkLlfolLHmoFfofbHpokFFplkmbhhllBbOpkLKopFLHFKoBHbkhhkHBHPPkHBFpMMMoMFlHOPMOoFhHhkffbPMkhMpPpLMbBpHMMhMomlKHLoBfPhkHpPFLBMkOPOklpmHpFlFmPLBfHKFbHPfLKkpbkPHlmMFpBlOMfOOFPHFOfPhLHbfpKOhLfbopMLMObfphMKlkLfHhkkOBOpfkFMHPplPMHpMHMKpBMhlPbKFfKpokObFhbLBbFpObkopfLhpkMLpfmhpkMmpPMLPMmplLLhkFkHbKLBpblHbkmflPlkhbhPlbKmBpBoBKKhOPkFhLhBkOOPmhmLbmHOfFKfoMboOfhmlKmfOhHkmPklmMFOooLlKmoOolLHmkbBFpoKOBPhFkPFflhmooHFfBompOLfMPmolflhKkMFoLFmmOFFoBmMbOPFLPLoLFfhmkpbmoMMPOOFmmFhPOOFPHhopFLHOKLPPLLMpOMohlmmMOMlhmLkLFkHoobfoLhbHpLlpmMmKOhLbmlOoBBHPopFbhfKlbmPLPFphFMmloOKPFlmpoofKHPKhBHPKLmbLOolMbBpplfmBooHmKhBfPKLhllbKPoLLbKOPMMHBoplkOFKffhHBKlbBLPMkOPlbFpMFlMBMHmOKfLHBKPBkFMbFpBlkmPHoOmlmhMoLFPmfBlhfLHbfpKpbLkbmpMbbhoOOFPmFoPpokFbopHopFKPBmFfKKFFKHLKpBMfKHoKhfBPHkbBkKfMBOBFkHPMlomFmHPKOkfkFbFpolHlLMppmlfMkLkmkKLBpPMPkkmBPhfkmbfkffhMHpkFMmPlbbkHoKofBPpKfbhPKLPHfFPHhoBfkBMHMolfkHmbPpOlmMFmkphfLMFOLlBPppMhKkLbppMppLmbBPKLKMMklbfoHfBhkkPkLfFhkkmbKPlFfbfpKlMMLKLFBHfooBHHOBPPOlMMlOOoFFkHoKBFKHooofkHoLmflhlLHbpKLkoOFFFHoKHKkbhhlkLmKPbBbpLlpmMHHpKllmhOkFkmkKhHhPlKpbhPHLmbopblmOLfmHFKoKbfmhooLBkhoFhBfPfLOblpkHhKmfFhokHBfFKHflBmkLpMbOLFpfmMlomFhPKoKfhHlKpMpPkLKbHpfLmFFFoHlKOBmBFHlkmfPPhkmmkOOFPFOFmHpKMflBBHFKMfLhfKkmopPfffplBmboLfpfBHLKHfKHoKPOLkbMKOhlBfPHmobBOHMobFbhmobbkhhkhbLPfPMOhFkHPobkOFFmfKLBPhpkommpmLmbFflmpokfPHbhoomfmhKKlhmOolPmHBKOHKMfmppMFKLlMfplMhbLOMmpFoPLLMPpFlbHFoPFoHMoPBMhFmhPllmMFOooFlPmhOoFLhLoBBkhmkMfkFhblOmlFmoHmpKlbHMohmkPMKMfhPMKBMPlOmmOFFoHoFoLKbHoKBMPPkbbLMbPbLKMmoBllMLKffLKofkhBkkbPMhhlkBMfpOLPblOhFPmfKKHbkhBBPkpFkLBBPKLlboKpFHPLpKHLKfBKPhpFkKBKPOkobOpHlPFfFpHFKoBHBkhokmbLPPKFBlooLOMPpFlPpOfPhokHBfbPhPKobPPHBbmpppopombbKBmFLLbHmphKOlLoMkOPlbfoMOpBFOhbOFfhHfBPPfLKMhMFpPlmMMOmlkOMkLFkHPoffHhPKkKhlhMBOkFPmboLkFbMPlBHPmkFboMphBLPbMBlMKoPFbHLPPoFfoPoKbBHPHkbBkOFLLblpplbmmopFhpMflPOLmbFbFKmfBhOOObBHfOpFBHOoFfHhPFKHhoBfFpPlfmKoholFOmHoBFLpMkfblpHkHbppMLOMKhPmpoBfkhPPOoBfkhlkPbpPpBFHhpflFMFOBlFBMfPhbkLbpMbhkkbmBPfLHMPpkfOmBOfFPHlofBpPmkOphlOmmOFoklhpfKpFOmboBfbkBbmpplMMlmOppllbBOfllPmOBfplmBFPbLLMpMkpLLLMpKLFOmPoObKKFBBPkLPlkbmPhLlHLPBlFOOFBhHKfBKbpHbfkMHPLLobOpoLbPlFFHFKoBHBkHbobBHPPBBPblLmpoMoKFpmloomoOLlKmKKhLlBphbLmMOpHbohlFFhmKFBobBhKkoBoPkkommoLFoHpFbHHKOBmhFPPKbflPokhhBoPFmmbPlmkKMflhOhfoLBOhPKLBKpHkFMPpOlFMmOlHPKlBOPmPkKobmhOkLbBpLFpMpOMlBmHFLhhkObmPFpPLmbophbhHkoOfPoBfohpkMBlbmHokhpOLFMfOKFhffHpKoBLhokpLFKObOpmLFlPMmpolhHBolfkhMoMfhHBKPBOKOlObohBlMMPpLlbphFBhPKbBLMhhbkKBlPmLlMPpofFmkLHKpKhBPhbkLLfBbhBkkbFPLPPOKFfHKKhKlfMHKKLfFhmBMmLPfLPPmlLHHoffKffHpoOflhfKBbMkMFKbBpFlkMFphHPKKBhhBPHKpffhbkHbMpLlhMFLmmbKHffhKPMKkfphMkOBFPBkfFHFMHmoFfoFbmlKhBHHLkPbbLKMLOpFMFfmpOPFomPkhFbpKBhPBLkMPmmPlbpHLOLlfmplFBlHhKLffhhkpbOPkolpBFpHMolKHFHHpKMfOhKfKMBpllkhfPFkloMfMHlKOkBFfHlKhflmPbKpBlkmPHlOpLbMfllbpHpKofpHBbhBBLkMBOkFPFFMfoPFPmbFObHHBKlfkPhMhOhlBmkhMOMllmhOfOOkObmPFLoMHkfppfhHBFpHPobfLbhHbooHOBhBlpolHMfmkphlkMllPBmHpKPFBhkofhmOKkKbhPlLpPOKLkBmKbKobBKhbKlOObopFlomHHFpLLbmplkBmmlopfbhLLOPblmMFOoollKMLOBlFHKoKbbKbbppMLllHbHPfLlHfoLBpmPoHFLHHMoPhLpMMplObkFbBoLlhmkOpKLoFBkPPkbLhBOhBkbMHOfLfHPObllHhoBfMPkKpBOhFkmHMLfmOomFFfomOoFlbHBoFbohbkHBlhbLobfpbhkoMfohHKfLpfmhkkKBMPLloMMpfLoMopbpoMKoKKmHPOMfBpPFPPkLfmpoMFlBPHMoKBPHbolBohhllBLPKLMbKplmKolfOhmhBoKBbHfKOBBPfLpPFlbmLopfMHlKOKhbFfkBmPfLKMhmPPPLobboLlOMkoOFPomLmBHHkklBbPpLLfplBmboLfpBMmbKpFKhoKpobkBMKOhlBFLMPOLlFhoolfLHPKbfhOhkhBBPOLMmklLHPobfLbmHooKfHPMKBbPPfFKmpKMLbMfOplfpbFbPMklbOMBPMkKBbpKLpbbplMkhMoLFBhMKMfFhPKfblPhLkbBpLHHoMfkhPKbkbfoHlkKBlPpLoMhPfLLMPOBlFmOFBhokLbppMOhLmMMpMLhMLKKfpmkFbhkkPBbBhPMKFBkppkLbbOHLBmFOPfHHFoffbkBBfpplMMlmhpBLLMBOHlkPpoPfMHpKbfohOBbpmllmOomKllHMBOBmKPhKpBOhkfbMopHkBMLpOlookfohHKfLHfPHKhlPfLbMLOpoBlLmHKHlBmlOkkPKObhPBLkFmBfpplPbFOOBhmHOBfmHkKObpHLKlBpPbLHfOlkHMolfObMmLoLfhHlobMbPkLKbKpLLKBmlfHlKOBmbKHBobBFPOkobkohlhMhpBMphpoOlfHbKhfkhBoBpPlhMBOkoblmMpOKkFKpBOPmkFLPBLhBkHbBpHoMOlFbHLKpkOFOHkKmbFhKKlbKPOPMOlFkHPobkkBLPhFMhOLmbFpoOPkBPKokLkMFOPMbPooOfmHbkHBHhpkkHHlKmKohFBfOmMoBFKHmPoPHLOMmpFOMlmMmpffMMBoPFbHlmoPmLMblpOOLfbhOKlpboHfhHBKkkkfBHOkPBHPLpfPLlFmooHKPlLmfopFlHlolBppHKFbLPkLKbBOOMHhHohlLHFKMfOhlLpPKlMMlOOOBllmmOfBKhpkhBLHLKfBKhBLMHMlomOomFFlkHmoMfhkHBOPkLPbbmphlFBbHoOFMMkOPlhKhBKPhkBLFBpPlBLHPpPlOMPpfHHpLBHhfkKPhFBHfKOmBHOMKoMFlHOhfohFPmBKFfLPMkkmOPpLhblphMLoofOhmKFkLBmhPKLHKLLMkOPlbFFMOOHFOplfFhFkobHbkhkkObmPMkpOpFLHpKMkOFLHFoOBOHBKBBOpblBOOFPmboLfphMBloBMmMKBkpHLfMKHMpOlKMHOBFommolFkppKfBKPHkBhMlKmhOBOklLhLPLbPOpBPPOLmbFMmPfkLbPKHlbPOobHLKLBpPMHKKObMhpkklklmmKohFBfOmMOLFFOKLkfkPmkhblphLfLblOHhoBfkbhHmoOfFpFKFfbPhLoMhLHfHmhpLFFHMoOflfFBppMLlMOMHpfFkMfOLlOmPomfKHOKFBphhlpbHPHmMppFoHHofkmFBmLkkBhHfKOBHOmLkbhpBLoMpOklbHmKbffHoKfBLhOPoppllmOomoBlKhFomfoHMKOBoPhkmbhHmMHOlFOHmHKOpfmHLKhfmHllPMmOFklbkpmLkboFLHFKoBHBoHbKMBpPokKbLOpMboMFlHOhBKfBlPhklmoKlbBpklPMbOLFphMhFmKHOKFBoPHpFkPBbOLkobpPblOMOpklfhmffhFkobHMpPhLHbLKBMmObFLHphLoHfmHpKKbKhFLoBbPBkoPkoklLMmohFomfKHMmkobopHLflPbPPolPMHKfHLKpBMhlkObmPFOoHbpolKmhOBKOlKmOopFomFfpPPLmbFpopfFPlblHmBokfPffHpoBfoHKKHBFhLFHMbOfFPMPOoFHmKoLhkKBbMPlLOlhBfomLOMFppllfpFKhPKbBLbbhokOBLPflfMmOFlPmhpFflmfolflhpKhofLPMOOmlFfOMbOLFhmpOLMofPBbPLLpMMpllOMkHFFOmHoffKhhPLKMfmhBkKBkPlBlHPOMLLmpplFPmOoBpOkmbPPbLLlbbbpKlmpmKkFOmpmbhMkhBBPkpfkLBOOKLmbOphlFblfohHKfBKPhkBllmPpKMLOpFMmloOfmFoPoPBhOkKbhPBOmklblppFOblpolLHfbkkHboHkLKKmlBPhLoMbOLFpFfMBOoFOHolLblHlkhBpPfLpbbPMmhopfMHlhhOffoHoKHBKPPhMpKlkmPOboMfFmHoofmmkkoPhLHbfpKPpLkbmpMlpohfphMKlLMBMhkKhBhhlKbbklkmkoPFbfKHPohfkHoKoPkLoMHpfPLLBbopfMmLPBmloBOPfkPBmmPPklHMfOKoHLkmMomFPOLLMfPhOKMbMhKkKbMBLmHohFBHkPMoLfkHkKlfklFMmpFlomHOfMKLmhBfKHoKbBLPpplKbbmhlLlbhphLlpKKblbmHoOKmkmbppMLllKbHOLlOMlOklkmooHPbkPBbPLLpMMplLHfmKPlkHHoffKBMHpoffbhmKOhpObLHbkLmfOMKpFObKpBhhBkkLoBBhLhHpOllmOomOfFKmPoKFmHLKMBphbKoMpLHmMOlFOffmhOPfmHloFfBoBlhbhPhkBPpoFlLMkoMFpHHMbhpkKbhPBpbKbbmPblFMbpkFHLBfmhokHBfbOPHkobPKokbblpmloMFOKfFKPBoPHkflhBoPkkhMhPlLlMholHHKOBmhFPPkmBoPhkMhBoPFmmbopmbKMflhOpMoKfLpfLLMKhPMKOkFPmbHoOpFPHHoKFfhHbMpHLfMKHmPbLmMbpFBphHKlhpkObmPFOPkhbmPkLmhlhpmkobfLhpPkKOfHpBkPBBPOLkbOpBlMfMFBHbKLBpbhpLlhHPolfoKblhmKohFBfoMbomBohMoBfphfkBboFbMFOfFKHhhOoPfhHhoOffHmbopOlmMFmkOmlMmhOkHLKkBPhbHOkPffPMmBpblFmooHKLbPOffMhkkPBbbohpKBbOppLfPFKOlpmMOklBHMopmokbbLpplMMlLOpbfFbKFkHfKKBhbLhPkhBhPpkhmlOKFOkBFpHoKHffBPHPokBOhFkLbOFfMMOlFOHmhLOKFBmPLHfohfKOBFPhLmbBpKLomoLMKhKhBHhfkKkbBphFkbKFlMmpoMFlBhmkohFlHBLFBPhbkkbpBmblOLFpHMHpOflBHhKpfOhKlpBlPkLObkkbFbmMpoFkmfohfKPHBmPfLKMhMkPlLKMMOolLhHoOfpmbKLFBpBKBBkPmklhBlomboLfpfBHOoKffhoKpbbhkLhbhPBlPmMmmmLKpBMhlPBKKfKpoLmBlPPFMMppflbmmOObPHooBhMKBbFpolHFPbLpflpMlOlllHpkpflHlKOBFhLlPbHPllobLhLmpKPfbhLPHKofbPmkhBKoOLkMMKHlPMKlkBkHLomBhhoKfbHlMMmOoFHmfHpOoFfmMobFfPooBBmhkLHKBlkmooHFfBOHHoLHhKlBbPLLpllBmkOFbbhpoFmMLOpmfooBkPPkbLoBFPPLObKPfflMBOpfkmkoFfoHfKbHbpbLMBopkLfMhOKpPokffhKkhLlfohbkBBOpMlFMLOPMlObfohHKfkOBHHpkObhhFkOmppbLkmpOPlkMKfmhfkKbhbBPPkPBbppLhpMoKlOMbollBoHLFfhhmkflMLlMbOLFpFkmLOPFFPPoKFfHLkhpHLmMkOPlbFLMMOhllmloKFBPbKfBmhlkBBLmMMBObFLHpHFOlmOPkKhfhKFbPpKlhMBMOppLfMlOMlFHHoKfFpFbMpHLfMKmmpfLMmmOBlommMfhMkObmPFpPkHbFPmLpMkOpBmmBOoFfoLBKPOLmbFmppmkkLLlFmBokfPBfHpohflHoKHbMBBblOHlfmKHBolfkOPklfmHHoFBLhKkBbohKMlOfFKHhHKoMFmmLKkfkHfmhPLlmMFOoObLfmopFFMHPKMBbhmKkBlhKlmpKlFmooHoklkmPoHbOHpKhflhhkOpolOmmOFoLFmMlohhHKKBkPPkblObMPbLPbLpFohOLfHHfKKLHFkHpKpbbPmLHbpOKlhbbOllofkfMhKkhBBbOPhkkbpkpFFMHphLfmlOkFbHKkhhhkBbkpPpbkBMPPolOMPKFfkhoObBkHkKFBohfkbKFlPmpoMFlfMHMoMFHHfoLpBLhbBpkbPkLfKOPfbfHFbhmKFBoBBhpkhmMhkkobbfomHopfMHlPHoKFkHhkmfbPpkBpflhmPObFLBPmhOFFmHhoKpbkkbfpKlhFlMmOhLlpLKkFmHPohmOkhbopHLflPbBpHlPMPOMlKmmOflFKFbmPFLolbbppoLmMfOOlMmLOKFHHOBpPOLmbFmPPhLmbkpmLlllFLHbKLBpbMHbkpfKPokpPHoKFpHhKFHkKPfbhLkpoMbLOOPhpllomHOfPFKboLfkhPKboOFFhMkOkKLkMFOoFHfpMbpbMBhkKhFfHOfbPPLlMOOmOOLBbbOPFOmookbOHFKLBohLLlPLlOmmOFoMFmmmOfBMmBKPfbhlfLMmPmLPbbpploMpBLmBKKBhhBPkKbfbhLLMBBOKLObbOlLBPmOKFOhHLBhBLPbbpLPBLlbopmlmMOoOFOmKKhfMKObkpPLbHHokLFkPhppHHFKoBHhfPhBKPBLkMPmOPFLHbFOLlKMflFbOHkKMFkklbBpklPFfMkOmMMHFOKFpmhBOhMkfbKphOlkLbOPlLKmPOflomoObFkoolmBmPhkmBLLbkpOMFLHpKMkpFmHpKMHoOMKlBbPFLObppOlLMoOHHbofBOPmkFlMBfhklKbmPblpbbOFlOhFoHfpHoflPhLoMHpfOmlHMHpfMPhfokFoHkmKPmLmbFpoOkLkbFpBlLhkFKHbKLBpbmHPKKBFhLBohpkfFPbBpBFMmLFlhLkpbMbPhoKbbMphlBbBoHlLmkOHFPHMoKfmpMKFBfPhkKfhlBmfoKfhFmHKolfmMOBfpMLlMOmFOHfpbkpfFomMOlBPKkBbPLLpLFBkppLBMoppfbMBOFFPmFlFPPkbbLPfpLooBMKMohoOfHHfKKLPmhkMbPPbLLlHboPblmMhpKBOmkoMpMKfBBPkLPKfbpPHklbBOmlooKfohHKfkbBMHbKlfhLbMLOpFMmlkOPmBFbhfFhfkKbhMphOFMbLpklmObFPHOKmfFbpHhopBhhMLbBlPLMpOLFpHMhHOKlBmKKOfPHkloBLPmoppKlbmLopofFHmLoFFBHhlmBPhllfBbPhpPObFLHpFKFhHoMfLlhmkObfpKlhFfMOOmlLMFOmBfmFoLfHHLKPobLkMKOhlBfOMpOBlBKPfKhlkObmMlPhkBmmpolmMkpfMBoKfLhpkMKPBmHfkhBkPFkBLLLlmBokfPfbmBKPFohOKPMFpkloBbOkLkMFOolfmblbBbhMooBkhfkhbKbkMKOfFKHhhlOPFmmlolfKpHkLBkPFHPOhFHmfoKOFFfmFobFMkMbppMLlkbbFPKLHMHpoFomoOkfPfOBHPLLpMMMkpmLBbfpBlOhFOlFOmboPfOHlolPplMMlOOoKlMMlOfFOHooobLhPkhBhPpkhmlOKFOplFMHoKHffBbHpolfpPhkmBOoMkbbOpflmkHfohHKfBKPhkBlMmPpLMMOpFMmlpOKHlBOoKbFkHkkMBhKKhmpmlLmpoMoflohlolFBHOLmfkPMkhMkPlLFbbLbmkolfOhmhOKHFbHklobPoFHmPBlbmLopKblOmHoHbLHpKfBFhflMbfphLbbFLLfLmlOHfPHKoBBhlLbKpKlhMBmooPfKPfkBmLoOBOPmkFLpBfPMkkBfpkbkhhOOlfOpkbfHHKKKfbPOKBbPPkLpKOlfHPobfLbHmlokfhhFkKmhpmLOMmpBLFoKFbHbKLBpBFpOlhHPohhPpplfmKohKKFMmbohfOopLmBpKOLlbhpHklPHlbHhoBfkbmHoKkfhhbkKBHPFkLoblOmfoKfhfFHKoHfOHOoFMfhFkLbHPLLPfBFHHKKhfBBkHKKBfmPMKBmLpHLfMoOhhLOofKhhKBkHBhhhKbMHPMLOMmpfflMLOplBmhopFLPOKKBOPOLMBBhFMhomFFHoHfObFFHPKlfBKPlmbppPkBMkPfMmhKOKFhmlopmKKlbkpPLbfBPpooLKpOOKlBOoOBfphhfhflPPkHBkppLhPHBhmPKmfFhoPfkLbKKhlLbPphLhMpphMMHKOHFHHkoFffhkKBhbLBMkOPoBLpMmOmflmfoBfmpPkmfLPMBhmhpPklMfOmlomFhHHBkmBFPopkKLMFPPLfMppbllokFbhMKlBObBhlKLBfhlLoOHlomkoPFbfoHPoLfOpmkBbFBkbopflKmhmLpkfFmOOOBpHPKLFfhFKLLBLFMfOKFhfmmPoMFPHmompKkhbOpmLFlobhPLLbbbOplLmOhOhhkpbMPlpHKbblpPLfblppHHoHfkhPKbkLBMhMKlbmhbBFmPpHLlmopLPOKmBPhbkLlHBKPLkHmpPflMbbFFmbKhfBhkmfKMfKhLKfBlppLBMopfmMoffKhhhFKPfohMKPbMObLHbkKMLBMBOpFFmPoLFbHlopPkLLMpOMOKlomfOllFmffFHKkhBBPkpHkLbhPFkfboOmLbhKOBlbmkKofphlkPkOkbMLOpFMFoMOKkFhmhkBFlHkKhMLhLKfbmOhlMMMMfmpKmfFhoPMKKBmhLKlBpPbkfPLKmloMKOHfMmBKPffkLbKphLBMkOPKoKlhpHomfKOBmhFPPKbflPokhhBopLlbFpOFPmHoKfmlBBKPoLHbfmopbFmBbFhmPoLfphMPLoKFfhhfoMBhBkmbppklpmbFKHLKpBMboHfoBBlPpkObKHPMOOBFkHPhFokFKPLoFfMPfKfbMPlLmMhpbKLOhfPHbKLklFlHBKOMmhfkMbfPlfoMOOmlLMbomFOPHKPBHPHkFBLFbmMOfFKHhmbkHlpKkBLPpLMLOBhPFkLmBpBkFoKfhHBKkBPhbPmlpOKLpMOOmlFFkmmOMFhhBKlOOKfBbPLLpkkbOPHkbMopkLFkpfPhhKBBkbohOKobHPOMHOOFmmFHBpbBKmLKHfFHfKbBlofMpOMllmOhpLpbLPmklllpPlkBlBLHHbHbpoFOhFOHmoFkPFhmBoFfbHbKHBOFoMPOpFMmlhHOFFLmpokFLKHfFPBLkMPmlpmLHMbOklLmFkLfOHMKlfmhLKFbPkPFPMpPFlBmHOKFfKlflPHkfbKMoPpLobHpBLKbFKflFmKolfpmKBKPfLKMhmLpMLmblOklomfoOBoHhBlhbLHbfpKOLLMbOpMlBMFoHFlpBBOPmkFbopHLfMKOhHLmPoPFbHLPMOBFkHoobOhLoLfpmlKmhOBollphFOBFFHMFlMHhHKfBphbhLOmFhmBokkmlfHpKmfoHoKhpMLpMoOHlfFKMoOfFOmbkOfOkPBKPlLOMmMBPHLpmLpblbmkOOlpoFBLPpLMLkbmPBkfbBpOfFMlOOlbmPoOFlPoKkBoPoLmBbhfmPoHFfHKhMkhBOfOBOPLLpMMMBpmkfMlplbphloolbhoBkPPkbbLppfMkFHOLlmMoofHHfhpKHfKhPlMBOhokmbbPflhMFPfmfKHffhKpHokfphpfbmPpPkBbBphbOOlfohHKfkPfhpOkMBMOlkKbOpMfoMopLlBhoKmFlHPpbPPLkMPpbpllOMHOLlkmFokfOHOKmmfkobBpklPFObFpbloMfOflfHokfFfhMKKlbLpMkOPlbfPmPOfFOPhKMFbPKKPoLkFMhpBlkfmbfOpFPMFoOfbHKoBBhhhKOpoLfMBOkFPfFmmOhFfmbKmHlKfbopHLfFoBBPLLLpPobFmHHopmlPHKHffhlKbfBLlmhOBFkBhMfOfFOmBoHHOpfkobOPOLKbOKhmmokfPHbhoopfbHPKKBFPKlPbbPlloMhplOloOfbhLkpLbfOhHkHmLPpLfMFpffMmfohFbmFBkPMLMblpOpBLPbKpHLhlLFFHBKkBPbPhpoFMfhFLHbFHKMkoHFfHKhfopFlhMLkBmhhKfBoohLkMhpllBfPfMhhKBBkbkhOKBBkObkObPOMpFoofHHfKKBhhBOklPoFkfMpOMllfpbFpKlKhHoPfpHKkLfLhpkhBohOMkOlFOHmhoOkfmHloFfBhLmmPbLbMLOpOFLFMPpBlfFkfhhfkKbhMfhokobMPKkFHFOOFpmpooFpPfkLbKOhbKpklPMbHooOfPHFKPbbLPfPPHkfbKMmPkkFbpPklphMpblOmfLMFBHBKpBFhPkLBbPlkppLFLHpKMkHFKHlKhfkhkKkbhkhlBMPpPLbmpOhmMhKoOFbhloBmHLlMKOhlBLmmMFBHpKpBMhlHOkMBhhpKbopLfmhOBFklmmLOOFhHlKLBHhHKBBlhkOPOmFhmBokkmFMmFooflhKKHlfLOMoOHlfFPMPpblfhpomOplMHMHkFlMKlLMppHOFFMHhoBfkbhHmoOfFhFKFBHPFHPpfFHmfoKKMlLmLKmfPPOkPBBhbLmPlLBmooHFffLmPkPFPHoobMohOkmBbpHLHbppklKokfKhhKBoffbhkKOkoLHMlOOFmfKMBpbFFHOoofkPokhBKPOkObPPbPhOOFFHoKHkoBkhfklBPhMKlbmPoLkbKfBmOoFfohHhlKhfFhpKOBMPLkKHMOfFlBMfmHFKopLPhoLOlMfpPbFpblLmpHBOHlbOmKfFkHOoPbhkfbBpklPlfMkphloMopfMOKoBoPHkfLpfbhkLhbBlBmOopfMHlMbObflHoKKPOLKMhpBoKFMHHLLBMHfKlloKLBFPoLHllBbPFlbblpKLOLoFOhMKlBObfhhKPbmPlkFbBkBFomhOKFOmOoPFbfKBhPFLoMHmFpPLbHlpLlKmMOKFpHoKKflhFKLKPLbMfOKFhLLMLOPlMKPBpPMkllMBKPMkhbfPlfKOfFBHkKPkFfkHKLLfFhMFmpHlomHOfoHlLmFoPMoPFKHBMhfkMmOLKMFOoFHFkmMOLFlmBoOfLHoKHlFLpMOOmlFFommplFhmpOLpmKBBbPLLpLfBlPPLFMlOhOPopfKhhKBLHfphhkPbHPPkOMPHfmOoofHHfhmoBffHkKpBmfoblOMllmOMppfFOmBOLFPHmKpflhfOlpplpmMOlomlmMKoKfbBPBMPhkBbkMBPOkKMMkhfLbBOFfoomBHhfkKLpfbOhLhbOPBFkMmOKllhmohfPHoFfbfhBKpboPlLmMOkKHMolfOhmKFooklpfOPPoLBMkOPoMLhMoOllkOOLMfMhHKMfkkBBfpplkmPObKPlkmbOKFBHbKlfkhlkhpMlhMBOkKhlFmooMFHmoFOMbomBkpHLfMKHHPkLpMpLbfLmFoffMoOLBBlhPkLfBlpmhOBFkBhHlKfBMKhBlPOLmLkBoPMLKMopbffMFOoFMmpooFFMoBlpmLFMomHpmlobLOkloOPkHFlhmoflokoMmpFloFBMPppFHmFOfFbPfKkfhhBKPBfhbLoOOlLmfoKfhBHmLKmfPHLKFBfPMpfpOlFmooHKOFomMlBBOHMKBfOhFkmBfbKMoOFFoHHhkObFMmLKKfOhFkpmMpfbppBFmmFooKLFKHoooFLhmLpBmPMbkOMllmOmfOhlLmfoBBPHPKbbHPhkOBOkbMpOlFOHmHOOBFMmkohBHhHLPBmPLkKlFlomloOfmfBHOopfKppKPBHhLkHkblLmpoMlbmkohPObOlbBpPKLhbBMlPplfMpOHlmmHOLFoKpBoPHkflobMPlLPbOPlBkFFFoHlKOBmblhhKBMlhhKbBLPLLOMpFhHpKMflfMmboffLpMlOmOkfMPOkFPmbhOOOFmmkkKfHpkKlBkhflhpklBmkoPKmllPhobFkhPoLBhhpkfMKLbmhOBFkfmmHokFkHPkFfKhpKhmoLPMfOKFhfMMLKBFBHmokbPHFkhBOhFkBbbpHKPpBFBHkKPkBFpHmKmblhfkBbmOPLbblOolhpBKBFbmOKKfFhHkoMmklMFOoFHFLmpOmFfmkkbBFPLLmBmPPkbbppoboHoOKLbHmopFlhMMohLLpMMplOmkBMoppfkMbOKlBmLkOfbHfKPBFPfLOmmlFmFoofHlfmOoLfMHpHmPLLLMpOMOBBphKklbOkLFfhKkhBBbBhlkhBBoPklbkOpMmhmoHlkHlobfphLlopPLbMLOpFMflfokmBFobBHhfkKLMBlhoLhBbopFHHMkBfPFklBlHFoPMkoBhfhPBlPMbOLKHlbmpomMPPMoKfbhHkhBmbMMmOPlbmLMbpllfHhOffhHKKPhokLMhpBlkLFMMpllLmhoOFHhMobBHHBkpBkPbKbOmFPmboLKoFmOlLMfphlKPBLKHbFOhlBmkhhpLlOmOkMfHhhKOMkPOKbbpfMMFOBFkHPhfoklFHmofBmHfofPllHMfOKplLbMLOkFkmpooffHoKfBHhBfFpPlfmKohOoFPmMoFFlHoKHBOPhKfbhPKLPbLKKmKoBfkhPhLLmHpPfkhBohbkKMPPfLkbkFhHBKkBPbBHpKmBmKlFPBbpolOMoLffpHHoKfPHmoMPMLpMMplopLhbKpBMHHLOPFPHmokFpkKbLpplMlfboOBLbMKOoFKoHfLhBkkbPblhKLPbfpOLPbBKofPppffhKkhhBHHMoPmmkBHMlOlFOHmHKOoBLHPoPPHPfbkpPLbLHbmPFLlMhkobfpKoMfFHmFpBoPMkMboPplhblpKFmMbokFKHPokBhhpKLHlpmLMbfkOlhmHOblFHoolMLOLFoHPpFkLMHphLlbfLhfKHhObfhHooBfLokkObfpMLOPMoofHhKOOfPOHLMfBPMFBmhOMlBhlpKLLmkMHHKKlBOPmpkKbbmPPkLbMpfLHKFFLHLKpBMbkHookBohPBFpOlKmhOBoklKmBOmfMmBoKPpkobFpolHFlbkPlfkHOkmFMmBoOFBlmbOpmLFMoOHlfbPhhFfmFKPfbhLPFKHBphfkhbhPhLfPfoBLBmmOkMkKOBLPpLMLKBOpMLkMHoKLKMlOhKpobBPhbkLLKBlhKkhMMpplHHhpKlPOffLhkkPBbbohfkoBphpmmOFFoFHOKoOloPflBhfkbbLppOPLOMMPfflMlpBfKolBhhBkkLBBOhHBpmbpHLPpmoklhMfoLFfphflPkLPbbMoPpkBMOOplfhlOLFpmBohfpHLLOBKPOLOMMPBoHOpfmHFKoKlfFHFKKblhkkbbLpObpHpOOLfmbohFkHBBFhfLhbBpkOblFmLKmloMKOHfMmBKPffhhBbphLBMkHhpllOHHOPFHHHoFFLHlbHPfLKMhpBmkLpHbBHmKKMflhOPKoBfPHBkFBLhbBBHPphLLmmOpMpKpBOPmkFKBBPhLLhbmPLfkOFFbHLKpkbfKhhKFfBhhBHHFHPMbOBFkHPMlomfHHpFMhpLmbFpopBLKbFpBLBMLOHllmoLmFBHFKOMfhfkMbPHkMFohFBHkhHoLfhHFoffoPmKbhFoHlbmfpBmloBfkhPPhKmfBhKKoBfPhLppmlBmfoKfhfPmLopfHObBOpMLlMOMbpllhMkpKlphMopFfHbKmfOOPkoBBbKMLOFFoHHhpOPlbmBLHfbHlHoPFlMMlOOohLoMkObFpmhKMfhHOHmPKLLMpOMoklpMhOKFOmloKoLKkBBPkLPlBbOpmFpMOPflbmhOkFBMBBMPhkBbkmHPMkHHHpmLbMopbmOKMBHhfkKLbfFPKKfbOPFLBpLFPHOKmfFbOPokLmlOFFLMPoPMmOLFpHMHBomFpHoKHHHpOKkBbKBlFbppllpKfFOHlKOBmbkhOKpBKhOLHMPPLLpMHBHmkKMflhOPhofMmPmkmBFObLfbFOhlKmplbHLKlBOPmpOKBBOPmLhbbkmmkoPFbfLMfbOlppplmPhLoMHpfOLLPPBoOlPMfopfPHFFMhbLmbFpopBkBbmpBLFHpKPkKhpBMPMklbOffPlLpbOpKLBObFBHkKPmFLbfhpHLHkbMmpFlolFMKppLbhfoLMhfmfKPpLMblMhhfLlMMpfbfmfLmbbpoKombPBKOBbPoLmBbLOMboHFfHKhKopFfHKKBfphhkbohlMmmOFFoFBMBOkFoPkkOFpPpbLpplMLhbHPfLFMPkKbBpkomffHHFOBKPmkmbKPOlPbFpkFHmMoLFkHpoLBPhOKlHFpHLmbBkolPmhoMlfHKoFMlOlFKHppfklMhpPLFbBLPfkHPoMfPHKobfloLkobBpmLoPmoKfhhkOofpOhLmfbPmFbMfPlLfbKOPLBMHKhfBPPoHBMObKFfBPfKLpKlbmLopKbFoHHKBfoHoKfflPoKbBbPobBpBFLHpKMkLFKmfKhbPHBKBBlPhBBmBpbLOmKOFFHHoBphpkFbopHpkLMbmpplhMMLbfommomFkhmFOhlLoMHpfOBkBMmpkfPmMOhfMmBFlbHhHkpbMPOLKbOFHmLokfPHbhOKMFKHoooPoLFMoOHoFlPMboLFPMFOlfKHOoKBmLMMmpFloFMMFpLlbMbOFhPKOBLPpKBBppplmMFKoFmmfoKFmHBKkBhhboKbhpMLlMOOmlFmooHFlHKKHfBHokPBbPLLpHMpLlOmmpLFoHHoFfKfFKBBkPPkbbLpplMMlOPFmmlooFMHfKKBhhBoPbHPbLLbhOMllmpomfoHOKHffHOkhBBPoLPhbpklpmMpkFOHmokfobMKFBKPhoBLopPLFMLOHFMMloPfmMBKoffhfkKbhPBLkMPpblLMboMFLHOKmfFhokHBfPpLhbKpklPMbOLFpHMokfOhmKFBpPHkfbKphLFMkOhlbmKoplBHlKOfBhFfobmPfLKbmpBlkmMObKKHPKMflmOkmBFPhLHbkpKLhMFOkFPmboPfpHbKlBOPmkFbopHLOMKOHlBmkoPFbBpKPfFhlKbbmPFLoMHHFlKmMOBFkHPoffLhpKfBlPhLmblpolMMfpOmHmBopfPBfKkBpPMolpLpmLoMopBlfMoohFBOFKPfkhLkMbMPlLOMmkbloMlOfFPHhoBfkHHPOBkhfLMKfpOlmMFOoMkmfoHfhHOKkBHhbkLhKpMLPMOpFlFmooHFfOlKhfOhkkMBbPLLpBBmHlpMKOFFbHmoffKhhfpBkhfkbbmppLBMlOOMPmFObfHHKKKBhhBkkhoPbLmMppFllmOomlLfBKmfhhKkMBBPkLPbbLmlpMKOllFHmoLfohHfMBKhLkBbPpPLbMLOpMhmlOFfmHKKoBHhfKOLLPfkBMPfMlLmpoMFlOfKmfhhoKoBfPOLhbBkFlPMpOLFMHMolfOhmFbBohokfbPphLBMkpHoOmkOkfMfbKOBmhFkohkPfkBMhpHlkmHObFLOKKMfMhOKFBFPoLHbfkllhMHOkFMmboLfpmBPHBphPkFmMpHLfMKOhMpmkOkFbmfKpfBhlkOhPPFklMHpKlKmhOBFkOoobFfhpKFBlPOLmBLMBlmbbOKlOmFokfPHbfmBphPklBKpmLLMoOHMMmKOOFBHPKPfbhLkphhPlkKMmpKlomHOflOfLofFLhPhfBLPpLMblkflmbbOolhmfoOfhHBFFBPhmkLbMpMLlMOOmbbmoOhFfHPKhfBhkKHLOPkkpMMoFlpmmOFFoOkofFLhhoBBkPHkbfLlklMbFOOllmFOmfHMfBFBhHBkkBfPbKLMpPMOkmOOMFFmoKHmohKkhbhPkkhbbpKlpMBOlLOFboFFphHKkBKhHkBBoMlLBbOOpkPmloOfmHFFBBHHlkKfbPBLoMPhbOKmppBFlmPKmlhhOoHpmPKKbbBpplPKFOkFpOoolFPhmoKBoPMkffKloLBboOPLfmLKFfMMlBLBmHkkoBHPfpoMHpKBhmPplFLLbKMfLhOKbBFPoHFbfpKlhblOkFPmboLpbhMKlBOhmkFbopHLlLhOhLkmkpmFbHLKpfBfOkOflPFpkMHpflKmmMkFkMfoboKhpkMBlPPhFbFhblHFOOKFhmBooObHbomBpFhklbOpmLLLHOHLhmKPPFBHkKPfffpkpfpPlkFMmpFloMFkoFKMooBhLhPKBBLPPLMblBMlmMFOolLmfoKfhHKlhBPHHkLlmpMLLMOOMlFmobFFfHKKhFBhkkPBbPPFbMMhflOffOFFOHHoFfKhhmKBkPPkbBopplMMlOMBlmFpKfHFmKKBHhBkKbPPbhPMpOMllMhomFFHooFMohKohBBfbLPbBpLlPmMOlpMHmoFfombKfBKPhkKHhpPKBMLPmFMmLoOfMHFKoOFhfkKbhhlLkMPpblPhboMLkHOfBfFhOkHBFPKLhKKpklPMbpoFpHMolfMplKFFPPHKhbKpHLBMKOPlbLPopfMHlohBmhFkoBFooLKfbpBPmmPOBFLHPKMflFMkmBFPoKbbfpKlhMKkhFPbLoLfhhMKLBOhbkFbofFLfMKOhlomkoPFbHLMbBMhlkOfBPFLoMHpoBHmhPKFkBFobfkhpKlBlPOHlbFpolHMpOKFhmBokpBHbKLBpHfklbOpmLFkmOHlfmKpPFBHkKPfbFPkpbMPlKOMmpFlomHboFKHhoBlKhPKbBLHpMPblHblmMpOoObmFpKKmHBOHBPmKkLpmPbLphMOmkhmoOmFfHoKhflhkkPokPLLpMMPllOmmOFFoMhoffKhhKBBkPPkbbLfblMMlOOLFmFoofHHfHFBHmokkFlPbLkMpPMmbmOPLFFHMKHpFhKohkFPkofbbhhlpOFOLFMPloFLBhHpOBKPHkBbopPLbkPOpFMmlOmfmHFKoBHmBkKbhPBLkMPpblLmpmPFLbbKmlhhokmBfHKMobBhHlPMkOLMfmbplhLhmOpBomlkfMOphKBloOPkKmLPBfMKoKpflOOkoFkPfOlMhpflkmHObFLLbKMflhOKlBFPoLHbfhklhMBOkFPmboLfphMHbBpmLkFFBpHLFMKPhHHmkPfFbHPKpHKhLoOppPFKMMHhOlKFFOBLkfHoblhhpOkBlLHLMbOKmlHBPOKHomBoKfPHFKLBpFLklbOpmLOMoOHlfmKbfFBHkKPFLhLkpbMPlKoMmpFlomHOfFKHhoBLmhhOKBLmFLMbLpOkbMFOoklmfLLfhHBKkfHhbkLFfpMlBMpOmlFbooHFfbbKhfPhkkoBBPLLpMMhhlOMbOFkBHHokfKhhKBBklHkbbkppkMlkOOkpmFPFfHFmKoBhPlkkFKPbLKMppbllmMllFFMMKHPfhKkHBBPoLPblmolpmMOlhOHmolfoHMfFBKmFkBHlpPLbMLphMbmlPBfmhbKOBHhfoKpoPBKMMPpOlLkOObFlLPKmlPhokMBfmbLhbLmOlPMbOLHLHMoLfOmmhLBomOkfFfphPHMKOPFFmLPkfMHkKOBMhFkmhFPfKmMhFplkmhObFKHpoFkKhOkmBFLBLHbFpKLmpfOkkfmbLFfphMKlFOBbkFFbpHLOMKPHlBmkbHFbMHKpfBhlOfbmPKOPMHpflKOlOBFKHPOfHkhpOPBlHokbbFpokHPHOKkomBPffPHoKKBpPMklFkpmLFMoOHlfbKohFBbFKPlHhLOFbMHlLOMmHbloBpOfMlHhoBfkhPOmBLmLLMblpOlmMFOokOmfPLfhHfKkfBKkkLFBpMMLMOOMlFmpoHFkBpKhfBhkbhBbPkLpBBLLlOBLOFbkHHoffKmhbHBkmFkbbPppkKMLPOObmFPbfHMpKKbBhBkkoHPbKHMppBllBfomFKBPKHffhKffBBPKLPBfLklpBPOlLomboFfomHFHBKmokBFfpPLoMKOpFMmlPkfmHFKoBHhfoKbhPBoFMPhHlLBFoMLlHOKmLbhoOpBfhMLHbBpklPBmOLkLHMolfOhmKFBomOkfFLphLfMkpBMkmLPBfMoFKOBMhFkpbHPkOpMhpBlkOpObFkHpOBHLhOOLBFokLHbfpKkhmOOkkFmboPfpoKKLFOPmkFFbpHKpMKpblBbkoPFbMHKplKhllmbmPFLoMHhplKmmOBLMHPolfLhpkMBlKmLmblpoLMpFOKkomBpLfHHbKLFpopklFLpmKMMopLllmKohFBbFKPfbhLkpbMHlLOMmHbloBpOfBBHhpBfkhPOHBLmKLMbOpplmMFOokPmfPffhHBKkBPhbkLFkpMofMOOMlFmmlFFfMmKhHMhkkhBbPKLpbFmKlOmmOFMkHHoFfKHmffBkmfkbHFpplMMlPOFkmFPbfHHoKKHlhfokbPPbKHMphKlllmomLFHoKHlphKOlBBOPLPbbpLlpBKOlFPHmphfoHBKfBKPhkBHppPLBMLphMbmlPLfmMfKpBHhfoKHKPBofMPhhlLMfOBFlHOKmLbhokHBfPKLhfBpklPBHOLkKHMLmfOmmKFBompkfFlphPkMkOPlbmLPofMMMKOBmhFkobHPfoFMhhMlkmhObFPObKMlPhOFPBFPOLHblpKLbFlOkFPmbLffpHbKlfPkMkFfMpHfbMKOhlBbkoFFbMHKpfLhlfBbMHFLoMHhplKBlOBlbHhpbfLhpOKBlmBLmmopolHMfOKklmBoofPMOKLBmPMklbOpmFkMoOmlfMOFHFBbfKPFMhKkpbMHlflMmhMloBOOfFMHmoBfkhPOHBLPpLMblpOkmMFOokpmfPlfhpPKkFPhbkLFKpMoBMOFBllmooHFfbLKhlhhkkPBbPLLpMMHblOBhOFFOHHooHHhhOoBkOKkbbkppLBMlOHoBmFoofHpmKKBHhBKoPhPbKhMpkHllmOomLFHbKHlphKKfBBObLPfbpLlpBKOlkBHmBofOmHKfBKmlkBfmpPFLMLOpFMmlPBfmHLKolkhfkPbhPBLkMPOflLmPoMlkopKmlMhoohBlPKLhfBKBlPBhOLkkHMohfPhmKFBompkfbKphLBMkPPlbmLPKfMbBKOMohFoobHPfolMhhmlkbkObFLHpKMLfhOOOBFPoLHbfpKlhBHOkkOmbokfpHLfpBOmLkFMFpHLFMKOmlBmphmFbHLKpbphlkpbmHFMlMHhOlKMbOBfmHhpbhBhpOkBlmbLmLkpOkHllOKkFmBpHfPKlKkfbOLklFfpmPkMoOmlfmOohFBMLKPfbhLkPbMPlLOMmhflomHOfFOHhoBfkhPFlBLmBLMfHpOlMMFppFHmfpmfhKFKKBPhboLbppMKhMOpflFmbomLfHKKhlOhkOFBbHkLpMMpllOBkOFkBHHoffKhhKBBkmfkbbLppKoMlOHFmmFoofHFbKoBHhBokpKPboBMphpllLOoMLOkPKHlmhKKBBfPKLPphpLlmFfOlFOHmoofOhmKfBPMMkBbkpPkPMkOPFMblfLfmMMKolohfHKbHHKLPMPhhlLbLObFLHOMlflhhPbBfPKLhBhpKlhMbPLHkHMPbfOMOKFooPmoobhphKHMkPklBmkopKOHlKHkBhFkobHhHLoMHpBkkoKObkBHpppflFOkMFOPHLHfmpKkKMfOKFPomokfmBfKlBOPmKmbOpmLfBKFolBBfoPLPHLmpfbmpkmbmHMLoBopFlomhPlFKHMhFfLhpkMfMPpLMbFhomOMfhFFhbhokOPHBOPBMPMObbOhOLlMOOHLlmoObKlHkKPfbmbkPBbPlKOOppFKlmHPHFKlhoflhHbKblBPpKpbLpplmflOOlBfLoKfhHBOBBhhBkLfplPLlfLOmkmmoMHFFMHoBfBMfkPfPPkLPMMPMlPMfHkFoHHoflfhHKfBkPMpFbLpplMBPOpFMmFooOFHFpFBhhfkkbPPbLLKPOMKBmOObFFHoKHlfhKkhFmPkoobbbLlpmMOlFObhoFfphHKfBKHhkBbkHOLbfFOpKlmLOPfmHFpKBHkLkKbhPBKkMPpbKLmpPpFlhfKmFLhokHlFPKPfbfpklPMbOLFpbmolLohmplBohMkfbKHhLBKhOPlbmLopfMHlpLBmMFkobmPfLPMhpBlkmPmmFkHPKMllkLkmFMPooobfBKlHBKOPFPbhoLLKHbKLBOMOklbhMbLfMKOhkmmKohFbMLBkBMMbkOFOPFhoMmhoHpmhPHFkBloBfkhpkfBLPHpBbFpolHfPOoFHmBokOBHBpBBphbklbOpmLFKOOHkMmKomFBHkKPlbhLkpFhPlokMmbFlomHOfFKbpoBfohPKbBLHpLMblHKlmfBOoKfmFOOfhHBpLBPmKkkbppMKlMOOmKFmoPoFfhbKhFFhkkPlBPLPbbbpllOmmOFFobhofLkhhpfBkhHkbbLHplMKpOOFmmFoofHHfpFBhMBkkbhPbLOMpOMllmOmhFlHOKHlfkFkhFHPkokbbBLlPBLOOFObpoFkPhmKFBKmHkBbpmmLbMLOpofmLopfmMFBlBHmmkKFKPBhkMhhkHompPPFlBOKMflholBBFPPOMbBpklPFbOkFPHMookhhmKFBobbkFbophKBOfOPkhmLPLfMllKpllLkkoFOPfpkMHpflkoMObFOBHKMflhOPHBlPOLHbfbHlHBHOkFhmboLfphMMLBOmPkFbppHLfMKPhlBmkPoFbbfKpKMhlkObmPFokMHpllKmhOBLkHPobLFhpOHBlmmLMBLpolHfBOKPBmBokfPMbKLBpmMklFlpmFhMopMlfmKPHFBfhKhfbhLkpbMPlooMmHfloBmOflOHhoBLkhPMkBLPpLMblpOlmBMOokHmfoofhHLKkBPhbkLkoPbLLMOPmHMmoPOFfbfKhOBhKOBBLPLokMMMKlpmMOFFKHmokkphhKBBkbmkBbkppLFFKOOFmmFmkfmHFKKBhfKkKFKPbLkMpOMllmOMBFFbLKHflhKkhBBHkLPbbHflpBhOlOOHmoFfohHpbBKPmkBbkpPKbMLOpkHmlPKfmboKOfMhfkKFPPBBPMhpblLbpoMFlbOKmlmhoLkBfhOLhbBHKlPlkOkFpHMolfOhmpfBomhkfFophkFMkOPKbmLBbfMHlKOBmhFkoFOPfoKMhpflkMBlkFLbBKMfLhpkMBFPpLHbkmplhMBOkFhmBokfpHBHOBOmLkFFfpHLfMKPhFPmkPFFbmLKpmLhlkObmPFobMHpllKmmOBLkHPoblmhpKmBlFOLmfFpolHBhOKlPmBPFfhMbKLBpmpklBopmbLMoOHlfmKPoFBHkKPfBhLkpbMPlokMmpFlomMOfkKHhoBLFhPhpBLKHLMblpOlmfBOolBmfoKfhmFKkBPmMkLoKPbLlMOPbohmOPHFfMlKhfBhkKHLOPkoPMMhBlOmmOFlpfkoFLOhhkMBkPPkbbLfflMffOOKbmFoOfHmfPBBHmmkkBkPboFMppMFPmOPpFFHhKmlMhKKmBBPkoobbPplhmMOlLOHmoFLLhHOMBKoHkBBopPLbfFOphMmLoOfmHFKoBHmMkKbmPBLoMPHblLmpPhFlOlKMHphoOHBfPKoObBfplhkBOkkpHMolLkhmPLBoMPkfFKphLBfFOPLpmKbpFbblKOBmMbkohfPfHKMHHBpkmPPHFLpKKMohhpOmKFPoopbfbPlhpoOklHOBoLLohMLoBOPmkFfolOLffLOhkMmkkFFBmKhFfbMFkOkfPFLoMHPlObmHhBFkfMobfLhpoBLHPpoMbFMhlHMfOKFhOpokLOHbpkBphBklBOmoLlfLOHPkmKPpFBHkmBfBMFkpBfPlLOMmHFpomHhbFKOBoBpkhhKkmPPpoHblHBlmMlOoFMmfoKpfHBKkBPmOkLbppMLlkMOmlFmoOhFfHKKhfFfPkPFMPLHlMMpllOMbMoFobHofLohhKBBkhBFkbLHPlMbbOOFMmFoOfHHfmHBhhBkkFFPbLLMppLBpmOhbFFMkKHfFhKKBBBPkHBbbpLlpMMOlFOHmoFOmhHKfBKhbkBbkpPLbBlOpFMmlohfmHFKoBHFokKbhPBoBMPpblLmpbLFlHOKmFfhokHBfPHFfbBHOlPMbOLFPHMohfOhmOfBoPHkfbpphLBMkOPPkmLopfMHoKOBmhFkooFPfLKMhpolkmPObFLLbKMflhOKmBFPoLHbfBHlhMBOkkHmboLfphMmpBOPmkFFkpHLfMKOhPKmkoPFbbkKpBMhlkOfHPFLoMHpklKmhOBLkfHobLOhpKFBlBfLMbFpFlHfkOKFmmBoofPHkBlBpMFklpppMLlMoOHlfmPhMFBHkKPhBhkkPbMPlBkMmHKloBlOfFKHhoBmlhPplBLPPLMbLpOLlhOOoKBmfbHfhHfKkfbhbkLobpMLlMOpOlFmooHFflHKhfBhkKpBbPLLpMMBplOmmOFFhHHoffKhhObBkPPkbbppplMMlOOLHmFoofHHoKKBhhBkhmBPbopMpBFllmpomFKHoKHOohKkhBBhBLPbbpLlpkLOlFOHmOffohHKfBKFfkBbkpPLlMLOpFMmlpofmHFKoffhfkKbhPKfhMPHklLlfoMFLHOoffFhomFBfPKLhbhpklPMbOLPbHMolfOHHKFBoPHkfKHphLBMkOMlbmLopfMMFKOBmhFkHbHPfLKbfKKlkffObHLHpobflhHkmBFfmLHbfpKLKMBOkFPmbMPfphMKlfoPmkFbopHhoMKOhlBmpoPFbHLKpFmhlkObmPoLoMHpflHhfOBkmHPHBfLhPkMBoPOLmKOpolHMfpfFhmBokfPlkKLBpPMKFbOpmLFMoBFlfmKohFLHkKPfbhLoObMPlLObFpFlomHPfoOHhPpfkhMKbfkPpKBFBpOoOMFbkFHmfoKfhHBKkLlhbpbbpPBLlBOOmlFfBoHkPHKFlffmkkPBbmmLpFoplLFmMPFFoHHPPfKbLKBboPPobbLppooMlHfFmoKoOFFpoKKLKhBmfbPPBLLMhOMllboomFFHoofffhKkhBBfhLPbbpLKMmMOlFOHmHKfobkKfLfPhkfbkpPLbMLHFFMBHoOfmHFopBHhfpBbhOHLKMPpbLKmpoMkMHOhBflhokHflPKLhFHpkPmMBOLFpHMolfObpKFBOPHklbKhhLBMkHKlbfBopOmHLOOBmhFplbHmmLKkbpfLomPObKfHpFPflhOkmBFPoLHFHpKoOMBOoFPmkLPfpbPKlKpPmklbopMLfMKPPlBmkoPFKHLKpBMhlHMbmPFLoFkpflKmhOBmMHPPpfLbkkMBkPOLmhbpookMfHBFhmBokFHoBKLLlPMHKbppmLFMopblffBohFfHkKHfbmLbkbMmmLOFopFPKmmPfHFHhPPfkbLKbKOPPKBPLpOoOMFHPFmmfoKfhomKkLKhbOMbppMLlbPmKllfLoHmmHKKhfBhkflBbMbLpFhpllPmmpLmOHHPmfKkmKfBkPPKfpPppohMlPPFMmFoofHHfKKLphBpBbPPbLLMpOMllfkomKBHoKHffhKkhBBMfLPbbpLoomMOoFOHmoFfohkKFBoPhKFPKpPOBMLPKlbmloOfmObKoLMhfpKbhPBLkMPOPlLfPoMFkHOobfFmmbbBfMoLhMppKlhMbKhFPmFhKfOhmKFBBPmkFbKPmbfMkHhlbfloPfMHlKOHPhFppbHMfLKMhpBlkmkObKkHpoBflhPkmFFLlLHlFpKoHMBFKFPbkopfpBbKlbKPMklbokmLFMPHMlBmkoPBmHkKPBMhophbmPFLoMkpFlomhOBOMHPhBfLbPkMBlPOKbPlpooMMfoFFHmBokfPoHKLLHPMplbOpmLFMmKFlffPohKkHkKhfbhOkpbMHFLOMmpFlMmHOfFKHhMKfkhPKbBOPpLMblpOhlMFOoFHBHoKfhHBKkOBhbkLbpMbLlMOOmlFpBoHKlHKhbfBhokPBbKfLplbploPmmOFFoHHmlfobHKBBkPPkbbLPbbLMlHLFmhLoOfmHfKOBhhLpObPPbLLHhpblLmOomOhHoPOffbFkhBBPkkHPBpLoKmMKhFpHmoFfoopKfLLPhkLbkpPLbbKmFlbfFoObOHFKoBHhoFHbhMBLkplpblkmpOfFlHOMlfFhokHfLPKLhbBpkkpMbOLFpmkolfOhmKFomPHkfbKmoLBMkOPlbOmopkhHlPOBmhLkobHkMLKFopBoFmPObFLmhFbflbkkmBkPOLHbfhKmoMBHFFPBHoLHhHbKpmMPmpBboPHLfMoOhlLmkoPpkHLKpBMhMkObmPFLoBhpflKmhOoFkHPobfLlbkMBlPOkfbFpolHMfPkFhmBokFFHbKLBpPMLMbOmPLFMpOHllmKohmMHkPofbhkkpBbPlkPpMpFoLmHOLFoHhoBlkkKKbLfPpOhblLPlMMOkmFHfboKOOHBKKBPhlkLbpfLLlMOOmlmmooHFfHKOPfBhkkPBKPLLpMMplPMmmOFFomBoffKhhKBFLPPkbbLPflMMlOOFmHmookpHfKOBhhFkkbPkmLLFKOMlLmOoMFFmpfmffblkhBlPKLPbbhLmkmMHBFOBPoFHphmKomHPhOMbkMFLbMkOplFmloOplHFKoBHhHkKbhPBLkBppblLmpOkFlHOKmfFFmkHBfPKkbbBpklPMbPlFpHMolFBhmKFBoPHHPbomOLBMoOPlfmLopfMHlPkBmhlkobmPfKKMhpBoFmPOlFLloKMllhOkmLbPoOpbfbBlHBBOkFPBHoLkKhMkkBOHmkFbompLfFlOhmLmKOBbkHLPOBMhKkObMPFLOMHpfkkmhOBFkmfobfLhpkMHLPOOPbFmKlHMFOKLhmBokkoHbKOBpPKkLfOpmLFFLOHKMmKphFBMkKPfbbfkplhPlPLMmhFlomHhMFKBOoBBohPObBLPpOhblmklmOKOOlFPooKkPHBhpBPhBkLbPpMLlBoOmlFmoOlFfHKKhfBhOkhlHPLOOMMpLlObmOFFoBpoffPhhHMBkHPkbbLmKlMFBOOPKmlpofHHfPlBhMmkkMHPbKLMpOMoBmOhPFFKhKmfoOHkhLbPkKKbbpklpMbOlFOMHoFfohHKOBKPhkBbkkhLbFfOpKmmlopfmMFKoBHMMkKBbPBlmMhhblLmphhFlBkKmlFhooHBfPKOObBmFlPlhOLLpHMolkkhmPbBopMkffKphLBFFOPKHmLfmFbHplMBmbfkoLbPfLoMhpflkmPpMFLHpKMfPhOkmBFPoPObFmllhFbOkFhmbOKHPhMPBBOhBklbopHKfOFOhKmmkhoFboKKPfLOpkOlhPFLHMHpFlKMfOBFkLBobfLhpKpBlPOLmbFhKlHMfOKlFmBokfPHbmPBpPMklBOpmLFMoOHPomKohFBHHKPfbhLkpoLPlLOMmpKlomHOfFKLfoBfkhPoFBLPpLMblPHlmFbOoFMmfoOfhHBKkBPMHkLbPpMLLMOPmlFmohpFfHPKhBOhKoPBbPLOKMMmBlObmOFLoHHofklhhpmBkBKkbfLpplMFBOOKPmFKpfHMfKKBhMmkkloPbMOMPpLBpmOhHFFmKKHfFhKkHBBPkKpbbpLlpMkOlFOHmoFfPhmpMBKMPkBbKpPKbMLOpKhmloHfmhPKOFHhfkKlOPBOFMPhblLbpoMFlBkKmkbhoBoBfHKLhbBmFlPfHOLHmmbopMMhmPfBoHpkfbophLlMkOPPkmLopfMHoKOBmhFkooFPfLKMhPBlkmPObFLMOKMflhOKLBFPoLHbfbflhfmOkKpmbokfpmMKlBOMPkFbhpHlpMoPhlBmkhoFbBfKpFMhloObmPFOLMHHMlKFHOfFhHPobkfhpHkBkPpLmbFpoLBFLOKFhmBmHfHHBKLFpLPkllkpmLKMoOLlFbKfoFBBFKPLHhLopbMHlMLMmmblofpOfooHHpBhfhPpHBLMKLMhbppLlOfOoKpmfmmfmHfKkBPhbkOlHpMLlMObLlLmOoHFfFHKHLmhkKfBbPLLpfMbllOfPOFkMHmbffoHflKBkMokbBhppLbMlOpFmmFpKfHHfKKfFhBkkbPHbpKMpHHllmHomllHooMkPhophBBpmLhbbpLlppoOlKKHmhFfohMKfFKLokBllpPomMLPpFMblfLfmBBKoLPhfBfbhHBpoMPHmlLfooMHoHpolMOhopHBflHLhbfpklhMbOLPbHMolfObPKFBoPHkfkFpHoMMkHPlbmkoplMfkKOLhhFkhbHhFLKbmmplKfPObfHHPKMflhOfKBFMkLHlfpKlmMBPkHKmbhFfpbHKlFOPmoFplpHObMKHplBFKohLkHpKpLHhlmhBbPlLoBPpllPfMOBFkHPbFfKhPkMFlbPLmlBpoLBMfpoFhMFPFfPBbKLBfhbklbOpmLFMoHPlffKohFFHkOPfbhLpobMMfLOBmpFkomHOfKLHhPMfkBhKBFLPpLMlfpOohMFopFHbfoKfhbMKkLOhbbObPPLfpMOHmlFmmoHFFHKKHfBhkmBBbPLLpFhpllOmmOFOlHmhbfKbhKBBKPPKfPkppoHMlOhFMmFoolHkmKKLphBplbPmlLkbhLbllfoomFkHOKHffmKboBBMLLPFMpLPpmMOpbMHmhFfolmKfBoPhkLbkpPhkMLOpFMmMoOfmHFKoFhhfkKbhPlLkMPpblLkboMFlHOpPfFhokHBffHLhbBpkKhMbOLFpHMMMfpbHKFLoPHkfbKphLBMkHOlbmLopFbHlKOBmhFpkbHMbLKMhpBLomPObKlHpkKfLhOkmBFPoLHlfpKLbMBOkFPMfoLfpBbKlpLPMkFboPFfoMKHmlBlPoPFBHLobBMhloobmPFLobbpflKmhOBphHPobfLMOkMBlPOLmKOpolHMfhFFhmBokfPlkKLBpPMOKbOpmLFMoBFlfmKohkBHkKPfbhLmbbMPlLOFhpFlomHOfMbHhhbfkbHKbBKPpLMhBpOohMFHKFHmfoKFmofKkLphbMFbppMLlMOLPlFfooHFkHKKhfBhkkkBbMlLpbBpllPmmpLmOHHhffKkMKfBkPPkbhfppObMlHoFmmFoofHFoKKLmhBkkbPPbLLMpMPlLfOomKLHoKmffmKboBBMkLPFMpLHkMbpkmpHmhlfomPKfBKPhkKHhpPOfMLMlFMmLoOFbHFKoFhhfkKbhPoLkMPpblLkboMFlHOPmfFhokHBfPfLhlfpklHMbOKFpmMPmfpbHKFplPmpFbKhhpFMkHhlbmOoplbHloPkKhlpPbHolLoMhpBlkplObKkHphfflhPkmFFLlLHllpKLhMBhBFhbbHKfpBBKlLPPmOLboPFfoMKmblBBOoPFBHLKPBMhlHMbmPFLoFmpflKmhOBfLHPhffLbmkMBLPOKmbFpooMMfOpFhFKokFHHbKLLmPMhkbppmLFBoOHlffPohKLHkLLfbmLkpbMMoLOlfpFHHmmOfFKHhhkfkhPKbBOPpoMblpOOFMFoBFHPkoKLhHBKkkbhbpkbPoFLlbPOmlFfmoHBkHKKhfBmkkPBbMPLplLplfBmMpLoBHmhOfKKkKBBkPPKflmpPOKMlOMlbmFooFMBPKokLhBmmbhPbLLMpLollfMomKhHoKMffHKpkBfMPLPKlpLObmMhlOOHmhofolfKFbLPhkBMLpPOfMLHMFMmLoOlmHFKoLMhfkpbhbKLkbHpblLfmoMOkHpKmfFmokHBfMPLhlLpkfLMbPLFpHMhofOBfKFpHPmkfbKphOkMkOPlbmOopLMHlKOkFhFLBbHlkLKfhpBlkFbObKkHPBBfLHPkmBFMmLHmkpKlhMBPkFPmbhPfpBLKlMBPMKLLBpmOOMKBllBmkoPlfBmKPkKhlFBbmPFLobMmPloFLOBPmHhobfLhpfoBlMMLmlhpolMMfpKKkmfhPfPllKLkbPMOlkOpmOoMoBflFoloHFBhLKPkfhLpMbMPLLOBmpFlofMOfFpHhHKfkHHKbBLMmLMkkpplmMFPoFHmfhPfhBLKkMLhboLbppMOoMOmflFLfomFfHKKhkkhkkPBbPOLpfMpllOFFOFfBHHlPfoMhKBBkbbkblkpPBoMLpPFmmFhmfHPkKKBhhBokbPPbOPMpmLllhBoMlLfBKmkOhKBkBBPkLPBfmmlPFKOlhBHMoFfoHMPPBobLkBohpPLbMLOpMomlhMfmBhKoBMhfKKlkPfOPMPBllLFboMklFOKmkohomfBFOoLhbBbflhFfOLKMHMoLfOmmbMBoMMkfBfphlkMkPPOfmLhhfMBkKOhfhlkmmFPfOPMhFLlkmhObFoHpKMlFhOkmBFPMLHbfpKlhkKOkFPmboOfphMKlBOFlkFbopHkfMKOhlBmkmKFBBKKpkFhlkpbmPOfmMHmllKLfOBFKHPoFfLhpmLBlPOLmBkpolHMfOKPfmBokfPMkKLBpPMklKMpmLFMopLlfmKohlFoKKPkFhLLlbMPlLOBmFMloFbOfKpHhfMfkHBlkBLMmLMoKpOlMMFOhFHmfpkfhHBKkffhbkLbppMhpMOOmlFbKoHFfHKKhOKhkkPBbhoLpMMpllOklOFFoHHhlfKhhKBBkpmkbloppLBMlOpFmmOLmfHBLKKfFhBkKbPPFLLMpBLllmOomlkHoKHffhKmfBBPkLPfkpLlpmMOlpMHmoFfoHLKfBKPhKFPKpPOlMLolFMmloOlmkMKokBhfpPbhLMLkbBKklLfMoMolHOKMfFhHkHBfHkLhbBpkLfMbOLFpHMMpfOhmKFBMPHkfbKphhKMkOPlbMLopfMHlKOOlhFkobHhLLKMhpBlkkBObFLHphfflhOkmBFpPLHlkpKlmMBOKFPmkLPfpBFKlohPmklboPfLfMKBflBmkoPlFHLKpBMhlHMbmPFLofFpflKmhOBphHPobfLHBkMBlPOLmKOpolHMfpKFhmBokfPlkKLBpPMkhbOpmLFMmKFlffhohomHkKhfbhkkpbMfpLOMmpFlMmHOfFKmmFffkBBKbpFPpLMblpObPMFHMFHmkoKfhHBKkBkhbpPbpPBLlMPOmlFpHoHKOHKKhfBhkkPffkkLplKplBKmmOFFoHHFMfKBLKBLhPPkbbLppPoMlmFFmfHoofHHfKPLMhBkkbPhfLoMPOMllPOomKpHohoffBFkhBKkhLPlopLLPMfOLFOmboFfhBbKfBKPhKfbOphLbbKmFlbfhoOlmHLKoBHHloObHMpLkOmpBlLmpoMFlHOhofFbmkHBfPKLhbBpkOkMbOLFpHMolfOhmKFkBPHpHbKpHLBboOPlbfmoplHHlKOBmhOFmbHMhLKFopBlKmPOFFLHpOmflhOkmBpPoLHbfpKhfMBOkFPfooLfphMKloMPmkFboMlLfMKOhlBhmoPKOHLKhBMhkkOBmPFLolFpfHFmHHpFkmHobfLBFkMPKPpLmbFpolHMfmBFhfKokfPHbKLBpPMpMbOpMLFMoOHlfmKohKpHkhkfbhkkpfMPlLOlKpFlpmHfBFoHhoBfkBkKbBmPpLMblPPlmMFmlFHBpoKfhHBOkBPhbPBbpMPLlhpOmLLFBomKMHKoOfBhkkPffMmLPlHplBmmmOFFoHHhKfoBoKBklPPkbbLppobMlmfFmmFoofMHfOKkmhBPbbPPHLLOBpblllMoMKMHookffhKkhBBkMLPlppLOkmMOkFOMmBMfoBKKfkBPhoMbKhPmhMLmlFMfmoOmLHlOoPOhfPBbhMPLkfmpblLLbObKMHOoKfFhokHflbbLHlHpkkKMBOLFpHMlBfOBPKFfpPHkfbKPmOpMKmOlbbBoPfMHlKOFBhFPFbHMHLKlppBLkfLOBKMHppOfkBlkmFFbpLHlhpKOLMBOFFPMfpOfpBPKlOkPmkFbopHLfMKmklBFfoPFfHLOpBMhlPlbmMhLoMppfLOmhOBoFHPObfLhpkMBlPOLmlmpoOpMfOOFhbBokfPBhKLkFPMkBbOhbLFMomPlfLPoHFBHkKPfbhLPkbMbfLObbpFkomHOfolHhhpfkhoKbfKPpLMLFpOLKMlOoFHmflbfhBmKkkphbkKbphMpkMOmhlFFBoHfMHKomkphKPPBbhhLPMMpllOpKOFokHHHffKhmKBFkbHkbLlppOoMlOkFmMLHBfmfFKKoPhBkkbPPbbmMpmmllFpomFLHoOHOKhKPhBBbbLPofpLLhmMOloPHmbPfohHKffOPhkBLOpPMpMkOpFMmloOfmfFKoKbhfkObhHBLkMPMBlLFloMPkHOObfFhohbBfFFLhbBpkLHMbOLomHMOOfOhmKFBoPHkfLophpLMkOHlbbLopfMfkKOkOhFmpbHhlLKMhMLlkBmOBFLHpOBkHhphFBFkfLmbfpKlhppOkoHmbHpfpHBKlFOFFkFLPpHOHMKBmlBMooPFbfpKpKlhlkObmhLLoMHMolKbBOBFkHPobfLhphfBlbMLmbLpokHMfOKObmBHBfPLfKLfhPMklLMpmblMOOHlfMOohFBfHKPFLhLkpbMPlLOMmMKlollOfFOHhpBfkhPhLBLbkLMokpOkbMFOoOlmfMPfHHBKkfHbOkkkfpMMmMpOmlFmolkFffhKhKOhkkHBbHLhMMMMplOFpOFPpHHOlfKhhhOBklLkBbLppkBMlOOOKmFOHfHHfKKBhhBkkkBPbpmMppBllbOomFFfMKHkMhKmmBBhoLPbbMmlpbOOLFOHmOLfohHhhBKkkkfbkpPLbMLOpOkmlmFfmHLKoFHhfkKklPBpFMPfflLMhoMFlFFKmokhokHBfhOpLbfbBlPbLOLFpHMolmfhmhPBoBokfbOphKBkPOPOOmLHKfMLkKOFbhFkokoPfFKMhpBlkMHObFLFkKMFOhOkmBFPoLHbfbblhlHOkFHmbpLfphMhmBObPkFoppHklMKOhOHmkOKFfHLKpFBhlkOkPPFkHMHpflKmhOBFkFLobofhpKBBlHOLmbFbFlHFMOKPmmBOofPHbHfBpblklbOpmkLlBOmpbmKFkFfHkKPfbKmkpkpPlPKMmpLlobHbKFKFooBKlhPMfBLhhLMblbKlmbpOOFHmfOOfhHBHLBPHLkLbppMLlMOOmOMmomhFfHOKhlBhkkPkHPLpoMMfklObbOFFoFhofFmhHKBBkhHkbbLbplMOmOpFmmFoofHHfHlBhfBkkbHPbKLMpOMpfmOHhFFLpKHFlhKkhKBPkmkbbpLlpbBHHFpFMoFHfhmKfBKPhBpbkbOLbLkOplBmlpOobHFHKBHBBkKomPBkollpBpkmpBBFLHOKmFLBBkmKlPKbkbfpklPMblmFpFmoloPhmKLBoHHPlbKbhLBlLOPhfmLOhKoHLHPBmoBkobHPfkOlLpfpOmPFpFkHpKMflofkmKFPohbbfpOlhBBmoFPlBoLKOhMbKBOHbolbOBbLfbhOhlBmkoPFbHLHPBMfKkObMPFKoMHpfpomhmBFkMlobFKhpkMKKPOOpbFpolHMfOKFhlLokFfHbKLBpHMklbOBfLFLhOHLBmKOfbKHkmbfblKkpBbPlLpMmpFkKmHOfFKmFoBfkhPofLmPPhLblPolmMFOoFHOPoKoHHBHhBPhfkLfpbBLlLPOmplmopbFlmOhLfffpkPPKPLLpMMPkkpmMMoFoKhoffKhhKBBkPPhfbLbMlMMLOOLmmFoooMHfhKBhHpkkBHPbLLLmOMHmmOomFFHoKHfffhkhBoPkLPbbhLlpmMMOFOlFoFHBhmKomHPhhKbklOLbMkOplbmloOlHHFKoBHhOkKbhPBkoBhpBphmpFoFLHOKmfFhokHKlPKhFbBpKlPBbOLFplBolKOhmohBohMkfbKBbLBMBOhlbmLopfMHlHmBmhpkobHPfKKMhpBpPmPMLFLHkobfpOMkmKOPomBbfpolhMFOkFPMMoLfphMKPBOPmkFbofFLfMKOhlLmkoPFbmKOPfbfPkOOPPlLoMHpflKmhMFFklfobfkhpoMBlPOhbbFMolHbPOKlmmBokoMHbOHBPPMklbOpmLFLHOHlOmKohFBMkKPfbfpkpKlPlKPMmpOBmmHMoFKLBoBfKhPKBBLPpKmblpOlmMpOoFHmfOOlHHfHHBPmfkLbppMLlMOOmpLmoMlFfHoKhlBhkkPKfPLppMMPHlObbOFFolBofOOhhKBBkPPkbbLbMlMMPOOFmmFpofHHfHhBhfkkkmKPBLPHbOMppmOPKFFHOKHfFhKkhFbPkLPbbphlpmMOllPfKoloMhHPPBoPhkBbkklLbLKOppkmloPfmMFhpBHfLkKkmPBkOMHPfommPMlFlobKmfFhoKMFFPohfbBkOlhMbOLFpHMolohhmHOBoPmkffKphLBLOOPObmLpFfMmkKOBmfokoMkPFLKMhpBlkmPMkFLmBKMflhOomBFPohFbfbHlhplOklBPkoLOBhMbOBOPMkFbOpHLfBkOhlBmkOfFbHLKpFBmLkpKkPFBoMHpflKmhOBFkFmoboHhpKbBlHOLmbFbPlHlfOKLLmBOofPHbHpBpBpklbOpmLFMoOHpomKOFFBHkKPlbhLkpKLPlPMMmOllOMFkoFKlFoBlohPKBBLPPLMblholmMFOollmfoKfhmFPMBhfokLMPPbLlMOOmOMmOMbFfFMKhffhkoPkfPLPHMMMllOMFOLlpfkoFohhhOmBkPPkbBKMFLbLpOOFomloofHHfHHBHfokkBfPbLLMpPMmbmOMLFFFMKHFbhOKmLpPKhFbbkOlPmMOllPfKolOBhHkhBoPhkBbhoBLbLMOplpmlopfmHlKoBHFokKbhPBkkMPpblLMhObFlllKmFPhpkHBfPKLhbBbOlPLPOLFPHMplfOhmHkBobmkffbphkFMkOPpLmLMLFbHlKOBmhFkoKFPfLKMhpBlkMBkkFLlBKMpMhOkMBFPOLHbfhklhMBOklfmboLfpmBPHBpfkkFFbpHLfMKOhMpmkmmFbFHKpfBhloOkbPFPhMHbLlKMMOFlofloBoPhpBkBlPOLmBLpOlHLOOKmhmBokfPHbKLBpfFklKbpmLlMoPHlfmKMbFBfKKPFOhLKhbMPlPMMmOFlOmHOfFKHhoBoHhPKbBLPpLMbpKMlmLPOomLmfoofhHlKkBPHMkLbppMLPMOOmlFmobFFfHKKhfOhkkPBbPLHbMMpllOMfOFFoHHOlKbhHHpBkmfkbbLpplMpHOOpfmFMBfHHlKKFhBFkkKbPbPOMpPflkMPHKFlFMKHhOhKkhBBhoKhbBbHlpBkOkFOHmoFfohHHKBKflkBbKpPKbMLOpplmlHpfmmhKofMhfkKKFPBBpMPpblLmpoMFllBKmfphokHBfHKLhbBbmlPLoOLBlmbopMMhmHhBomMkfbophLfMkOPLMmLopfMHPKOBmhFKpLkPFhBMhkHlKmPObFLOFKMoOhOHoBFPpLHffMOlhLKOkpbmbOofhmBPHBpfkkFpMpHLfMKpmkfmKMlFblMKPBMhlkObmPFPmMHbPlKmHOBLkHPoboPhphbBlHfLmBLpolHLpOKBomBokfPHbKLBpfoklBbpmLFMoPHlfmKMLFBFMKPFOhKKbmLPlhFMmbplommOfFoHhoBlLhPKbBLhBLMblpOkbFhOOpomfhPfhHBKkBPKOkLKbpMPMMOpblFboHMFfFmKhoKhkKmBfhKpFbbbHlOOLOFFoHHOllohHHPBkLbkbbLpplMMlOOpLmFMffHHFKKFhhBkkKfPbpkMpPollMPomFFlBKHHKhokhBBPkLPbbbMlpMkOlFOHmpFfohHHhBKfkkBHHpPLkhPOpppmlOmfmHlKoBmhfkKfPPBLkMPpKlLmpoMlkfFKMoMhoBoBFPKLhbBpklPLKOLpkHMokfOmmKFBofLkfkmphklMopHlbmLMlfMKPKOBmhFKpbHPfhfMhpklkmPObFLHpKMohhOHOBFPOLHffpKlhLOOkoPmbpPfhmBKlBOfokFHFpmLfMKOhlBmkMFFbFMKpfbhloObmPFhbMHMflKbLOBloHPoboMhpbbBlPOLmbFpolHLHOKlFmBokfPMbKLBpfpklKlpmhbMOpFBomKMoFBmpKPfBhLkPbMPlKoMmpFloMlOfFKHhOFmLhPHHBLbfLMblpOlmMFOopLmfMlfhHFKkFPhbkLKFpMPhMOPBlLMpoHFflfKhhohkkPBbhKLpMMBblOpoOFFoHHoffKhhHpBkfKkbbkppkMMlOOpKmFHofHHKKOfmhBkkKkPbpLMPOMllMPomFFllKHFHhokhBBPkLPbbBflpMkOlFOHmpFfohHHMBKfOkBPMphkfMLOppHmlbMfmHFKofMhfkKKPPBLbMhpblLMbkLFllOKmLbhokmBfPoLhbBhLlPMbOLlBHMolfOmbOlBOfmkfhophLBMkOPlbmLMFfMlLKOBMhFoobHPfhbMhMBlkblOblKHpKMoMhOomBlPoLHbfpKlhLHOklfmboLfpmMKlBOfpkFKlpHmmMKPhHHmkMKFblBKpPphLkMmlPFhLMHMLlKmHOBFKHPobllhpkMBlhbLmbFpoLMFPOoppmBfffPHbKLBpKoklKfpmhBMoOMlfbKHmFBlbKPoOhLKHBBhkpfMMbMloOlOfFKHhOFlKhhHHBLPHkBblpOlmMFOopKmfMlfhHfKkFPhbkLKlpMplMOPKlFMpoHFflFKhlphokPBbPLLpMMBBlOMLOFFoHHpffKhhHmBkfokbOHppkMObOOpPmFMLfHkHKoffOKkkKOPbmhMppbllmpomFFMKKHffhKKFBBPkLPBflklpLmOlHBHmoFfohHKfBKfkkBKLpPLfMLPpFMmlMlfmFHKoFbhlKObhPBhFMPlKlLmpoMlkHOKmOBhoMlBfPKLhbBpklPLPOLpoHMoLfOmmKFBofokfLKphLkMopHlbmLMKfMKbKOBmhFKpbHPfhLMhFplKmPObFLHpKMOFhOKLBFPoLHffpKlhkbOkppmbfBfpmBKlBOfmkFBHpmLfMKOhlBmkMpFbllKpoMhlKPbmPFhoMHBFlomhOBloHPobOkhpkOBLPOLmbOKmlHklOKhomBoKfPHBKLBpHmklbOpmLpMoOHlfMOHLFflOKPKlhkkpbMPlPLMMbmlokbOfFoHhpBKohPHPBLbpLMbOpPkbFhOOppmfBMfhHBKkfHbOkkKopMBPMOOmlFmoMFFFlkKhfohkkPBbHLMkMMBFlOLHOFHbHHOlKbhHmBBkHbkBbLpplMMLOppHmFMKfHlfKKfmbpkKKPPblfMpOMllMPHKFllOKHBhhokhBBPhFBbbBKlpohOlFpHmolfohHOBBKPhkBbHpPLbMLphOMmLMhfmlBKOBHhfkKbhPBhBMPBFlLmPoMLlHOKmomhohFBfHbLhBFpklPLHOLhpHMolfOhmKFBofPkfbmphLBMkpHlbmLMOfMmfKpBmhFkobHPfhLMhbMlkLpObFPPbKMOFhOPPBFPOLHbFpKlhBbOkFPmbohfphMKlfPbKklKopHkbMoOhlBmkllFblbKpoMhlkPbmHFppMHbmlKLKOBlOHHOfkmhPHHBlkbLmbFpoLMLfOopPmBkFfhHbKLBpPMklKLpmhfMoOmlfbKohFBlfKPKkhLoFbMhkLOMmBBloKmOFFKHhoBfkhPHMBLhBLMblpOkbMFOopHmffBfHHBKkBPhbkLKOpMhFMObmlFmmkFFflKKhPbhkkhBbPkLpMMhFlOmmOFFMHHoffKHmPpBKfhkbOMpPlMMlOOMKmFMlfHlFKKBmhBokLHPbhfMpbPllMhOblLfBKmOBhKBFBBPkLPBfbLlPLMOlLLHmoFfohHKfBKfOkBKkpPLBMLPpFMmlMkfmfOKoFkhfKObhPBhLMPkolkmpoMFlHOKmOFhoKlBfPKLhBFpklPkBOLflmbolfOhmKFBofHkfKKphhfMkpBBkmLMPfMKPKOBMhFkObHPfKkMhpBlkMfObFLHpOBkHhpmbBFpfLmbfpKlhppOkpombMKfpHBKlFOBbkFKkpHPMMKpMlFMoHlFBlLKphkhlkObmhLPoMmBFlKllOfFkHPobfLhpHHBlfpLmblpokHMfOKppmBHhfPmOKLfhPMklKOpmlfMOOHlfmKohFBlKKPfKhLkpbMhkLOMmBLlooBOFFKHhoBfkhPmBBLfPLMKkpOLlhOOopMmfbffhHfKkBhhbkLfOpMLlMOpLlFmooHllfbKHOlhkMMBBPLLpMMLHlOLhOFpPHHolfKmhhFBkfpkbKFppkfMkpPoKmlMOfHKOKKBhhBKokPPBhKMpmplLmOomFFHoKHOBhKHmBBPKLPfbpLlpLmOlomHmOhfoHMKfBKfHkBBhphLbMLOpFMmlMPfmHpKoBHhfKObhPBhOMPPplLmpoMFlHOKmOLhoHMBffpLhbKKhlPkFOLohHMoLfOHbKFBoHhkfbKphLoMkOPlbmLbbfMHlKOffhFkobHhlPKMHBLlklhOBFLHpKMflhOHHBFfhLHbFpKkhMBOkppmbHpfpmoKlfPPmkFKOpHlHMKOhlBmkoPFblKKpfkhlkObmhLLoMHBLlKBPOfFkHPobfLhpmBBlfPLmKkpoLFhoOKpMmBmLfPHBKLBPPMklfopmLFMopllfmKohlFBMKhOlhLbhbMPlLOMmMMlOLhOfpPHhoffkmPhfBLfOLMLOpOKlMLppOHmFMofhloKkBPhbkLbppMhFMObMlFmOoHLfHKKhObhkhbBbhmLpBBpllOLMOFoHHmoffKhhKBBkfHkbbhpplMMlpPFmmFMPfHbPKKBhhBkkbPPbhKMpBBllLhomFOpmKHOLhKmPBBPKLPbBpLlpbmOlFOHmopfohHKffOBhkfKppPllMLOpFMmloOfmlfKoOBhfkobhHBLkMPbMlLFMoMlHHOObfFhoHmBfFBLhbBpklPMbOLphHMoPfOhmKFfpPHkfKpphObMkOPlbmLopfMlkKOObhFHPbHPofHMhBllkBfObFkHpobflhOoHBFPoLHbOpKlhMBpoOPmBMOfpLoKlBOPmkFbopHhBMKBblBmKoPLbHLKpomhlPmbmhhLobMpflKLHOBPKHhobfLhpkMBlfPLmbppolHMfpOFhmBMOfPbKKLBpPMklbOpmhLMobMlfLpohFKphKPOFhLoObMPLLObbpFlobhOfFKHhoofkhPKbBLFbLMblpOLfMFOoFHMlMMfHlLKkMlhBkLbppMLlMObHlFLhoHFFHKOhfBhkHpBbboLpBoplLPmmOFpOHHmBfKhhKBBkPPkbKKppLkMlOOFmMLoofHlLKKOPhBkkbPPbLLMpBBllLPompkHooMffhKHMBBoPLhbbpLlpmMOlpPHmMLfolbKfBHOfkBKOpPpkMLOPFMmLoOfmMfKoBHhfkmbhPBLkbHpklLLmoMbOHpKmfFhokHBffkLhKLpklhMbPLFpHMMFfOfBKFBHPMKlbKphhfMkmmlbmLoplBHlKOObhFmkbmPfLKMhpBlkLmObFhHpKMflHPkmBFfhLHoBpKlhMBOkFPmbMofplfKloHPmKLbopHhkMKpHlfmkoPFbHLKpOfhlHhbmfKLobMmPlokbOBKpHhobfLhpKbBLfhLmKkpohBMfpOoLmfMpfPBKKkBpPMKkLfpMhoMoOKlFmKohFKphKPOkhLMFbMPLLOMMpFlobhOfFKHhoofkhPKbfKFfkbKPpOHFMlOoFHmfoKfhlbKkOfhbkkbphMLlMObHlFFPoHlPHKomfBhkHhBbHBLhMMpllOmmOFppHHoOfKhhKBfoPPkbKopphmMlOOFmmFoofHllKKomhBHObPhfLLMpBfllpkoMFFHoKHffhKHmBBfoLPKFpLLbhLOlphHmplfohmKfBoPhkBfLpPLbMLpBFMmloOlbHOKoOBhfmhbhPBLkMPpblLLOoMpoHOKMfFmokHBffkLhLlpkLbMfpKFpHMMLfOPpKFBoPHKlbKphhFMkBOlBmLopfMHlKOOBhFkMbHPfLKbmpBlkLMObPlHpKMflhOkmBFfPLHKLpKhbMBpoFPmbMOfpmbKLBOPmkFbopHhLMKbMlBLpoPlfBmKPOFhlFFbMPFLoMHpFloLMOBpOHPMlfLHhPoBLfHLmlppOlHMfpOoLmfMPfPhpKkBpPMkpHMpmhOMoMllfmoohFfHkKPFMhLkpbMPPLOMmpFLpkLOFpmHhoFfohPKbBLPpLMKFpOhLMFOOFHbfoKfhlbKkkmhbKmbphBLlMObMlFmMoMFfHKKhfBhkHHBbPhLpMMplLPmmOFpPHHbBfKhhKBBkPPkbKKpphBMlbhFmMLoofHlLKKkfhfkkbPPbLLMpBBllLPompkHooFMohKHMBBfoLPbBpLlPmMOlLoHmoFfoHlKfBKPhKFKmphhlMLmblbmloOfmHFKoohhfHPbhPfLkBPpblLLOoMoKHOOKfFHpkHBffoLhFkpklPMbOLFpHMMkfOHLKFBoPHKlbKphhlMkBplbmLopfMHlKOObhFHpbHfLLKbmpBlkLmObKPHPKMflhOkmBFfpLHKlpKPMMBOhBBmbMofpfMKlBpPmklbopHKBMKOhlBmHoPFbHLohOKhLHHbmLfLOMHpflKmhOBpLHPMlfLhPkMFlPOLmKfpopbMfPbFhMFokfPlBKLFMhbklbOpmLFMobMlfmmohFBHkoHfbhLHHbMFFLOMmpFlomHOfpOHhMFfkFmKbfKPpLMKKpOoKMlOoFHmfoKfhlFKkoHhbHobpPLfpMOBBlFLMoHFFHKKHfBhkopBbPLLpbkpllOmmpLPbHmMkfKbLKfBkPPkbbLppPmMlbHFmmloolHHfKKoPhBPObPhOLLbhOMllLpomobHOKHffhKkhBBfoLPbKpLlpmMpkFOHmMkfolhKfBKPhkBbkpPhfMLbhFMLKoOlbHFKoObhfpHbHPBLkMPpblLLhoMpkHOMBfFhmlFBffpLhpkpklhMbOkFpHMpFfOhmKFBMPHkfbKPmOpMKbMlblooPfMHlKOKphlHKbHfkLKMHpBkkFHObplHpHfflmMKbfLBoLmKFpKmHMfOkFPmboLfpFmKlopPmklbohHLfMKbPlBFOoPlOHLohBMhlHpbmHHLOMHpflKmhOBpoHPoKfLhpkMfkPOLmKkpoppMfOKFhmBokfPlfKLohPMHKbOPlfOMoBblfMlohFfHkKHfbhLoObMPlLObLpFlomHOfpHHhoBfkhMKbBLPpKBbHpOhfMFMLFHmfoKfhHBKkophbHObpPbLlbPOmlFLOoHbOHoKhfBhkkPBbflLpLfplPpmmpLFoHHMFfKmFKFBkPPkkHPpphBMlhMFmmloofmHfKKOfhBkkbPPlLLMpOMlllLoMpfHomMffhokhFBboLPkMpLOHmMPpFPMbmFfOFmKfKKPHkBbkpPLbMLbOFMLLoOfMHFOoBHhfHkbhblLkBlpbLKmpoMpLHOBmflhokHBfPKLhKFpkLfMbOLFpMBolfOlBKFbMPHkfbKphLBMkbHlbLKoppfHlKMMlhFHPbHMPLKMHpBlKmPObLlHpKMflHbkmBFPokMkfpohbMBoHFPmboLfphMKlooPmHKbopmLfBKOhlBLLoPoFHLOFBMHkkObmflLoMhpflKmhOBFkHPMffLHBkMBlPOKbbFpohbMfPoFHmBokfPHbKLohPMHkbOfBLFMmKFlfLpohpbHkKhfbhkkpbMHFLOMmpFlMmHOfFKmmmBfKFMKbFkPPLMblpOlmMFbKFHLkoKfHHBOkBPhbHlbpbBLlBfOmLLmooHpFHKmofBhkkPBbPLLpKBpllhmmOFFomMoffKFMKBPhPPkbbLpplMMlbPFmLLoopbHfOKPohBHobPffLLOLpblpPMompkHoObffhokhBfPkLPBMpLlpmMOKFOHmoFFpBkKFoPPhkobkpPLbMLLFFMLFoOpfHFKpBHmfPObhfBLkkppbLomhpBKHHpMbfFkMkHBfPKkmbfpkPmMbOBFpHMolfOhmKFooPHHLbKpHLBBkOPlbLLopoBHlOfBmHLkobHflLKkOpBlkmPObFLHpMfflhOkmBFPokFHopKhbMBpoFPmBoLfPhMKlFoPmkFboPbLfMKOhLFlloPpLHLOOfbhlkObmPFLokHpfPhmhOFFkMPobfLFPkMolPOKBbLPplHMfbpFhoookfPHboKBpPMHobOpBLFMoOHlfmKohpfHkmMfbhkkpfBMHLpKBpFbbmHOfFKHhmMfkFhKbkKPpHfblPPOKMlbPFHbboofhHBKkmbhbHObpPfLlMOOmLLFBompKHKFLfBhkkPffMmLPKLplmLmMOFFomMhPfolFKBlfPHkbbLpphKMlbHFmLpoofmHfoOkLhfHPbPkOLLMpOMlllMompOHoKHffhKkhBKohLPKKpLOOmMOLFOHMoFfomhKfBKPhklbkpPLbbKhlFMLhoOflHFKoBHhfkKbhffLkKFpblkmppMFlHOmMfFBpkHFoPOkmbBpkPmMbpBFpHMolfOhmKFoOPHHLbKpHLBBkOPlbLkopoBHlOfBmHLkobHfLLKHLpBlkmPObFLHpMFflhhkmBFPokMbfpKhBMBlfFhmboLfphMKloHPmHKboffLfBKOhlBLpoPplHLfMBMhpFMbmfoLoffpflomhOFFkHPOMfLhpkMBKPOLmbFpohFMfOKFhbmokfPHboKKoPMHpbOmoLlMoOHlfmKohpfHkMBfbhKkpfMPlLOKbpFPOmHpLFOmmoBfkFMKbPhPpLMblPPlmMFbHFHHpoKfhHBKkBPhbHKbpflLlMpOmkFFpoHplHKhmfBhPkHffMmLPKFploPmmOFFomMhPfolBKBmmPPkbbLppPLMLbMFmmkoofHHfoOkLhfHHbPLhLkMpOMllmpoMpOHoMFffFmkhFBLfLPKkpLhbmMHkFOMbhhfOllKflHPHkBbkPHOOMkBfFMHmopfmHFKmMFhfmbbhPMLkMhpblKmpoMLFHOKmfFhPkHBfPKLhKKpklPMbhfFpHMolFPfmKlOfPHKBbOphLBMkOPlbLKoppOHlKpBmmFkobHflLKLbpBLMmPpfFLHpMFflkBkMBFPoLHbfpKhBMBOHFPmboLFhhMKloMPmokbppHLfMKOhlBLPoPpLHLMbBMhpFMbmfOLokBpflomhOfFkHPOMfLhpkMBPPOLmbFPppPMfbmFhKOoKfPHbKLBpPMHkbOfLLFMpOHkfmKohplHkmHfbHokhfBPlLOKFpFmMmHOfFKmmoBfklBKbMKPPLMblpOlmMFbPFHLooKfHHBOkkHhbHobpbFLlBMpbLLMBoHpKHKKmffhkkPBbPLLpKfplPmmmOlFomMoffKlBKBlBPHkbbLpplMMlbhFmFKoopfHfoOBhhBHPbPFoLLMpOMlllMompOHoKHffhKkhBKohLPKKpLKbmMOLFOmBoFfomhKfBKPhkobkpPLbMLPOFMmloOfMHFKoBHhfokbhPBLkMHpblLmppBFHHOMkfFflkmBfPKLhbBpkPmMbbHFpmbolFPhmKFoHPHBpbKphLBMkOPlbLoopoFHlmmBmHLkobHfKLKPPpflkmPObMpHpMLflhHkmBFPokMlPpohFMBOmFPmboLFhBoKLOBPmhBbopHLfbOmLlfLMoPfkHkKpBMHkPfbMfHLobFpFlKmhOBpmHPMkfLllkMBLPOLmkOpOhlMfOmFhmBokFHfhKLOfPMLobppmLFMoOHlfLmohpoHkMFfbHKkpbMfhLOPHpllomHOfFKHhMofklfKboHPpLMblpOhkMFOoFHmfoKFfpKKkOlhbhFbpPbLlMpOmlFbKoHFfHKoFfBhkkPffpOLpKOplpMmMOFFoHHoffKFMKBObPPkBbLPhlMMlbmFmOPoofHHfKKBhhBHObPblLLkMOMLkmOompoHoOPfFhKkhBBPkLPKkpLlhmMOlFOMboFfollKfHbPhkBbkPHLbMLBfFMobopfmHFKoBHhfHHbhfOLkMhpblLLbObpPHOoLfFhokHflBFLhKOpkFMMBOLFpHMolfOlLKFoMPHHpbKPmLBMkBFlbBlopfMHlKOBmhFHMbHfOLKKlpBlkmPObpHHpKMflhOkmBOomLHKPpKoPMBOKFPmBoLfpmmKlBOPmkpbopHLfbOpLlBkboPPPHkKpBMhlkObmfkLoKKpflomhpFFkHPMLfLpBKbBlPOLmbFpohbMfmPFhLkokFHHbKLoMPMkkbppmLFMmKFlfLHohHfHkKhfbhokpbMfpLOMmpFoHmHOfFKHhpbfkhPKbBhPpLMblpOhlMFOoFHfkoKfhHBKkMOhbHobpfLLlMpOmkFmooHpLHKHFfBHMkPffPLLpKlplPhmmOFFoHHoffKlfKBBPPPkbbLPhlMMlBbFmfFoofHHfKKBhhBHhbPfkLLKBOMkloLompOHoMFffkfkHBKohLPKKpLOkmMOLFOmboFfomhKfBKPhkkbkpPLbMLBbFMmloOFBHFKoBHHlhLbhfOLkbPpBlLmpoMFlHOMBfFlbkHBlPKKhbBpkPMMbboFpMfokFPhmKFomPHbObKphLBboOPlbLhopkMHLKOBmhFkobHfkLKKFpBlKmPPboKHpMFflfbkmBoPpkMlPpohfMBOmFhmboLFhBoKLObPmmBbOpHLfMKbflfLmoPFLHLKpBMHkPfbMfhLoFHpflKmhOBMBHPMofLlfkMoHPOKbbFpohkMfpPFHmBokfPHbKLOfPMHhbOfKLFbpOHlfkbohBlHKKPfbHKkpbMfmLOMopllomHOobHHhMhfkfKKbBkPpkBblpOhlMFOoFHmLoKfhHBKkFphbkLbpPlLlMOOmLLkbompmHKobfFhkkPBbPLLpKFplhLmmOlFoMHoffKlbKBkHPPKObLPhlMMlbMFmHpoOfHHfKKBhhBHHbPPLLLMpOMLkmOompPHoPHffhKkhBBPkLPKKpLhBmMbhFOMboFfolLKflMPHkBbkpPLbMLBBFMLPoOpkHFKmMFhfHMbhmhLkMhpblKmpoMLFHOKmfFhHkHBfPKLhKKpklPMbOoFpHMolFPFbKFOBPHlLbKphLBMkOPlbLOoppoHlKPBmHLkobHfOLKPfpflkmPObFLHpMlflFHkmopPoLHbfpKhFMBOPFPmboLFhhMKlOBPmpFbopHLfMKOhlBLHoPpKHLMfBMHkkObmfPLoBkpFlKmhOBFkHPMKfLlBkMohPOKbbFpohLMfpPFmmBokfPHbKLOBPMHPbOfkLFMmKFlfLMohkPHkKhfbhkkpbMHFLOMmpFlHmHOfFKmmMOfKllKbbmPPLMblpOlmMFbHFHLPoKfHHBOkBPhbHpbpbkLlBfOmLLmooHpOHKHPffhkkPBbPLLpKKpllmmmOFFomMoffKlLKBLkPPkbbLpplMMlBBFmLPoopkHfoOBhhBHMbPhKLLMpOMllmOompPHoMLfflbkhBKohLPKOpLpFmMOLFOmboFfomhKfBKPhkkbkpPLbMLBbFMmloOFBHFKoBHHlhObhfPLkmHpBlLmpoMFlHOMFfFlfkHBlPKkmbBpkhFMblPFPHMolfOhmKFomPHHKbKflLBMkOPlbLHopFlHlKOBmHLkobHfPLKFhpBlkmPObFLHpMKfllBkmohPokMbfpKhLMBpMFhmboLfphMKlOBPmHPbofkLfbOOhlBLMoPkbHkKpBMhlkObmfPLoKLpfhbmhOKbhHPMOfLbhkMBLPOLMbFpokhMfOKFhmkokfPHboKOfhbHmbOkfLFMoOHlfmKohpKHkMLfbhkkpfMPlLOKlpFOMmHpPFKmmoBfklFKbMmPpLMblpOlmMFBBFHmKoKfhHBooBPhbHMbpmMLlMOOmlFmooHpPHKMLfBlbkPffPLLpKOplPpmmOFFoHHoffKlLKBoMPPHpbLPbfLMlBFFmfOoofmHfKOBhhBoLbPPbLLMMOMllmOompOHoKHffhpkhBBPkkHkfpLhLmMbkFpHmoFfohHKfoHPhHhbkpHLbbKOpFMLHoOmlHlKoBHhfkKbhfoLkKBpbPmmpoMFlHOMKfFhHkHBfPKkmbBpkhLMbHLFpHMolfOhmKFOBPHHPbKfkLBboOPlbLMoploHLKOBmhFkobHfPLKKLpBhbmPpfFLHpMOflOhkMBFPoLHbfpKhLMBbMFPLpoLFbpLKlOFPmMbbopmLfMoOhlBbLoPFbHLKMBMhlkOfbfPLOKopflomhOBFkHPobfLlBkMoMPOLMbFholHMfbmFhFookllHboKBpPMHHbOOkLFMoOHlfmKohpPHkobfbhLkpfBPlLOKOpFoomHOfFKHhoBfklLKboMPpHpblPPlmMFBFFHPfoofhHBKkBPhbHMbpfOLlKlOmlOPmoHpHHKPBfBhKkPBfPLLpBmpllOmmOoFoHHoffKlfKBBkPPkFbLpplMbkMPFmLMooPpHfKKBhhBkkbPfKLLKkOMlkmOpbFFHoMKffKHkHBBPkLPbbpLhfmMbPFOLooFfohHKfOBPhkkbkpPLbbKOpFMLMoOkmHFKoBHhfkKbhfPLkKLpbhbmppBFlHOMOfFmBkmBfPKLhbBpkhLMbbMFpLpolFPhmKFOFPHohbKphLBMkOPlbLMoppOHlMlBmhOFmbHfHLKfppBlKmPOBFLHpOmflhOkmBoPoLHbfPOhlMfBfFPbkoLfphMKlBOPmHPbofOLfMoOhkBmkoPpoHLHBBMHHkOfbPFLoKKpfLPmHOBFkHPobfLlLkMBOPOLmbFPplHMfBFFhfBokfPHbKLBpPMHMbOfOLFKlOHLlmKohpHHkMKfBhLkpbMPlLOKOpFhFmHbmFKmfLKfklKKbfPPpkbblpPlmMFPKFHmfoKFBHBKkBPhbHPbppMLlMhOmlFmoOMOlHKMOfBOLkhBbPLLpMMplhBmmBbFoHMofFOhhKBOBPPBkbkpplMMlOOFmLhoopLHfMfBhhBkkbPfPLLMMOMllmOpbFFHoMOffbKkhBBPkLPbbpLhLmMbMFOLpoFFphHKfOFPhKpbKpPLbMLOpFMLMoOpOHFMlBHHlkKbhfHLkpbpblLmpoMFlHOMOfFlFkHomPKkfHKpkhKMbmpFpmbolfphmKFFKPHkfbKPBLBMkOPLfLHoPphHlbFBmhFkobHPfLKKLpBhFmPOBFLMpKMfllfkmkpPoKkbfPOlhMBBBFPBkoLfphMKlBOPmHMboPfLfMKOhLFmkoPpHHLPpBMhlkObmPFLoKOpfhFmhbmFkmHobfLlKkMPOPpLmbFpolHMfBFFhLHokpoHbKPMbPMmBbOlkLFMOOHllmKohLbHkKPfbhpkpbMPlLOKlpFlomHOLFKHhoBFofHKbOFPpoFbkpOlmMFOoFHLPoKppHBKoBPHfkLbpfPLlpMOMlFmooHFfHKMkfBFMkPohPLLpMMplhLmmOoFoHHofFOhhKBOFPPpbbLpplMMlOOFmLMoopOHfMlBhHFkkbPfHLLBFpbllmOomFFHoMOfflFkhomPkkHbbpLhKmMOMFpHmoFfohHKfOFPhHHbkfoLbMPKbFMkBoOOOHFKOBHhFkKbhHbLkMPpblpmpoMFlmPMkfllkkHObPKLhbBpklPMbbMFpLHolfphmOFBoPHHhbKbFLBbMOPLfmLoppPHlFmBmhFkobHPfLKKOpBlPmPObFLmhKMfllKkmLFPoLHbfpKlhMBBFFPLHoLpohMokBOPmmBboFPLFMKOhlBmkoPpHHLMKBMlfkOBloOLoKPpfmOmhOfFkHHobfLmOkMBlPOkFbFpolHMfbHFhmBokfmHbKLBpHBMLbOfHLFlFOHlfmKohFBHkMLfbllkpBbPlKOMmpFhfmHmOFKbfoFFohPKbOBPpFFblpOlmMFOoFHLhoKpoHBKKBPmbkLbpfOLlLbOmLhmoOMFfHKMofBBMkPBbPLLpMMplhkmmOFFoHHoffHpfKBOlPPMBbLpPlMMLOOFmLOoofHHfKpBhhBkkBHPBLLKOOMoOmpomFFHoKHfflBkhObPkLhbbhLlpmMbmFOFLoFlBhHolBKPhHHbkFHLBMLOpFMmloOpPHFKoBHhfkKBfoKLkKOpbokmpObFlHpKmfFFmkHBfPKLMbBpklPbfOkFpLmolhkhMKFBoPHkfbKfkLBKLOPlBmLppfMHlMFBmBpkofkPfkOMhpBhfmPlFFkHpKMflhOkmObPoLHbfpKlhMKkhFPLmoLhlhMKLBOPMkFbofFLfMKOhllmkoPFbmKHpfblFkOKkPFLoMHpflKmhbPFkLpobfkhpoMBlPOHobFbblHbPOKlmmBokpKHbHoBpPMklbOpmLFKLOHlKmKohFBmoKPfblFkpMFPLLOMmpFlomHbMFKLOoBplhPObPBPpHhblfklmomOOlFPooKppHBHBBPhBkLbHpMLlBoOmlFmoOfFfHKKhfBFhkPBbPLLmMMpllOmmbOFoHHofLhhhKBBkhHpbbkfOlMlhOOFmmFoofHHfMBBhlbkkbHPbKLMpOMPMmOboFFmPKMFlhKkhomPkbfbbpLlpbBOlFOLhoFbkhmKfBKPhkBbkfkLbKFOplbmlpOfmHFMFBHBpkKFfPFkoMPpbhfmpFMFLHOKmfFhokHoHPKHObBpKlPBbOLFpLpoloBhmohBohMkfbKfOLBBhOhlbmLopfMHlMKBmhokobHPfkOMhpBhLmPKlFkHpKMflhOkmOBPoHPbffklhbFOkFPLMoLPhhMKlBOPmkFbofPLfKLOhhbmkOBbkHLMOBMHHkObMPFLOMHpfkkmhOBFkmbobfLhpoBKkPOHmbFFplHMfOKFhmBokpkHbMLBphBklBPpmLFKkOHMomoohFBHkKPfblBkpopPlHKMmpFlomHBbFKmBoBfkhPofBLPpHmbloHlMMFOoFHmfoKppHBMlBPFMkLBhpMLlKoOmOLmOoHFfHKKhfBllkPomPLHOMMPklOmmBfFoHKoffKhhKBBkPPHmbLfolMKFOOllPOoophHfKoBhhfkkbhPbLLBOOMllmOOFFFHoKHFlhHkhOBPkHMbbpLlpmMOlFOLpoFpohHKFBKHhkBbkfKLblHOpllmkOPfmHFMkBHfPkobhPBkoMPpbhlmpbHFLHOKmfFhokHOfPKkBbBpklPbfOLFpkbolbHhMKFBoPHkfbKfhLBKkOPhBmLOhfMHlMpBmHKkObHPfLKMhpBhkmPBbFLLPKMFkBfkMOlPolbbFpKlhbFHMFhkfoLflHbKlBOhlFOboFbLfMMOhlfmkohFbHLOOBMhlkOBFPFLoMHPlpKmHBLFkbkobfLhpkMBlPOHpbFfhlHMFOKLhmBokpKHbhmBpHoklBPpmLFKkOHpomKohFBHkKPfbllkpBlPlLOMmPLlomHBfFKFKoffkhPKbBLPpHmblfolmKFOoLHKmoKpPHBMLBPLPkkBboLLlKOOmHLmoomFfHpKhfBmLkPBbPLLMMMpllOmmbOFoHHoffPhhKBBkPPHkbLpplMfPOOFmmFOpkHHFMoBhkBkkbPPbLLMpOMhbmObMFFHpKHlfhKkhomPkHKbbPolhbBOlFOLHoFhMhHKfBKhmkBbkfPLbLmOpFMmloOfmHFMLBHlfkKbHPBKkMPpbhfmpmoFlMMobFLhokHOBPKbhbfpklPMbOLFpLholpohmKlBoHHkfbKfOLBlMOPLOmLOhfMHlMoBmKfkObHPfLKMhpBhkmPOLFLHpKMFkhOkmOlPoPobFpKlhMBOkFPkboLpphMMLBOHbkFbofmLfpPOHlBmkoPFbHLMpBMllkOoMPFLmHFpfhomhFKFkHhobfkhpkMFFPOLmbFpHlHMfOKlmLOoKpHHbfOBPPMklbOpmLFKLOHhlmKoHFBMkKPfblfkpkoPlKfMmPLlomHBBFKLfoBfkhPKbBLPpHMblpmlmMFOolMmfoKpHHBHBBhhbkLbppMLlKOOmhFmobmFfmOKhfBlKkPmPPkLpMMpllOmmBFFoLHofpohhKKmhPPmBbLBFlMMLOOFMmFoolhHfKKBhhkkkbPPbkKlFpbhkmOkOFlHoKHfffFkHomPkHHbbpklpbMmkFOLPoFoBhHOoBOhmkKbkfpLbbOOPFMmloOfmHFMLBHlBkKbHPBKkMPpbhfmpmoFlHmobFLhokHOBPKkPbfpklPbfOLFpLMolpKhMKFBoPHkfbKfHLBMPOPlbmLOhfMHlMPBmBmkObHPfLKMhpBhKmPBBFLLhKMFkhOkmOLPoKBbFpKlhMBOkFPkBoLpPhMMkBOHbphbOfMLfHpOHlBmkOHKOHkMHBMPmkpbmPFLmHFpfhPmhfBFkHhobfkhpkMFFPOLmbFpHlHMfOKlmlBoKPbHbMmBPPMklbOpmLFKLOHhKmKoHFBMkKPfblfkpkOPlKfMmPLlomHBBFKmooFfkhPKbBLPpHMblpmlmMFOolMmfoKpHHBfFBhhbkLbppMLlKOOmhFmobmFfMKBofBlkkPObPLMLbbppBMmmBlFoMHoffohhKlBkPPKMbLpplMMOOOFmmFoopFHfKKBhhLkkbPPbLLKbOMllmOhkFFHoKHFlFLkHOFPkBpbbpLlpmMOlFOLPoFpphHKlBKHhkBbkfOLbKfOpLfmkOPfmHFMoBHkOkKbhPBkoMPpbhkmpOBFlHOKmfFhokHObPKHHbBpKlPBbOLFpLHoloFhmOOBphMkfbKfhLBbpOhlbmLopfMHlMKBmlFkobmPfKKMhpBhlmPmpFLHMoBFkhOkmOFPohlbFpKlhbFOkFPkBoLpoHbKlBOPmkFbofMLfMhOhlBmkOHFbHLMHBMKBkpbmPFLoMHpfhOmhBFFkLmobFKhpkMOKPOKfblpolHMfOKFhkFokpHHbMoBpHBklbOFBLFHPOmlfmKOmFBHkMMfbPMkPbMPlLMHlpFhHmHBKFKHHoBfKhPKbFlPpLMblpmlmMFOolMoLoKPfHBHPBhhbkLbppMLlKKOmhOmoomFfHKKhfBllkPBbPLLmMMPklOmmBfFoKooffKhhoFBkPPmbbLPlLBMlOOFmmFoopHHfKoBhhFkkbPPbLLKoOMhFmObmFFmpKHfflkkhoOPKLPbbpLlpmMBlFOHmoFfohHKfBKPhHMbkfpLbKLOpLBmloOpHHFkOBHhfkKBmPBLkKPpbBHmpoMFlHOKmfFlkkHOBPKHhbBPolPMbBlFpPboLfOhmoLBoPHmfbKfpLfMkOPlbmLoppHHlMoBmlFkoBFooLKKPpBKfmPOBFLHhKMflFMkmBFPoKbbfpKlhMBbhFPmboLpohMKlBOHbphbOfHLfPfOhlBmkOHKOHkMHBMKhkObmPFLokPpfhomhmmFkLmobFKBmKbOKPOoFbFpolHMfOKFhkLokFKHbKLBpHBklbOFFLFPFOHlfmKOmFBHkbBfbhmkpbMPlkPMmpFhMmHhlFoHhoBFohPKbOHPpBObLpOlmbLOoFHkPoKFfHBKkBPHfkLbpFOLlHMOMlFmoOMFfHKbKfBoMkPBbPLkhMMplHLmmPPFpHHofFOBLKfpFPPfmbkpplMbkmfFMKBooMhHfKKBhHFpMbhFMLLMppbllmOpbKhHObHffplkhBBPkLPKopLhmmMflFOHMoFfoopKfOhPhmBbkpPLbMLbbFMkpoOfmHFKoBHhoFHbhFoLkOkpblkmpObFlHOMlfFhokHOfPKLhbBPoLlMbBHFpmpokfOhmKFBoPHmFbKFlLBMKOPLfmLopPfHlLbBMhFkobHPfLKKHpBpFmPBFFLmhKMfllhkmBHPoLHbfpHffMBBpFPLboLfPhMKkBOPmHObopHLfKKOhlBmkoPpkHLKpBMlFkObmPFLoLOpFhomhBLFkHhobFKBFKbOKPOFLblpolHMfbLFhkfokooHbMoBpHBpHbpFBLFMOOMlfmKOfbKHkMMfblFkpBbPlLpMmpFPmmHOfFKmloBfkhPKbKBPPmbblfHlmMlOolMfPoopMHBlHBhhbkLbpBHLlKpOmpBmoBbFfmOhLfflOkPKBPLLpMMppBMmmBKFomkoffohhKFBkPPHkbLpplMBFOOFmmFoopFHfKKBhlbkkbPPbLLLkpbhLmOBfFFHOKHFlBbkHOlPkFfbBpLlpmMbfFOLMoFokhHMLBKhmppbKfmLbfOOpFMmloMblHFMhBHhkkKbHPBLoMPpbPPmpoMFlMPKmfFhokHooPKLhbBfLlPMbOLFpFPoLpphmMKBoPmkfBOMLLfKOOPBKmkopfMHlmKBmllkokPPfHpMhPFoMmhBFFLpmKMflhOKlmOPomBbfBLlhMfOkFHmboLpbhMKlBOHhkFbopHLfkHOhlBmkbpFbHLKpBMfBkpoMPFHhMHpFlKMmOBFkLhobFHhpkMBlPOLmbFfOlHMoOKFhmBOofPHbMkBpoPklbOpmLFMoOHhFmKOKFBLKKPlbhLkpObPlHpMmlKlOMFkoFKLMoBkkhPKBBLPHLMblBMlmMFOolFmfoKfhHBOLBPhbkLBbpMLlMOOmPOmooHFfbPKhfBhkkPkhPkHPMMfKlOmMOFlpfkoFpphhpMBKPPkbbLBolMKLOOOOmFbPfHmlhbBHllkkfMPBLLMpOMMHmObMFFLPKHflhKKmLpPKHMbbmFlPmMOlFOlhoFpphHhHBKlbkBBoMlLBKOOpkFmLoOfmHFFBBHllkKObPBLoMPPfommPBlFlOBKmfFhokHobPKHMbBbBlPKLOLlhFFoLpmhmokBoPHkfbKphLBKhOPLmmLopfMmkKOBmlpkolpPfLKMhPFlkmPBoFLHFKMflhOobBFPomkbfLolhMBOklHmboLPlhMhfBpPmkFBppHLfofOhlfmKoPFbmKKpBMLbkOfBPlLoMHPllKmhBmFklkobfLhpoBBlPOmhbFmLlmMfOKlmhKokPpHbbBBpPMklBPpmLFooOHLFmOohFBmoKPfbLkkpfKPlLOMmPLlomHflFKOpoffkhPofBLPpMfblPKlmMFOolMmfoKhbHBbHBPhbkLBhpMLlomOmBFmooHFfmOKhfBLhkPoOPLLpMMPklOmmfpFoKPoffKhhoFBkPPMobLFBLbMlOOLbhOoohkHfKLBHhBkkBHPbLLOlOMbkmpomFFmpKHffkfkhMhPKLPbbPKlpmMFbFOHlolfohHolBKPhMmbkMOLbMLOpLBmloOhhHFHMBHhfkKBmPBLkOppbmHmpoMFlmPKmfFkokHMoPKLhbBPolPMbFkFpKholfOhmoLBoPHblbKPOLfMkOPLfhPopHfHlLpBMhFkoBMPfLKpbpBOfmhObFLmhKMflkmkmOOPOLHbfPOlhMBFhFPmhokfphMokBOPmbpbohFLlMKOhLFmkoPHoHLhOfbhlkOfbPFLopkpflmmHOBFkmHobfLKlkMfkPOLmbFPplHMflfFhKpokfPHboKBpPMBbbOBoLFMoOHLlhHohHmHkfofbhLkpfBPlLOphpFOfmmOfFKmmoBfkKpKbFkPhLMblPPlmMFloFHfMoKfhHBooBPhbBkbpMbLlMOOmLLmooHmlHKkhfBhkkPffPLLpPfplBlmmOFFomMoffKobKBbBPPkbbLPhlMMllmFmOfoofHHfoOBhhBBhbPKkLkMpOMLkFfoMmpHoflfFhKkhfFMMLhPopLfomMOlFOHmMPfoLFKfhMPhkfbkPHOOMkfBFMlBopfmHFopkkhFmMbhhFLoMPpbLKFFObPHHOkbfFhokHflbbLHoPpkBoMBOLFpHMMhfOLlKFpfPHklbKphPKMKfflbmPopfMHlKOolhFMbbHPfLKMhpBlhhBObPmHpOpflhpkmBkPoLHfBpKlhMBOhFPmboLfplLKlBOPmkObopHLfMKBflBmkoPklHLKpBMHkPfbMFHLopLpFlKmhOBOfHhbFfLLlkMBLPOLmkOpOHbMfpBFhmBokfPFkKLOmPMkLbOpmLFMmmolFkpohFbHHKhfblOkpBFMKLOMmpFlKMlOFFKHhmKfKlmKbBkPpLMblpOkkMFBhFHmloKfhHBOkBPhbmObpFFLlLOOmlFmooHPKHKKmfBhkkPFbPLLpolplhmmmhoFOHHoffKLfKBBhPPkbbLPhlMMlfbFmfPoOfHHfKKBhhBmhbPFkLLoBOMLkmOomPpHoLLffhKkhBBPkLPoFpLHBmMOLFOMbhhfOLbKfmFPhkBbkpPLBMkBHFMmMoOPBHFOokMhfmpbhFlLkOMpBlPhboMPOHOpOfFhOkHBoPKLhKKpklPMbBkFpHMolfOllKFBoPHkkbKphLBMkBBlbmLopFLHlKOBmhFoKbHPfLKbfpBlkmPObpPHpKMfllPkmBFPoLHfBpKlhMBpbFPmboLfppHKlOhPmmobopmLfBKOhlBkOoPoPHLOFBMHkkObmFoLoLlpFlKmhOBFkHPbkfLhMkMBlPOKbbFpoHlMfMOFhmBokfPHbKLpbPMmpbOFLLFBoFOlfkHohPKHkBkfBhPlbbMFPLOoLpFlOmHOkFKHhpbfkhPKbBpPpLMblpOhlMFOoFHmooKfhHBKkFphbkLbpPLLlMOOmlFLmoHFfHKPbfBhkkPffBFLpoKplohmmOFFoHHoffKlMKBOmPPkfbLhplMMlBHFmkkoolbHloOBhhBmhbPLKLLMpOMLkmOomPpHoPKffhKkhBBPkLPolpLHBmMOLFOmlLOfoLBKfOMPhkfbkphLbMLBbFMmloOFfHFKoBHhfhHbhFkLkMPpblLmpoMOpHOblfFhokHBfPKLhkKpkHfMbOLFpHMolfOFlKFpbPHkfbKphLBMobblbkmopPHHlKOBmHLBObHFhLKKOpflkmPPbHBHpbOflLFkmmlPokMlPpoHKMBPLFPmboLFhobKlpLPmhLbOpHLfMKLLlBKboPPhHLKhBMhlfkbmFmLookpflKmhOBBpHPbhfLLlkMBlPOLmbFpoHoMfOOFhmfokFHHbKLpLPMhfbppmLFbpOHlfKFohlmHkKPfbmLkpbMlbLOoppFBOmHplFKHhbmfkOHKbBLPpKBblpOHhMFPhFHmfoKFmHBKkpphbKObppMLlMOOmlFKloHhBHKKmfBhkkPBbFMLpopplHLmmpLmOHHbHfKlOKfBkPPobpBppHpMlflFmPlooFMBPKopohBoLbPPbLLbhLbllKkomOLHOKHffhKfLBBlBLPoHpLlhmMOlMkHmbMfoLkKfBKPhkBmppPHHMLfLFMmloOfmHFKopOhfkObhPfLkbHpblLKkoMOfHpKmfFHpkHBfllLhBmpklPMbPLFpHMBBfOLPKFmOPHKlbKphHMMklBlBmLoplBHlKOpHhFHMbmPfLKbmpBlkKPObKPHpKMflhOkmBFlLLHOfpKlmMBOkFPmbBbfpLPKlpkPmKLPOpHHmMKBOlfmkoPLbKBKppPhlMLbmolLobMmPloKOOBLLHPobfLHhfbBllKLmkLpOlHMfOKMLmBBffPLmKLBhPMklhkpmmbMofklfmKohFBPpKPpmhLMkbMPlLOMmpFloKpOfFOHhoffkHHKbBLlKLMkfpplmMFppFHmfBLfhmmKkBPhboLbppMmfMOfhlFPOoHllHKKhPbhkmkBbPLLpBBpllOKmOFbfHHoffKHmKBBklhkbLkpplMMlOOFmmFBkfHkFKKBmhBkkbPPbmBMpfhllKKomlLoOKHpMhKmOBfPkLPfblBlpKhOlhkHmLlfoHMPPBolpkBfLpPLbMLphMbmlBofmFLKOBHhfkKhLPBmFMPfMlLmhoMFlOkKmPBhoMkBfPKLhbBoplPKMOLhKHMolfOhmKFBolPkfbOphLfMkpHlbmLBofMFfKpBmhFKpbHPfmkMhPmlkmPObLLHpKMPFhOMHBFoOLHBlpKlhoBOkfbmBoLfpmBKlBOlMkFoPpHLfMKpmlBmkBHFbfkKpBMhlkObmPFmKMHFllKmmOBFkHPobPfhpMHBlloLmBLMBlmobOKfPmBokfPHbKkBPlHklOFpmmBMoPHOlmKBpFBklKPhlhkKbmLPlmOMmmHlommOfFhHhoBOhhPKbBLhpLMblpOlmBfOoFHmfomfhHBKkBPFkkLbppMHOMOOmlFmobFFfHKKhpKhkkPBbPLHbMMpllOKfOFFoHHofoFhHMMBklPkbbkppkBFHOphhmFKKfHHfKKBhhfkKOOPbmbMpfHllbOmbFFkkKHPbhKBbBfPhFBbbFLlpooOlFpHmoofohHmoBKPhkBBkpPLbMLOpLmmloOfmHpKoBHhfkKofPBLkMPfklLmpoMFllMKmfFhoMfBfPKLhbBBhlPMbOLPmHMolfOhmhMBOlPkfOKphLfMkpHoOmkBofMhFKOBmhFkobmPFmLMhfHlkKOObLLfhKMPfhOMhBFLhLmboKHlhoBOkkPmbokfpHlKlBOFlkFbopHkfMKOhlBmkppFbHLKpfkhlkObmPFhmMHpflKKFOBFkHPobOPhpkMBllBLmbFpolHkoOKFhmBbpfPHbKLBpBPkLOKpmmFMoOmlfMOHLFfklKPbMhLkpbMPlLpMMFBloKpOfhLHhpBKohPMmBLloLMpoppLlhOOohHmfHffhHfKkfbhbkLobpMLlMOpmlFmooHFfMkKhfBhkKfBbPLLpMMBplOmmOFhbHHoffKhhmKBkPPkbohpplMMlOOPlmFoofHLkKKBhhBkkmOPbmFMpfMllmpomLFHoKHPbhKhoBBhMLPBfpLlpKMOlBoHmoFfohHKfBKlHkBbHpPLbMLphFMmlBPfmKhKoBHhfkKbhPBmKMPFBlLKhoMFppMKmPLhoBBBfPoLhblpklPbMOLFpHMoPfOhmKFBoFFkfbKphHPMkOPlbmLbbfMHlKOpOhFkobHPfFLMhfMlkKHObFkHpOMflhOMhBFBlLHBPpKLmMBOkhPmblbfphMKlBOPmkFOOpHLOMKOhlBMooPFbkKKpFhhkkObmPFLoMHFFlKKHOBhoHPokMPhpbBBlFfLmblpoLbMfOKLPmBokfPHKKLBpPMklKMpmLFMofOlfmKohFBlhKPfbhLMKbMPlLOMmKLloKPOfhOHhoffkmPKbBLloLMkbpOKlMLppFHmfBKfhplKkBPhbkLbppMmfMOfmlFmOoHllHKKhPBhklfBBPLLpMMpllOKhOFOlHHBffKHmKBBklPkbfopplMMlOMBlmFBOfHFpKKBHhBkKbPPbhPMpOMllkHomFFHoKHKmhoMpBBlKLPbBpLLhFoOLhOHmLpfOhHKfBKfpkBOlpPphMLfpFMMkHffMkFKoMFhfkKbhPKfhMPFBlLKHoMFLHOKMfFhomFBfPKLhoLpklPMbOLbhHMBffOLMKFBOPHofbKphHMMkMKlbbPohlBHlKOpmhFPBbHPfLKMhpBlkKOObhLHpobflHPkmBFloLHHOpolhMBOkFPmbBFfpfPKlpOPmKLbopHmfMKmhlBmkoPFkpPKpPbhlpKbmPlLoMmpflKkfOBFkHPblfLhpkMBlBLLMOBpoHmMfOoFhMFhMfhkbKLLohbklbOpmhBMofPlflkohhBHkoHfBhLMpbMmbLpMmpFlomHOfhLHhBBfkhhKbFLPpLMOfpOpmMFPBFHMloKfhkBKkbOhBkLbppMLlMOfMlFmOoHFfHKofMKhkMHBbFLLpbbpllhmmOFpmHHoffKHKKBBkPPkbKPpplMMlOHFmmFoofHMBKKBhhBkMbPPbLLMpbblLKKomhLHoKMffmKkhBBlLLPompLLHMBpkFOHmBlfokFKfBKPhKFbkpPmfMLFblbmloOfmHFKopmhfMobhlFLkbHpblLKhoMFlHPKmfFhokHBfloLhOfpkHHMbpKFpHMBkfOMhKFBoPHkfbKphmbMkfHlbmkoplBHlKOpMhFBmbmPfLKMhbMlkKpObOLHpBbflHPPKBllOLHbPpOlhMBpomhmbBKfpFmKLBOPmKLLBpmmLMKBKlfmkoPFbHkKPPBhlMPbmlkLobMmPloKMOBKfHhobfLhpKbBLlPLmOLpombMfpOoLmfBOfPpkKkBpPMklbppMmLMofMlfKpohFKphKPPFhLofbMPLLObbpFlokFOfFKHhoFfkhPKbBLFbLMblpOOKMFOoFHMlObfhkLKkHBhbkLbppMLlMOfHlFKhoHFFHKomfBhkMhBbkPLPMMpllOmmOFhKHHmffKLHKBfoPPkbOkppBkMLOOFmMLFOfHklKKoPhfkkbPhfOmMPFfllkloMFFHoKHfFhoMmBBloLPOFpLLhFoOLhhHmPMfOhHKfBKPHkfOopPmfMLfHFMMkHffMkkKoHMhfkKbhPBLKMhFflLKhoMhKHOolMOhobbBfMbLhbfpklHMbOLPbHMolfOHbKFBoPHkfKHphLBMkmllbmLoplBHHKOPfhFbkbmPfLKMhpBlkKpObhOHpobflHPkmBFlOLHPopolhMBOkFPmbBlfpfMKlppPmKLbopHmFMKhhlBmkoPlfokKpPBhlHobMPFLobMmPloKMOBPBHhobfLhpKbBLlPLmOLpombMfpOoLmfBOfPbhKkBpPMklbppMmLMofMlfKpohlFBMKhPFhLPObMPlLOMmpllOKMOfhOHhBlfkHBlkBLlHLMompOlMMFOpFHmfMHfhHBKkBHhbkLbppMhpMOOmlFFBoHFfHKomhHhkMMBbMbLpMMpllOmmOFhKHHBkfKhHKBfoPPkbOlppBPMlOOFmmFoofHkBKKfKhBMLbPHbLLMpfmllKoomHKHOoFMohKMHBBfKLPbBpLlHmMOlpMHmoFfomBKfBKPhkBKhpPLbMLOHFMmloOfmMfKoBHhfkhbhPBLkMPMhlkKOoMhLHOKMfFhooKBFPKLhbfpklPMbOkFpHMolfOhmKFBoPHkfbKphLBMHOPlbmLopMhHlKOBmhlkobHPfLKMhpBlkmPObFLHpKMflhOkmBFPoLHbfpKlhMBOkFPmboLfHhMKlBOPmkFbopHLfMKOhlBmkoPFbHLKpBMhkkObmPFLoMHpflKmhOfFkHPobfKhhkMBlPOMfbopolHMfbKOMlfMfOKfKKLBpPMklbOpmLFMoPPlfmKohlFBMKhffhLkhbMPlLOBbmhlOMbOfFOHhoBfkHHfBBLPmLMbLpOlmMFOmBFmfohfhHBKkBhhbkObppMhpMOOmlFmpoHFfHKKhOKhkkPBbPLLpMMpllOklOFFoHHoLfKhhKBBkFBkbbLppLbMlOOFmmFKPfHHkKKBmhBkKbPPkpbMPOMllbFomFlHoKmffhPpMBBPkLPBppLlPmMOphkHmoFfoHPKfBoPhkfbkpMOFMLOpFMMfoOfMHFKhkbhfkKbhhPLkMhpblPFLObFLHOOofFhOkHBfPKkbllpklPMbpMFpmbolfOMBKlBhPHklbKpMLBMkPmlBmpopFfHlKPBmhOMLbHPkLKBBpBlKmPOLFLHmhfflhOkmfoPoLmbfpPoMMBOkFPMpoLfPhMKlFhPMkKbopMLfMpOhlBbOohFLHLKHBMhkkOBlMmLObBpfkBmhOfFkmbobfObHkMBlPOKobFpOlHMkHpFhmBoklkHbKkBpPMOobpPfLFMoOHlfmKohOKHkKMfbhkkpbMPlLOfbpFlhmHOlFKHhoBfkmLKBBLPpkbblpOlmMFohFHmfoKHLHoKkBPhbphKMBHpBkobfPkPPOpFfHKKhkLfMHmolBkhokfbOohLHMMpKlMfPfHhhKBBkMmhMKBBOhBkKHOlFmFoofHlfHpKHfHHfkbPoLLMpOMokLoMfphBMMkOlFkFMBPPkLPbbmmPokfboOplhMKkOFkHMLKhkkBbkpPOLkBMMPLlLMHOHlLhhkHhLkKbhPBLkMPfobofpObFHHOKmfFfPHLKFfOPHklBpPbkfHLlBHMolfOBbHhKMbhHbKFfLFOMMOPlbmLmBOmlkmlOBFFhOKbBKbbbppBlkmPHmplflMlOBFOPBoffKhOkkBkhFLMphlKmboLfpffmlKpFLHBkHBBpkkkbPpHLOhPFoHLKpBMBKhhobBohkllBKPbfhOkFkHPobkoFfHloKfHMfbkpolHMfbLpBLooKFFHbKLBpFFHFKhffhLkBbPpOObOBFBHkKPKlFLPfKofoOObppFlomHmlOolmmpOpllPFolfkhmKkBhbhMoOoFHmfHPOPlFmOoppoKobppMLllfbhpOLBMPOPlPmBKBfPHPobBphhLfBlPPlMbhmBmooffKhhPOKPBhhhKOBfOfkFbLpHLLoOFkHfKKBhbMHLLHBBPhLmbmPbLLPOFPHoKHffbMmBKmBKhOkMbmpmBpOHFOHmoFKPFpHFoFfoPbKlBKhOFLpKFMmloOoMlFmBlhFOhhkmBOhLkpbPPoBOlHFLHOKmfFfKBkBkPKLhbBMkphkfbOoMmoolfOhmHpKOfphKKpBBPMkObbLkmhopfMHlPPoHFPhHobbBhLKPpHlkmPObKkFmmFkOlBmfoLBOpbkFBpPlhlOHFPmboLobFomKoffbhMkHblLfMKOhlBmkhPhMBLMOfhhlkObmMlhHKBBBOKLLMlpBfmmFOKfPHMKmhLLmbFpoOkkbbpPblfMlOMBLmkoMfoHllOPkLFMoOHoOLkMPOLfLmOohFmmObMPlLOMmKolomHOfFKHhbBKKbPPbfbPpLMblMLPFLlMhpfLlmOOPFfmoKMFMKBbppMLllLbKpLLpmmplLbPMObFlHBKKhPkLMMpllOlbMoOMlkMLOPFBmFLPbmPbOOPFlMMlOOobLfmhpkBomkomflhPPlPHLLMpOMoLLmbfpffomkoLFfhbobfLhKKFKoLfmMOlFOloHHOLFMPlkHfKHommPLLbMLOpoFlOmpOpFompKbbKPpLholLHMPpblLFoMbpBFmMBKfFkHKBmPKLhbBMpphLfmOOMLKMokhFHHMoKfMfbbMphLBMkmHpBLKmMKmlfmLOKoBKlbHPfLKlMbOPLkfHFOHFPMFKbFoHLokFKkkbfpKlhlLMPOhlHhoOfFlHKolpkkpbopHLfFMbLPLFkmhpflOFofohlkObmfphKkMbHPpLhMfOOlbOkFBhpkMBlbMhKKkBBpMLmMhKMlOmPomFPloBMPMklbOMPhfkkbfPPLBOhFBHkKPkoFpHKKbffhokKbKOpLhbBpPfhmfOoFMLofBPpLMblMKPHFOMOpOlmhPoHFmHKoffLFoBKpMLlMOMBpkLpmmpfBpmPObFfhMKMfhhokOpPlOmmOFKpFmmkKkFpHHoMPhKpbLpplMFObPPbLfMpLOMfPpoPFBhMKbBlKLkmbmkllhMpOhloHMOBfoHmKLPKkfbbpLlplBMOpklHMOoHlbooBHPhkBbkmmPhLmMMpHLoBHFKHFKoBHFOhhkmBOhLkpbPomfmFoFmHOKmfFBFHkKLffphkHbKhlLLbKffmfolfOhmHloofkbPBhphLBMkMMpOLomHOmlkHHlhfphMFhBOpolBmOKokbmppHfMmpFphMkmBFPoHbkpboPbkbbHObmpoLfphMHFKoFBhokPffhlLhbBPfkLOBFbHLKpkoFKpHKFBlPhHbpmlKmhOBoplHmOohFBHlokMmHlkoBkhBHppbFhmBokkmFoHkohfbhKKHBFhLbmpolfmKohKfFpmooOFFPhKlfBhoKfboLmMFOfFKHhhlOLFKHMoKmHhObopOlmMFmbpflFmPmPHBbhBPhbkLbppMLlMOOmoFmmoHFfHKhmoffpHloLfolfbFpllOmmHPOHFmmkLfhMKBBkPPpHkkBpKpMoOOFmmFHlOfFomPKBhlkkbPPbOplHmMBKmHomFFHohfObFhHOBfPmLPbbpLOLLobbpLFMMoOpfmLpBMPhkBbkMmPFkKMPpMfOHhKmOBKPBHhfkKlHbBOMBBpMlLmpoMoFlOmFOBbhHhoBfOhMlMbPphkfMKPFOHoHfOhmKFLpfhhkobMfhbkoMmpLomomfMHlKOoLflHLKfBhkmMhpBlkLHMfpHFPMfOKfmmfKhBhOKFBHkolfLhoKBBBPKkbbfpPlpHlkKbopHLfllMHppLlMLFKHLKpBMbLhhKBBohkKBHlPBmMOBFkHPhfokfmKbfBPOLmbFMLPhkbMhPLflMLOpFhHOoOFkHfHhPOLFMoOHoLLbbbOpLbmbomFoHfKoflolbLpFlomHHFOpFMmkOlFMpBKMhFLMblpOOpLoMMpfLbmPoHlFmMOphMkLbppMOHkKblphLkMkpkFhhMOLfKHoKOfFPPmKpPlOmmOFollfmoOPbHHHopKOkLbLpplMlKmhokLompLoHPKKBhhBPkKKBBhmLMBBoPLmMKbkmfKHffhKPMokfohBkBbopMFkbOpflpoFfohHKfBKPhoLlkKmLOMLOpFMFoMPoMFkHHoMFLPkKpolLHMPpblLfHMmpfFMmKopFPfHBfPKLhbBpklPLlHLplmmolfOhmhFKHfHHfkhBmplkkbHpBLmhPpllkHpMBhpkobHPfPPkLBlpOLpbfOOfMokflhOkmLlfBhplFBLPLLmmPlbmboLfpBfmFoLfHHLFLpHLfMKOhlBmkkPkMbBKPfbhhkObmPFpMLmbmPFfmMfpllffOfhhpkMBlMMhKKLbHomkpMhkKmOokfPHbPpKlbBHHKObMhkkPlkllmKohFBlLmmFkhMkpbMPlOhkkblPplmMLpPlBMFOOhhKoBLPpLMlhBHhfkFmophLLMPhbHPKkBPhbPOkPfBPPLmBfOFlOMMpkppobfBhkkPLoBpPPkFkflMmmOFFoLLMfopfHHHofpFkLbLpplMFhbophlobBofHLKKBhhBHlKlBhfoMMOMllmOmFKhfFmfOPFBKFBBPkLPlPbphFFfbFOHlFHoFbhHKfBKbbhpKOBMPBkFMHpllmoMfmHFKoKbFfHOKBBfPpMhpOlLmpoMoPFpmpomBPHHKKBhhblBpPlPMbOLKHlPMFpbFhOmBHPHkfbKbBOLLMboKfFpOBfMHlKOKlfohPoBfBhOfMPKLfmPObFLlHmlOofhHpKhfoPMKBboPmLLmPlFmboLfpBHmFkPfFhkKKBkPmbHpblBmkoPKmFkmKolphKfbmPFLolFbFppLBHlOKlohMOFBMKkBlPOLmkOBpPhLMmOoFfFLOFFHbKLBpbBHFoBMBhfklbhPlmooMFBHkKPkhfpHBfLPmLOMmpFomLkblOhfMmkOolBHLoKmLkKblpOlmFmbBpOlmhpOlFfmpKfLpMmpFlomHOfkKoffoOlFfHKKhkMFLpmKhBmhplFMOlHmmOFFoFKMBOkFOPBBmPPkbbLbhPokohKpbLPMKOMMHoFBhhBkkLMBMhlkkmfPFLoMpOKlKMlObOpKoBBPkLPlBBpPmLmmlpflBmmkPfmmLKMfkkKbkpPLblLbkpbLHmmpbOBofBHhfkKKLflhfLmbhPlLHblpkFmFhFbhokHBfbphhKFbPphLlHkpKlhMFOmFhmKlFhlkfbKphOOkpbMPbfhmMpFmpobBmhFkokbBFPHkBmkOOFPmLlKHpKMflflpblfmpPpffMFPPLfMpLPFFMpoHFfHOohFBlPbMpHLfMKmKppLfMKKHfohBfbhhkObmPFpBkPBLPPlHMMOOlboBfphpkMBlfOHbkhBkhBFfOpFhmBokkHFBmOOOhKklbOpmOkkbMmpPLLMMOflHMpfkhLkpbMMLhkkHBoPkkBMhFMHhoBfkbHHMKOFFpkKHBPPHLHpbFHmfoKKMFkmpkmfFHlKhBlOlbBOmlFmoHPpBBPmPOoFlHbKlbpLmMMpllOFBMlpPlLBkfphhKBBkbfhLKOHLLpMlOOFmflMHpBlBhKoLflHBkbfbhoMHkhBbPLLpMMplkBkBHHKkBBPkLPllBlhBLHMOOHfBmPoOlBFbfLPhkBbkMmPOkBMMpHLohpOKlbPPohfmHkKmolkBMPpblLFHMMOLLbmhoofhPbKFfphlpppMlPMbOLKPlHMoOffBmKoKfpHfHpPLLBMkOPomlkMKOlBKmoopFfHphPPhLKMhpBohkbMhpBBhMBoHFbHkoKhmkBbfpKlhFPbOpplmkMfphMKlBOPmfFLpmHpKMmOhlBmkMFpllOmpLOMFOooHPHLoMHpfOBLMbbplBMmLooFOHFKOFokkbFpolHFLMopolHmoohFFmbOOhkklbOpmOKLHMmpmlhMmplHKoLfbhLkpLFBHhhKfblPkLbMKoklpBKhpFPpHBMOBbfhlmohHMmOoFHmfmpOlFkHOokfFhkKkBPPOkPoklKmooHFfFmHHomfPBlBKPLLpMMmKPLLKMopkLBMLLfmlKBBkPPHbkkBHhFLOMPpKLBPkOblBmllPFFhKofHMhplLHfKPfMMoKoHOooffhKkhkLfoPhkFbpPhFfbFpLlHMLFmHFKfBKPhPLKLBpPhllbofKmPoOfmHFhkohBLHlKPBhPPfkphlLmpoMKLFhmBooFkmBLLfkhoKbBoPmFfOLFpHMolfOpmmfLoHFkKbKphLBlpblPlLBmMHoHPKOBmhFhmKMfBhllmmoooPmOhFLHpKMkkFlmLLpffPlLObOOfklBbobFLoPfphMKlkkfHHBKFBfhPoPpblBmkoPofFkmholLokMbmPFLolMbKPlLPbLOPpmoOfLhpkMkBBphLKBBBhBkKMPpBhOohfPHbKLKbfbHbKmBFhkohpklfmKohoBlfHhOOfpHhLlbKpOfOpMlomHOfoblpMKOLFkHLkoBMHBKpbmhbFFpKFHmfoKObllHhFPfOHofpBKPLkPbPpMlHbbpLmMBkPpLMblpOlmBFFmpLLfmmOFFoFbMfoofMHkkbFbhHKLfOLkMlOOFmfkMKOMFKPmOBfpKhBbPbLLMpMBpHLbMkpKpPomffhKkhkFBPhPkhbmpHLbboOmlfHkOhFhmlKofFhkKbPlLbMLOpPklLMLOOlkmooffKhPbMPBLkMPpblLmphHKlfmoffFhokHokfbhOkkfLLlMbOLFpfOMOOkFmhFoKFlhKKOfPLKMkOPlbFhmMObllmoohfHkMbHPfLKlBbMpKlHMhOpFmfofMhOkmBFbkhhloBFpHklMmOHlBMFOBFOofBOPmkFLkBhOoLobLpHFfMpOFlbmpoofKHlmFPFLoMHpflKkhbKKkpmoPfLhpkMobBmPMkKbHPMkLbPOHLLMOppHKKLBpPMpKKfffPhKfbfPbKHohFBHkKPfbpLhMlMHMLmMmpFloFFMPppLbMlpLHFKbBLPppKkObpPpkKbbohLbooFLHBKkBPbLHkKMBohlFpbhphLLomlFHKKhfBBPHOKhflPHkpmoPoLHbLpPfPmKooFmHFoMpFkHbLpplMlbMmpLloMkOBFFmOOLBbHlKKfOHlboOMllmOhMpolhmhklFOHBKffBpmkBbPpMkfFHllHmoFfoBFhBkHbMhkKpBMPOkFbBPfhhoHfmHFKokLfKhoKbPfLMMPpblLFmMmpFlLhBOfFlHholbhkfbBpklPFFMkpKfLMFOMFoofBoPHkfloBbPLFPBBpLLFMmKKFLmKoffMhHKMMfLmMhpBlkFMMMphFMMBKoBOHofBPoLHbfMLPBkobppplmMoOOFLmokFBBPfLklBLPMKOhlBFHmhOhlbmHoMfOhmKfokkfMHpflKFpbbKoFhMfoKlBHookBmPFBbpolHMfmOpBllMLOlFhPkoKfhHFKmBhhKPkpBlfmKohpBFKmHOlllkMbMPlLOllBfPpLbMKpBMboBfkhPhFKpfmpMKkBfPPLlbpPkFfmoOmlLPOkBFfhkKKBlpOBlOmlFmomoKKlOmmObFohoFbMohOkMbHpmLfPFphlhpfopFoHpokBHhMkkBhPFooOMFmmFookmFMmkOBfMHplPPLLLMpOMOKlhMHpLFHBBfkhKkhBBMMPmkMBFkbMpOlFOHmhMOKFbHFoFbhhHkKflPLkKfmlHmloOfmFpHOopfKHpKBBMhOkbhMpHLmbFplkHoPfFhokHkLfKPHKoBlPbLlmoOHLBmLOOlBFBfLPHkfbKmMPfkFmBpMLPHmOmFPmbopfohhPkPhLKMhpBoHLbblooFMMBOpFfHBKoPOLMbfpKlhLbHHObmloLfphMPPoofHhKLbpmLfMKOmpkmkoPFbHoKpBMhlKPpmPFLoMHmLlKmhOBFkpbobfLhpkMBlPOLmbFkHlHMFOKFhmBokfPmfBLBphbklhkpmLFMopMMFmKoHFBMBKPfbhLObpfPlLpMmphlommOfKoHhoLkOhPKbBLhFLMbLpOLfFkOoFHmfOBfhHfKkBPHpkkbppMLLMOOmlFmpMfFfHoKhffhkkPBbhKMpMMpLlOBpOFFoHHOlKbhHKfBkBHkbbLppkBpLOOlbmFKPfHHfKKBhokkkbmPbLLMppbllmOLFFFHhKHffhKkMBBhobhbbpplpFKOlFOHmpFhlhHKKBKhBkBhfpPkfFmOPlLmllFfmHFKofMbPkoBFPBBbMPpblLMhHoFLmBKmHHhokHBfPKBLbBpPlPMoOLFhHMOllfhmKKBoBPkfbhphkFMkOPlLmLHffMHlKOFmhFkoBfPfLhMhLHlkMHObFLmbKMHmhOkmBFhpLHbfpmlhpPOkFPmbOKfphMKhBOKokFbopHLfMKOhlkmkOFFbHKKpfMhlkOBfPFPfMHpKlKMmOBFkmbobkHhpkMBlHOLmbFpHlHMKOKMomBOoKlHBKPBpKOklbOpmkLlBOmlOmKlkFBHkKPFfbmkPBKPlBFMmpFlomHlPFKmBoBfmhPKfBLhpOObLpHlmffOolfmfOKkkHfKOBPKOkLbmpMklFFOMlLmoPLFfHpKhfBoPkPBfPLLpMMpklOBmMFFoHMofmfhhHFBkmPhbbLphlMmBOOOkmFopOfHfKpBhhBkkbPPbLLkFOMlomOOFFFHoKHffohkhBKPkLPbbPMlpmMLOFOmLoFfohHKoBKmhhBbkPfLbKoOpoOmlPOomHFKMBHmLkKLkPBokLPpblhmpbhFlfFKmLFfokHBOPKkfbBMblPMbLpFpmKolfOhmKLBomHhfbKPlLBHhOPoPmLPpoMHloBBmLkkoLoPfkKFkpflHmPLfFLmfKMflHkkmBPPoLHbfpOlhfBOkFPmooLbFhMPmBOmmkFboPLLfkfOhoPmkOPFbHLoBBMbbkOBkPFkoMHpflHmhOfFkmfobfLhpkMBPPOLmbFphlHffOKFhmookpMHbmmBpmMklbOPLLFfPOHoMmKPhFBHkoffbOlkpmkPlLOMmpFLbmHOfFKmboBfkObKbBmPpkBblpOlmbLmBFmmhoKOOHBKkBPHfpmbPPpLlPMOmlFmooHppHKoLfBHBkPBBPLkpFOpLLBmmfHFomkoffKOBKBBMPPkfbLpplMbkmfFMmHooPoHfKKBhHFpMbhPPLLhbOMllmOompPHookffHfkhBfPkkPFppkLfmMkPFOmKoFfoOfKffbPhkFbkpPLbbKmFlbmmoOHBHFKoBHHlPbbHPhLkhBpblLmpoMphHOoKfFHFkHBFPKkhFPpKLFMbbLFpmoolfOOFKFfBPHklbKphLBbomllBmMopmbHlKOBmHLPBbmPHLKhfpBlkmPObpHHpooflHlkmBlPokHFhpoLlMBFBFPmOoLFpFFKlfbPmhpboPLLfbKOhlBmhoPlfHLoBBMMlkObmPOLolMpfOBmhhBFkHPokfLKBkMLmPOombFpoLFMfboFhfPokLPHbKLfbPMlbbOMoLFfoOHlfmHohHLHkhLfbMLkpbMPpLOoopFOfmHhfFKHhoKfkkfKbFpPpoMblpOLlMFHhFHLboKLhFBKkfBhbMLbpMOLlfOMmlFmmoHLHHKhkfBMkhPBbPPLpfBplOFmmhFOoHHoofKfhKBkbPPObkLppLLMlpLFmfHooLHFfKKffhBfHbPMpLLfpMMllmMombLHohKffMKhhBBPhLPFBpLPomMhlOOHmoOfoOmKfkBPhOBkkpPLkMLLfFMfmoOLmFFKofFhflBbhMPLkfPbblLMboMoOHOhofFMohHBfPHLhoHpkOLMbhLOpHMopfOKKKFkfPHOfkKphLKMkohlbfMopLMFlKOflhFlobHHoLKfhbBlkMBObhfHpmlflMOhmBFPmLHBKpKOkMBhkOPmboPfpFoKlkFPmkFhHpHLOMKOhlBmooPkbFLKpfkhlFObmMHLofHbflKMFOBfBHPlhfLHppOBLPMLmoBpoLlMfOKobmfoHfPHbKLBhPMOlbOpmLpMokHlfFBohkBHkKPfKhLLLbMLMLObmpFloMFOfbLHhoofkMPKbBLhbLMmOpOOoMFhoFHmfoHfhbOKkkLhbOLbppMLpMOPLlFFfoHkfHKKhfKhkHpBbMMLpfMpllOMlOFFMHHhhfKMhKBBkhBkbmKppOOMlpPmMmFoMfHfFKKBhhBokmHPbLhMppkllklomLFHoKHfOhKKFBBBKLPBbpLlpMLOlPFHmopfoMHKfBKhfkBpLpPOpMLOpFMmlObfmHFKoffhfkKbhPBLmMPpblLMloMklHOKmfPhoFHBfbBLhFBpklPMoOLpbHMhmfOMmKFBohLkffLphOPMkhPlbmLOffMbfKOkohFOokHPfLMMhLBlkFLObkLFpKMfhhOlkBFbfLHFfbKlhMOOkMfmbhMfpMMHlBOhkkFoHpHOhMKOhbkmkOlFbHLKpfkhlKPPMPFkfMHmplKmhOBLkKKobfMhpKOBlKLLmBLMBlmMHOKMkmBokfPmfPmBPhPklhFpmLFMopMoPmoOOFBObKPfbhLkphoPlkFMmPblomMOflKMLoBfMhPMKBLhlLMBkpOlmMHOooLmfoKfhMBKkBPhpkLBlpMBbMOPblFmoOoFfOBKhfBhkKHBbPLkkMMLmlOmmOFlpHHofFlhhfPBkPPkbbLpplMMmOOlPmFopfHmfKKBhhpkkPFPbLMMpPBllmOOoFFfbKHffhKohBBPkkLbbpMlppPOllPfKolFFhHfhBKPhkBBoMlLBbBOpMOmloOfmmLhBBmhMkKhkPBLkMPpbMmmpOOFlmkKmfLhoKHlhPokLbBpolPMpOLlhObolFFhmPPBoPHkffKllLBbbOPlpmLlkfMmkKOBmhmkohKPfLKMhPFlkmPOhFLOlKMflhOobBFPokpbfkBlhMBOkFPmboLFlhMoBBOhbkFBopHLfbbOhLKmkOLFbmKKpBMhmkOLkPFLoMHhflKmhOPFkmLobmBhpoBBlPOkObFkflHMfOKlmmBokFKHbfMBpPMklBPpmLFbLOHMhmKohFBHkKPfbhMkpBhPlLPMmPFlomHOPFKPPoBFbhPofBLPpkOblMBlmMFOoLHmfoKFkHBobBPKhkLBhpMLlblOmMHmooHFfmOKhfBHfkPhpPLLpMMPklOmmpbFoOKoffKhhKBBkPPkpbLPKlMMkOOlmmFooFkHffHBhhPkkBHPbLLblOMohmOomFFMoKHffHBkhBPPkBKbbPKlpmMOMFOOooFfohHolBKPhkHbkkLLbMLOpLBmloOFPHFFfBHhfkKbhPBLkbLpbLfmpOBFlmOKmfFHBkHKmPKkkbBPklPMbOHFpmfolFfhmpFBoPHkpbKfoLBBKOPLbmLopFkHlFhBmhPkobHPfLKblpBlkmPOKFLbpKMflHBkmmFPopKbfHKlhMBOmFPPPoLKlhMplBOPmkPboHHLflBOhKBmkoPFoHLOmBMbmkOFmPFLobLpfoBmhHPFkbPobfLHfkMObPOKMbFpolHMfpbFhmBokfMHboKBpPMkmbOMkLFMoOHkfmKohFPHkoLfboBkpfBPlLObOpFBmmHOfFKmmoBfkHKKbmPPpLMblPPlmMFpLFHPooKfhHBKkBPhbkMbpPhLlMPOmLFmooHFPHKHKfBHbkPffPLLpbOplOBmmOFFoMHoffKHkKBfbPPBhbLPhlMMlplFmfmoofHHfoOBhhBKfbPkpLLMpOMLkmOomlbHohoffhKkhBBPkLPbppLLKmMOkFOmmoFfoHkKfbPPhkPbkPHLbMLplFMfhoOfmHFOoBHhfKBbhPPLkPKpbLKmpoMFMHOFofFhokHflPKLhbHpkOkMbOLFpMBolfOHPKFkFPHkfbKphLBMkpLlbMfopFBHloOBmhFKBbHKBLKbkpBLomPObFMHphKflhOkmFFPoLHbhpKLkMBLfFPMfoLfpHpKlHFPmkFboPMLfMKpolBpboPFbHLohBMhlKkbmBPLoMHpflKmhOBlbHPoHfLhhkMflPOLmbhpophMfpBFhMBokfPHoKLfHPMkHbOPmLFMopllfFpohFOHkKPfbhLKfbMPlLObfpFKomHOfFMHhLBfkBLKblLPpLMbhpOLoMFmfFHBfoKfhHOKkFlhbpMbpHMLlMOpklFkloHLFHKohfBhkKfBblpLpbKpllOmmOFlbHHoffKhmKBlkPPkbbHppBMMlmFFmBFoofHHpKKOohBoKbPhbLLMppkllBfomFPHoKHffhKKlBBPkLPbfpLKpmMOllBHmLFfoBKKflKMKkBbmpPhhMLpfFMMloOfmHpKolphfkMbhPBLkMPpolLmpoMFLHOKmfFhoKkBfPKLhblpkKPMbOLlFHMPHfOBoKFloPHkfBbphpHMkmLlbBLopfMHHKOpHhFPfbHhfLKMhpOlkoHObFmHpKMflhOKKBFPoLHblpKlhMBOklLmboLfpHFKlBOoFkFBFpHLfMKOhlBMkhLFBHMKpbMhlKlbmPFBHMHpHlKmhOBFkHPObLMhPKOBlhkLmbmpolHPKOKlKmBokfPHbKLfpMOkLBFpmMOMopolfmKLBFBmBKPfbhLkpbMhlOFMMpHloOhOflfHhOBkbhhKOBLboLMbmpOlmPoOolKmfoKfhHFKkBPoLkLBLpMLlMOOmlFMohKFFmBKhOlhkKkBbPLBMMMpMlOmmOFFoHHOfkBhHKPBkMokbBbppLMfmOplKmFFhfHHhKKBhokkkBLPbLLMppfllmOLFFFmFKHffhKKbBBmkPPbbPblpPMOloFHmPFoohHKHBKmmkBLbpPobLLOplpmlPmfmBHKolHffkKBKPBhPMPmHlLMphOFLmFKmKhhoKoBfPKfBbBPBlPMbOLFhHMPloOhmKmBoHHkfLBphoBLkOPlPmLHkfMpKKOfmMHkOBKPfFlMhphlkMHlBFLmLKMkhhOkmBFHoMObfPflhMhOkMKmbOKKFHbobBOKokFbopHkllbOHlmmklLFbHLKpFBbHkpBhPFBfMHpflKmhlpFkmkobFFhpKBBlhOOoblPflHOKOKlKmBokMbHbobBphBklbOpmkLlBOmlmmKHOFBHkKPFfbmkPBhPlkHMmpFlomHbpFKmKoBFFhPKBBLhhBbblPLlmMKOoFHmfoHbfHBoFBPhfkLbPpMLMMOOmPOmooHFfmbKhfBhkkPokPLLpMMpKlOmmOFFoLFoffKhhKFBkPPkbbLfblMMlOOlomFoofHHfmHBhhBkkBkPbLLMpOMPpmOomFFHMKHffhKkhoKPkLPbbpplpmMOlFOLloFfohHKoBKPhkBbkfBLbMLOplKmloOfmHFmmBHhfkKbHPBLkMPpbPPmpoMFlHHKmfFhokHOlPKkobBpolPMHOLlbKoolFLhmpoBOPmkfbophLLFOOPlbmLPMFbHLKOffbkkobHPfoMMHpflkMHlBFLmoKMPHhOkmBFhppkbFPklhoKOkFPmboLBHhMofBOhbkFbOpHLoOkOhlmmkHfFBHkKpBMhlkHLBPFLoMHmOlomHOBFkOoobFFhpKfBlPOLmfFlllHbBOKFmmBlBfPMbBBBphMklbPpmlbMopMoPmoOHFBBBKPfbhLkpkPPLkKMmPllommOflOoHoBFlhPbOBLPpLMBkMflMbfOofKmfoKfhHBkOBPhmkLbhpMLLMOPbMlmoOPFfLOKhfBhkKHhBPLkOMMPLlOmmOFFoOpofFKhhKmBkPPkbbLLolMbFOOlmmFoofHHfOmBhhMkkbPPbLkMpOMLmmpomFFHOKHffhK");local n=((-65+0xa4)+-#[[whats up]])local l=53 local h=b;local o={}o={[((-117+0x7c)+-#'Hey y7')]=function()local f,b,o,k=g(v,h,h+S);h=h+u;l=(l+(n*u))%L;return(((k+l-(n)+O*(u*N))%O)*((N*I)^N))+(((o+l-(n*N)+O*(N^S))%L)*(O*L))+(((b+l-(n*S)+I)%L)*O)+((f+l-(n*u)+I)%L);end,[(0x5e-92)]=function(o,o,o)local o=g(v,h,h);h=h+i;l=(l+(n))%L;return((o+l-(n)+I)%O);end,[(-#"I make elevating music you make elevator music"+(207-0x9e))]=function()local b,o=g(v,h,h+N);l=(l+(n*N))%L;h=h+N;return(((o+l-(n)+O*(N*u))%O)*L)+((b+l-(n*N)+L*(N^S))%O);end,[(-58+0x3e)]=function(h,o,l)if l then local o=(h/N^(o-b))%N^((l-i)-(o-b)+i);return o-o%b;else local o=N^(o-i);return(h%(o+o)>=o)and b or D;end;end,[(-0x72+119)]=function()local l=o[(-45+0x2e)]();local f=o[(-66+0x43)]();local k=b;local h=(o[(0x1a8/106)](f,i,C+u)*(N^(C*N)))+l;local l=o[(110+-0x6a)](f,21,31);local o=((-b)^o[(-#"sussy"+((57+-0x7b)+75))](f,32));if(l==D)then if(h==_)then return o*D;else l=i;k=_;end;elseif(l==(O*(N^S))-i)then return(h==D)and(o*(i/_))or(o*(D/_));end;return T(o,l-((L*(u))-b))*(k+(h/(N^R)));end,[(0x27-33)]=function(f,k,k)local k;if(not f)then f=o[(-#"suck my balls"+(0x1f8/36))]();if(f==D)then return'';end;end;k=j(v,h,h+f-b);h=h+f;local o=''for h=i,#k do o=Y(o,z((g(j(k,h,h))+l)%L))l=(l+n)%O end return o;end}local function D(...)return{...},A('#',...)end local function j()local k={};local M={};local l={};local f={k,M,nil,l};local h={}local P=(0xb1+-122)local l={[(0x27-37)]=(function(l)return not(#l==o[(2/0x1)]())end),[(0x1c-25)]=(function(l)return o[(955/0xbf)]()end),[(-#[[i love minors]]+(0x6a+-92))]=(function(l)return o[(-#[[If you see this string you are cool]]+(114+-0x49))]()end),[(0/0xe3)]=(function(l)local b=o[(1158/0xc1)]()local l=''local o=1 for h=1,#b do o=(o+P)%L l=Y(l,z((g(b:sub(h,h))+o)%O))end return l end)};for o=i,o[((7514/0xdd)+-#"moon sex is better than lua guard")]()do M[o-i]=j();end;f[3]=o[(0x11c/((430-0x109)+-#"Tomathoust6969 was here"))]();local O=o[(-50+0x33)]()for b=1,O do local o=o[(0x1c2/((573-0x145)+-#[[dot gg slash BKf6SjpfFv]]))]();local O;local o=l[o%(163-0x8e)];h[b]=o and o({});end;for f=1,o[(-#'moonsex looks great'+(-0x3f+83))]()do local l=o[(0x5c/46)]();if(o[(0x1b8/110)](l,b,i)==_)then local P=o[(0x50/20)](l,N,S);local O=o[(36+-0x20)](l,u,N+u);local l={o[(0x68+-101)](),o[(-92+0x5f)](),nil,nil};local M={[((0x26+-30)+-#"amongass")]=function()l[K]=o[(0x117/93)]();l[c]=o[(((0x49950/78)/184)+-#"Eu gosto de peitos")]();end,[((192-(0x556b/197))+-#'81072288006025753475892953766016422248802943297561016754277806637153679671241827')]=function()l[d]=o[(0x33+-50)]();end,[(0x1e6/243)]=function()l[H]=o[((0xea-135)+-#"People trying to play roblox colon meanwhile crosswoods colon may I introduce myself question mark")]()-(N^C)end,[(96-0x5d)]=function()l[H]=o[(-0x54+85)]()-(N^C)l[t]=o[(-#"Hoo gah hooga hoo gahoo hoo gah hooga hoo gahoo"+(0xb2-128))]();end};M[P]();if(o[(0x7f-123)](O,i,b)==i)then l[p]=h[l[B]]end if(o[(-#'I have stolen your father figure and all your milk muahahahahahaha'+(0xe1-155))](O,N,N)==b)then l[d]=h[l[a]]end if(o[((0x32+-28)+-#"Eu gosto de peitos")](O,S,S)==i)then l[c]=h[l[U]]end k[f]=l;end end;return f;end;local function v(o,n,u)local l=o[N];local L=o[S];local o=o[b];return(function(...)local h={};local O=o;local g={};local I=l;local D=D local o=b o*=-1 local S=o;local C=A('#',...)-i;local l=b;local z={};local _={...};local L=L;for o=0,C do if(o>=L)then z[o-L]=_[o+i];else h[o]=_[o+b];end;end;local A=C-L+b local o;local L;while true do o=O[l];L=o[(-#"abortion is a right dont take it away in the USA date 2022"+(0x27a4/172))];f=(10669548)while(0x8100/172)>=L do f-= f f=(9364404)while L<=(0x9e+-63)do f-= f f=(9133127)while(0x75-70)>=L do f-= f f=(617319)while L<=(3864/0xa8)do f-= f f=(64906)while(1474/(-17+0x97))>=L do f-= f f=(5203334)while L<=(83-0x4e)do f-= f f=(511305)while L<=(59-0x39)do f-= f f=(9133910)while L<=(0x1f-31)do f-= f local m;local f;local L;h[o[B]]=n[o[a]];l=l+b;o=O[l];h[o[F]]=h[o[d]][o[t]];l=l+b;o=O[l];h[o[e]]=n[o[P]];l=l+b;o=O[l];h[o[e]]=h[o[M]][o[t]];l=l+b;o=O[l];h[o[B]]=o[P];l=l+b;o=O[l];h[o[k]]=h[o[a]][o[s]];l=l+b;o=O[l];h[o[p]]=o[H];l=l+b;o=O[l];L=o[M];f=h[L]for o=L+1,o[c]do f=f..h[o];end;h[o[p]]=f;l=l+b;o=O[l];h[o[k]]=o[P];l=l+b;o=O[l];m=o[e]h[m](r(h,m+i,o[a]))l=l+b;o=O[l];l=o[M];break;end while(f)/((0xcc4+-102))==2885 do f=(1893544)while(123/0x7b)<L do f-= f local O=o[e]local f={h[O](r(h,O+1,o[a]))};local l=0;for o=O,o[t]do l=l+b;h[o]=f[l];end break end while 1886==(f)/(((-0x2f+1066)+-#'gozei na parede'))do local M;local f;h[o[F]]=o[P];l=l+b;o=O[l];f=o[m]h[f](r(h,f+i,o[d]))l=l+b;o=O[l];f=o[e];M=h[o[K]];h[f+1]=M;h[f]=M[o[t]];l=l+b;o=O[l];h[o[B]]=o[H];l=l+b;o=O[l];h[o[k]]=(o[P]~=0);break end;break;end break;end while(f)/((2778-0x5a3))==383 do f=(727160)while L<=(0x24-33)do f-= f local o=o[B]h[o]=h[o]()break;end while 2597==(f)/((0x266-334))do f=(44165)while(30-0x1a)<L do f-= f if(h[o[k]]~=o[x])then l=l+i;else l=o[d];end;break end while(f)/((858+(-36+-0x13)))==55 do local f;h[o[p]]=o[a];l=l+b;o=O[l];h[o[F]]=o[P];l=l+b;o=O[l];h[o[F]]=o[K];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[F]][o[K]]=h[o[c]];l=l+b;o=O[l];h[o[k]][o[M]]=o[t];l=l+b;o=O[l];h[o[F]]=u[o[P]];l=l+b;o=O[l];h[o[p]]=h[o[H]][o[s]];l=l+b;o=O[l];h[o[p]]=o[K];l=l+b;o=O[l];f=o[B]h[f]=h[f](h[f+i])break end;break;end break;end break;end while 2083==(f)/(((2540+-0x16)+-#[[33 cocks in my mouth]]))do f=(42666)while(1168/0x92)>=L do f-= f f=(2354718)while L<=(-#"impulse 2022"+(2664/0x94))do f-= f local P;local f;h[o[k]]=o[H];l=l+b;o=O[l];f=o[e]h[f](r(h,f+i,o[M]))l=l+b;o=O[l];f=o[m];P=h[o[d]];h[f+1]=P;h[f]=P[o[x]];l=l+b;o=O[l];h[o[p]]=o[M];l=l+b;o=O[l];h[o[B]]=o[H];l=l+b;o=O[l];h[o[k]]=n[o[M]];l=l+b;o=O[l];h[o[e]]=o[H];l=l+b;o=O[l];h[o[B]]=h[o[M]][h[o[U]]];l=l+b;o=O[l];h[o[k]]=o[d];l=l+b;o=O[l];h[o[e]]=h[o[H]][h[o[w]]];break;end while(f)/((2038+-0x4f))==1202 do f=(2573460)while L>((-0x4a+108)+-#"moonsec backrooms confirmed")do f-= f local f;f=o[F]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];h[o[B]]=o[d];l=l+b;o=O[l];h[o[m]]=n[o[H]];l=l+b;o=O[l];h[o[B]]=o[H];l=l+b;o=O[l];f=o[e]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[p]]=o[a];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];h[o[F]]=h[o[H]];l=l+b;o=O[l];l=o[M];break end while 765==(f)/((0x1aa3-3455))do local M;local f;h[o[k]]=o[d];l=l+b;o=O[l];f=o[F]h[f](r(h,f+i,o[a]))l=l+b;o=O[l];f=o[k];M=h[o[P]];h[f+1]=M;h[f]=M[o[x]];l=l+b;o=O[l];h[o[F]]=o[P];l=l+b;o=O[l];h[o[B]]=n[o[K]];l=l+b;o=O[l];h[o[m]]=h[o[d]][o[x]];break end;break;end break;end while(f)/((-0x3a+605))==78 do f=(11032266)while(0x5c4/164)>=L do f-= f local B;local f;h[o[m]]=o[P];l=l+b;o=O[l];f=o[p]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];h[o[m]]=o[H];l=l+b;o=O[l];f=o[k];B=h[o[M]];h[f+1]=B;h[f]=B[h[o[s]]];l=l+b;o=O[l];h[o[p]]=o[d];break;end while 2702==(f)/((4168+-0x55))do f=(1875440)while(-#[[da hood money generator 2022 working free no virus]]+(0xa6+-106))<L do f-= f h[o[m]]=(o[K]~=0);l=l+i;break end while 1360==(f)/((1418+-0x27))do local f;h[o[B]]=h[o[K]];l=l+b;o=O[l];h[o[m]]=n[o[d]];l=l+b;o=O[l];h[o[m]]=h[o[K]][o[x]];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];if h[o[B]]then l=l+b;else l=o[d];end;break end;break;end break;end break;end break;end while 17==(f)/((0x827f8/140))do f=(4099410)while(2771/0xa3)>=L do f-= f f=(700488)while((149+-0x77)+-#'iPipeh Is My god')>=L do f-= f f=(3649914)while L<=(0x60c/129)do f-= f local f;f=o[p]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[m]][o[P]]=h[o[w]];l=l+b;o=O[l];h[o[e]]=u[o[a]];l=l+b;o=O[l];h[o[k]]=h[o[M]][o[x]];l=l+b;o=O[l];h[o[m]]=h[o[K]][o[s]];l=l+b;o=O[l];h[o[B]]=o[P];break;end while(f)/((0x4302c/178))==2367 do f=(9303462)while L>(-#"niggers"+(143-0x7b))do f-= f if(h[o[F]]<h[o[U]])then l=o[M];else l=l+i;end;break end while 2961==(f)/((0x17034/30))do h[o[B]]={};l=l+b;o=O[l];h[o[k]][o[H]]=o[U];l=l+b;o=O[l];h[o[F]][o[d]]=o[U];l=l+b;o=O[l];h[o[p]][o[M]]=h[o[x]];l=l+b;o=O[l];h[o[e]][o[P]]=h[o[x]];l=l+b;o=O[l];h[o[F]]={};l=l+b;o=O[l];h[o[m]][o[K]]=o[c];l=l+b;o=O[l];h[o[e]][o[P]]=o[c];l=l+b;o=O[l];h[o[p]][o[K]]=o[c];l=l+b;o=O[l];h[o[F]]={};break end;break;end break;end while 846==(f)/((-119+0x3b3))do f=(13413724)while(73+-0x3a)>=L do f-= f h[o[F]]=o[M];break;end while(f)/((7366-0xe85))==3676 do f=(1708720)while L>(0x4c-60)do f-= f local f;local P;local k;h[o[e]]=u[o[K]];l=l+b;o=O[l];h[o[p]]=n[o[K]];l=l+b;o=O[l];h[o[F]]=h[o[H]][o[U]];l=l+b;o=O[l];h[o[F]]=n[o[M]];l=l+b;o=O[l];k=o[B]P={h[k](h[k+1])};f=0;for o=k,o[x]do f=f+b;h[o]=P[f];end l=l+b;o=O[l];l=o[H];break end while 1240==(f)/((53742/0x27))do local k;local f;f=o[B];k=h[o[d]];h[f+1]=k;h[f]=k[o[U]];l=l+b;o=O[l];f=o[m]h[f]=h[f](h[f+i])l=l+b;o=O[l];f=o[m];k=h[o[M]];h[f+1]=k;h[f]=k[o[t]];l=l+b;o=O[l];h[o[m]]=o[K];l=l+b;o=O[l];h[o[m]]=#h[o[d]];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];f=o[m];k=h[o[H]];h[f+1]=k;h[f]=k[o[U]];l=l+b;o=O[l];f=o[e]h[f]=h[f](h[f+i])l=l+b;o=O[l];if(h[o[p]]~=h[o[c]])then l=l+i;else l=o[M];end;break end;break;end break;end break;end while 1687==(f)/((-47+0x9ad))do f=(10909878)while(-#"nononono listen listen"+(118-(-#[[Pipe te quiero xupar el pene]]+(-0x79+225))))>=L do f-= f f=(6304440)while(114-0x60)>=L do f-= f local k;local p,P;local f;h[o[B]]=u[o[a]];l=l+b;o=O[l];h[o[B]]=h[o[H]][o[c]];l=l+b;o=O[l];h[o[m]]=o[H];l=l+b;o=O[l];h[o[F]]=o[M];l=l+b;o=O[l];h[o[e]]=o[a];l=l+b;o=O[l];f=o[e]p,P=D(h[f](r(h,f+1,o[K])))S=P+f-1 k=0;for o=f,S do k=k+b;h[o]=p[k];end;l=l+b;o=O[l];f=o[e]h[f](r(h,f+i,S))l=l+b;o=O[l];l=o[a];break;end while 2455==(f)/(((0xa6e+-78)+-#[[moonsec got deobfuscated]]))do f=(4484877)while L>(3762/(470-0x110))do f-= f local M;local f;f=o[e]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[p]]();l=l+b;o=O[l];h[o[p]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[B]]=h[o[H]][o[x]];l=l+b;o=O[l];h[o[e]]=h[o[K]][o[x]];l=l+b;o=O[l];h[o[m]]=h[o[K]][o[U]];l=l+b;o=O[l];f=o[k];M=h[o[K]];h[f+1]=M;h[f]=M[o[c]];break end while 3121==(f)/((-#"zykem krul"+(1514+-0x43)))do local b=o[P];local l=h[b]for o=b+1,o[t]do l=l..h[o];end;h[o[m]]=l;break end;break;end break;end while(f)/((2901+-0x57))==3877 do f=(8464308)while(-0x7e+147)>=L do f-= f local f;h[o[m]]=n[o[K]];l=l+b;o=O[l];h[o[e]]=n[o[M]];l=l+b;o=O[l];h[o[m]]=h[o[d]][o[s]];l=l+b;o=O[l];h[o[B]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[B]]=h[o[d]];l=l+b;o=O[l];f=o[F]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];do return end;break;end while(f)/(((-118+0xe48)+-#[[impulse was here omg]]))==2406 do f=(4681685)while(-#"I like watching videos of black men shaking their booty cheeks"+(289-0xcd))<L do f-= f if(h[o[k]]==h[o[t]])then l=l+i;else l=o[H];end;break end while(f)/((572015/0xe9))==1907 do local P;local f;h[o[e]]=n[o[d]];l=l+b;o=O[l];h[o[k]][o[d]]=o[x];l=l+b;o=O[l];h[o[F]]=n[o[M]];l=l+b;o=O[l];f=o[B];P=h[o[a]];h[f+1]=P;h[f]=P[o[t]];l=l+b;o=O[l];f=o[F]h[f](h[f+i])l=l+b;o=O[l];l=o[d];break end;break;end break;end break;end break;end break;end while 607==(f)/(((2184-0x47b)+-#"impulse was here omg"))do f=(222548)while L<=(51+-0x10)do f-= f f=(10144115)while L<=(0x86-105)do f-= f f=(9700208)while(-#[[If not skid then return hasbitches end]]+(207-0x8f))>=L do f-= f f=(3320352)while(162-0x8a)>=L do f-= f local L;local f;local p;h[o[m]]=n[o[H]];l=l+b;o=O[l];h[o[k]]=h[o[M]][o[c]];l=l+b;o=O[l];h[o[e]]=n[o[P]];l=l+b;o=O[l];h[o[F]]=h[o[H]][o[w]];l=l+b;o=O[l];h[o[m]]=n[o[K]];l=l+b;o=O[l];h[o[m]]=o[K];l=l+b;o=O[l];p=o[P];f=h[p]for o=p+1,o[x]do f=f..h[o];end;h[o[m]]=f;l=l+b;o=O[l];h[o[m]]=o[d];l=l+b;o=O[l];L=o[B]h[L](r(h,L+i,o[M]))break;end while 976==(f)/((-#"ching chong"+(433451/0x7f)))do f=(1371602)while(0x42+-41)<L do f-= f local k;local f;h[o[F]]=o[M];l=l+b;o=O[l];f=o[B]h[f](r(h,f+i,o[P]))l=l+b;o=O[l];h[o[p]]=o[H];l=l+b;o=O[l];f=o[F];k=h[o[M]];h[f+1]=k;h[f]=k[h[o[t]]];l=l+b;o=O[l];h[o[p]]=o[P];break end while 1354==(f)/((0x84a-1109))do local f;h[o[k]][o[a]]=h[o[c]];l=l+b;o=O[l];h[o[k]]=u[o[a]];l=l+b;o=O[l];h[o[F]]=h[o[a]][o[w]];l=l+b;o=O[l];h[o[e]]=o[K];l=l+b;o=O[l];h[o[e]]=o[d];l=l+b;o=O[l];h[o[p]]=o[P];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];h[o[e]][o[a]]=h[o[c]];l=l+b;o=O[l];h[o[p]]=u[o[P]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[c]];break end;break;end break;end while 3598==(f)/((474496/0xb0))do f=(63916)while L<=(84-0x39)do f-= f local L;local f;h[o[k]]=h[o[a]][o[s]];l=l+b;o=O[l];h[o[p]]=h[o[H]][o[c]];l=l+b;o=O[l];h[o[e]]=h[o[H]][o[t]];l=l+b;o=O[l];f=o[e];L=h[o[M]];h[f+1]=L;h[f]=L[o[s]];l=l+b;o=O[l];h[o[k]]=o[K];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];h[o[B]]=h[o[d]][o[U]];l=l+b;o=O[l];f=o[m];L=h[o[K]];h[f+1]=L;h[f]=L[o[c]];l=l+b;o=O[l];h[o[p]]=o[d];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];h[o[e]]=h[o[K]][o[s]];l=l+b;o=O[l];h[o[e]]=h[o[K]]-h[o[t]];l=l+b;o=O[l];h[o[e]]=h[o[d]][o[U]];l=l+b;o=O[l];if(h[o[m]]<=o[t])then l=o[P];else l=l+i;end;break;end while 29==(f)/(((258274/0x3a)-2249))do f=(1398740)while(0x1324/175)<L do f-= f local B;local f;h[o[e]]=o[P];l=l+b;o=O[l];f=o[e]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];h[o[F]]=o[H];l=l+b;o=O[l];f=o[e];B=h[o[K]];h[f+1]=B;h[f]=B[h[o[w]]];l=l+b;o=O[l];h[o[F]]=o[a];l=l+b;o=O[l];h[o[e]]={};l=l+b;o=O[l];h[o[p]]=o[d];l=l+b;o=O[l];h[o[F]]=o[d];l=l+b;o=O[l];h[o[k]]=o[M];l=l+b;o=O[l];h[o[m]]=o[H];break end while 388==(f)/((421785/0x75))do h[o[k]]=h[o[H]][h[o[U]]];break end;break;end break;end break;end while 2735==(f)/(((-122+0x1dea)-0xef3))do f=(10880)while L<=(0x5f+-63)do f-= f f=(1315123)while L<=(77-0x2f)do f-= f local H;local L;local n,a;local f;h[o[k]]=h[o[K]];l=l+b;o=O[l];h[o[B]]=(o[K]~=0);l=l+b;o=O[l];f=o[k]n,a=D(h[f](r(h,f+1,o[K])))S=a+f-1 L=0;for o=f,S do L=L+b;h[o]=n[L];end;l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,S))l=l+b;o=O[l];f=o[p]h[f]=h[f]()l=l+b;o=O[l];h[o[p]]=u[o[P]];l=l+b;o=O[l];h[o[F]]=u[o[M]];l=l+b;o=O[l];f=o[e];H=h[o[P]];h[f+1]=H;h[f]=H[o[U]];l=l+b;o=O[l];h[o[p]]=h[o[d]];l=l+b;o=O[l];h[o[m]]=(o[K]~=0);break;end while 361==(f)/((0x8013/9))do f=(1237665)while L>((-0x36+113)+-#[[10 black dicks in your mouth]])do f-= f local p;local L;local f;h[o[e]]=o[K];l=l+b;o=O[l];h[o[k]]=u[o[M]];l=l+b;o=O[l];h[o[B]]=h[o[H]];l=l+b;o=O[l];f=o[m]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[k]]=o[H];l=l+b;o=O[l];L=o[M];p=h[L]for o=L+1,o[s]do p=p..h[o];end;h[o[F]]=p;l=l+b;o=O[l];h[o[B]][o[M]]=h[o[U]];l=l+b;o=O[l];l=o[P];break end while 715==(f)/((0xda2-((97405/0x37)+-#'cilertedcool')))do h[o[p]]=n[o[K]];break end;break;end break;end while 136==(f)/((12480/0x9c))do f=(2350565)while L<=(-#"Ur mom"+(5460/0x8c))do f-= f local M;local f;h[o[k]]=o[d];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];f=o[p];M=h[o[H]];h[f+1]=M;h[f]=M[o[x]];l=l+b;o=O[l];h[o[B]]=n[o[d]];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];h[o[e]]=h[o[H]][o[U]];l=l+b;o=O[l];if(h[o[k]]~=o[s])then l=l+i;else l=o[P];end;break;end while 1195==(f)/(((4042-0x805)+-#"I FUCKING HATE FEMBOYS"))do f=(10340386)while L>(-0x74+(-0x26+188))do f-= f local m;local P;local L;local f;h[o[k]]=n[o[M]];l=l+b;o=O[l];h[o[p]]=o[K];l=l+b;o=O[l];f=o[B]L={h[f](h[f+1])};P=0;for o=f,o[c]do P=P+b;h[o]=L[P];end l=l+b;o=O[l];h[o[k]]=n[o[M]];l=l+b;o=O[l];f=o[F];m=h[o[a]];h[f+1]=m;h[f]=m[o[x]];l=l+b;o=O[l];h[o[k]]=o[H];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];if h[o[B]]then l=l+b;else l=o[d];end;break end while 3778==(f)/((2784+-0x2f))do do return h[o[F]]end break end;break;end break;end break;end break;end while 59==(f)/((0xa1284/(4900/0x1c)))do f=(6068080)while(9430/0xe6)>=L do f-= f f=(960225)while(8474/0xdf)>=L do f-= f f=(385440)while L<=(-#[[moon on top]]+(0x9c-109))do f-= f local k;local f;h[o[e]]=o[M];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[K]))l=l+b;o=O[l];f=o[p];k=h[o[d]];h[f+1]=k;h[f]=k[o[t]];l=l+b;o=O[l];h[o[p]]=o[a];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];f=o[B];k=h[o[P]];h[f+1]=k;h[f]=k[o[c]];l=l+b;o=O[l];h[o[B]]=o[K];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];f=o[e];k=h[o[H]];h[f+1]=k;h[f]=k[o[s]];l=l+b;o=O[l];h[o[F]]=o[H];break;end while(f)/((-0x45+245))==2190 do f=(13339944)while L>(7067/0xbf)do f-= f for o=o[p],o[a]do h[o]=nil;end;break end while 3681==(f)/((((-0x15+-74)+3741)+-#"sussy chat sussy sussy"))do local P;local f;h[o[p]][o[K]]=o[w];l=l+b;o=O[l];h[o[F]]=n[o[a]];l=l+b;o=O[l];h[o[B]][o[a]]=o[t];l=l+b;o=O[l];h[o[p]]=n[o[d]];l=l+b;o=O[l];h[o[F]][o[d]]=o[U];l=l+b;o=O[l];h[o[k]]=n[o[M]];l=l+b;o=O[l];h[o[B]][o[H]]=o[w];l=l+b;o=O[l];h[o[e]]=n[o[M]];l=l+b;o=O[l];f=o[F];P=h[o[a]];h[f+1]=P;h[f]=P[o[s]];l=l+b;o=O[l];f=o[e]h[f](h[f+i])l=l+b;o=O[l];l=o[d];break end;break;end break;end while(f)/((0x67e-887))==1239 do f=(4690344)while((0x6a+-38)+-#[[Only a to Z 0 to 9 is allowed]])>=L do f-= f local o=o[F]h[o](r(h,o+i,S))break;end while(f)/((8105-(0x5e292/94)))==1172 do f=(9593999)while L>((0xab+-118)+-#'turi ip ip ip')do f-= f local f;h[o[p]][o[a]]=o[U];l=l+b;o=O[l];h[o[F]][o[H]]=o[U];l=l+b;o=O[l];h[o[B]]=u[o[P]];l=l+b;o=O[l];h[o[m]]=h[o[M]][o[U]];l=l+b;o=O[l];h[o[m]]=o[d];l=l+b;o=O[l];h[o[F]]=o[H];l=l+b;o=O[l];h[o[B]]=o[H];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[e]][o[a]]=h[o[x]];l=l+b;o=O[l];h[o[B]][o[M]]=o[c];break end while(f)/((7719-(-0x2f+3933)))==2503 do local L;local e;local M;local f;f=o[B];M=h[o[K]];h[f+1]=M;h[f]=M[o[s]];l=l+b;o=O[l];f=o[F]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[B]]=u[o[H]];l=l+b;o=O[l];h[o[p]]=n[o[P]];l=l+b;o=O[l];f=o[k];M=h[o[H]];h[f+1]=M;h[f]=M[o[U]];l=l+b;o=O[l];f=o[m]e={h[f](h[f+1])};L=0;for o=f,o[c]do L=L+b;h[o]=e[L];end l=l+b;o=O[l];l=o[H];break end;break;end break;end break;end while(f)/((-0x6e+1612))==4040 do f=(10791330)while(157+-0x71)>=L do f-= f f=(2698540)while L<=(0xa2-120)do f-= f local k;local f;h[o[B]]=o[H];l=l+b;o=O[l];f=o[B]h[f](r(h,f+i,o[M]))l=l+b;o=O[l];f=o[e];k=h[o[K]];h[f+1]=k;h[f]=k[o[w]];l=l+b;o=O[l];h[o[m]]=o[K];l=l+b;o=O[l];f=o[B]h[f](r(h,f+i,o[M]))l=l+b;o=O[l];f=o[e];k=h[o[M]];h[f+1]=k;h[f]=k[o[c]];l=l+b;o=O[l];h[o[B]]=o[P];l=l+b;o=O[l];h[o[F]]=n[o[a]];l=l+b;o=O[l];h[o[F]]=o[K];l=l+b;o=O[l];h[o[e]]=h[o[P]][h[o[w]]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[x]];break;end while 2140==(f)/((0x9ec-1279))do f=(2978388)while L>(156-0x71)do f-= f h[o[e]]=h[o[d]]-o[w];break end while 1484==(f)/(((0x80f+-38)+-#[[Impulse youtube ez]]))do h[o[p]][o[P]]=o[s];break end;break;end break;end while(f)/((((866251/0x89)+-#"Hoo gah hooga hoo gahoo hoo gah hooga hoo gahoo")-0xc77))==3498 do f=(724646)while(-83+0x80)>=L do f-= f local P;local f;h[o[B]]=o[K];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];h[o[m]]=h[o[K]][o[c]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[s]];l=l+b;o=O[l];h[o[B]]=h[o[H]][o[x]];l=l+b;o=O[l];f=o[p];P=h[o[K]];h[f+1]=P;h[f]=P[o[U]];break;end while 593==(f)/((2466-0x4dc))do f=(15520684)while L>(0xbb-141)do f-= f local o=o[p];do return r(h,o,S)end;break end while 3994==(f)/((3939+-0x35))do local m;local f;h[o[k]]=n[o[M]];l=l+b;o=O[l];h[o[p]][o[d]]=h[o[w]];l=l+b;o=O[l];h[o[k]]=n[o[d]];l=l+b;o=O[l];h[o[e]]=h[o[M]][o[c]];l=l+b;o=O[l];h[o[k]]=n[o[a]];l=l+b;o=O[l];f=o[k];m=h[o[a]];h[f+1]=m;h[f]=m[o[s]];l=l+b;o=O[l];h[o[B]]=o[K];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[k]]=h[o[K]][o[t]];l=l+b;o=O[l];h[o[p]]=h[o[K]][o[t]];l=l+b;o=O[l];h[o[F]]=h[o[P]][h[o[s]]];l=l+b;o=O[l];h[o[p]]=h[o[P]][o[x]];l=l+b;o=O[l];h[o[B]]=h[o[H]][o[s]];l=l+b;o=O[l];f=o[F];m=h[o[M]];h[f+1]=m;h[f]=m[o[x]];break end;break;end break;end break;end break;end break;end break;end while(f)/(((3020+-0x56)+-#'anime is for fags'))==3131 do f=(5675813)while(0x67+-32)>=L do f-= f f=(2396499)while(-#'Cause I know the way to get em motivated'+(237-0x8a))>=L do f-= f f=(146625)while((-0x14+205)-132)>=L do f-= f f=(3667493)while L<=(10200/0xcc)do f-= f f=(8819320)while L<=(0x9c+-108)do f-= f local k;local f;h[o[e]]=h[o[a]][o[s]];l=l+b;o=O[l];f=o[B];k=h[o[K]];h[f+1]=k;h[f]=k[o[c]];l=l+b;o=O[l];h[o[m]]=o[M];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];if not h[o[e]]then l=l+i;else l=o[a];end;break;end while 2183==(f)/(((0xfe3+-17)+-#[[zykem krul]]))do f=(4715946)while(182-0x85)<L do f-= f local b=h[o[x]];if not b then l=l+i;else h[o[F]]=b;l=o[M];end;break end while(f)/((-0x6c+1854))==2701 do local o=o[p]h[o]=h[o](r(h,o+b,S))break end;break;end break;end while 1831==(f)/(((-0x58+2123)+-#"free deobfuscator real and legit"))do f=(56490)while L<=(0x8f7/45)do f-= f h[o[F]]=h[o[P]][o[U]];break;end while(f)/((0x80+-107))==2690 do f=(2553120)while L>(4888/0x5e)do f-= f local k;local f;h[o[p]]=n[o[d]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[B]][o[P]]=h[o[w]];l=l+b;o=O[l];h[o[m]]=n[o[P]];l=l+b;o=O[l];f=o[F];k=h[o[H]];h[f+1]=k;h[f]=k[o[x]];l=l+b;o=O[l];f=o[F]h[f](h[f+i])l=l+b;o=O[l];do return end;break end while(f)/((1712-(-0x62+1000)))==3152 do h[o[F]][o[a]]=o[t];l=l+b;o=O[l];h[o[B]]=n[o[P]];l=l+b;o=O[l];h[o[k]][o[M]]=o[x];l=l+b;o=O[l];h[o[k]]=n[o[a]];l=l+b;o=O[l];h[o[e]][o[P]]=o[x];break end;break;end break;end break;end while 425==(f)/((0x179+-32))do f=(14486085)while(-#'how tf do i remove the meme strings'+(189+-0x62))>=L do f-= f f=(5013813)while(13608/0xfc)>=L do f-= f local f;h[o[B]]=h[o[K]][o[t]];l=l+b;o=O[l];h[o[B]]=h[o[d]]-o[x];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];h[o[B]][o[H]]=h[o[U]];l=l+b;o=O[l];h[o[k]]=n[o[a]];l=l+b;o=O[l];h[o[F]]=u[o[d]];l=l+b;o=O[l];h[o[e]]=h[o[K]][o[w]];l=l+b;o=O[l];h[o[p]]=h[o[M]][o[s]];l=l+b;o=O[l];h[o[B]]=h[o[H]][o[c]];l=l+b;o=O[l];h[o[B]]=h[o[a]]-o[U];break;end while 2787==(f)/((0x73a+-51))do f=(2924492)while L>(74+-0x13)do f-= f h[o[F]]=n[o[a]];l=l+b;o=O[l];h[o[k]]=h[o[M]][o[x]];l=l+b;o=O[l];h[o[m]][o[K]]=h[o[c]];l=l+b;o=O[l];h[o[m]]=n[o[M]];l=l+b;o=O[l];h[o[m]]=n[o[P]];l=l+b;o=O[l];h[o[p]]=h[o[K]][o[c]];l=l+b;o=O[l];h[o[B]]=n[o[M]];l=l+b;o=O[l];h[o[e]]=h[o[K]][o[x]];l=l+b;o=O[l];h[o[F]]=o[a];l=l+b;o=O[l];h[o[B]]=o[M];break end while 1858==(f)/((39350/0x19))do local f;h[o[p]]=h[o[P]][o[x]];l=l+b;o=O[l];h[o[p]]=n[o[K]];l=l+b;o=O[l];f=o[p]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[F]]=h[o[a]];l=l+b;o=O[l];f=o[m]h[f](h[f+i])break end;break;end break;end while 4005==(f)/((-#'ambattakam'+(7325-0xe72)))do f=(1461132)while(146-0x59)>=L do f-= f local o=o[e]local O,l=D(h[o](r(h,o+b,S)))S=l+o-i local l=0;for o=o,S do l=l+b;h[o]=O[l];end;break;end while 489==(f)/((6064-0xc04))do f=(1601624)while L>((286-0xcc)+-#[[big niggers sucking cock]])do f-= f h[o[F]][o[K]]=o[c];l=l+b;o=O[l];h[o[B]][o[H]]=h[o[w]];l=l+b;o=O[l];h[o[B]]={};l=l+b;o=O[l];h[o[B]]={};l=l+b;o=O[l];h[o[m]][o[M]]=o[U];l=l+b;o=O[l];h[o[p]][o[d]]=o[U];l=l+b;o=O[l];h[o[p]][o[M]]=o[x];l=l+b;o=O[l];h[o[p]][o[M]]=h[o[U]];l=l+b;o=O[l];h[o[k]]={};l=l+b;o=O[l];h[o[e]]={};break end while 3116==(f)/(((-80+0x266)+-#"negative chromosomes"))do h[o[F]]=u[o[P]];break end;break;end break;end break;end break;end while 2463==(f)/((-#[[i shoved a whole bag of jellibeans up my ass]]+(0x838-1087)))do f=(3902288)while L<=((-45+0x7c)+-#"freerobuxphone")do f-= f f=(7926620)while(135+-0x49)>=L do f-= f f=(1964757)while(((-#[[Hoo gah hooga hoo gahoo hoo gah hooga hoo gahoo]]+(0x6971-13554))/186)+-#[[cheeseburger]])>=L do f-= f local f;local k;h[o[p]]=n[o[d]];l=l+b;o=O[l];h[o[e]]=h[o[d]];l=l+b;o=O[l];k=o[K];f=h[k]for o=k+1,o[t]do f=f..h[o];end;h[o[p]]=f;l=l+b;o=O[l];do return h[o[m]]end l=l+b;o=O[l];do return end;break;end while 1151==(f)/((1820+-0x71))do f=(6651150)while L>(-#'no meme strings access moment'+(2250/0x19))do f-= f local M;local f;h[o[m]][o[a]]=o[t];l=l+b;o=O[l];h[o[p]]=n[o[P]];l=l+b;o=O[l];h[o[m]][o[P]]=o[c];l=l+b;o=O[l];h[o[k]]=n[o[P]];l=l+b;o=O[l];h[o[B]][o[d]]=o[s];l=l+b;o=O[l];h[o[F]]=n[o[H]];l=l+b;o=O[l];f=o[k];M=h[o[d]];h[f+1]=M;h[f]=M[o[w]];l=l+b;o=O[l];f=o[B]h[f](h[f+i])l=l+b;o=O[l];l=o[P];break end while 1650==(f)/(((-0x5a+4134)+-#"breathe   air"))do local b=o[B];local O=h[b]local f=h[b+2];if(f>0)then if(O>h[b+1])then l=o[P];else h[b+3]=O;end elseif(O<h[b+1])then l=o[d];else h[b+3]=O;end break end;break;end break;end while 2836==(f)/((((-0x50+-18)+-#[[fix vg hub dekudimz]])+2912))do f=(5759568)while(192-0x81)>=L do f-= f h[o[B]]=n[o[P]];l=l+b;o=O[l];h[o[F]]=h[o[d]][o[t]];l=l+b;o=O[l];h[o[k]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[k]][o[P]]=h[o[s]];l=l+b;o=O[l];h[o[m]]=n[o[M]];l=l+b;o=O[l];h[o[p]]=n[o[P]];l=l+b;o=O[l];h[o[e]]=h[o[K]][o[c]];l=l+b;o=O[l];h[o[B]][o[d]]=h[o[w]];l=l+b;o=O[l];h[o[F]]=n[o[M]];l=l+b;o=O[l];h[o[F]]=n[o[M]];break;end while(f)/((681688/0xc4))==1656 do f=(250090)while L>(0xc2-130)do f-= f local k;local f;h[o[e]]=o[M];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];f=o[B];k=h[o[P]];h[f+1]=k;h[f]=k[o[t]];l=l+b;o=O[l];h[o[p]]=o[P];l=l+b;o=O[l];h[o[p]]=o[P];l=l+b;o=O[l];f=o[F]h[f](r(h,f+i,o[H]))l=l+b;o=O[l];f=o[p];k=h[o[P]];h[f+1]=k;h[f]=k[o[x]];l=l+b;o=O[l];h[o[e]]=o[d];l=l+b;o=O[l];h[o[B]]=o[M];l=l+b;o=O[l];h[o[B]]=n[o[K]];break end while(f)/((-#[[ip grabbing in progress]]+(1233-0x288)))==445 do local f;h[o[e]]=n[o[K]];l=l+b;o=O[l];h[o[F]]=h[o[K]];l=l+b;o=O[l];h[o[e]]=h[o[M]];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];h[o[p]]=#h[o[K]];l=l+b;o=O[l];if(h[o[m]]~=o[w])then l=l+i;else l=o[H];end;break end;break;end break;end break;end while(f)/((0x21715/41))==1168 do f=(1327809)while L<=(((-0x25+12009)/146)+-#[[freerobuxphone]])do f-= f f=(5697000)while((0x78c/21)+-#"Obfuscated by my ass hurts")>=L do f-= f local P;local L;local B;local f;f=o[F];B=h[o[H]];h[f+1]=B;h[f]=B[o[s]];l=l+b;o=O[l];h[o[F]]=n[o[d]];l=l+b;o=O[l];f=o[e];B=h[o[M]];h[f+1]=B;h[f]=B[o[U]];l=l+b;o=O[l];h[o[p]]=o[M];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];h[o[k]]=h[o[H]][o[x]];l=l+b;o=O[l];f=o[p]L={h[f](r(h,f+1,o[M]))};P=0;for o=f,o[s]do P=P+b;h[o]=L[P];end l=l+b;o=O[l];if not h[o[p]]then l=l+i;else l=o[K];end;break;end while 1800==(f)/((6383-0xc92))do f=(4489920)while(-#'pairu sucks dick'+(16766/0xca))<L do f-= f local f;h[o[B]][o[M]]=o[s];l=l+b;o=O[l];h[o[m]]=u[o[K]];l=l+b;o=O[l];h[o[B]]=h[o[P]][o[s]];l=l+b;o=O[l];h[o[p]]=o[K];l=l+b;o=O[l];f=o[F]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[p]][o[K]]=o[c];l=l+b;o=O[l];h[o[e]][o[d]]=o[w];l=l+b;o=O[l];h[o[p]][o[K]]=o[s];l=l+b;o=O[l];h[o[B]][o[d]]=o[s];l=l+b;o=O[l];h[o[B]][o[H]]=o[c];break end while(f)/((0x1a5e0/75))==3118 do l=o[d];break end;break;end break;end while 1193==(f)/((-97+0x4ba))do f=(1542544)while L<=((-#'IP grabbed'+(-0x31+3578))/0x33)do f-= f h[o[B]][o[K]]=o[s];l=l+b;o=O[l];h[o[p]]=n[o[d]];l=l+b;o=O[l];h[o[B]][o[H]]=o[t];l=l+b;o=O[l];h[o[e]]=n[o[d]];l=l+b;o=O[l];h[o[k]][o[a]]=o[c];l=l+b;o=O[l];l=o[H];break;end while(f)/((0x11e40/80))==1684 do f=(9713438)while((190-0x70)+-#"Hey skid")<L do f-= f local o=o[m]local O,l=D(h[o](r(h,o+b,S)))S=l+o-i local l=0;for o=o,S do l=l+b;h[o]=O[l];end;break end while(f)/((354166/0x7a))==3346 do if(h[o[F]]<=h[o[s]])then l=l+i;else l=o[P];end;break end;break;end break;end break;end break;end break;end while 2089==(f)/((0x4452b/103))do f=(13740)while(283-0xc8)>=L do f-= f f=(11030747)while(-#"pls free synapse x i am gamer girl uwu"+(0x122-175))>=L do f-= f f=(2942112)while L<=(0xbf-117)do f-= f f=(199738)while(-101+0xad)>=L do f-= f local f;h[o[k]]=u[o[M]];l=l+b;o=O[l];h[o[F]]=h[o[H]][o[x]];l=l+b;o=O[l];h[o[F]]=h[o[P]][o[t]];l=l+b;o=O[l];h[o[e]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[B]]=h[o[d]]-o[w];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];h[o[p]][o[d]]=h[o[t]];l=l+b;o=O[l];h[o[m]]=n[o[P]];l=l+b;o=O[l];h[o[k]]=u[o[K]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[x]];break;end while 77==(f)/((-#"Moonsex v5 eta"+(0x832a0/206)))do f=(2915873)while(215-(-0x4d+219))<L do f-= f h[o[F]]=n[o[M]];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[s]];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[w]];l=l+b;o=O[l];h[o[m]][o[P]]=h[o[t]];l=l+b;o=O[l];do return end;break end while(f)/((-59+0x36c))==3569 do local L;local f;h[o[B]]=u[o[H]];l=l+b;o=O[l];h[o[F]]=h[o[P]][o[c]];l=l+b;o=O[l];h[o[k]]=h[o[M]][o[s]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[U]];l=l+b;o=O[l];h[o[p]]=h[o[H]]-o[w];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];h[o[e]][o[M]]=h[o[s]];l=l+b;o=O[l];h[o[m]]=n[o[a]];l=l+b;o=O[l];h[o[m]]=u[o[K]];l=l+b;o=O[l];h[o[p]]=h[o[M]][o[w]];l=l+b;o=O[l];h[o[F]]=h[o[K]][o[s]];l=l+b;o=O[l];h[o[p]]=h[o[M]][o[c]];l=l+b;o=O[l];h[o[p]]=h[o[K]]-o[s];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];h[o[B]][o[d]]=h[o[c]];l=l+b;o=O[l];h[o[F]]=n[o[M]];l=l+b;o=O[l];h[o[k]]=u[o[K]];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[c]];l=l+b;o=O[l];h[o[e]]=h[o[d]][o[t]];l=l+b;o=O[l];h[o[p]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[p]]=h[o[P]]-o[x];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];h[o[k]][o[H]]=h[o[x]];l=l+b;o=O[l];h[o[B]]=n[o[P]];l=l+b;o=O[l];h[o[F]]=u[o[M]];l=l+b;o=O[l];h[o[B]]=h[o[H]][o[c]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[t]];l=l+b;o=O[l];h[o[k]]=h[o[H]][o[t]];l=l+b;o=O[l];h[o[k]]=h[o[M]]-o[U];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];h[o[k]][o[d]]=h[o[w]];l=l+b;o=O[l];h[o[k]]=n[o[P]];l=l+b;o=O[l];h[o[B]][o[H]]=o[s];l=l+b;o=O[l];h[o[k]]=n[o[K]];l=l+b;o=O[l];h[o[m]][o[M]]=o[t];l=l+b;o=O[l];h[o[e]]=n[o[K]];l=l+b;o=O[l];h[o[e]][o[K]]=o[U];l=l+b;o=O[l];h[o[B]]=n[o[d]];l=l+b;o=O[l];h[o[B]][o[d]]=o[x];l=l+b;o=O[l];h[o[e]]=u[o[P]];l=l+b;o=O[l];h[o[F]]=h[o[K]][o[t]];l=l+b;o=O[l];h[o[k]]=n[o[K]];l=l+b;o=O[l];f=o[p];L=h[o[H]];h[f+1]=L;h[f]=L[o[x]];l=l+b;o=O[l];h[o[F]]=o[K];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[m]]=h[o[K]][o[w]];l=l+b;o=O[l];h[o[B]]=n[o[H]];l=l+b;o=O[l];h[o[e]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[e]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[k]]=h[o[a]][o[x]];l=l+b;o=O[l];f=o[k];L=h[o[d]];h[f+1]=L;h[f]=L[o[U]];l=l+b;o=O[l];h[o[k]]=o[d];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[B]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[B]]=h[o[d]]-h[o[U]];l=l+b;o=O[l];h[o[F]]=h[o[P]][o[x]];l=l+b;o=O[l];f=o[m]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[F]]=n[o[M]];l=l+b;o=O[l];h[o[p]]=h[o[M]][o[s]];l=l+b;o=O[l];h[o[m]]=h[o[a]][o[w]];l=l+b;o=O[l];if(h[o[F]]==o[U])then l=l+i;else l=o[M];end;break end;break;end break;end while(f)/((0x550f8/216))==1824 do f=(45496)while L<=(12600/0xa8)do f-= f local B;local f;h[o[e]][o[d]]=o[x];l=l+b;o=O[l];h[o[k]]=n[o[H]];l=l+b;o=O[l];h[o[p]][o[K]]=o[w];l=l+b;o=O[l];h[o[p]]=n[o[a]];l=l+b;o=O[l];h[o[p]][o[d]]=o[U];l=l+b;o=O[l];h[o[p]]=n[o[M]];l=l+b;o=O[l];f=o[p];B=h[o[M]];h[f+1]=B;h[f]=B[o[x]];l=l+b;o=O[l];f=o[e]h[f](h[f+i])l=l+b;o=O[l];l=o[d];break;end while 44==(f)/((0x2050/8))do f=(6665258)while L>(0x6b+-31)do f-= f local f;local P;h[o[m]]=u[o[H]];l=l+b;o=O[l];h[o[B]]=h[o[K]][o[t]];l=l+b;o=O[l];h[o[k]]=o[H];l=l+b;o=O[l];h[o[F]]=o[M];l=l+b;o=O[l];P=o[m]h[P]=h[P](r(h,P+b,o[K]))l=l+b;o=O[l];f={h,o};f[i][f[N][F]]=f[b][f[N][U]]+f[i][f[N][H]];l=l+b;o=O[l];h[o[p]][o[M]]=h[o[w]];break end while 1649==(f)/((-#'Ok guys relax Theyre just fucking socks Its impossible for socks to turn me gay My heterosexuality will be fine dudes'+(752779/0xb5)))do local f;local m;local L,a;local K;local f;u[o[P]]=h[o[e]];l=l+b;o=O[l];u[o[d]]=h[o[B]];l=l+b;o=O[l];h[o[F]]=u[o[M]];l=l+b;o=O[l];h[o[p]]=u[o[H]];l=l+b;o=O[l];h[o[F]]=h[o[P]][o[t]];l=l+b;o=O[l];h[o[k]]=h[o[H]][o[U]];l=l+b;o=O[l];f=o[F];K=h[o[P]];h[f+1]=K;h[f]=K[o[t]];l=l+b;o=O[l];f=o[F]L,a=D(h[f](h[f+i]))S=a+f-b m=0;for o=f,S do m=m+b;h[o]=L[m];end;l=l+b;o=O[l];f=o[e]L={h[f](r(h,f+1,S))};m=0;for o=f,o[t]do m=m+b;h[o]=L[m];end l=l+b;o=O[l];l=o[P];break end;break;end break;end break;end while(f)/(((0xfb0+-55)+-#'never gonna give you up never gonna let you down'))==2819 do f=(15275652)while L<=(3920/0x31)do f-= f f=(2423582)while(4602/0x3b)>=L do f-= f local b=o[F];local O=h[b]local f=h[b+2];if(f>0)then if(O>h[b+1])then l=o[P];else h[b+3]=O;end elseif(O<h[b+1])then l=o[P];else h[b+3]=O;end break;end while(f)/((0x1ce6-(0xf0d+-116)))==662 do f=(72216)while((269-0xb6)+-#'Omg guys')<L do f-= f local f;h[o[k]]=u[o[H]];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[t]];l=l+b;o=O[l];h[o[F]]=n[o[M]];l=l+b;o=O[l];h[o[k]]=h[o[a]][o[c]];l=l+b;o=O[l];h[o[p]]=h[o[P]][o[t]];l=l+b;o=O[l];h[o[F]]=h[o[H]];l=l+b;o=O[l];f=o[p]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];do return end;break end while 2124==(f)/(((0x71+-51)+-#"10 black dicks in your mouth"))do h[o[F]]=h[o[P]];l=l+b;o=O[l];h[o[B]]=n[o[H]];l=l+b;o=O[l];h[o[e]]=h[o[a]][o[c]];l=l+b;o=O[l];h[o[F]]=h[o[d]][o[w]];l=l+b;o=O[l];h[o[F]]=n[o[M]];l=l+b;o=O[l];h[o[e]]=h[o[H]][o[c]];l=l+b;o=O[l];h[o[e]]=h[o[M]][o[t]];l=l+b;o=O[l];h[o[F]]=h[o[H]][o[t]];l=l+b;o=O[l];h[o[k]]=n[o[K]];l=l+b;o=O[l];h[o[F]]=h[o[M]][o[w]];break end;break;end break;end while 4067==(f)/((0xf0d+-97))do f=(14814369)while((-#[[Fucking Retarted]]+(0x1a+-33))+104)>=L do f-= f do return end;break;end while(f)/(((-#'warboy hates you'+(39390365/0xd7))/0x2d))==3639 do f=(8269350)while(10168/0x7c)<L do f-= f local f;h[o[F]]=u[o[M]];l=l+b;o=O[l];h[o[B]]=h[o[P]][o[x]];l=l+b;o=O[l];h[o[p]]=h[o[H]];l=l+b;o=O[l];f=o[F]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[F]]();l=l+b;o=O[l];do return end;break end while(f)/((0x8190c/244))==3802 do local b=o[k];local l=h[o[P]];h[b+1]=l;h[b]=l[o[t]];break end;break;end break;end break;end break;end while(f)/((0x21c-311))==60 do f=(440748)while L<=(190+-0x65)do f-= f f=(213188)while L<=((-111+0x11b)+-86)do f-= f f=(2432232)while L<=(-#"penis"+(-48+0x89))do f-= f local f;f=o[F]h[f](r(h,f+i,o[M]))l=l+b;o=O[l];for o=o[B],o[H]do h[o]=nil;end;l=l+b;o=O[l];h[o[k]]=u[o[K]];l=l+b;o=O[l];h[o[e]]=u[o[M]];l=l+b;o=O[l];h[o[m]]=u[o[a]];l=l+b;o=O[l];f=o[F]h[f]=h[f]()l=l+b;o=O[l];h[o[p]]=h[o[H]][o[w]];l=l+b;o=O[l];h[o[p]]=h[o[M]][o[x]];l=l+b;o=O[l];h[o[B]]=o[K];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[d]))break;end while 2988==(f)/((-#"holy shit"+(125096/0x98)))do f=(3903018)while L>((200+-0x58)+-#"moonsec backrooms confirmed")do f-= f local f;local P;local p,K;local L;local f;h[o[m]]=n[o[H]];l=l+b;o=O[l];f=o[B];L=h[o[H]];h[f+1]=L;h[f]=L[o[w]];l=l+b;o=O[l];f=o[k]p,K=D(h[f](h[f+i]))S=K+f-b P=0;for o=f,S do P=P+b;h[o]=p[P];end;l=l+b;o=O[l];f=o[B]p={h[f](r(h,f+1,S))};P=0;for o=f,o[t]do P=P+b;h[o]=p[P];end l=l+b;o=O[l];l=o[M];break end while(f)/((((-0x22-0)+3114)+-#"jjsplot on top"))==1273 do if(o[F]<h[o[s]])then l=l+i;else l=o[M];end;break end;break;end break;end while(f)/((0x3e8-554))==478 do f=(2362338)while L<=(194+(-84+-0x17))do f-= f local f;h[o[k]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[B]]=h[o[K]]-o[U];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];h[o[F]][o[d]]=h[o[U]];l=l+b;o=O[l];h[o[p]]=n[o[d]];l=l+b;o=O[l];h[o[B]]=u[o[M]];l=l+b;o=O[l];h[o[m]]=h[o[K]][o[s]];l=l+b;o=O[l];h[o[k]]=h[o[a]][o[x]];l=l+b;o=O[l];h[o[F]]=h[o[K]][o[c]];l=l+b;o=O[l];h[o[m]]=h[o[M]]-o[s];break;end while 738==(f)/((6420-0xc93))do f=(4161456)while((619-0x15e)-0xb5)<L do f-= f if(h[o[e]]~=h[o[w]])then l=l+i;else l=o[d];end;break end while 1539==(f)/((5493-0xae5))do local f;local B;h[o[e]]=u[o[M]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[s]];l=l+b;o=O[l];B=o[m];f=h[o[P]];h[B+1]=f;h[B]=f[o[w]];l=l+b;o=O[l];h[o[e]]=o[M];l=l+b;o=O[l];h[o[p]]={};l=l+b;o=O[l];f=h[o[U]];if not f then l=l+i;else h[o[k]]=f;l=o[M];end;break end;break;end break;end break;end while 1749==(f)/((-#'i fucked your dad'+(0x23b-((449+-0x7f)+-#"free pornhub premium"))))do f=(5554560)while(0x114-184)>=L do f-= f f=(8836242)while(0x9d8/(0x1618/202))>=L do f-= f local o=o[e];do return h[o](r(h,o+1,S))end;break;end while(f)/((-#[[me and the monkey]]+(-0x19+3783)))==2362 do f=(1773458)while(-#"mf stfu"+(0x72+-16))<L do f-= f h[o[k]]=o[M];l=l+b;o=O[l];h[o[p]]=h[o[H]][h[o[s]]];l=l+b;o=O[l];h[o[B]]=o[P];l=l+b;o=O[l];h[o[m]]=h[o[M]][h[o[w]]];l=l+b;o=O[l];h[o[B]]=(o[d]~=0);break end while 626==(f)/((0xa1279/233))do local f;f=o[m]h[f](r(h,f+i,o[P]))l=l+b;o=O[l];h[o[p]]=h[o[H]][o[U]];l=l+b;o=O[l];h[o[m]]=h[o[a]][o[c]];l=l+b;o=O[l];h[o[p]]=h[o[d]][o[w]];l=l+b;o=O[l];if h[o[e]]then l=l+b;else l=o[K];end;break end;break;end break;end while(f)/((4255-0x85f))==2630 do f=(5111055)while((6120/0x14)-213)>=L do f-= f local l=o[e];do return r(h,l,l+o[H])end;break;end while(f)/(((4966-0x9ef)+-#"If not skid then return hasbitches end"))==2143 do f=(1514540)while L>(250-0x9c)do f-= f local f;h[o[B]]=h[o[H]][o[w]];l=l+b;o=O[l];h[o[B]]=n[o[P]];l=l+b;o=O[l];f=o[m]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[m]]=h[o[a]];l=l+b;o=O[l];h[o[k]]=n[o[P]];l=l+b;o=O[l];f=o[e]h[f](r(h,f+i,o[d]))break end while 820==(f)/((0x256d5/83))do local p;local f;h[o[k]]=o[M];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];f=o[e];p=h[o[P]];h[f+1]=p;h[f]=p[o[t]];l=l+b;o=O[l];h[o[m]]=o[a];l=l+b;o=O[l];h[o[B]]=o[H];l=l+b;o=O[l];f=o[B]h[f](r(h,f+i,o[d]))break end;break;end break;end break;end break;end break;end break;end break;end while(f)/((0x1d02-(-#'my ass hurts'+(7590-0xeec))))==2553 do f=(9343136)while L<=(0xb6+-39)do f-= f f=(8890762)while(30107/0xfd)>=L do f-= f f=(457704)while(232-0x7d)>=L do f-= f f=(5020114)while(-#'Only a to Z 0 to 9 is allowed'+((0x1ebc0c/122)/127))>=L do f-= f f=(475972)while((-0x10+182)+-0x44)>=L do f-= f f=(5667762)while L<=((17400/0x96)+-#[[meme strings be like]])do f-= f h[o[B]][o[M]]=o[s];break;end while(f)/((346006/0x71))==1851 do f=(4955580)while L>(0x110-175)do f-= f local L;local f;h[o[p]]=o[a];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];h[o[B]]=o[M];l=l+b;o=O[l];f=o[m];L=h[o[M]];h[f+1]=L;h[f]=L[h[o[x]]];l=l+b;o=O[l];h[o[F]]=n[o[P]];l=l+b;o=O[l];h[o[k]]=o[H];l=l+b;o=O[l];h[o[m]]=h[o[P]][h[o[x]]];l=l+b;o=O[l];h[o[k]]=o[d];l=l+b;o=O[l];h[o[e]]=h[o[a]][h[o[s]]];l=l+b;o=O[l];h[o[k]]=o[K];l=l+b;o=O[l];h[o[e]]=h[o[H]][h[o[U]]];break end while(f)/((-0x14+3240))==1539 do local l=o[F];do return h[l](r(h,l+1,o[K]))end;break end;break;end break;end while(f)/((-#"null"+(-0x76+(0x400-520))))==1246 do f=(10258272)while(((0x259-364)+-#"penis")-133)>=L do f-= f local H;local f;local L;h[o[m]]=n[o[K]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[s]];l=l+b;o=O[l];h[o[B]]=n[o[M]];l=l+b;o=O[l];h[o[F]]=h[o[d]][o[t]];l=l+b;o=O[l];h[o[m]]=o[d];l=l+b;o=O[l];h[o[p]]=h[o[d]][o[w]];l=l+b;o=O[l];h[o[m]]=o[a];l=l+b;o=O[l];L=o[P];f=h[L]for o=L+1,o[s]do f=f..h[o];end;h[o[p]]=f;l=l+b;o=O[l];h[o[m]]=o[a];l=l+b;o=O[l];H=o[k]h[H](r(h,H+i,o[P]))break;end while 3064==(f)/((-#[[nicuse is nil skull]]+(0xd37+-16)))do f=(1417494)while(-72+0xac)<L do f-= f h[o[k]]=v(I[o[d]],nil,u);break end while(f)/((0x1d5+-27))==3207 do h[o[k]][o[d]]=h[o[t]];l=l+b;o=O[l];h[o[m]][o[H]]=h[o[s]];l=l+b;o=O[l];h[o[k]][o[P]]=o[c];l=l+b;o=O[l];h[o[p]][o[M]]=o[s];l=l+b;o=O[l];h[o[e]][o[a]]=o[w];l=l+b;o=O[l];h[o[m]][o[M]]=o[s];l=l+b;o=O[l];h[o[B]][o[H]]=o[c];l=l+b;o=O[l];h[o[p]][o[K]]=o[w];l=l+b;o=O[l];h[o[p]][o[a]]=o[U];l=l+b;o=O[l];h[o[F]][o[P]]=o[c];break end;break;end break;end break;end while(f)/(((0x42240/102)+-#'furries should die'))==1903 do f=(7387457)while L<=(0xa28/25)do f-= f f=(2719980)while L<=((24442/0xca)+-#'moonsex looks great')do f-= f h[o[F]]=(o[P]~=0);break;end while 828==(f)/((6640-0xd1b))do f=(6478850)while((398-0xef)+-#[[You say is ricochetin off of me and itll glue to you and]])<L do f-= f h[o[B]]=#h[o[a]];break end while 2422==(f)/((2701+-0x1a))do h[o[m]]=h[o[K]][o[w]];l=l+b;o=O[l];h[o[k]]=h[o[a]][o[U]];l=l+b;o=O[l];h[o[k]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[k]]=h[o[P]][o[t]];l=l+b;o=O[l];h[o[k]]=h[o[H]]-h[o[x]];l=l+b;o=O[l];h[o[p]]=h[o[H]][o[x]];l=l+b;o=O[l];u[o[H]]=h[o[m]];l=l+b;o=O[l];h[o[e]]=u[o[d]];l=l+b;o=O[l];h[o[k]]=u[o[M]];l=l+b;o=O[l];if(h[o[p]]<h[o[x]])then l=o[P];else l=l+i;end;break end;break;end break;end while(f)/((-85+(0x97db8/212)))==2593 do f=(2678883)while(24255/0xe7)>=L do f-= f for o=o[m],o[P]do h[o]=nil;end;break;end while(f)/((0x792-1001))==2859 do f=(6038831)while(0xfc-146)<L do f-= f local f;local B;local d,x;local L;local f;h[o[m]]=n[o[K]];l=l+b;o=O[l];f=o[F];L=h[o[a]];h[f+1]=L;h[f]=L[o[w]];l=l+b;o=O[l];h[o[F]]=o[a];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[e]]=h[o[a]][o[c]];l=l+b;o=O[l];h[o[e]]=h[o[H]][o[c]];l=l+b;o=O[l];f=o[p];L=h[o[M]];h[f+1]=L;h[f]=L[o[w]];l=l+b;o=O[l];f=o[e]d,x=D(h[f](h[f+i]))S=x+f-b B=0;for o=f,S do B=B+b;h[o]=d[B];end;l=l+b;o=O[l];f=o[p]d={h[f](r(h,f+1,S))};B=0;for o=f,o[U]do B=B+b;h[o]=d[B];end l=l+b;o=O[l];l=o[M];break end while 2573==(f)/((2390+-0x2b))do n[o[M]]=h[o[k]];break end;break;end break;end break;end break;end while(f)/((-#"moonsec is better then my ass"+(0x1cd-276)))==2934 do f=(1264310)while((37036/((0x145e/22)+-#[[Cause I know the way to get em motivated]]))+-#"brawl stars hard gay porn shelly nsked minecraft gay porn roblox rule34 hot")>=L do f-= f f=(11944596)while(0x122-180)>=L do f-= f f=(5336190)while(0x145-217)>=L do f-= f local P;local L,m;local f;h[o[k]]=u[o[M]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[t]];l=l+b;o=O[l];h[o[k]]=o[H];l=l+b;o=O[l];h[o[B]]=o[M];l=l+b;o=O[l];h[o[k]]=o[a];l=l+b;o=O[l];f=o[F]L,m=D(h[f](r(h,f+1,o[K])))S=m+f-1 P=0;for o=f,S do P=P+b;h[o]=L[P];end;l=l+b;o=O[l];f=o[p]h[f](r(h,f+i,S))l=l+b;o=O[l];l=o[a];break;end while(f)/((0xb1c+-34))==1899 do f=(1826839)while((0x101+-122)+-#'so much white liquid daddy')<L do f-= f local l=o[p];local b=h[o[H]];h[l+1]=b;h[l]=b[h[o[w]]];break end while 3493==(f)/((((0x68bd+-124)+-#"warboy hates you")/51))do local f;h[o[e]]=h[o[H]];l=l+b;o=O[l];h[o[k]]=n[o[P]];l=l+b;o=O[l];h[o[m]]=h[o[M]][o[w]];l=l+b;o=O[l];h[o[B]]=h[o[K]][o[c]];l=l+b;o=O[l];h[o[k]]=n[o[a]];l=l+b;o=O[l];h[o[B]]=h[o[H]][o[t]];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[t]];l=l+b;o=O[l];h[o[e]]=h[o[a]][o[U]];l=l+b;o=O[l];h[o[B]]=n[o[P]];l=l+b;o=O[l];h[o[p]]=h[o[H]][o[c]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[x]];l=l+b;o=O[l];h[o[p]]=h[o[H]][o[U]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[w]];l=l+b;o=O[l];f=o[e]h[f](r(h,f+i,o[M]))l=l+b;o=O[l];l=o[H];break end;break;end break;end while 3673==(f)/((3356+-0x68))do f=(4725900)while(322-0xd3)>=L do f-= f if(o[m]<=h[o[s]])then l=o[H];else l=l+i;end;break;end while 3204==(f)/((0x217d7/93))do f=(2461781)while((0x548d/185)+-#'false')<L do f-= f local k;local P,L;local f;n[o[H]]=h[o[m]];l=l+b;o=O[l];h[o[e]]=n[o[K]];l=l+b;o=O[l];h[o[F]]=u[o[K]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[t]];l=l+b;o=O[l];h[o[F]]=o[a];l=l+b;o=O[l];h[o[p]]=o[d];l=l+b;o=O[l];h[o[F]]=o[K];l=l+b;o=O[l];f=o[B]P,L=D(h[f](r(h,f+1,o[M])))S=L+f-1 k=0;for o=f,S do k=k+b;h[o]=P[k];end;l=l+b;o=O[l];f=o[F]h[f](r(h,f+i,S))l=l+b;o=O[l];h[o[m]]=u[o[H]];break end while 1267==(f)/((3952-0x7d9))do local B;local f;h[o[e]][o[M]]=o[c];l=l+b;o=O[l];h[o[e]]=n[o[P]];l=l+b;o=O[l];h[o[p]][o[a]]=o[c];l=l+b;o=O[l];h[o[m]]=n[o[a]];l=l+b;o=O[l];h[o[k]][o[P]]=o[c];l=l+b;o=O[l];h[o[k]]=n[o[a]];l=l+b;o=O[l];f=o[e];B=h[o[H]];h[f+1]=B;h[f]=B[o[w]];l=l+b;o=O[l];f=o[m]h[f](h[f+i])l=l+b;o=O[l];l=o[M];break end;break;end break;end break;end while(f)/(((0x863a/69)+-#[[free pornhub premium]]))==2645 do f=(1644148)while L<=(-17+0x85)do f-= f f=(8523195)while(260-0x92)>=L do f-= f local M;local f;h[o[p]]=h[o[d]][o[c]];l=l+b;o=O[l];f=o[k];M=h[o[d]];h[f+1]=M;h[f]=M[o[U]];l=l+b;o=O[l];h[o[B]]=o[d];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];if h[o[F]]then l=l+b;else l=o[d];end;break;end while(f)/((4622-0x935))==3763 do f=(564988)while L>(-0x37+(-#"no h"+(0xdb+-45)))do f-= f h[o[e]][o[K]]=o[U];l=l+b;o=O[l];h[o[k]]=n[o[a]];l=l+b;o=O[l];h[o[m]]=n[o[H]];l=l+b;o=O[l];h[o[k]]=h[o[H]][o[U]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[w]];l=l+b;o=O[l];h[o[m]]=h[o[a]][o[x]];l=l+b;o=O[l];h[o[p]][o[M]]=h[o[U]];l=l+b;o=O[l];h[o[e]]=n[o[H]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[c]];l=l+b;o=O[l];h[o[k]]=h[o[M]][o[x]];l=l+b;o=O[l];if(h[o[p]]==o[s])then l=l+i;else l=o[M];end;break end while(f)/((-37+0x42c))==548 do do return h[o[e]]end break end;break;end break;end while(f)/((0x421-584))==3476 do f=(533722)while L<=(25740/0xdc)do f-= f local B;local f;f=o[F];B=h[o[M]];h[f+1]=B;h[f]=B[o[U]];l=l+b;o=O[l];h[o[m]]=o[P];l=l+b;o=O[l];h[o[p]]=o[a];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];f=o[k];B=h[o[P]];h[f+1]=B;h[f]=B[o[w]];l=l+b;o=O[l];h[o[m]]=o[P];l=l+b;o=O[l];h[o[F]]=o[a];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[K]))l=l+b;o=O[l];f=o[k];B=h[o[d]];h[f+1]=B;h[f]=B[o[U]];l=l+b;o=O[l];h[o[k]]=o[M];break;end while 569==(f)/((-#'ambattakam'+((0x7b5-995)+-0x1e)))do f=(10987576)while(-#[[What I gotta do to get it through to you Im superhuman]]+(390-0xda))<L do f-= f local L;local f;h[o[m]]=n[o[P]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[U]];l=l+b;o=O[l];h[o[m]][o[M]]=h[o[c]];l=l+b;o=O[l];h[o[B]]=n[o[P]];l=l+b;o=O[l];h[o[F]]=n[o[H]];l=l+b;o=O[l];h[o[e]]=h[o[H]][o[t]];l=l+b;o=O[l];h[o[k]]=h[o[d]][o[x]];l=l+b;o=O[l];h[o[e]][o[a]]=h[o[t]];l=l+b;o=O[l];h[o[e]]=n[o[H]];l=l+b;o=O[l];h[o[e]]=n[o[d]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[w]];l=l+b;o=O[l];h[o[k]]=h[o[a]][o[U]];l=l+b;o=O[l];h[o[m]][o[P]]=h[o[w]];l=l+b;o=O[l];h[o[k]]=n[o[K]];l=l+b;o=O[l];h[o[m]]=n[o[d]];l=l+b;o=O[l];h[o[B]]=h[o[M]][o[U]];l=l+b;o=O[l];h[o[e]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[k]][o[M]]=h[o[s]];l=l+b;o=O[l];h[o[e]]=n[o[K]];l=l+b;o=O[l];h[o[m]]=n[o[P]];l=l+b;o=O[l];h[o[m]]=h[o[K]][o[w]];l=l+b;o=O[l];h[o[k]]=h[o[H]][o[c]];l=l+b;o=O[l];h[o[m]][o[M]]=h[o[t]];l=l+b;o=O[l];h[o[B]]=n[o[M]];l=l+b;o=O[l];h[o[k]]=n[o[d]];l=l+b;o=O[l];h[o[F]]=h[o[M]][o[c]];l=l+b;o=O[l];h[o[p]]=h[o[K]][o[s]];l=l+b;o=O[l];h[o[k]][o[d]]=h[o[x]];l=l+b;o=O[l];h[o[p]]=n[o[a]];l=l+b;o=O[l];h[o[B]]=n[o[K]];l=l+b;o=O[l];h[o[B]]=h[o[H]][o[U]];l=l+b;o=O[l];h[o[k]]=h[o[P]][o[t]];l=l+b;o=O[l];h[o[m]][o[d]]=h[o[w]];l=l+b;o=O[l];h[o[p]]=n[o[a]];l=l+b;o=O[l];h[o[F]]=n[o[d]];l=l+b;o=O[l];h[o[e]]=h[o[d]][o[t]];l=l+b;o=O[l];h[o[p]]=h[o[M]][o[U]];l=l+b;o=O[l];h[o[k]][o[H]]=h[o[s]];l=l+b;o=O[l];h[o[p]]=n[o[K]];l=l+b;o=O[l];f=o[F];L=h[o[H]];h[f+1]=L;h[f]=L[o[c]];l=l+b;o=O[l];h[o[p]]=n[o[K]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[x]];l=l+b;o=O[l];h[o[e]]=h[o[a]][o[c]];l=l+b;o=O[l];f=o[m]h[f](r(h,f+i,o[H]))l=l+b;o=O[l];do return end;break end while(f)/(((7597-0xf07)+-#"FranzJPresents"))==2941 do h[o[F]]=h[o[d]];break end;break;end break;end break;end break;end break;end while 3683==(f)/((576946/0xef))do f=(9082836)while(23187/0xb1)>=L do f-= f f=(5931540)while(-#"zeynox was here"+(338-0xc6))>=L do f-= f f=(9757388)while L<=((54093/0xdb)+-#[[That meme string already exists and also You said a blacklisted word so you are getting banned and kicked and never come back]])do f-= f f=(1880172)while L<=(0xee+-118)do f-= f local l=o[m];local b=h[l];for o=l+1,o[a]do y(b,h[o])end;break;end while 3316==(f)/((-#"monobola"+(604+-0x1d)))do f=(3517072)while(-#'33 cocks in my mouth'+(-112+0xfd))<L do f-= f local o=o[F]h[o](h[o+i])break end while 962==(f)/((0x1cbb-3699))do local L;local f;f=o[m];L=h[o[a]];h[f+1]=L;h[f]=L[o[t]];l=l+b;o=O[l];f=o[F]h[f]=h[f](h[f+i])l=l+b;o=O[l];f=o[B];L=h[o[M]];h[f+1]=L;h[f]=L[o[U]];l=l+b;o=O[l];h[o[p]]=o[M];l=l+b;o=O[l];h[o[B]]=#h[o[M]];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[K]))l=l+b;o=O[l];f=o[e];L=h[o[P]];h[f+1]=L;h[f]=L[o[c]];l=l+b;o=O[l];f=o[k]h[f]=h[f](h[f+i])l=l+b;o=O[l];if(h[o[m]]==h[o[x]])then l=l+i;else l=o[P];end;break end;break;end break;end while(f)/((6674/0x2))==2924 do f=(11445055)while((0x113-148)+-#'flat')>=L do f-= f local l=o[p]h[l](r(h,l+i,o[P]))break;end while(f)/((423060/0x84))==3571 do f=(5638424)while(2480/0x14)<L do f-= f local L;local f;h[o[p]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[p]]=h[o[K]][o[x]];l=l+b;o=O[l];f=o[k];L=h[o[K]];h[f+1]=L;h[f]=L[o[x]];l=l+b;o=O[l];h[o[B]]=o[d];l=l+b;o=O[l];h[o[p]]=(o[M]~=0);l=l+b;o=O[l];f=o[m]h[f](r(h,f+i,o[P]))break end while 3769==(f)/((-#[[I FUCKING HATE FEMBOYS]]+(0xbdc0/32)))do local L;local f;h[o[F]]=n[o[a]];l=l+b;o=O[l];f=o[F];L=h[o[a]];h[f+1]=L;h[f]=L[o[t]];l=l+b;o=O[l];h[o[p]]=u[o[P]];l=l+b;o=O[l];h[o[k]]=h[o[d]][o[U]];l=l+b;o=O[l];h[o[k]]=o[d];l=l+b;o=O[l];h[o[m]]=o[d];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[p]]=u[o[P]];l=l+b;o=O[l];h[o[e]]=h[o[M]][o[s]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[w]];l=l+b;o=O[l];f=o[m]h[f](r(h,f+i,o[a]))l=l+b;o=O[l];h[o[F]]=u[o[a]];l=l+b;o=O[l];h[o[k]]=o[H];l=l+b;o=O[l];f=o[k]h[f](h[f+i])l=l+b;o=O[l];h[o[m]]=n[o[K]];l=l+b;o=O[l];f=o[B];L=h[o[P]];h[f+1]=L;h[f]=L[o[s]];l=l+b;o=O[l];h[o[p]]=u[o[P]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[s]];l=l+b;o=O[l];h[o[e]]=o[K];l=l+b;o=O[l];h[o[k]]=o[P];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[K]))l=l+b;o=O[l];h[o[p]]=u[o[M]];l=l+b;o=O[l];h[o[B]]=h[o[H]][o[w]];l=l+b;o=O[l];h[o[F]]=h[o[a]][o[w]];l=l+b;o=O[l];f=o[B]h[f](r(h,f+i,o[a]))l=l+b;o=O[l];do return end;break end;break;end break;end break;end while(f)/((3756-0x768))==3189 do f=(7349373)while(195+-0x43)>=L do f-= f f=(5392332)while L<=(0x116-152)do f-= f local o=o[B]h[o]=h[o](r(h,o+b,S))break;end while(f)/((-0x47+1448))==3916 do f=(453993)while L>(379-(49644/0xc5))do f-= f local P;local f;f=o[F]h[f](r(h,f+i,o[M]))l=l+b;o=O[l];f=o[B];P=h[o[M]];h[f+1]=P;h[f]=P[o[w]];l=l+b;o=O[l];h[o[k]]=o[K];l=l+b;o=O[l];f=o[m]h[f](r(h,f+i,o[M]))l=l+b;o=O[l];h[o[p]]=o[d];l=l+b;o=O[l];f=o[F];P=h[o[M]];h[f+1]=P;h[f]=P[h[o[x]]];l=l+b;o=O[l];h[o[p]]=o[H];break end while 3691==(f)/(((0x152-210)+-#[[Asses]]))do local M;local f;h[o[p]]=n[o[H]];l=l+b;o=O[l];h[o[k]][o[K]]=h[o[U]];l=l+b;o=O[l];h[o[k]]=n[o[P]];l=l+b;o=O[l];f=o[m];M=h[o[d]];h[f+1]=M;h[f]=M[o[w]];l=l+b;o=O[l];h[o[m]]=o[K];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];h[o[p]]=h[o[K]][o[t]];l=l+b;o=O[l];f=o[p];M=h[o[K]];h[f+1]=M;h[f]=M[o[s]];break end;break;end break;end while 2213==(f)/(((-0x3b+3409)+-#'daddy stop trying to crack me'))do f=(1440450)while L<=(0x159-216)do f-= f local P;local f;local B;h[o[p]]=n[o[H]];l=l+b;o=O[l];h[o[k]]=h[o[a]][o[U]];l=l+b;o=O[l];h[o[F]]=n[o[H]];l=l+b;o=O[l];h[o[k]]=h[o[a]][o[c]];l=l+b;o=O[l];h[o[p]]=o[K];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[c]];l=l+b;o=O[l];h[o[F]]=o[d];l=l+b;o=O[l];B=o[M];f=h[B]for o=B+1,o[c]do f=f..h[o];end;h[o[m]]=f;l=l+b;o=O[l];h[o[k]]=o[d];l=l+b;o=O[l];P=o[m]h[P](r(h,P+i,o[M]))l=l+b;o=O[l];l=o[d];break;end while(f)/((0x1476/2))==550 do f=(191454)while L>(-#'game players kick localplayer kicked by nicuse and beliveri12 ahhahahahahahhaha'+(0x14f+-126))do f-= f h[o[e]][o[K]]=o[w];l=l+b;o=O[l];h[o[p]]=n[o[K]];l=l+b;o=O[l];h[o[e]][o[H]]=o[x];l=l+b;o=O[l];h[o[B]]=n[o[P]];l=l+b;o=O[l];h[o[B]][o[d]]=o[s];break end while(f)/((176438/0x5e))==102 do local l=o[B]local f={h[l](h[l+1])};local O=0;for o=l,o[c]do O=O+b;h[o]=f[O];end break end;break;end break;end break;end break;end while 2439==(f)/((-0x68+(-#[[If not skid then return hasbitches end]]+(0x1e71-3927))))do f=(3915288)while(368-0xe7)>=L do f-= f f=(1115240)while L<=(0x5ca6/177)do f-= f f=(443989)while(-0x19+157)>=L do f-= f h[o[k]][o[M]]=o[x];l=l+b;o=O[l];h[o[F]]=n[o[H]];l=l+b;o=O[l];h[o[k]]=n[o[M]];l=l+b;o=O[l];h[o[e]]=h[o[H]][o[t]];l=l+b;o=O[l];h[o[e]]=h[o[K]][o[s]];l=l+b;o=O[l];h[o[e]]=h[o[d]][o[c]];l=l+b;o=O[l];h[o[B]][o[P]]=h[o[U]];l=l+b;o=O[l];h[o[p]]=n[o[d]];l=l+b;o=O[l];h[o[m]]=h[o[K]][o[U]];l=l+b;o=O[l];h[o[B]]=h[o[P]][o[x]];l=l+b;o=O[l];if(h[o[m]]~=o[U])then l=l+i;else l=o[d];end;break;end while 833==(f)/((-#'daddy stop trying to crack me'+(0x4bd-651)))do f=(14648108)while(((281+-0x3f)+-66)+-#"luraph deobfuscator")<L do f-= f local f;h[o[F]]=u[o[P]];l=l+b;o=O[l];h[o[m]]=h[o[M]][o[x]];l=l+b;o=O[l];h[o[m]]=h[o[a]][o[w]];l=l+b;o=O[l];h[o[e]]=h[o[P]][o[c]];l=l+b;o=O[l];h[o[k]]=h[o[M]]-o[c];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[B]][o[a]]=h[o[s]];l=l+b;o=O[l];h[o[e]]=n[o[P]];l=l+b;o=O[l];h[o[e]]=u[o[K]];l=l+b;o=O[l];h[o[B]]=h[o[P]][o[t]];break end while(f)/((((3994+-0x7f)+-#'Me be like at 5am in the morning')+-81))==3902 do local M;local f;h[o[k]]=h[o[K]][o[x]];l=l+b;o=O[l];h[o[k]]=h[o[a]][o[w]];l=l+b;o=O[l];h[o[F]]=h[o[d]][o[w]];l=l+b;o=O[l];f=o[m];M=h[o[P]];h[f+1]=M;h[f]=M[o[s]];l=l+b;o=O[l];h[o[m]]=o[P];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[K]))l=l+b;o=O[l];h[o[p]]=h[o[a]][o[U]];l=l+b;o=O[l];f=o[k];M=h[o[d]];h[f+1]=M;h[f]=M[o[t]];l=l+b;o=O[l];h[o[e]]=o[P];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[a]))break end;break;end break;end while(f)/(((0x8eb9-18329)/8))==490 do f=(8168380)while L<=(34020/0xfc)do f-= f local L;local f;h[o[m]]=h[o[P]][o[c]];l=l+b;o=O[l];h[o[F]]=h[o[a]][o[x]];l=l+b;o=O[l];h[o[k]]=h[o[a]][o[t]];l=l+b;o=O[l];f=o[B];L=h[o[M]];h[f+1]=L;h[f]=L[o[t]];l=l+b;o=O[l];h[o[F]]=o[P];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[F]]=h[o[M]][o[s]];l=l+b;o=O[l];f=o[p];L=h[o[d]];h[f+1]=L;h[f]=L[o[t]];l=l+b;o=O[l];h[o[B]]=o[P];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];h[o[F]]=h[o[a]][o[U]];l=l+b;o=O[l];h[o[B]]=h[o[H]]-h[o[t]];l=l+b;o=O[l];h[o[m]]=h[o[M]][o[x]];l=l+b;o=O[l];if(h[o[m]]<=o[w])then l=l+i;else l=o[P];end;break;end while 3470==(f)/((-#"anime is for fags"+(0x679d9/179)))do f=(1504781)while(0x5f18/179)<L do f-= f local o={o,h};o[N][o[i][k]]=o[N][o[b][a]]+o[i][x];break end while(f)/((-83+(-0x37+2869)))==551 do local k;local f;f=o[p];k=h[o[K]];h[f+1]=k;h[f]=k[o[s]];l=l+b;o=O[l];h[o[F]]=o[d];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];h[o[e]]=h[o[a]][o[t]];l=l+b;o=O[l];f=o[B]h[f]=h[f](h[f+i])l=l+b;o=O[l];if(h[o[e]]==o[w])then l=l+i;else l=o[M];end;break end;break;end break;end break;end while 3666==(f)/((0x896-1130))do f=(14702504)while L<=(385-(-#'33 cocks in my mouth'+(13515/0x33)))do f-= f f=(6661538)while L<=((-0x28+191)+-#[[Daddy fuck me]])do f-= f h[o[B]]=h[o[P]][o[c]];l=l+b;o=O[l];h[o[k]]=h[o[M]][o[w]];l=l+b;o=O[l];h[o[F]]=h[o[d]][o[w]];l=l+b;o=O[l];h[o[F]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[p]]=h[o[H]][o[w]];l=l+b;o=O[l];h[o[B]][o[K]]=o[x];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[c]];l=l+b;o=O[l];h[o[B]]=h[o[P]][o[c]];l=l+b;o=O[l];h[o[B]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[k]]=h[o[P]][o[s]];break;end while 2962==(f)/((-#'this video is sponsored by manscaped your balls will thank you'+(0x937+-48)))do f=(767536)while(261+-0x7a)<L do f-= f h[o[e]]=h[o[K]]-o[U];break end while(f)/(((0xf68+-16)+-#'Monkey balls'))==196 do u[o[P]]=h[o[p]];break end;break;end break;end while(f)/(((0xa9fc0/176)+-#[[something you will never get]]))==3743 do f=(6548118)while(-#'good googly moogly'+(233+-0x4a))>=L do f-= f if(h[o[m]]~=h[o[x]])then l=l+i;else l=o[d];end;break;end while 2749==(f)/((-#[[false]]+(4858-0x9a7)))do f=(283360)while L>(0x2fb4/86)do f-= f if(o[k]<=h[o[t]])then l=l+i;else l=o[M];end;break end while(f)/((-0x5f+3775))==77 do local k;local f;h[o[e]]=h[o[a]][o[t]];l=l+b;o=O[l];f=o[p];k=h[o[M]];h[f+1]=k;h[f]=k[o[x]];l=l+b;o=O[l];h[o[B]]=o[M];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];f=o[e];k=h[o[K]];h[f+1]=k;h[f]=k[o[s]];l=l+b;o=O[l];h[o[e]]=o[K];l=l+b;o=O[l];h[o[e]]=u[o[a]];l=l+b;o=O[l];f=o[F]h[f]=h[f]()l=l+b;o=O[l];h[o[p]]=n[o[P]];l=l+b;o=O[l];f=o[m];k=h[o[d]];h[f+1]=k;h[f]=k[o[s]];break end;break;end break;end break;end break;end break;end break;end while(f)/((0x1a64-3412))==2794 do f=(7123824)while(405-0xee)>=L do f-= f f=(15059668)while(0x5901/147)>=L do f-= f f=(3980020)while(0xf3+-94)>=L do f-= f f=(6856014)while L<=(0x17e-236)do f-= f f=(10500540)while L<=((381-0xd5)+-#"big niggers sucking cock")do f-= f local o=o[p];do return h[o](r(h,o+1,S))end;break;end while 3020==(f)/((3527+-0x32))do f=(1516912)while L>(0x87f/15)do f-= f local f;local L;h[o[m]]=o[M];l=l+b;o=O[l];h[o[B]]=n[o[P]];l=l+b;o=O[l];L=o[P];f=h[L]for o=L+1,o[s]do f=f..h[o];end;h[o[k]]=f;l=l+b;o=O[l];h[o[F]][o[M]]=h[o[U]];l=l+b;o=O[l];h[o[B]]=n[o[P]];l=l+b;o=O[l];h[o[p]]=u[o[K]];l=l+b;o=O[l];h[o[F]]=h[o[H]][o[U]];l=l+b;o=O[l];h[o[p]]=o[H];l=l+b;o=O[l];h[o[k]]=o[P];l=l+b;o=O[l];h[o[F]]=o[d];break end while 1808==(f)/((0x6a4-861))do local L;local f;h[o[F]]=o[d];l=l+b;o=O[l];f=o[p]h[f](r(h,f+i,o[H]))l=l+b;o=O[l];f=o[B];L=h[o[M]];h[f+1]=L;h[f]=L[o[x]];l=l+b;o=O[l];h[o[k]]=o[P];l=l+b;o=O[l];f=o[B]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];f=o[m];L=h[o[P]];h[f+1]=L;h[f]=L[o[w]];l=l+b;o=O[l];h[o[p]]=o[d];l=l+b;o=O[l];h[o[B]]=(o[H]~=0);break end;break;end break;end while 2846==(f)/(((0x1368-2516)+-#"why 6 hours cooldown to send a meme strings"))do f=(6967604)while L<=((0x18d-244)+-#'uhhhhh')do f-= f if(h[o[k]]==o[c])then l=l+i;else l=o[a];end;break;end while 3724==(f)/(((1968+-0x34)+-#'testpsx dupe no scam legit 2022 free no virus'))do f=(2631944)while(166+-0x12)<L do f-= f if(h[o[m]]<=o[w])then l=l+i;else l=o[P];end;break end while(f)/(((0x4590/16)+-#'sex in fortnite real'))==2408 do h[o[m]]=h[o[H]][o[s]];l=l+b;o=O[l];h[o[B]]=n[o[K]];l=l+b;o=O[l];h[o[B]]=h[o[K]][o[x]];l=l+b;o=O[l];h[o[F]]=h[o[M]][o[t]];l=l+b;o=O[l];if(h[o[p]]==h[o[c]])then l=l+i;else l=o[M];end;break end;break;end break;end break;end while(f)/((0x6dd+-19))==2290 do f=(412800)while((369-0xce)+-#"panzerfaust")>=L do f-= f f=(5936139)while L<=(-#'Moonsex v5 eta'+((-41+0x1d0)-259))do f-= f local L;local e,K;local f;h[o[m]]=u[o[a]];l=l+b;o=O[l];h[o[F]]=h[o[M]][o[x]];l=l+b;o=O[l];h[o[k]]=o[M];l=l+b;o=O[l];h[o[k]]=o[d];l=l+b;o=O[l];h[o[p]]=o[H];l=l+b;o=O[l];f=o[k]e,K=D(h[f](r(h,f+1,o[H])))S=K+f-1 L=0;for o=f,S do L=L+b;h[o]=e[L];end;l=l+b;o=O[l];f=o[B]h[f](r(h,f+i,S))l=l+b;o=O[l];l=o[P];break;end while(f)/(((7572-0xee7)-1940))==3267 do f=(53440)while(-0x3f+214)<L do f-= f local f;h[o[p]]=h[o[M]][o[x]];l=l+b;o=O[l];h[o[k]]=o[a];l=l+b;o=O[l];h[o[e]]=o[d];l=l+b;o=O[l];h[o[e]]=o[P];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];h[o[B]][o[a]]=h[o[w]];l=l+b;o=O[l];h[o[k]]=u[o[K]];l=l+b;o=O[l];h[o[p]]=h[o[H]][o[t]];l=l+b;o=O[l];h[o[e]]=o[P];l=l+b;o=O[l];h[o[m]]=o[H];l=l+b;o=O[l];h[o[m]]=o[a];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];h[o[m]][o[d]]=h[o[x]];l=l+b;o=O[l];h[o[B]]=u[o[P]];l=l+b;o=O[l];h[o[k]]=h[o[d]][o[t]];l=l+b;o=O[l];h[o[e]]=o[P];l=l+b;o=O[l];h[o[e]]=o[d];l=l+b;o=O[l];h[o[k]]=o[P];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];h[o[m]][o[P]]=h[o[w]];l=l+b;o=O[l];h[o[k]]=u[o[M]];l=l+b;o=O[l];h[o[m]]=h[o[M]][o[t]];l=l+b;o=O[l];h[o[p]]=o[H];l=l+b;o=O[l];h[o[e]]=o[P];l=l+b;o=O[l];h[o[F]]=o[a];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];h[o[m]][o[H]]=h[o[s]];l=l+b;o=O[l];h[o[k]][o[K]]=h[o[c]];l=l+b;o=O[l];h[o[k]][o[P]]=o[s];l=l+b;o=O[l];h[o[F]][o[a]]=h[o[t]];l=l+b;o=O[l];h[o[B]]={};l=l+b;o=O[l];h[o[F]][o[d]]=o[t];l=l+b;o=O[l];h[o[F]][o[K]]=o[s];l=l+b;o=O[l];h[o[p]][o[H]]=o[s];l=l+b;o=O[l];h[o[B]][o[a]]=o[c];l=l+b;o=O[l];h[o[p]][o[d]]=o[x];l=l+b;o=O[l];h[o[B]][o[M]]=o[w];l=l+b;o=O[l];h[o[e]]={};l=l+b;o=O[l];h[o[e]]=u[o[P]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[c]];l=l+b;o=O[l];h[o[p]]=o[K];l=l+b;o=O[l];h[o[p]]=o[d];l=l+b;o=O[l];h[o[k]]=o[K];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[m]][o[K]]=h[o[c]];l=l+b;o=O[l];h[o[p]]=u[o[a]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[t]];l=l+b;o=O[l];h[o[B]]=o[H];l=l+b;o=O[l];h[o[k]]=o[K];l=l+b;o=O[l];h[o[p]]=o[d];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[p]][o[a]]=h[o[U]];l=l+b;o=O[l];h[o[F]]=u[o[K]];l=l+b;o=O[l];h[o[p]]=h[o[P]][o[x]];l=l+b;o=O[l];h[o[k]]=o[a];l=l+b;o=O[l];h[o[p]]=o[K];l=l+b;o=O[l];h[o[m]]=o[M];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[F]][o[P]]=h[o[s]];l=l+b;o=O[l];h[o[e]]=u[o[K]];l=l+b;o=O[l];h[o[p]]=h[o[P]][o[c]];l=l+b;o=O[l];h[o[F]]=o[K];l=l+b;o=O[l];h[o[e]]=o[a];l=l+b;o=O[l];h[o[p]]=o[M];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];h[o[F]][o[P]]=h[o[s]];l=l+b;o=O[l];h[o[k]][o[a]]=h[o[c]];l=l+b;o=O[l];h[o[m]][o[a]]=h[o[s]];l=l+b;o=O[l];h[o[k]]={};l=l+b;o=O[l];h[o[B]][o[M]]=o[w];l=l+b;o=O[l];h[o[k]][o[M]]=o[t];l=l+b;o=O[l];h[o[m]][o[H]]=o[U];l=l+b;o=O[l];h[o[k]][o[K]]=o[c];l=l+b;o=O[l];h[o[B]][o[H]]=h[o[c]];l=l+b;o=O[l];h[o[F]]={};l=l+b;o=O[l];h[o[m]][o[a]]=o[x];l=l+b;o=O[l];h[o[p]][o[a]]=o[U];l=l+b;o=O[l];h[o[m]][o[d]]=h[o[c]];l=l+b;o=O[l];h[o[F]]={};l=l+b;o=O[l];h[o[F]][o[P]]=o[x];break end while 3340==(f)/((92-0x4c))do local L;local f;h[o[B]]=o[M];l=l+b;o=O[l];f=o[k]h[f](r(h,f+i,o[H]))l=l+b;o=O[l];h[o[e]]=o[d];l=l+b;o=O[l];f=o[F];L=h[o[a]];h[f+1]=L;h[f]=L[h[o[w]]];l=l+b;o=O[l];h[o[m]]=o[d];l=l+b;o=O[l];h[o[k]]=u[o[P]];l=l+b;o=O[l];h[o[e]]=o[P];l=l+b;o=O[l];h[o[p]]=h[o[H]][h[o[c]]];l=l+b;o=O[l];h[o[p]]=o[M];l=l+b;o=O[l];h[o[B]]=h[o[K]][h[o[s]]];break end;break;end break;end while(f)/((0x111+-73))==2064 do f=(145068)while L<=(0x105+-108)do f-= f if not h[o[e]]then l=l+i;else l=o[M];end;break;end while(f)/((-#[[my ass hurts]]+((-21483/0xd9)+342)))==628 do f=(221862)while L>(0x151-183)do f-= f local L;local d,H;local F;local f;h[o[k]]=u[o[a]];l=l+b;o=O[l];h[o[e]]=n[o[P]];l=l+b;o=O[l];f=o[p];F=h[o[K]];h[f+1]=F;h[f]=F[o[x]];l=l+b;o=O[l];h[o[k]]=o[P];l=l+b;o=O[l];h[o[e]]=(o[a]~=0);l=l+b;o=O[l];f=o[B]d,H=D(h[f](r(h,f+1,o[M])))S=H+f-1 L=0;for o=f,S do L=L+b;h[o]=d[L];end;l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,S))l=l+b;o=O[l];h[o[B]]();l=l+b;o=O[l];do return end;break end while 2154==(f)/((103/0x1))do h[o[m]]=n[o[d]];l=l+b;o=O[l];h[o[k]][o[H]]=h[o[s]];l=l+b;o=O[l];h[o[p]]=n[o[K]];l=l+b;o=O[l];h[o[F]]=h[o[M]][o[c]];l=l+b;o=O[l];if(h[o[B]]==o[w])then l=l+i;else l=o[a];end;break end;break;end break;end break;end break;end while 4079==(f)/((3712+-0x14))do f=(2875059)while((0x210-325)+-#"Reduce meme string slowmode when plsplspls")>=L do f-= f f=(3196305)while L<=(-#"fico éreto para mulheres japonesas"+(-0x5e+286))do f-= f f=(82152)while L<=((0x186-224)+-#"stfu furry")do f-= f h[o[e]]=h[o[a]][o[s]];break;end while(f)/((0x13944/123))==126 do f=(4627158)while(22294/0x8e)<L do f-= f h[o[e]]=n[o[a]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[t]];l=l+b;o=O[l];h[o[B]][o[P]]=h[o[c]];l=l+b;o=O[l];h[o[B]]=n[o[M]];l=l+b;o=O[l];h[o[m]]=n[o[a]];l=l+b;o=O[l];h[o[F]]=h[o[M]][o[t]];l=l+b;o=O[l];h[o[F]]=h[o[K]][o[w]];l=l+b;o=O[l];h[o[k]][o[d]]=h[o[w]];l=l+b;o=O[l];do return end;break end while(f)/((((0x1314+-70)-0x976)+-#'impulse was here pastebin reel'))==1959 do local f;f=o[e]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];h[o[B]]=o[M];l=l+b;o=O[l];h[o[e]]=n[o[H]];l=l+b;o=O[l];h[o[B]]=o[H];l=l+b;o=O[l];f=o[F]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[e]]=o[H];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[K]))l=l+b;o=O[l];h[o[k]]=h[o[a]];break end;break;end break;end while 1533==(f)/((4219-(4391-0x8d1)))do f=(2157138)while(0xe2+-67)>=L do f-= f if h[o[B]]then l=l+b;else l=o[d];end;break;end while 1161==(f)/((-#"heil eco mother fuckers"+((-14784/0xe7)+1945)))do f=(1012626)while L>(-81+0xf1)do f-= f local L;local f;h[o[F]]=o[H];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];f=o[m];L=h[o[P]];h[f+1]=L;h[f]=L[o[c]];l=l+b;o=O[l];h[o[F]]=o[M];l=l+b;o=O[l];h[o[k]]=o[H];l=l+b;o=O[l];f=o[m]h[f](r(h,f+i,o[P]))l=l+b;o=O[l];f=o[m];L=h[o[H]];h[f+1]=L;h[f]=L[o[s]];l=l+b;o=O[l];h[o[B]]=o[P];l=l+b;o=O[l];h[o[e]]=o[M];l=l+b;o=O[l];h[o[m]]=n[o[a]];l=l+b;o=O[l];h[o[p]]=h[o[H]][o[U]];l=l+b;o=O[l];h[o[B]]=o[a];l=l+b;o=O[l];h[o[k]]=h[o[a]][h[o[s]]];l=l+b;o=O[l];h[o[m]]=o[P];l=l+b;o=O[l];h[o[m]]=o[M];break end while(f)/((0x3bc+-47))==1114 do u[o[a]]=h[o[e]];break end;break;end break;end break;end while 1017==(f)/((0xab2a8/248))do f=(9576206)while L<=(22468/0x89)do f-= f f=(8718432)while L<=(-#[[alivephoneluaLMAO]]+(232+-0x35))do f-= f h[o[F]]=v(I[o[M]],nil,u);break;end while(f)/((0x953d6/221))==3152 do f=(10918710)while L>(((0x86da/82)+-#'Lana Rhoades')-0xf6)do f-= f h[o[p]][h[o[H]]]=h[o[c]];break end while 4035==(f)/((-#"Well thats what they do when they get jealous they confuse it"+(5559-0xae8)))do local f;h[o[e]]=o[a];l=l+b;o=O[l];f=o[k]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];h[o[m]]={};l=l+b;o=O[l];h[o[m]]=o[H];l=l+b;o=O[l];h[o[m]]=u[o[H]];l=l+b;o=O[l];f=o[m]h[f]=h[f]()l=l+b;o=O[l];h[o[k]][h[o[M]]]=h[o[w]];l=l+b;o=O[l];h[o[p]]=o[H];l=l+b;o=O[l];h[o[k]]=(o[M]~=0);l=l+b;o=O[l];h[o[k]][h[o[a]]]=h[o[c]];l=l+b;o=O[l];h[o[m]]=o[K];l=l+b;o=O[l];h[o[p]]=o[a];l=l+b;o=O[l];h[o[F]][h[o[a]]]=h[o[w]];l=l+b;o=O[l];h[o[k]]=o[K];l=l+b;o=O[l];h[o[e]]=o[a];l=l+b;o=O[l];h[o[B]][h[o[d]]]=h[o[s]];break end;break;end break;end while(f)/((8146-0x1017))==2378 do f=(2956077)while((248+-0x4d)+-#"python")>=L do f-= f local O=o[e]local f={h[O](r(h,O+1,o[d]))};local l=0;for o=O,o[U]do l=l+b;h[o]=f[l];end break;end while(f)/((0xd8e+-107))==879 do f=(12138112)while(-53+0xdb)<L do f-= f h[o[p]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[p]]=h[o[d]][o[s]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[c]];l=l+b;o=O[l];h[o[F]]=h[o[d]][o[x]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[s]];l=l+b;o=O[l];h[o[p]]=h[o[H]]-h[o[x]];l=l+b;o=O[l];h[o[k]]=h[o[d]][o[w]];l=l+b;o=O[l];if(h[o[k]]<o[t])then l=l+i;else l=o[M];end;break end while 3059==(f)/((0xfa3+-35))do local f;local k;local P,p;local f;h[o[m]]=u[o[H]];l=l+b;o=O[l];h[o[e]]=h[o[M]];l=l+b;o=O[l];f=o[B]P,p=D(h[f](h[f+i]))S=p+f-b k=0;for o=f,S do k=k+b;h[o]=P[k];end;l=l+b;o=O[l];f=o[B]P={h[f](r(h,f+1,S))};k=0;for o=f,o[x]do k=k+b;h[o]=P[k];end l=l+b;o=O[l];l=o[K];break end;break;end break;end break;end break;end break;end while(f)/((0x9f3+-114))==2928 do f=(12384706)while(432-0xfd)>=L do f-= f f=(74992)while(-#[[local bolsac equals game dot localplayer dot character dot legs dot bolls]]+(-0x3f+309))>=L do f-= f f=(7962400)while L<=(0x1b0-262)do f-= f f=(3685906)while L<=(0x18f0/38)do f-= f local o={h,o};o[i][o[N][k]]=o[b][o[N][s]]+o[i][o[N][d]];break;end while 911==(f)/((-#[[zxcvbnm]]+(8147-0xffe)))do f=(1442467)while L>(-0x23+204)do f-= f local b=o[F];local f=h[b+2];local O=h[b]+f;h[b]=O;if(f>0)then if(O<=h[b+1])then l=o[K];h[b+3]=O;end elseif(O>=h[b+1])then l=o[a];h[b+3]=O;end break end while(f)/((0x383+(-0x75+11)))==1819 do local f;local M;local P,p;local m;local f;h[o[B]]=u[o[H]];l=l+b;o=O[l];h[o[e]]=n[o[H]];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[c]];l=l+b;o=O[l];h[o[F]]=h[o[H]][o[t]];l=l+b;o=O[l];f=o[k];m=h[o[H]];h[f+1]=m;h[f]=m[o[c]];l=l+b;o=O[l];f=o[B]P,p=D(h[f](h[f+i]))S=p+f-b M=0;for o=f,S do M=M+b;h[o]=P[M];end;l=l+b;o=O[l];f=o[B]P={h[f](r(h,f+1,S))};M=0;for o=f,o[t]do M=M+b;h[o]=P[M];end l=l+b;o=O[l];l=o[a];break end;break;end break;end while 2960==(f)/((-#[[impulse is hot]]+(0xaa2+-18)))do f=(129408)while(-#'mama mo'+(-87+0x109))>=L do f-= f h[o[m]]=h[o[d]]-h[o[U]];break;end while(f)/(((-0x37+262)+-#"gozei na parede"))==674 do f=(7706346)while L>(0x122+-118)do f-= f local l=o[m];local b=h[o[H]];h[l+1]=b;h[l]=b[h[o[s]]];break end while(f)/(((409013/0xd1)+-#"monobola"))==3954 do local M;local f;h[o[F]]=o[d];l=l+b;o=O[l];f=o[m]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];h[o[k]]=o[a];l=l+b;o=O[l];h[o[B]]=h[o[K]][h[o[w]]];l=l+b;o=O[l];f=o[F];M=h[o[a]];h[f+1]=M;h[f]=M[o[s]];break end;break;end break;end break;end while 172==(f)/(((0x1f7+-43)+-#"0nly 1337 smashed ur wap"))do f=(3581874)while L<=(406-0xe6)do f-= f f=(4372962)while(241+(-#[[pls free synapse x i am gamer girl uwu]]+(-1537/0x35)))>=L do f-= f local o=o[p]local O,l=D(h[o](h[o+i]))S=l+o-b local l=0;for o=o,S do l=l+b;h[o]=O[l];end;break;end while(f)/((2262-0x473))==3894 do f=(264918)while L>((37327/0xa3)+-#"me when they are is have the me when are is do me when")do f-= f if(o[m]<h[o[x]])then l=o[K];else l=l+i;end;break end while(f)/((-#'Should have used luraph'+(7974-0xf9d)))==67 do if not h[o[p]]then l=l+i;else l=o[d];end;break end;break;end break;end while(f)/((0x1813-3112))==1174 do f=(4077000)while(0x18f-222)>=L do f-= f h[o[p]]=u[o[d]];break;end while(f)/((7572-0xed5))==1080 do f=(2834025)while L>(0x1ae-(51660/0xcd))do f-= f h[o[B]][o[H]]=o[w];l=l+b;o=O[l];h[o[m]]=n[o[P]];l=l+b;o=O[l];h[o[k]][o[H]]=o[U];l=l+b;o=O[l];h[o[B]]=n[o[P]];l=l+b;o=O[l];h[o[p]][o[H]]=o[U];l=l+b;o=O[l];l=o[d];break end while(f)/((0xf87+-66))==725 do h[o[k]]=h[o[P]][o[s]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[x]];l=l+b;o=O[l];h[o[B]]=h[o[M]][o[t]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[t]];l=l+b;o=O[l];h[o[e]]=h[o[H]]-h[o[U]];l=l+b;o=O[l];h[o[F]]=h[o[H]][o[x]];l=l+b;o=O[l];u[o[d]]=h[o[p]];l=l+b;o=O[l];h[o[p]]=u[o[K]];l=l+b;o=O[l];h[o[k]]=u[o[K]];l=l+b;o=O[l];if(h[o[B]]<h[o[U]])then l=l+i;else l=o[d];end;break end;break;end break;end break;end break;end while(f)/((3689+-0x28))==3394 do f=(4213848)while(0x1e8-303)>=L do f-= f f=(6577560)while L<=(0x10c+-86)do f-= f f=(12107964)while((0xec+(-7279/0xfb))+-#'you get no absolute bitches')>=L do f-= f local P;local f;h[o[B]]=o[a];l=l+b;o=O[l];f=o[k]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];f=o[m];P=h[o[M]];h[f+1]=P;h[f]=P[o[w]];l=l+b;o=O[l];h[o[k]]=o[K];l=l+b;o=O[l];h[o[p]]=(o[K]~=0);break;end while 3828==(f)/((((0x19e9-3339)+-0x73)+-#'Shrimps was here'))do f=(6563200)while(-#[[psx real dupe steal all ur pets no joke]]+(552-0x14c))<L do f-= f local f=o[k];local k=o[t];local O=f+2 local f={h[f](h[f+1],h[O])};for o=1,k do h[O+o]=f[o];end;local f=f[1]if f then h[O]=f l=o[H];else l=l+b;end;break end while(f)/((0x104d-2122))==3200 do local L;local f;f=o[B];L=h[o[M]];h[f+1]=L;h[f]=L[o[t]];l=l+b;o=O[l];h[o[F]]=o[d];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];f=o[k];L=h[o[P]];h[f+1]=L;h[f]=L[o[w]];l=l+b;o=O[l];h[o[p]]=o[P];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[K]))l=l+b;o=O[l];f=o[B];L=h[o[M]];h[f+1]=L;h[f]=L[o[s]];l=l+b;o=O[l];h[o[F]]=o[d];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];f=o[e];L=h[o[a]];h[f+1]=L;h[f]=L[o[w]];l=l+b;o=O[l];h[o[p]]=o[H];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];h[o[B]]=n[o[P]];l=l+b;o=O[l];f=o[B];L=h[o[H]];h[f+1]=L;h[f]=L[o[c]];l=l+b;o=O[l];h[o[k]]=o[M];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];f=o[F];L=h[o[a]];h[f+1]=L;h[f]=L[o[c]];l=l+b;o=O[l];h[o[p]]=o[K];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];h[o[m]][o[M]]=h[o[U]];l=l+b;o=O[l];l=o[M];break end;break;end break;end while(f)/((-86+0xd50))==1980 do f=(678414)while L<=(21411/0x75)do f-= f local o=o[B];S=o+A-1;for l=o,S do local o=z[l-o];h[l]=o;end;break;end while(f)/((3353+-0x6b))==209 do f=(7900416)while L>(0x5ee0/132)do f-= f local l=o[m]h[l]=h[l](r(h,l+b,o[P]))break end while(f)/(((2424+(-0x49-18))+-#'no meme strings access moment'))==3429 do local p;local f;h[o[F]]=n[o[a]];l=l+b;o=O[l];h[o[e]]=o[P];l=l+b;o=O[l];f=o[m]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[F]][o[M]]=h[o[w]];l=l+b;o=O[l];h[o[k]][o[P]]=o[w];l=l+b;o=O[l];h[o[k]]=n[o[a]];l=l+b;o=O[l];f=o[k];p=h[o[d]];h[f+1]=p;h[f]=p[o[c]];l=l+b;o=O[l];h[o[F]]=o[K];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];f=o[B];p=h[o[a]];h[f+1]=p;h[f]=p[o[c]];break end;break;end break;end break;end while(f)/((-0x67+1666))==2696 do f=(2821014)while L<=(0xabd8/234)do f-= f f=(1461825)while(((0xb928/100)+-#'ratio no one cares yo momma dead yo daddy left')-242)>=L do f-= f local f;local L;local F,n;local H;local f;u[o[a]]=h[o[B]];l=l+b;o=O[l];h[o[p]]=u[o[P]];l=l+b;o=O[l];h[o[p]]=h[o[M]][o[c]];l=l+b;o=O[l];u[o[M]]=h[o[B]];l=l+b;o=O[l];h[o[e]]=u[o[M]];l=l+b;o=O[l];h[o[e]]=u[o[K]];l=l+b;o=O[l];h[o[k]]=h[o[d]][o[x]];l=l+b;o=O[l];h[o[k]]=h[o[d]][o[c]];l=l+b;o=O[l];f=o[p];H=h[o[P]];h[f+1]=H;h[f]=H[o[c]];l=l+b;o=O[l];f=o[m]F,n=D(h[f](h[f+i]))S=n+f-b L=0;for o=f,S do L=L+b;h[o]=F[L];end;l=l+b;o=O[l];f=o[B]F={h[f](r(h,f+1,S))};L=0;for o=f,o[c]do L=L+b;h[o]=F[L];end l=l+b;o=O[l];l=o[K];break;end while(f)/((636795/0x9f))==365 do f=(5537508)while(-#'hol on leme chec ur seirc histori toll'+(504-(-0x54+363)))<L do f-= f local p;local f;h[o[B]]=o[P];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];f=o[k];p=h[o[a]];h[f+1]=p;h[f]=p[o[w]];l=l+b;o=O[l];h[o[e]]=o[d];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];f=o[B];p=h[o[K]];h[f+1]=p;h[f]=p[o[t]];l=l+b;o=O[l];h[o[F]]=o[d];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];h[o[m]][o[M]]=h[o[c]];break end while(f)/((0x9cf+-78))==2276 do h[o[B]]=h[o[M]][h[o[x]]];l=l+b;o=O[l];h[o[p]]=o[P];l=l+b;o=O[l];h[o[m]]=h[o[K]][h[o[U]]];l=l+b;o=O[l];h[o[F]]=o[a];l=l+b;o=O[l];h[o[m]]=o[H];break end;break;end break;end while 3073==(f)/((0x795-1023))do f=(304447)while L<=(-#[[how tf do i remove the meme strings]]+(38250/0xaa))do f-= f f=(1086750)while L>(46683/0xf7)do f-= f h[o[m]]();break end while(f)/((-47+0xb81))==375 do h[o[e]]=h[o[M]];break end;break;end while(f)/(((344-0xbe)+-#'Pipe te amo'))==2129 do f=(3867136)while(499-(0xd9c4/181))<L do f-= f h[o[F]][o[H]]=o[w];l=l+b;o=O[l];h[o[m]]=n[o[P]];l=l+b;o=O[l];h[o[F]][o[K]]=o[c];l=l+b;o=O[l];h[o[F]]=n[o[M]];l=l+b;o=O[l];h[o[k]][o[M]]=o[s];l=l+b;o=O[l];h[o[e]]=n[o[d]];l=l+b;o=O[l];h[o[B]][o[H]]=o[t];l=l+b;o=O[l];h[o[e]]=n[o[M]];l=l+b;o=O[l];h[o[e]][o[P]]=o[x];l=l+b;o=O[l];l=o[P];break end while(f)/((110058/0x33))==1792 do local L;local f;h[o[B]]=o[K];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];f=o[F];L=h[o[H]];h[f+1]=L;h[f]=L[o[c]];l=l+b;o=O[l];h[o[p]]=o[K];l=l+b;o=O[l];h[o[k]]=o[d];l=l+b;o=O[l];f=o[e]h[f](r(h,f+i,o[P]))l=l+b;o=O[l];f=o[m];L=h[o[a]];h[f+1]=L;h[f]=L[o[U]];l=l+b;o=O[l];h[o[B]]=o[H];l=l+b;o=O[l];h[o[e]]=o[M];l=l+b;o=O[l];h[o[F]]=n[o[K]];l=l+b;o=O[l];h[o[B]]=h[o[M]][o[w]];l=l+b;o=O[l];h[o[p]]=o[a];l=l+b;o=O[l];h[o[k]]=o[M];break end;break;end break;end break;end break;end break;end break;end break;end break;end while 3639==(f)/((-#[[real roblox omg builderman caught playing real]]+(-0x4e+3056)))do f=(1440036)while((772-(-0x7d+547))+-#[[Help I cant think of a funny and original meme string pls help]])>=L do f-= f f=(400320)while(-#"Apoio pela legalização de web sexo no Roblox"+(35500/0x7d))>=L do f-= f f=(2734564)while L<=(((-0x54+35518)+-#'send nudes')/0xa4)do f-= f f=(6461748)while(528-0x144)>=L do f-= f f=(7199820)while L<=(2178/0xb)do f-= f f=(14300)while L<=(-45+0xf0)do f-= f f=(1678404)while L<=(-#[[hamburger]]+(0x1d32/37))do f-= f local M;local f;f=o[F]h[f](r(h,f+i,o[P]))l=l+b;o=O[l];h[o[k]]=h[o[d]][o[U]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[c]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[s]];l=l+b;o=O[l];h[o[e]]=h[o[P]][o[s]];l=l+b;o=O[l];f=o[m];M=h[o[a]];h[f+1]=M;h[f]=M[o[U]];break;end while(f)/((-0x74+(0x604-815)))==2756 do f=(237321)while((0x3ad-516)-231)<L do f-= f local l=o[m];do return r(h,l,l+o[K])end;break end while 3767==(f)/((0xb2-115))do local L;local f;h[o[F]]=o[d];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];f=o[p];L=h[o[P]];h[f+1]=L;h[f]=L[o[w]];l=l+b;o=O[l];h[o[e]]=o[P];l=l+b;o=O[l];h[o[F]]=o[K];l=l+b;o=O[l];f=o[k]h[f](r(h,f+i,o[M]))l=l+b;o=O[l];f=o[m];L=h[o[P]];h[f+1]=L;h[f]=L[o[s]];l=l+b;o=O[l];h[o[e]]=o[H];l=l+b;o=O[l];f=o[B]h[f](r(h,f+i,o[d]))l=l+b;o=O[l];h[o[F]]=o[M];break end;break;end break;end while 260==(f)/((0xdc-165))do f=(814980)while((0x155+-122)+-#"ip grabbing in progress")>=L do f-= f local f;local M;local B,L;local m;local f;f=o[k]h[f](r(h,f+i,o[d]))l=l+b;o=O[l];h[o[e]]=u[o[a]];l=l+b;o=O[l];h[o[e]]=h[o[P]][o[x]];l=l+b;o=O[l];f=o[p];m=h[o[d]];h[f+1]=m;h[f]=m[o[t]];l=l+b;o=O[l];f=o[k]B,L=D(h[f](h[f+i]))S=L+f-b M=0;for o=f,S do M=M+b;h[o]=B[M];end;l=l+b;o=O[l];f=o[e]B={h[f](r(h,f+1,S))};M=0;for o=f,o[w]do M=M+b;h[o]=B[M];end l=l+b;o=O[l];l=o[a];break;end while(f)/((0x9d576/223))==282 do f=(10803)while L>(0x1651/29)do f-= f local f;h[o[B]][o[d]]=o[w];l=l+b;o=O[l];h[o[F]][o[H]]=o[t];l=l+b;o=O[l];h[o[p]][o[M]]=o[s];l=l+b;o=O[l];h[o[e]][o[a]]=o[U];l=l+b;o=O[l];h[o[p]]=u[o[P]];l=l+b;o=O[l];h[o[k]]=h[o[H]][o[U]];l=l+b;o=O[l];h[o[F]]=o[P];l=l+b;o=O[l];h[o[k]]=o[K];l=l+b;o=O[l];h[o[F]]=o[P];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[K]))break end while 39==(f)/((-#[[What I gotta do to get it through to you Im superhuman]]+(723-0x188)))do h[o[k]]={};break end;break;end break;end break;end while 2412==(f)/(((0x52860/112)+-#'i would jerk off to federals feet'))do f=(6846528)while((504-0x10f)+-#[[i bought a boost for this string]])>=L do f-= f f=(5757621)while(26865/0x87)>=L do f-= f local f;h[o[B]]=n[o[P]];l=l+b;o=O[l];h[o[k]]=n[o[H]];l=l+b;o=O[l];h[o[e]]=h[o[M]][o[w]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[w]];l=l+b;o=O[l];f=o[F]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[e]]=n[o[d]];l=l+b;o=O[l];h[o[e]]=h[o[M]][o[U]];l=l+b;o=O[l];h[o[B]]=h[o[M]][o[U]];l=l+b;o=O[l];if(h[o[F]]~=o[s])then l=l+i;else l=o[a];end;break;end while(f)/((0xda2-1781))==3369 do f=(10559220)while(-120+(0x102c0/207))<L do f-= f local f;local k;h[o[p]]=n[o[K]];l=l+b;o=O[l];h[o[e]]=h[o[P]][o[c]];l=l+b;o=O[l];h[o[m]]=h[o[d]][o[c]];l=l+b;o=O[l];k=o[F];f=h[o[M]];h[k+1]=f;h[k]=f[o[x]];l=l+b;o=O[l];h[o[B]]=o[K];l=l+b;o=O[l];h[o[B]]=u[o[M]];l=l+b;o=O[l];h[o[m]]=h[o[d]][o[s]];l=l+b;o=O[l];h[o[m]]=o[H];l=l+b;o=O[l];h[o[B]]=o[M];l=l+b;o=O[l];h[o[m]]=o[P];break end while 2604==(f)/((-#"When the"+(0x1fe4-4101)))do local L;local _,C;local N;local f;h[o[F]][o[H]]=o[t];l=l+b;o=O[l];h[o[B]]=u[o[K]];l=l+b;o=O[l];h[o[F]][o[d]]=h[o[t]];l=l+b;o=O[l];h[o[p]]=n[o[a]];l=l+b;o=O[l];f=o[F];N=h[o[H]];h[f+1]=N;h[f]=N[o[x]];l=l+b;o=O[l];h[o[k]]=o[M];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];h[o[e]][o[P]]=h[o[w]];l=l+b;o=O[l];h[o[e]][o[K]]=o[w];l=l+b;o=O[l];h[o[F]][o[K]]=h[o[x]];l=l+b;o=O[l];h[o[m]][o[H]]=o[x];l=l+b;o=O[l];h[o[p]]=n[o[M]];l=l+b;o=O[l];h[o[p]]=h[o[P]][o[x]];l=l+b;o=O[l];h[o[k]][o[M]]=h[o[w]];l=l+b;o=O[l];h[o[m]]=h[o[a]][o[w]];l=l+b;o=O[l];h[o[m]]=h[o[H]][h[o[s]]];l=l+b;o=O[l];h[o[p]][o[H]]=h[o[U]];l=l+b;o=O[l];h[o[F]]=h[o[H]][o[s]];l=l+b;o=O[l];h[o[e]][o[H]]=h[o[U]];l=l+b;o=O[l];h[o[F]]=n[o[M]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[U]];l=l+b;o=O[l];h[o[F]]=h[o[a]][o[c]];l=l+b;o=O[l];h[o[e]][o[M]]=h[o[c]];l=l+b;o=O[l];h[o[B]]=h[o[P]][o[t]];l=l+b;o=O[l];h[o[m]]=h[o[P]][h[o[x]]];l=l+b;o=O[l];h[o[k]]=h[o[M]][o[s]];l=l+b;o=O[l];h[o[m]][o[K]]=h[o[x]];l=l+b;o=O[l];h[o[k]]=n[o[a]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[w]];l=l+b;o=O[l];h[o[F]]=h[o[P]][o[U]];l=l+b;o=O[l];f=o[B];N=h[o[P]];h[f+1]=N;h[f]=N[o[U]];l=l+b;o=O[l];h[o[p]]=u[o[H]];l=l+b;o=O[l];h[o[B]]=h[o[a]];l=l+b;o=O[l];f=o[m]_,C=D(h[f](h[f+i]))S=C+f-b L=0;for o=f,S do L=L+b;h[o]=_[L];end;l=l+b;o=O[l];f=o[k]h[f](r(h,f+i,S))l=l+b;o=O[l];h[o[m]]=n[o[M]];l=l+b;o=O[l];h[o[B]]=h[o[K]][o[x]];l=l+b;o=O[l];h[o[B]]=h[o[a]][o[x]];l=l+b;o=O[l];f=o[B];N=h[o[P]];h[f+1]=N;h[f]=N[o[t]];l=l+b;o=O[l];h[o[p]]=u[o[a]];l=l+b;o=O[l];h[o[k]]=h[o[P]];l=l+b;o=O[l];f=o[p]_,C=D(h[f](h[f+i]))S=C+f-b L=0;for o=f,S do L=L+b;h[o]=_[L];end;l=l+b;o=O[l];f=o[p]h[f](r(h,f+i,S))l=l+b;o=O[l];h[o[e]]=n[o[K]];l=l+b;o=O[l];h[o[k]]=h[o[M]][o[t]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[s]];l=l+b;o=O[l];f=o[p];N=h[o[M]];h[f+1]=N;h[f]=N[o[c]];l=l+b;o=O[l];h[o[m]]=u[o[a]];l=l+b;o=O[l];h[o[e]]=h[o[K]];l=l+b;o=O[l];f=o[e]_,C=D(h[f](h[f+i]))S=C+f-b L=0;for o=f,S do L=L+b;h[o]=_[L];end;l=l+b;o=O[l];f=o[p]h[f](r(h,f+i,S))l=l+b;o=O[l];h[o[p]]=n[o[d]];l=l+b;o=O[l];h[o[F]]=h[o[K]][o[c]];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[x]];l=l+b;o=O[l];f=o[F];N=h[o[a]];h[f+1]=N;h[f]=N[o[w]];l=l+b;o=O[l];h[o[B]]=u[o[M]];l=l+b;o=O[l];h[o[m]]=h[o[H]];l=l+b;o=O[l];f=o[m]_,C=D(h[f](h[f+i]))S=C+f-b L=0;for o=f,S do L=L+b;h[o]=_[L];end;l=l+b;o=O[l];f=o[e]h[f](r(h,f+i,S))break end;break;end break;end while 2704==(f)/((0x47b50/116))do f=(3530219)while L<=(304+-0x66)do f-= f local B;local f;f=o[m];B=h[o[K]];h[f+1]=B;h[f]=B[o[t]];l=l+b;o=O[l];h[o[m]]=o[H];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];h[o[m]][o[H]]=o[t];l=l+b;o=O[l];h[o[m]]=n[o[P]];l=l+b;o=O[l];f=o[e];B=h[o[a]];h[f+1]=B;h[f]=B[o[t]];l=l+b;o=O[l];h[o[k]]=o[H];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];h[o[F]][o[H]]=o[w];l=l+b;o=O[l];h[o[m]]=n[o[M]];l=l+b;o=O[l];f=o[e];B=h[o[M]];h[f+1]=B;h[f]=B[o[w]];l=l+b;o=O[l];h[o[p]]=o[K];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];h[o[k]][o[M]]=o[t];l=l+b;o=O[l];h[o[p]]=n[o[H]];l=l+b;o=O[l];f=o[m];B=h[o[d]];h[f+1]=B;h[f]=B[o[x]];l=l+b;o=O[l];h[o[e]]=o[H];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];h[o[m]][o[d]]=o[t];l=l+b;o=O[l];h[o[e]]=n[o[M]];l=l+b;o=O[l];f=o[m];B=h[o[M]];h[f+1]=B;h[f]=B[o[U]];l=l+b;o=O[l];h[o[m]]=o[H];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];h[o[p]]=u[o[M]];l=l+b;o=O[l];h[o[p]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[F]]=o[H];l=l+b;o=O[l];h[o[k]]=o[K];l=l+b;o=O[l];h[o[k]]=o[a];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];h[o[e]][o[d]]=h[o[U]];break;end while(f)/((-#'cilertedcool'+(0xa717/29)))==2413 do f=(331760)while L>(0x1ea-287)do f-= f h[o[k]]=n[o[a]];l=l+b;o=O[l];h[o[m]]=n[o[d]];l=l+b;o=O[l];h[o[p]]=h[o[K]][o[x]];l=l+b;o=O[l];h[o[F]]=h[o[a]][o[c]];l=l+b;o=O[l];h[o[e]]=h[o[P]][o[t]];l=l+b;o=O[l];h[o[e]][o[K]]=h[o[t]];l=l+b;o=O[l];h[o[m]]=n[o[M]];l=l+b;o=O[l];h[o[k]][o[H]]=o[x];l=l+b;o=O[l];h[o[B]]=n[o[K]];l=l+b;o=O[l];h[o[e]][o[M]]=o[c];l=l+b;o=O[l];h[o[F]]=n[o[H]];l=l+b;o=O[l];h[o[m]][o[K]]=o[x];l=l+b;o=O[l];h[o[p]]=n[o[M]];l=l+b;o=O[l];h[o[e]][o[P]]=o[U];l=l+b;o=O[l];h[o[e]]=n[o[P]];l=l+b;o=O[l];h[o[m]][o[K]]=o[x];l=l+b;o=O[l];h[o[k]]=n[o[a]];l=l+b;o=O[l];h[o[B]][o[P]]=o[s];l=l+b;o=O[l];h[o[B]]=n[o[K]];l=l+b;o=O[l];h[o[m]][o[P]]=o[s];l=l+b;o=O[l];do return end;break end while 319==(f)/((((0x56dee8/24)/0xe3)+-#"penis"))do local f;h[o[m]]=h[o[H]][o[x]];l=l+b;o=O[l];h[o[k]]=n[o[P]];l=l+b;o=O[l];h[o[k]]=h[o[d]][o[c]];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[c]];l=l+b;o=O[l];h[o[F]]=h[o[K]];l=l+b;o=O[l];f=o[m]h[f](r(h,f+i,o[K]))break end;break;end break;end break;end break;end while(f)/((0x6b391/115))==1692 do f=(3081240)while(-109+0x13f)>=L do f-= f f=(68472)while(0x135+-102)>=L do f-= f f=(290927)while(496-0x123)>=L do f-= f h[o[k]]=n[o[d]];l=l+b;o=O[l];h[o[B]]=#h[o[P]];l=l+b;o=O[l];n[o[P]]=h[o[k]];l=l+b;o=O[l];h[o[m]]=n[o[K]];l=l+b;o=O[l];h[o[e]]=#h[o[H]];l=l+b;o=O[l];n[o[K]]=h[o[p]];l=l+b;o=O[l];do return end;break;end while(f)/((-#'Ok guys relax Theyre just fucking socks Its impossible for socks to turn me gay My heterosexuality will be fine dudes'+(0x1c4-244)))==3197 do f=(1215240)while(479-0x111)<L do f-= f local k;local f;f=o[B];k=h[o[d]];h[f+1]=k;h[f]=k[o[t]];l=l+b;o=O[l];h[o[p]]=n[o[d]];l=l+b;o=O[l];h[o[p]]=h[o[P]][o[s]];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];if not h[o[B]]then l=l+i;else l=o[H];end;break end while 1140==(f)/(((0xfd5746/175)/89))do local l=o[m]local f={h[l](r(h,l+1,S))};local O=0;for o=l,o[U]do O=O+b;h[o]=f[O];end break end;break;end break;end while 634==(f)/(((0xec+-117)+-#"moon on top"))do f=(3672480)while L<=(-56+0x108)do f-= f h[o[F]][h[o[M]]]=h[o[t]];break;end while 1093==(f)/((0x1a86-3430))do f=(358956)while L>(((-56+0x23)+0xef)+-#"Crackzzzz")do f-= f local M;local f;f=o[e]h[f](r(h,f+i,o[d]))l=l+b;o=O[l];f=o[p];M=h[o[K]];h[f+1]=M;h[f]=M[o[s]];l=l+b;o=O[l];h[o[B]]=o[K];l=l+b;o=O[l];f=o[e]h[f](r(h,f+i,o[a]))l=l+b;o=O[l];h[o[k]]=o[H];l=l+b;o=O[l];f=o[k];M=h[o[K]];h[f+1]=M;h[f]=M[h[o[x]]];l=l+b;o=O[l];h[o[k]]=o[K];break end while(f)/((-92+0x35b))==468 do if(h[o[p]]<o[x])then l=l+i;else l=o[a];end;break end;break;end break;end break;end while(f)/((0xce5-1681))==1902 do f=(6900250)while L<=(-#'ÑÑÑÑÑÑÑ'+(-82+0x12e))do f-= f f=(1789648)while L<=(-0x33+262)do f-= f h[o[m]]=h[o[M]][o[x]];l=l+b;o=O[l];h[o[F]]=h[o[K]][o[s]];l=l+b;o=O[l];h[o[k]]=n[o[M]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[w]];l=l+b;o=O[l];h[o[p]][o[M]]=h[o[U]];l=l+b;o=O[l];l=o[P];break;end while 3248==(f)/((614+-0x3f))do f=(472033)while(246+-0x22)<L do f-= f local f;h[o[k]]=h[o[K]][o[t]];l=l+b;o=O[l];h[o[B]]=u[o[d]];l=l+b;o=O[l];h[o[p]]=h[o[H]][o[c]];l=l+b;o=O[l];h[o[B]]=o[M];l=l+b;o=O[l];h[o[p]]=o[H];l=l+b;o=O[l];h[o[p]]=o[M];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];h[o[p]][o[H]]=h[o[x]];l=l+b;o=O[l];h[o[F]]=u[o[M]];l=l+b;o=O[l];h[o[B]]=o[d];break end while(f)/(((0x9219/91)+-#"jjsplot on top"))==1189 do local f;h[o[F]][o[P]]=o[w];l=l+b;o=O[l];h[o[F]][o[M]]=o[s];l=l+b;o=O[l];h[o[B]][o[a]]=o[t];l=l+b;o=O[l];h[o[p]][o[P]]=o[w];l=l+b;o=O[l];h[o[F]]=u[o[M]];l=l+b;o=O[l];h[o[k]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[F]]=o[d];l=l+b;o=O[l];h[o[m]]=o[H];l=l+b;o=O[l];h[o[e]]=o[P];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[K]))break end;break;end break;end while 3943==(f)/((0xe18-(178368/0x60)))do f=(1518984)while((683-0x193)+-#'if syn request then print your mom then end and then kill yourself')>=L do f-= f local k=I[o[K]];local f;local b={};f=E({},{__index=function(l,o)local o=b[o];return o[1][o[2]];end,__newindex=function(h,o,l)local o=b[o]o[1][o[2]]=l;end;});for f=1,o[w]do l=l+i;local o=O[l];if o[(0x76-117)]==118 then b[f-1]={h,o[P]};else b[f-1]={n,o[P]};end;g[#g+1]=b;end;h[o[e]]=v(k,f,u);break;end while 657==(f)/((4640-0x918))do f=(861272)while((-82+(414+-0x57))+-#'Mulheres me deixam de pau duro')<L do f-= f h[o[k]]=n[o[K]];l=l+b;o=O[l];h[o[B]]=h[o[a]][o[U]];l=l+b;o=O[l];h[o[F]]=h[o[H]][o[w]];l=l+b;o=O[l];h[o[e]][o[K]]=h[o[x]];l=l+b;o=O[l];do return end;break end while 1592==(f)/((43821/0x51))do h[o[F]][o[a]]=o[c];l=l+b;o=O[l];h[o[m]]=n[o[K]];l=l+b;o=O[l];h[o[B]][o[M]]=o[U];l=l+b;o=O[l];h[o[F]]=n[o[d]];l=l+b;o=O[l];h[o[e]][o[a]]=o[x];l=l+b;o=O[l];l=o[P];break end;break;end break;end break;end break;end break;end while 889==(f)/((3095+-0x13))do f=(601412)while L<=(0xc780/224)do f-= f f=(2377050)while L<=(0xc852/231)do f-= f f=(6062463)while(482-0x107)>=L do f-= f f=(700383)while L<=(455-0xee)do f-= f if(h[o[p]]~=o[c])then l=l+i;else l=o[P];end;break;end while 1329==(f)/((591+-0x40))do f=(2183842)while L>(0x20e-308)do f-= f h[o[F]]=(o[a]~=0);break end while 622==(f)/((7045-(-#[[Negro]]+(-0x25+3576))))do local B;local L,m;local f;h[o[F]]=u[o[M]];l=l+b;o=O[l];h[o[k]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[e]]=o[K];l=l+b;o=O[l];h[o[k]]=o[K];l=l+b;o=O[l];h[o[k]]=o[P];l=l+b;o=O[l];f=o[p]L,m=D(h[f](r(h,f+1,o[H])))S=m+f-1 B=0;for o=f,S do B=B+b;h[o]=L[B];end;l=l+b;o=O[l];f=o[k]h[f](r(h,f+i,S))l=l+b;o=O[l];l=o[H];break end;break;end break;end while(f)/((((0x65fc3+-117)+-#[[Me be like at 5am in the morning]])/0xde))==3223 do f=(2200275)while(-0x53+303)>=L do f-= f if(h[o[F]]<=o[t])then l=o[K];else l=l+i;end;break;end while(f)/((-0x47+960))==2475 do f=(3335565)while L>(36465/0xa5)do f-= f local M;local f;f=o[m]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];f=o[p];M=h[o[P]];h[f+1]=M;h[f]=M[o[x]];l=l+b;o=O[l];h[o[B]]=o[H];l=l+b;o=O[l];h[o[k]]=n[o[K]];l=l+b;o=O[l];h[o[p]]=o[d];l=l+b;o=O[l];h[o[p]]=h[o[a]][h[o[w]]];break end while(f)/((141600/0xa0))==3769 do local P;local f;h[o[B]]=n[o[M]];l=l+b;o=O[l];f=o[F];P=h[o[d]];h[f+1]=P;h[f]=P[o[c]];l=l+b;o=O[l];h[o[p]]=o[M];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];f=o[F];P=h[o[K]];h[f+1]=P;h[f]=P[o[c]];l=l+b;o=O[l];h[o[e]]=o[K];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];h[o[p]]=h[o[K]][o[x]];l=l+b;o=O[l];f=o[B]h[f]=h[f](h[f+i])l=l+b;o=O[l];if(h[o[k]]~=o[U])then l=l+i;else l=o[M];end;break end;break;end break;end break;end while(f)/((0xec6+-125))==650 do f=(309894)while L<=(499-0x112)do f-= f f=(55460)while L<=(-#'Only a to Z 0 to 9 is allowed'+(291+-0x27))do f-= f local m;local p,L;local e;local f;f=o[k];e=h[o[M]];h[f+1]=e;h[f]=e[o[t]];l=l+b;o=O[l];h[o[F]]=o[H];l=l+b;o=O[l];f=o[k]p,L=D(h[f](r(h,f+1,o[H])))S=L+f-1 m=0;for o=f,S do m=m+b;h[o]=p[m];end;l=l+b;o=O[l];f=o[k]p,L=D(h[f](r(h,f+b,S)))S=L+f-i m=0;for o=f,S do m=m+b;h[o]=p[m];end;l=l+b;o=O[l];f=o[k]h[f](r(h,f+i,S))l=l+b;o=O[l];h[o[k]]=u[o[K]];l=l+b;o=O[l];h[o[F]]=o[M];l=l+b;o=O[l];f=o[F]h[f](h[f+i])l=l+b;o=O[l];h[o[B]]=n[o[d]];l=l+b;o=O[l];h[o[F]]=h[o[P]][o[U]];break;end while(f)/((-#"number 15 you get no bitches"+(0xe5a2/182)))==188 do f=(2035480)while L>(496-0x110)do f-= f local P;local f;h[o[k]]=h[o[H]][o[w]];l=l+b;o=O[l];f=o[k];P=h[o[M]];h[f+1]=P;h[f]=P[o[w]];l=l+b;o=O[l];h[o[B]]=o[K];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];if not h[o[F]]then l=l+i;else l=o[K];end;break end while 674==(f)/((0x2f300/64))do local l=o[e];local b=h[o[a]];h[l+1]=b;h[l]=b[o[c]];break end;break;end break;end while 1781==(f)/((212+-0x26))do f=(9847035)while L<=(-#'fix ownerof'+(508-0x10f))do f-= f h[o[p]]=h[o[H]][o[c]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[c]];l=l+b;o=O[l];h[o[B]][o[M]]=h[o[U]];l=l+b;o=O[l];h[o[m]][o[d]]=o[c];l=l+b;o=O[l];h[o[p]]={};l=l+b;o=O[l];h[o[F]]={};l=l+b;o=O[l];h[o[F]][o[a]]=o[U];l=l+b;o=O[l];h[o[m]][o[K]]=o[x];l=l+b;o=O[l];h[o[m]][o[M]]=o[w];l=l+b;o=O[l];h[o[k]][o[d]]=o[U];break;end while(f)/((702240/0xe0))==3141 do f=(65100)while L>(((-7735/0xdd)+-#[[Only A to Z 0 to 9 is allowed]])+0x123)do f-= f local f;h[o[m]]=h[o[P]];l=l+b;o=O[l];f=o[m]h[f](h[f+i])l=l+b;o=O[l];h[o[m]]=o[M];l=l+b;o=O[l];h[o[F]]=u[o[P]];l=l+b;o=O[l];h[o[p]]=h[o[K]][o[t]];l=l+b;o=O[l];h[o[B]]=o[K];l=l+b;o=O[l];h[o[k]]=o[K];l=l+b;o=O[l];h[o[k]]=o[d];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];h[o[e]][h[o[M]]]=h[o[s]];break end while 105==(f)/((1274-0x28e))do local f;local M;h[o[p]]=n[o[d]];l=l+b;o=O[l];h[o[k]]=h[o[a]];l=l+b;o=O[l];M=o[a];f=h[M]for o=M+1,o[c]do f=f..h[o];end;h[o[B]]=f;l=l+b;o=O[l];do return h[o[p]]end l=l+b;o=O[l];do return end;break end;break;end break;end break;end break;end while 457==(f)/((-#"If not skid then return hasbitches end"+(39266/0x1d)))do f=(429044)while L<=(561-0x147)do f-= f f=(11337144)while(20790/0x5a)>=L do f-= f f=(9658845)while((0x4ad0/76)+-#"Tomathoust6969 was here")>=L do f-= f h[o[m]]=h[o[K]]*h[o[c]];break;end while(f)/((-#[[Pipe te quiero xupar el pene]]+(-0x41+3500)))==2835 do f=(7600565)while L>(0x23b-341)do f-= f local f;h[o[F]]=u[o[M]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[s]];l=l+b;o=O[l];h[o[e]]=o[M];l=l+b;o=O[l];f=o[k]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[k]][o[K]]=o[w];l=l+b;o=O[l];h[o[k]][o[a]]=o[U];l=l+b;o=O[l];h[o[m]][o[H]]=o[s];l=l+b;o=O[l];h[o[e]][o[P]]=o[t];l=l+b;o=O[l];h[o[F]][o[P]]=o[c];l=l+b;o=O[l];h[o[m]]=u[o[M]];break end while(f)/(((0x6b415/159)+-#'if true then return your dad'))==2779 do h[o[k]]=o[H];l=l+b;o=O[l];h[o[e]]=o[H];l=l+b;o=O[l];h[o[F]]=o[P];l=l+b;o=O[l];h[o[k]]=o[M];l=l+b;o=O[l];h[o[B]]=o[M];l=l+b;o=O[l];h[o[F]]=o[M];l=l+b;o=O[l];h[o[k]]=o[H];l=l+b;o=O[l];h[o[F]]=o[P];l=l+b;o=O[l];h[o[m]]=o[a];l=l+b;o=O[l];h[o[B]]=o[d];break end;break;end break;end while(f)/((-#'psx dupe is abd'+(6093-0xbf6)))==3759 do f=(5974848)while((-50+(-22+0x140))+-#'jjsploit winning')>=L do f-= f local L;local f;f=o[B]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[F]][o[K]]=h[o[w]];l=l+b;o=O[l];h[o[k]]=u[o[P]];l=l+b;o=O[l];h[o[F]]=h[o[a]];l=l+b;o=O[l];h[o[B]]=(o[a]~=0);l=l+b;o=O[l];f=o[p]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];f=o[p];L=h[o[a]];h[f+1]=L;h[f]=L[o[c]];l=l+b;o=O[l];h[o[m]]=n[o[M]];l=l+b;o=O[l];h[o[e]]=u[o[K]];l=l+b;o=O[l];h[o[p]]=h[o[K]][o[U]];break;end while 1472==(f)/((0x23acc/36))do f=(2243052)while(535-0x12e)<L do f-= f h[o[B]]();break end while(f)/((966/0x1))==2322 do h[o[k]]=n[o[K]];l=l+b;o=O[l];h[o[B]]=h[o[H]][o[t]];l=l+b;o=O[l];h[o[e]]=h[o[H]][o[w]];l=l+b;o=O[l];h[o[k]][o[a]]=h[o[s]];l=l+b;o=O[l];do return end;break end;break;end break;end break;end while 2189==(f)/((-#"Obfuscated by my ass hurts"+(0x119+-59)))do f=(8375276)while(-0x5c+329)>=L do f-= f f=(9500348)while L<=(-#'whats up'+(320+-0x4d))do f-= f local o={o,h};o[N][o[i][B]]=o[N][o[b][M]]+o[i][s];break;end while(f)/((0x369a4/92))==3908 do f=(683748)while(0x1c94/31)<L do f-= f local f;h[o[B]]=u[o[K]];l=l+b;o=O[l];h[o[m]]=o[d];l=l+b;o=O[l];f=o[m]h[f](h[f+i])l=l+b;o=O[l];h[o[F]]=n[o[H]];l=l+b;o=O[l];h[o[e]]=h[o[M]][o[c]];l=l+b;o=O[l];if(h[o[p]]==o[t])then l=l+i;else l=o[a];end;break end while 1404==(f)/((0x412-(1135-0x244)))do local k;local f;h[o[m]]=o[K];l=l+b;o=O[l];f=o[F]h[f](r(h,f+i,o[M]))l=l+b;o=O[l];f=o[e];k=h[o[a]];h[f+1]=k;h[f]=k[o[s]];l=l+b;o=O[l];h[o[F]]=o[K];l=l+b;o=O[l];h[o[p]]=n[o[a]];l=l+b;o=O[l];h[o[m]]=o[M];l=l+b;o=O[l];h[o[e]]=h[o[a]][h[o[c]]];l=l+b;o=O[l];h[o[p]]=o[H];l=l+b;o=O[l];h[o[F]]=h[o[M]][h[o[s]]];break end;break;end break;end while(f)/(((0x1b7f590/82)/0x8a))==3287 do f=(5956800)while(497-0x103)>=L do f-= f if(h[o[m]]<h[o[c]])then l=l+i;else l=o[a];end;break;end while 1700==(f)/((7066-0xdea))do f=(8446752)while L>(-0x68+343)do f-= f h[o[e]]=(not h[o[K]]);break end while 2532==(f)/((-0x25+(-#"arab porn"+(0xd5e+-40))))do local p;local f;f=o[k]h[f](r(h,f+i,o[M]))l=l+b;o=O[l];f=o[m];p=h[o[d]];h[f+1]=p;h[f]=p[o[c]];l=l+b;o=O[l];h[o[B]]=u[o[M]];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[s]];l=l+b;o=O[l];h[o[e]]=h[o[a]][o[x]];l=l+b;o=O[l];h[o[m]]={};l=l+b;o=O[l];h[o[e]][o[K]]=o[t];l=l+b;o=O[l];h[o[k]][o[d]]=o[w];l=l+b;o=O[l];h[o[k]]=u[o[a]];l=l+b;o=O[l];h[o[k]]=h[o[P]][o[t]];break end;break;end break;end break;end break;end break;end break;end while 1668==(f)/(((-37+0x138)+-#'how tf do i remove the meme strings'))do f=(9036621)while(618-0x162)>=L do f-= f f=(3468818)while L<=(549-0x129)do f-= f f=(3022306)while((699-0x17c)+-#[[local bolsac equals game dot localplayer dot character dot legs dot bolls]])>=L do f-= f f=(7940940)while(-109+0x160)>=L do f-= f f=(7816140)while L<=((0x11e20/224)+-#'roblox roblox zimjelja roblox roblox sastalajala roblox roblox roblox salamelja roblox')do f-= f local B;local f;h[o[k]]=u[o[H]];l=l+b;o=O[l];f=o[e];B=h[o[a]];h[f+1]=B;h[f]=B[o[s]];l=l+b;o=O[l];h[o[F]]=n[o[M]];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];if not h[o[p]]then l=l+i;else l=o[H];end;break;end while(f)/((2612+-0x66))==3114 do f=(1687664)while(-#"Only a to Z 0 to 9 is allowed"+(0x161+-82))<L do f-= f local o=o[e]h[o](h[o+i])break end while(f)/((0x1df9-3889))==446 do local B;local f;f=o[m];B=h[o[P]];h[f+1]=B;h[f]=B[o[c]];l=l+b;o=O[l];h[o[p]]=o[M];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];f=o[F];B=h[o[M]];h[f+1]=B;h[f]=B[o[U]];l=l+b;o=O[l];h[o[m]]=o[d];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];f=o[F];B=h[o[d]];h[f+1]=B;h[f]=B[o[t]];l=l+b;o=O[l];h[o[k]]=o[M];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];h[o[m]]=n[o[H]];break end;break;end break;end while 2555==(f)/((-#[[pls free synapse x i am gamer girl uwu]]+(468754/(0x6705/177))))do f=(9028729)while(-#[[ambattakam]]+(0x4f6/5))>=L do f-= f local p;local m;local f;h[o[e]]=o[K];l=l+b;o=O[l];f=o[B]h[f](r(h,f+i,o[P]))l=l+b;o=O[l];h[o[e]]=o[H];l=l+b;o=O[l];f=o[k];m=h[o[H]];h[f+1]=m;h[f]=m[h[o[x]]];l=l+b;o=O[l];h[o[k]]=o[M];l=l+b;o=O[l];h[o[e]]={};l=l+b;o=O[l];h[o[B]]=o[M];l=l+b;o=O[l];h[o[B]]=o[P];l=l+b;o=O[l];f=o[e];p=h[f];for o=f+1,o[H]do y(p,h[o])end;break;end while(f)/((-22+0xbf7))==2969 do f=(657825)while(-#"psx dupe is abd"+(0xaeb0/172))<L do f-= f n[o[d]]=h[o[k]];break end while(f)/((-#[[IP grabbed]]+(0x99d8/72)))==1225 do if(h[o[e]]<o[x])then l=o[M];else l=l+i;end;break end;break;end break;end break;end while(f)/((-0x36+3593))==854 do f=(1698982)while(-#'yeet'+(-0x70+365))>=L do f-= f f=(3881100)while(-#'howtodumpscript'+(624-0x16a))>=L do f-= f local f;h[o[e]][o[d]]=h[o[U]];l=l+b;o=O[l];h[o[F]]=u[o[P]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[w]];l=l+b;o=O[l];h[o[e]]=o[a];l=l+b;o=O[l];f=o[k]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[e]][o[K]]=o[U];l=l+b;o=O[l];h[o[F]][o[P]]=o[x];l=l+b;o=O[l];h[o[B]][o[K]]=o[x];l=l+b;o=O[l];h[o[m]][o[d]]=o[s];l=l+b;o=O[l];h[o[F]][o[d]]=o[c];break;end while(f)/((751868/0xf7))==1275 do f=(2362288)while(0x242-330)<L do f-= f local o=o[F]h[o]=h[o](h[o+i])break end while(f)/((-#"cheeseburger"+(791520/0xff)))==764 do local M;local m;local P;local f;h[o[B]]=h[o[d]][o[c]];l=l+b;o=O[l];h[o[e]]=h[o[a]][o[s]];l=l+b;o=O[l];f=o[B];P=h[o[H]];h[f+1]=P;h[f]=P[o[t]];l=l+b;o=O[l];f=o[k]m={h[f](h[f+1])};M=0;for o=f,o[c]do M=M+b;h[o]=m[M];end l=l+b;o=O[l];l=o[K];break end;break;end break;end while 547==(f)/((0x187c-3162))do f=(2425696)while(-34+0x11c)>=L do f-= f local M;local f;f=o[k];M=h[o[K]];h[f+1]=M;h[f]=M[o[t]];l=l+b;o=O[l];f=o[B]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[B]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[B]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[B]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[F]]={};l=l+b;o=O[l];h[o[m]]={};l=l+b;o=O[l];h[o[k]][o[H]]=o[c];l=l+b;o=O[l];h[o[B]]={};l=l+b;o=O[l];h[o[m]]=o[a];break;end while(f)/((2871-0x5db))==1768 do f=(7792554)while L>(-0x26+289)do f-= f if(h[o[B]]==o[w])then l=l+i;else l=o[M];end;break end while(f)/(((4308-0x882)+-#"hamburger"))==3674 do local o=o[k]h[o]=h[o](h[o+i])break end;break;end break;end break;end break;end while(f)/(((0x86ac+-90)/0x21))==3329 do f=(1876880)while(562-0x130)>=L do f-= f f=(1445400)while((68781/0xe3)+-#[[never gonna give you up never gonna let you down]])>=L do f-= f f=(3822572)while L<=(-#"Zapperqr is leaker"+(635-(0x1d8+-108)))do f-= f local N;local L;local S;local f;h[o[k]]={};l=l+b;o=O[l];h[o[B]][o[K]]=o[U];l=l+b;o=O[l];h[o[k]]=u[o[P]];l=l+b;o=O[l];f=o[m]h[f]=h[f]()l=l+b;o=O[l];h[o[F]][o[K]]=h[o[c]];l=l+b;o=O[l];h[o[p]]=n[o[d]];l=l+b;o=O[l];f=o[m];S=h[o[H]];h[f+1]=S;h[f]=S[o[x]];l=l+b;o=O[l];h[o[p]]=o[K];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];h[o[F]][o[d]]=h[o[t]];l=l+b;o=O[l];h[o[k]][o[M]]=o[w];l=l+b;o=O[l];h[o[m]]=n[o[a]];l=l+b;o=O[l];h[o[F]]=o[M];l=l+b;o=O[l];f=o[F]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[F]][o[P]]=h[o[w]];l=l+b;o=O[l];h[o[k]][o[H]]=o[t];l=l+b;o=O[l];h[o[k]]=n[o[d]];l=l+b;o=O[l];h[o[e]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[p]][o[H]]=h[o[t]];l=l+b;o=O[l];h[o[m]]=h[o[M]][o[c]];l=l+b;o=O[l];h[o[k]][o[d]]=h[o[U]];l=l+b;o=O[l];h[o[k]][o[d]]=h[o[t]];l=l+b;o=O[l];h[o[F]]=h[o[H]][o[U]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[U]];l=l+b;o=O[l];h[o[k]][o[M]]=h[o[x]];l=l+b;o=O[l];h[o[B]]=h[o[a]][o[s]];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[c]];l=l+b;o=O[l];h[o[F]][o[K]]=h[o[U]];l=l+b;o=O[l];h[o[e]]=o[K];l=l+b;o=O[l];h[o[k]]=o[M];l=l+b;o=O[l];h[o[F]]=o[a];l=l+b;o=O[l];f=o[p];L=h[f]N=h[f+2];if(N>0)then if(L>h[f+1])then l=o[P];else h[f+3]=L;end elseif(L<h[f+1])then l=o[a];else h[f+3]=L;end break;end while(f)/((-#[[Innovative and Im made of rubber so that anything]]+(0xfad-2066)))==2014 do f=(13790616)while(0xee20/((0xcd3b/211)+-#[[0nly segc]]))<L do f-= f local f;h[o[e]]=o[a];l=l+b;o=O[l];h[o[m]]=o[M];l=l+b;o=O[l];h[o[e]]=o[P];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];h[o[B]][h[o[M]]]=h[o[x]];l=l+b;o=O[l];h[o[e]]=u[o[P]];l=l+b;o=O[l];h[o[p]]=h[o[d]][o[x]];l=l+b;o=O[l];h[o[k]]=o[K];l=l+b;o=O[l];h[o[F]]=u[o[H]];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[d]))break end while 3569==(f)/((0x1e92-3962))do local M=I[o[P]];local k;local b={};k=E({},{__index=function(l,o)local o=b[o];return o[1][o[2]];end,__newindex=function(h,o,l)local o=b[o]o[1][o[2]]=l;end;});for f=1,o[c]do l=l+i;local o=O[l];if o[((0x5e-55)+-#'pls free synapse x i am gamer girl uwu')]==118 then b[f-1]={h,o[P]};else b[f-1]={n,o[P]};end;g[#g+1]=b;end;h[o[m]]=v(M,k,u);break end;break;end break;end while 2475==(f)/((((2547-0x531)-621)+-#'Pyrite On Top'))do f=(13879350)while((728-0x1a5)+-#'PLEASE HELP MY BOYFRIEND TRAPPED ME IN HIS BASEMENT')>=L do f-= f l=o[P];break;end while 3725==(f)/((0x1d48-3770))do f=(4062051)while L>(-#[[I like watching videos of black men shaking their booty cheeks]]+(-0x39+376))do f-= f h[o[p]]=h[o[H]][o[c]];l=l+b;o=O[l];h[o[k]]=h[o[H]][o[t]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[x]];l=l+b;o=O[l];h[o[e]]=h[o[H]][o[x]];l=l+b;o=O[l];h[o[k]]=h[o[P]][o[x]];l=l+b;o=O[l];h[o[m]]=h[o[a]]-h[o[t]];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[x]];l=l+b;o=O[l];u[o[M]]=h[o[e]];l=l+b;o=O[l];h[o[p]]=u[o[P]];l=l+b;o=O[l];h[o[k]]=u[o[M]];break end while 3171==(f)/((40992/0x20))do h[o[k]]=h[o[d]][h[o[s]]];break end;break;end break;end break;end while(f)/((0x124e-2366))==809 do f=(2239440)while L<=(46980/0xb4)do f-= f f=(573300)while L<=(610-0x15f)do f-= f local M;local f;f=o[m]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];h[o[B]]=h[o[K]][o[s]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[F]]=h[o[d]][o[s]];l=l+b;o=O[l];f=o[k];M=h[o[d]];h[f+1]=M;h[f]=M[o[c]];break;end while(f)/((0x4012c/103))==225 do f=(6155863)while L>(636-0x178)do f-= f local l=o[e];do return h[l](r(h,l+1,o[M]))end;break end while 3649==(f)/((0x6d8+-65))do h[o[m]]=n[o[P]];l=l+b;o=O[l];h[o[p]]();l=l+b;o=O[l];h[o[m]]=n[o[H]];l=l+b;o=O[l];h[o[k]]=h[o[a]][o[w]];l=l+b;o=O[l];h[o[k]]=n[o[K]];l=l+b;o=O[l];h[o[k]]=h[o[M]][o[U]];l=l+b;o=O[l];h[o[e]]=h[o[K]][o[w]];l=l+b;o=O[l];h[o[e]]=h[o[K]][o[w]];l=l+b;o=O[l];h[o[p]][o[H]]=h[o[x]];l=l+b;o=O[l];h[o[p]]=n[o[d]];break end;break;end break;end while 2064==(f)/(((1193+-0x5e)+-#'no penne pasta'))do f=(2664162)while(-#[[free bobux no skem]]+(0xa528/151))>=L do f-= f local f;f=o[k]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];h[o[m]][o[P]]=h[o[t]];l=l+b;o=O[l];h[o[p]]=u[o[d]];l=l+b;o=O[l];h[o[F]]=h[o[K]][o[w]];l=l+b;o=O[l];h[o[e]]=h[o[P]][o[c]];l=l+b;o=O[l];h[o[F]]=o[M];break;end while(f)/((-#'sexo 4 o filme'+(-87+0xca7)))==849 do f=(4855158)while L>((3978664/0x7a)/0x7c)do f-= f local f;h[o[F]][o[K]]=o[s];l=l+b;o=O[l];h[o[B]]=n[o[M]];l=l+b;o=O[l];h[o[F]]=u[o[K]];l=l+b;o=O[l];h[o[k]]=h[o[H]][o[s]];l=l+b;o=O[l];h[o[B]]=o[d];l=l+b;o=O[l];h[o[p]]=o[d];l=l+b;o=O[l];h[o[e]]=o[d];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[p]][o[P]]=h[o[U]];l=l+b;o=O[l];h[o[B]]=n[o[H]];break end while 1302==(f)/((-0x4e+3807))do if(h[o[B]]<=h[o[U]])then l=l+i;else l=o[M];end;break end;break;end break;end break;end break;end break;end while 2467==(f)/((21978/0x6))do f=(2096388)while(((0x4574a/9)/0x6d)+-#[[0 divided by 0]])>=L do f-= f f=(1804075)while L<=((803-0x1be)+-#'when the he went where when he where where when the he when ther wher he then here went')do f-= f f=(3427600)while L<=(35778/(213+-0x4f))do f-= f f=(3104325)while L<=((0x1b3f/25)+-#"dies of cringe")do f-= f local f;h[o[k]]=n[o[d]];l=l+b;o=O[l];h[o[e]]=o[H];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];h[o[p]][o[H]]=o[U];l=l+b;o=O[l];l=o[H];break;end while(f)/((427050/0x82))==945 do f=(10539661)while(366+-0x64)<L do f-= f local o=o[k];local l=h[o];for o=o+1,S do y(l,h[o])end;break end while 4009==(f)/(((-0x7250/236)+0xac1))do local L;local f;h[o[B]]=u[o[M]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[k]]=n[o[H]];l=l+b;o=O[l];h[o[B]]=h[o[a]][o[x]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[t]];l=l+b;o=O[l];h[o[B]]=n[o[a]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[s]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[s]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[w]];l=l+b;o=O[l];f=o[B];L=h[o[H]];h[f+1]=L;h[f]=L[o[w]];break end;break;end break;end while(f)/((6661-0xd35))==1045 do f=(6088797)while L<=(-#'Pyrite On Top'+(0x2ac-403))do f-= f local f;h[o[B]]=h[o[d]][o[x]];l=l+b;o=O[l];h[o[B]]=h[o[H]][o[s]];l=l+b;o=O[l];h[o[m]]=o[K];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[K]))l=l+b;o=O[l];if not h[o[B]]then l=l+i;else l=o[a];end;break;end while(f)/((0x11db-2330))==2717 do f=(1344074)while L>(((92677-0xb53d)+-#[[Monkey balls]])/0xac)do f-= f local f=o[F];local O={};for o=1,#g do local o=g[o];for l=0,#o do local l=o[l];local b=l[1];local o=l[2];if b==h and o>=f then O[o]=b[o];l[1]=O;end;end;end;break end while 2806==(f)/(((1068-0x22d)+-#'i bought a boost for this string'))do if(o[k]<h[o[s]])then l=l+i;else l=o[d];end;break end;break;end break;end break;end while 1183==(f)/(((-0x6b+4)+1628))do f=(6343695)while L<=((53298/0xbd)+-#[[Crackzzzz]])do f-= f f=(1845340)while L<=(315+-0x2c)do f-= f local L;local i;local f;h[o[m]]=n[o[P]];l=l+b;o=O[l];h[o[F]]=n[o[K]];l=l+b;o=O[l];h[o[m]]=h[o[a]];l=l+b;o=O[l];f=o[e]i={h[f](r(h,f+1,o[H]))};L=0;for o=f,o[t]do L=L+b;h[o]=i[L];end l=l+b;o=O[l];h[o[F]]=u[o[H]];l=l+b;o=O[l];h[o[k]]=h[o[P]][o[s]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[t]];l=l+b;o=O[l];h[o[B]]=h[o[M]][o[x]];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];h[o[F]]=h[o[K]];l=l+b;o=O[l];f=o[m];do return h[f],h[f+1]end l=l+b;o=O[l];do return end;break;end while 490==(f)/((-#"no h"+(-27+0xed5)))do f=(13852265)while(0x176+-102)<L do f-= f local O=o[F]local f={h[O](h[O+1])};local l=0;for o=O,o[t]do l=l+b;h[o]=f[l];end break end while 3631==(f)/((7647-(0x1e24-3884)))do h[o[p]]=n[o[P]];l=l+b;o=O[l];h[o[B]]=h[o[M]][o[w]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[c]];l=l+b;o=O[l];h[o[k]][o[K]]=h[o[x]];l=l+b;o=O[l];do return end;break end;break;end break;end while 2745==(f)/((0x4efd4/140))do f=(2918551)while L<=(0x235-291)do f-= f h[o[k]]=n[o[M]];l=l+b;o=O[l];h[o[e]]=h[o[P]][o[c]];l=l+b;o=O[l];h[o[k]]=h[o[a]][o[t]];l=l+b;o=O[l];h[o[k]][o[K]]=h[o[s]];l=l+b;o=O[l];do return end;break;end while 1039==(f)/((-#'You say is ricochetin off of me and itll glue to you and'+(5798-0xb75)))do f=(1198080)while(19800/0x48)<L do f-= f local m;local f;h[o[p]]=u[o[M]];l=l+b;o=O[l];h[o[B]]=h[o[H]][o[w]];l=l+b;o=O[l];h[o[B]]=n[o[M]];l=l+b;o=O[l];h[o[F]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[B]]=h[o[a]][o[t]];l=l+b;o=O[l];h[o[F]]=n[o[a]];l=l+b;o=O[l];h[o[p]]=h[o[K]][o[c]];l=l+b;o=O[l];h[o[p]]=h[o[H]][o[c]];l=l+b;o=O[l];h[o[e]]=h[o[K]][o[U]];l=l+b;o=O[l];f=o[k];m=h[o[a]];h[f+1]=m;h[f]=m[o[s]];break end while 520==(f)/((0x3c300/107))do local f;h[o[F]]=h[o[K]][o[U]];l=l+b;o=O[l];h[o[e]]=o[a];l=l+b;o=O[l];h[o[k]]=o[d];l=l+b;o=O[l];h[o[e]]=o[a];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];h[o[e]][o[H]]=h[o[x]];l=l+b;o=O[l];h[o[m]][o[K]]=o[x];l=l+b;o=O[l];h[o[k]]=u[o[a]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[p]]=o[M];break end;break;end break;end break;end break;end while 1239==(f)/(((0x6e4+(-25+-0x19))+-#'I FUCKING HATE FEMBOYS'))do f=(715491)while(-#"Big black men"+((-#[[get some bitches]]+(1450638/0x3f))/0x4e))>=L do f-= f f=(2045257)while((-79+0x171)+-#"moon on top")>=L do f-= f f=(11297853)while(66203/0xef)>=L do f-= f local b=h[o[U]];if not b then l=l+i;else h[o[p]]=b;l=o[P];end;break;end while 3051==(f)/((-44+0xea3))do f=(1567420)while(44480/0xa0)<L do f-= f local O=o[p]local f={h[O](r(h,O+1,S))};local l=0;for o=O,o[t]do l=l+b;h[o]=f[l];end break end while(f)/(((31920/0x39)+-#"howtodumpscript"))==2876 do local f;h[o[k]]=u[o[d]];l=l+b;o=O[l];h[o[k]]=o[a];l=l+b;o=O[l];f=o[B]h[f](h[f+i])l=l+b;o=O[l];h[o[F]]=u[o[H]];l=l+b;o=O[l];h[o[F]]=o[M];l=l+b;o=O[l];f=o[B]h[f](h[f+i])l=l+b;o=O[l];h[o[e]]=o[a];l=l+b;o=O[l];h[o[k]]=o[a];l=l+b;o=O[l];h[o[e]]=u[o[H]];l=l+b;o=O[l];h[o[B]]=u[o[a]];break end;break;end break;end while 593==(f)/((41388/0xc))do f=(839052)while L<=(-0x49+353)do f-= f local l=o[e]local O,o=D(h[l](r(h,l+1,o[P])))S=o+l-1 local o=0;for l=l,S do o=o+b;h[l]=O[o];end;break;end while 1828==(f)/((0x3ab-480))do f=(2831470)while L>(-#'qwertyui is hot'+(-80+0x178))do f-= f do return end;break end while 2749==(f)/(((0x43b+-38)+-#"W4rboy was here"))do local f;h[o[B]]=n[o[H]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[c]];l=l+b;o=O[l];h[o[p]]=h[o[P]][o[t]];l=l+b;o=O[l];h[o[F]]=h[o[K]];l=l+b;o=O[l];f=o[k]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];l=o[H];break end;break;end break;end break;end while(f)/((639-0x160))==2493 do f=(9958410)while(0x191+-116)>=L do f-= f f=(3652596)while L<=(341+-0x3a)do f-= f h[o[p]]=o[M];l=l+b;o=O[l];h[o[m]]=o[a];l=l+b;o=O[l];h[o[B]]=o[K];l=l+b;o=O[l];h[o[e]]=o[d];l=l+b;o=O[l];h[o[p]]=o[P];l=l+b;o=O[l];h[o[F]]=o[d];l=l+b;o=O[l];h[o[B]]=o[K];l=l+b;o=O[l];h[o[B]]=o[P];l=l+b;o=O[l];h[o[m]]=o[P];l=l+b;o=O[l];h[o[k]]=o[a];break;end while 2169==(f)/((0xd51-1725))do f=(5822424)while(-61+0x159)<L do f-= f local o=o[F];do return h[o],h[o+1]end break end while 2316==(f)/((0x6acbc/174))do local P;local f;h[o[m]][o[K]]=o[x];l=l+b;o=O[l];h[o[m]]=n[o[a]];l=l+b;o=O[l];h[o[e]][o[H]]=o[w];l=l+b;o=O[l];h[o[k]]=n[o[H]];l=l+b;o=O[l];h[o[B]][o[M]]=o[c];l=l+b;o=O[l];h[o[p]]=n[o[M]];l=l+b;o=O[l];f=o[k];P=h[o[M]];h[f+1]=P;h[f]=P[o[s]];l=l+b;o=O[l];f=o[p]h[f](h[f+i])l=l+b;o=O[l];l=o[M];break end;break;end break;end while(f)/(((7089-0xe14)+-#'suck my dicky giggas'))==2874 do f=(154560)while(309+-0x17)>=L do f-= f local f;h[o[m]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[k]]=h[o[H]][o[s]];l=l+b;o=O[l];h[o[k]]=u[o[a]];l=l+b;o=O[l];h[o[k]]=h[o[d]][o[t]];l=l+b;o=O[l];h[o[k]]=o[M];l=l+b;o=O[l];h[o[m]]=o[K];l=l+b;o=O[l];h[o[B]]=o[H];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];h[o[m]]=h[o[H]]*h[o[t]];l=l+b;o=O[l];f=o[m]h[f](h[f+i])break;end while 96==(f)/((-0x6d+1719))do f=(106764)while L>(34153/0x77)do f-= f local k;local f;f=o[m];k=h[o[d]];h[f+1]=k;h[f]=k[o[c]];l=l+b;o=O[l];h[o[F]]=o[M];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[K]))l=l+b;o=O[l];h[o[p]]=h[o[M]][o[s]];l=l+b;o=O[l];f=o[B]h[f]=h[f](h[f+i])l=l+b;o=O[l];if(h[o[m]]~=o[c])then l=l+i;else l=o[M];end;break end while 217==(f)/((553+-0x3d))do local o=o[B]h[o]=h[o]()break end;break;end break;end break;end break;end break;end break;end break;end while(f)/((-0x78+1749))==884 do f=(2688072)while L<=(-#'use luraph if want lost money'+(769-0x194))do f-= f f=(6206190)while L<=(-#[[0nly was here mf]]+(0x1b6+-110))do f-= f f=(1150380)while(678-0x17a)>=L do f-= f f=(8227590)while((5776/0x13)+-#[[zykem krul]])>=L do f-= f f=(5154193)while L<=(-0x21+324)do f-= f f=(569543)while(604-0x13b)>=L do f-= f local k;local f;h[o[B]]=o[P];l=l+b;o=O[l];f=o[p]h[f](r(h,f+i,o[P]))l=l+b;o=O[l];f=o[B];k=h[o[H]];h[f+1]=k;h[f]=k[o[t]];l=l+b;o=O[l];h[o[p]]=o[a];l=l+b;o=O[l];h[o[B]]=n[o[H]];l=l+b;o=O[l];h[o[m]]=h[o[d]][o[c]];break;end while(f)/((-#[[i fucked your dad]]+(15960/0x4c)))==2951 do f=(2405718)while(-#[[freerobuxphone]]+(-65+0x171))<L do f-= f h[o[p]]=h[o[P]]-h[o[U]];break end while 2562==(f)/(((0x7e3-1062)+-#[[Se men is so tasty]]))do local f;h[o[k]]=u[o[M]];l=l+b;o=O[l];h[o[m]]=h[o[a]];l=l+b;o=O[l];h[o[F]]=(o[M]~=0);l=l+b;o=O[l];f=o[m]h[f](r(h,f+i,o[d]))l=l+b;o=O[l];h[o[B]]=u[o[P]];break end;break;end break;end while 2011==(f)/((517726/0xca))do f=(1261358)while(342+((0x68-101)+-#"Rip Technoblade but he truly never dies in our hearts"))>=L do f-= f local b=o[e];local f=h[b+2];local O=h[b]+f;h[b]=O;if(f>0)then if(O<=h[b+1])then l=o[a];h[b+3]=O;end elseif(O>=h[b+1])then l=o[P];h[b+3]=O;end break;end while(f)/((0x38e-((0xa05/5)+-#'now what the hell is this')))==2989 do f=(7963410)while L>((0x2c3-387)+-#'you get no absolute bitches')do f-= f local f;h[o[e]]=n[o[K]];l=l+b;o=O[l];h[o[B]]=h[o[a]][o[x]];l=l+b;o=O[l];h[o[e]]=h[o[M]][o[c]];l=l+b;o=O[l];h[o[e]]=h[o[K]];l=l+b;o=O[l];f=o[F]h[f](r(h,f+i,o[d]))break end while(f)/(((0x1613-2834)+-#'when the he went where when he where where when the he when ther wher he then here went'))==2917 do if(o[p]<=h[o[x]])then l=l+i;else l=o[d];end;break end;break;end break;end break;end while 3045==(f)/((-76+((2879+-0x5d)+-#"Omg guys")))do f=(403392)while((0x2bd-375)+-#[[use luraph if want lost money]])>=L do f-= f f=(744192)while(-0x1a+321)>=L do f-= f local k;local p;local B;local f;h[o[m]]=h[o[M]];l=l+b;o=O[l];f=o[m]h[f](h[f+i])l=l+b;o=O[l];h[o[m]]=u[o[H]];l=l+b;o=O[l];h[o[e]]=n[o[a]];l=l+b;o=O[l];f=o[m];B=h[o[M]];h[f+1]=B;h[f]=B[o[t]];l=l+b;o=O[l];f=o[m]p={h[f](h[f+1])};k=0;for o=f,o[U]do k=k+b;h[o]=p[k];end l=l+b;o=O[l];l=o[P];break;end while 288==(f)/((0x80108/203))do f=(15120192)while(632-0x150)<L do f-= f local k;local M;local f;h[o[p]]=u[o[K]];l=l+b;o=O[l];f=o[F]h[f]=h[f]()l=l+b;o=O[l];h[o[F]]={};l=l+b;o=O[l];f=o[F];S=f+A-1;for o=f,S do M=z[o-f];h[o]=M;end;l=l+b;o=O[l];f=o[p];k=h[f];for o=f+1,S do y(k,h[o])end;break end while(f)/((0x2f472/50))==3904 do if(h[o[m]]<=o[t])then l=o[d];else l=l+i;end;break end;break;end break;end while(f)/((0x88f+(-#'IP grabbed'+(-81+0xc))))==191 do f=(4303800)while(0x2c3-409)>=L do f-= f local m;local f;h[o[F]]=o[d];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];f=o[p];m=h[o[P]];h[f+1]=m;h[f]=m[o[x]];l=l+b;o=O[l];h[o[F]]=o[K];l=l+b;o=O[l];h[o[e]]=o[a];l=l+b;o=O[l];f=o[k]h[f](r(h,f+i,o[a]))l=l+b;o=O[l];f=o[k];m=h[o[K]];h[f+1]=m;h[f]=m[o[U]];l=l+b;o=O[l];h[o[k]]=o[d];l=l+b;o=O[l];h[o[k]]=o[d];l=l+b;o=O[l];h[o[B]]=n[o[M]];break;end while 1350==(f)/(((-111+0x1)+3298))do f=(10591668)while(-46+0x159)<L do f-= f local m;local L,F;local p;local f;h[o[e]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[s]];l=l+b;o=O[l];f=o[B];p=h[o[K]];h[f+1]=p;h[f]=p[o[t]];l=l+b;o=O[l];h[o[B]]=u[o[H]];l=l+b;o=O[l];h[o[e]]=h[o[M]];l=l+b;o=O[l];f=o[k]L,F=D(h[f](h[f+i]))S=F+f-b m=0;for o=f,S do m=m+b;h[o]=L[m];end;l=l+b;o=O[l];f=o[e]h[f](r(h,f+i,S))break end while(f)/((-#[[no penne pasta]]+(0xf4d+(-#'goofy ahh uncle productions'+(87+-0x4f)))))==2727 do local k;local f;h[o[p]]=u[o[H]];l=l+b;o=O[l];f=o[F];k=h[o[d]];h[f+1]=k;h[f]=k[o[x]];l=l+b;o=O[l];h[o[e]]=n[o[a]];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[d]))l=l+b;o=O[l];if not h[o[m]]then l=l+i;else l=o[H];end;break end;break;end break;end break;end break;end while 770==(f)/(((0x46220/191)+-#'stfu furry'))do f=(2376238)while(-#"pairu sucks dick"+(0x1031c/206))>=L do f-= f f=(7316192)while L<=(394+-0x5b)do f-= f f=(5861430)while(0x2bc-399)>=L do f-= f local L;local f;f=o[B];L=h[o[a]];h[f+1]=L;h[f]=L[o[w]];l=l+b;o=O[l];h[o[m]]=o[M];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[p]]=h[o[M]][o[w]];l=l+b;o=O[l];h[o[m]]=h[o[K]]-h[o[U]];l=l+b;o=O[l];h[o[B]]=h[o[a]][o[x]];l=l+b;o=O[l];f=o[k]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[m]]=n[o[d]];l=l+b;o=O[l];h[o[F]]=h[o[H]][o[t]];l=l+b;o=O[l];h[o[B]]=h[o[a]][o[c]];break;end while 2295==(f)/((0x6284c/158))do f=(5308512)while((-75+0x18c)+-#'how to join the kkk')<L do f-= f h[o[p]]=h[o[K]][o[U]];l=l+b;o=O[l];h[o[k]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[k]]=h[o[M]][o[x]];l=l+b;o=O[l];h[o[p]]=h[o[M]][o[t]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[s]];l=l+b;o=O[l];h[o[e]]=h[o[M]][o[w]];l=l+b;o=O[l];h[o[m]][o[d]]=o[s];l=l+b;o=O[l];h[o[B]]=h[o[a]][o[s]];l=l+b;o=O[l];h[o[k]]=h[o[a]][o[U]];l=l+b;o=O[l];h[o[B]]=h[o[P]][o[s]];break end while 1452==(f)/((-0x72+3770))do h[o[p]]=#h[o[K]];break end;break;end break;end while 2236==(f)/((-#[[moonsec backrooms confirmed]]+(0xd1a+-55)))do f=(3684876)while((714-0x185)+-#[[this is an ip grabber]])>=L do f-= f local f;h[o[F]]=o[P];l=l+b;o=O[l];h[o[B]]=o[d];l=l+b;o=O[l];h[o[F]]=o[H];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];h[o[k]][o[K]]=h[o[U]];l=l+b;o=O[l];h[o[e]][o[M]]=o[x];l=l+b;o=O[l];h[o[B]]=u[o[P]];l=l+b;o=O[l];h[o[m]]=h[o[K]][o[w]];l=l+b;o=O[l];h[o[e]]=o[P];l=l+b;o=O[l];f=o[p]h[f]=h[f](h[f+i])break;end while(f)/((-#'one foot is in the grave'+(0xe8b-1905)))==2054 do f=(10616818)while L>((-76+0x1b1)+-#'If LocalPlayer equals Dumbass then while true do end')do f-= f h[o[k]][o[a]]=o[U];l=l+b;o=O[l];h[o[B]]=n[o[d]];l=l+b;o=O[l];h[o[m]][o[M]]=o[t];l=l+b;o=O[l];h[o[k]]=n[o[P]];l=l+b;o=O[l];h[o[e]][o[K]]=o[w];l=l+b;o=O[l];l=o[P];break end while(f)/((-91+0xd8e))==3142 do h[o[k]]=h[o[P]][o[c]];l=l+b;o=O[l];h[o[B]]=h[o[K]][o[x]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[U]];l=l+b;o=O[l];h[o[p]]=h[o[P]][o[s]];l=l+b;o=O[l];if(h[o[k]]==o[s])then l=l+i;else l=o[d];end;break end;break;end break;end break;end while(f)/((0x452cb/119))==998 do f=(1203125)while(0x2dc-423)>=L do f-= f f=(942012)while((1370-0x2c4)-355)>=L do f-= f if(h[o[B]]<h[o[t]])then l=l+i;else l=o[M];end;break;end while(f)/((-#"panzerfaust"+(169099/0xcb)))==1146 do f=(5692375)while(0x108b0/220)<L do f-= f local L;local f;h[o[F]]=n[o[H]];l=l+b;o=O[l];h[o[F]]=h[o[a]][o[s]];l=l+b;o=O[l];f=o[k];L=h[o[P]];h[f+1]=L;h[f]=L[o[U]];l=l+b;o=O[l];f=o[e]h[f](h[f+i])l=l+b;o=O[l];h[o[m]]=n[o[P]];l=l+b;o=O[l];f=o[k];L=h[o[a]];h[f+1]=L;h[f]=L[o[s]];l=l+b;o=O[l];h[o[m]]=o[M];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];f=o[B];L=h[o[d]];h[f+1]=L;h[f]=L[o[x]];l=l+b;o=O[l];h[o[m]]=n[o[H]];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];h[o[p]][o[M]]=h[o[s]];l=l+b;o=O[l];do return end;break end while 3875==(f)/((-0x65+1570))do h[o[B]]=(o[P]~=0);l=l+i;break end;break;end break;end while(f)/(((0x12ddb/(-#'W4rboy was here'+(0x90+-74)))+-#[[while wait 1 do print deez end]]))==875 do f=(8753377)while(0xf708/204)>=L do f-= f h[o[e]]();l=l+b;o=O[l];h[o[B]]=n[o[a]];l=l+b;o=O[l];h[o[k]]=h[o[M]][o[s]];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[c]];l=l+b;o=O[l];h[o[B]]=h[o[P]][o[s]];l=l+b;o=O[l];if(h[o[F]]==o[s])then l=l+i;else l=o[H];end;break;end while(f)/((0x1f2b-4002))==2201 do f=(1379791)while L>(416+-0x69)do f-= f local k;local M;local f;f=o[B]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];h[o[e]]=u[o[K]];l=l+b;o=O[l];h[o[m]]=u[o[d]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[w]];l=l+b;o=O[l];f=o[F]M={h[f](h[f+1])};k=0;for o=f,o[x]do k=k+b;h[o]=M[k];end l=l+b;o=O[l];l=o[d];break end while 971==(f)/((((-0x3f+3088)-0x615)+-#'Please stop hitting my ribcage with a metal bar'))do h[o[B]][o[H]]=h[o[t]];break end;break;end break;end break;end break;end break;end while(f)/((-60+0x8cd))==2830 do f=(3233608)while(-#'Tomathoust6969 was here'+(-57+0x194))>=L do f-= f f=(7295832)while L<=(18126/0x39)do f-= f f=(958500)while((-0x5f+432)+-#"ohhhh nice code thanks")>=L do f-= f f=(1836180)while(0x2ed-436)>=L do f-= f if(o[m]<=h[o[w]])then l=o[a];else l=l+i;end;break;end while 1515==(f)/(((2563-0x534)+-#"luraph deobfuscator"))do f=(4761134)while(-#'daddy stop trying to crack me'+(25725/0x4b))<L do f-= f h[o[F]]=(not h[o[H]]);break end while(f)/((-#[[33 cocks in my mouth]]+(0xa70+-95)))==1862 do h[o[F]][o[P]]=h[o[c]];break end;break;end break;end while(f)/((661-(0x326-415)))==3550 do f=(306032)while(0x2a4-360)>=L do f-= f local f;h[o[B]]=n[o[a]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[s]];l=l+b;o=O[l];h[o[F]]=h[o[M]][o[w]];l=l+b;o=O[l];h[o[e]]=h[o[M]];l=l+b;o=O[l];f=o[k]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];l=o[a];break;end while 248==(f)/((2521-0x507))do f=(11179360)while L>(658-0x155)do f-= f h[o[B]]=n[o[a]];l=l+b;o=O[l];h[o[F]]=h[o[M]][o[s]];l=l+b;o=O[l];h[o[k]]=h[o[d]][o[c]];l=l+b;o=O[l];h[o[k]]=h[o[H]][o[w]];l=l+b;o=O[l];h[o[B]][o[a]]=h[o[x]];l=l+b;o=O[l];h[o[m]]=n[o[M]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[s]];l=l+b;o=O[l];h[o[m]]=n[o[K]];l=l+b;o=O[l];h[o[e]]=h[o[M]][o[t]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[x]];break end while(f)/(((-#"ip grabbing in progress"+(0x101406/158))-3381))==3424 do local k;local f;f=o[m]h[f](r(h,f+i,o[H]))l=l+b;o=O[l];h[o[p]]=h[o[H]][o[w]];l=l+b;o=O[l];h[o[p]]=h[o[M]][o[x]];l=l+b;o=O[l];h[o[e]]=h[o[P]][o[x]];l=l+b;o=O[l];h[o[F]]=h[o[P]][o[t]];l=l+b;o=O[l];f=o[m];k=h[o[P]];h[f+1]=k;h[f]=k[o[x]];break end;break;end break;end break;end while 2502==(f)/(((0x3a7a2/82)+-#"the J"))do f=(6308279)while(-#'dot gg slash BKf6SjpfFv'+(724-0x17c))>=L do f-= f f=(10782975)while(-#[[MSC 793z487nhvcgsdfgsudfza9889jgvz56gz56z547684z5g54z948g56z74j56475jzg645z6456 oh wait bitch]]+(-69+0x1e1))>=L do f-= f local f;local P;local m,L;local p;local f;n[o[M]]=h[o[e]];l=l+b;o=O[l];h[o[F]]=u[o[d]];l=l+b;o=O[l];h[o[k]]=n[o[H]];l=l+b;o=O[l];h[o[F]]=h[o[M]][o[w]];l=l+b;o=O[l];h[o[B]]=h[o[M]][o[w]];l=l+b;o=O[l];f=o[k];p=h[o[K]];h[f+1]=p;h[f]=p[o[x]];l=l+b;o=O[l];f=o[k]m,L=D(h[f](h[f+i]))S=L+f-b P=0;for o=f,S do P=P+b;h[o]=m[P];end;l=l+b;o=O[l];f=o[e]m={h[f](r(h,f+1,S))};P=0;for o=f,o[t]do P=P+b;h[o]=m[P];end l=l+b;o=O[l];l=o[K];break;end while 4025==(f)/(((0x42351/101)+-#'shlong'))do f=(2346108)while L>(702-0x17e)do f-= f local f;h[o[F]]=u[o[K]];l=l+b;o=O[l];h[o[e]]=h[o[K]][o[U]];l=l+b;o=O[l];h[o[B]]=n[o[d]];l=l+b;o=O[l];h[o[m]]=h[o[M]][o[x]];l=l+b;o=O[l];h[o[m]]=n[o[P]];l=l+b;o=O[l];h[o[m]]=h[o[a]][o[c]];l=l+b;o=O[l];f=o[p];do return h[f](r(h,f+1,o[d]))end;l=l+b;o=O[l];f=o[k];do return r(h,f,S)end;l=l+b;o=O[l];do return end;break end while(f)/((-0x67+875))==3039 do local L;local f;h[o[p]]=o[a];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];f=o[p];L=h[o[K]];h[f+1]=L;h[f]=L[o[s]];l=l+b;o=O[l];h[o[F]]=o[H];l=l+b;o=O[l];h[o[k]]=o[M];l=l+b;o=O[l];f=o[F]h[f](r(h,f+i,o[a]))l=l+b;o=O[l];f=o[k];L=h[o[a]];h[f+1]=L;h[f]=L[o[x]];l=l+b;o=O[l];h[o[m]]=o[a];l=l+b;o=O[l];f=o[B]h[f](r(h,f+i,o[H]))l=l+b;o=O[l];f=o[k];L=h[o[K]];h[f+1]=L;h[f]=L[o[x]];l=l+b;o=O[l];h[o[m]]=o[K];l=l+b;o=O[l];h[o[m]]=n[o[K]];l=l+b;o=O[l];h[o[B]]=o[P];l=l+b;o=O[l];h[o[k]]=h[o[P]][h[o[s]]];l=l+b;o=O[l];h[o[k]]=o[H];l=l+b;o=O[l];h[o[F]]=h[o[M]][h[o[s]]];break end;break;end break;end while 1633==(f)/(((-69+0xf9e)+-#'I have stolen your father figure and all your milk muahahahahahaha'))do f=(6101516)while L<=((856-0x1c7)+-79)do f-= f h[o[m]][o[P]]=o[w];l=l+b;o=O[l];h[o[B]]=n[o[K]];l=l+b;o=O[l];h[o[B]][o[a]]=o[U];l=l+b;o=O[l];h[o[F]]=n[o[a]];l=l+b;o=O[l];h[o[F]][o[P]]=o[t];l=l+b;o=O[l];h[o[e]]=n[o[H]];l=l+b;o=O[l];h[o[k]][o[M]]=o[x];l=l+b;o=O[l];h[o[e]]=n[o[K]];l=l+b;o=O[l];h[o[e]][o[a]]=o[c];l=l+b;o=O[l];l=o[K];break;end while 2972==(f)/((-56+0x83d))do f=(1128644)while(-#"i bought a boost for this string"+(0x10a4/12))<L do f-= f h[o[F]]={};l=l+b;o=O[l];h[o[F]][o[H]]=o[t];l=l+b;o=O[l];h[o[B]][o[a]]=o[t];l=l+b;o=O[l];h[o[m]][o[M]]=h[o[c]];l=l+b;o=O[l];h[o[m]][o[H]]=o[x];l=l+b;o=O[l];h[o[k]][o[K]]=o[t];l=l+b;o=O[l];h[o[m]][o[d]]=o[x];l=l+b;o=O[l];h[o[k]][o[P]]=o[s];l=l+b;o=O[l];h[o[B]][o[K]]=o[t];l=l+b;o=O[l];h[o[B]][o[a]]=o[x];break end while(f)/((-123+(0x854-1101)))==1243 do h[o[p]]={};break end;break;end break;end break;end break;end while(f)/((-#[[Your cookie has been leaked]]+(8288-0x104d)))==791 do f=(13134)while L<=(0x11a4e/((371+-0x7d)+-#'tutorial how to deobfuscate'))do f-= f f=(1484340)while((0x2e1-383)+-#[[if syn then haxor alert end]])>=L do f-= f f=(679434)while L<=(0x157+-18)do f-= f local l=o[m]local O,o=D(h[l](r(h,l+1,o[a])))S=o+l-1 local o=0;for l=l,S do o=o+b;h[l]=O[o];end;break;end while(f)/((-120+0x19e))==2311 do f=(4128261)while(0x2d7-401)<L do f-= f local o=o[F]h[o](r(h,o+i,S))break end while(f)/((0xd32a5/229))==1093 do local p;local L;local k;local f;f=o[B];k=h[o[d]];h[f+1]=k;h[f]=k[o[w]];l=l+b;o=O[l];h[o[m]]=n[o[K]];l=l+b;o=O[l];f=o[m];k=h[o[d]];h[f+1]=k;h[f]=k[o[c]];l=l+b;o=O[l];h[o[B]]=o[P];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[B]]=h[o[d]][o[s]];l=l+b;o=O[l];f=o[B]L={h[f](r(h,f+1,o[a]))};p=0;for o=f,o[x]do p=p+b;h[o]=L[p];end l=l+b;o=O[l];if h[o[B]]then l=l+b;else l=o[M];end;break end;break;end break;end while(f)/(((1832-0x3be)+-#"pairu sucks dick"))==1730 do f=(5648328)while(0x2e4-412)>=L do f-= f h[o[p]]=h[o[M]]*h[o[t]];break;end while 3528==(f)/((0x6b3+-114))do f=(14099224)while(763-0x1b2)<L do f-= f local L;local f;h[o[m]]=o[d];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];f=o[p];L=h[o[K]];h[f+1]=L;h[f]=L[o[c]];l=l+b;o=O[l];h[o[F]]=o[a];l=l+b;o=O[l];h[o[p]]=o[a];l=l+b;o=O[l];f=o[m]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];f=o[B];L=h[o[K]];h[f+1]=L;h[f]=L[o[U]];l=l+b;o=O[l];h[o[k]]=o[P];l=l+b;o=O[l];f=o[e]h[f](r(h,f+i,o[P]))l=l+b;o=O[l];f=o[e];L=h[o[M]];h[f+1]=L;h[f]=L[o[c]];l=l+b;o=O[l];h[o[m]]=o[H];l=l+b;o=O[l];h[o[F]]=n[o[P]];l=l+b;o=O[l];h[o[F]]=h[o[K]][o[U]];break end while(f)/((634618/0xa6))==3688 do h[o[e]]=o[K];break end;break;end break;end break;end while(f)/(((-#"no dick no balls"+(-0x1c+17357))/87))==66 do f=(2707875)while L<=(0x2cb-382)do f-= f f=(3788790)while L<=((0x16d+-17)+-#"Real deobfuscator")do f-= f if(h[o[k]]==h[o[x]])then l=l+i;else l=o[M];end;break;end while(f)/(((-36+0xa7d)+-#"Nsrds GAYYYYAIAHAKAJAVAHAUA"))==1445 do f=(3384706)while L>((0x204+-105)+-#'game players kick localplayer kicked by nicuse and beliveri12 ahhahahahahahhaha')do f-= f if(h[o[B]]<=o[w])then l=l+i;else l=o[H];end;break end while(f)/((142844/0xa4))==3886 do h[o[p]][o[H]]=h[o[t]];l=l+b;o=O[l];h[o[m]]=n[o[P]];l=l+b;o=O[l];h[o[k]]=h[o[a]][o[c]];l=l+b;o=O[l];h[o[k]]=n[o[M]];l=l+b;o=O[l];h[o[m]]=h[o[a]][o[s]];l=l+b;o=O[l];h[o[F]]=h[o[P]][o[w]];l=l+b;o=O[l];h[o[F]]=h[o[M]][o[w]];l=l+b;o=O[l];h[o[k]][o[K]]=h[o[c]];l=l+b;o=O[l];h[o[e]]=n[o[d]];l=l+b;o=O[l];h[o[m]]=h[o[K]][o[U]];break end;break;end break;end while 2407==(f)/((111375/0x63))do f=(1544700)while L<=(0x2df-401)do f-= f local B;local f;h[o[k]]=o[P];l=l+b;o=O[l];f=o[p]h[f](r(h,f+i,o[H]))l=l+b;o=O[l];f=o[e];B=h[o[M]];h[f+1]=B;h[f]=B[o[c]];l=l+b;o=O[l];h[o[F]]=o[K];l=l+b;o=O[l];h[o[m]]=n[o[P]];l=l+b;o=O[l];h[o[F]]=o[P];l=l+b;o=O[l];h[o[k]]=h[o[a]][h[o[c]]];break;end while 1355==(f)/(((0xa2d-1353)+-112))do f=(671184)while L>((-0x2f+457)+-#'fun fact if you want to say discord just type Discord with a capital D boom')do f-= f local f;h[o[B]]=u[o[K]];l=l+b;o=O[l];h[o[k]]=h[o[H]][o[x]];l=l+b;o=O[l];h[o[m]]=h[o[a]][o[t]];l=l+b;o=O[l];h[o[k]]=h[o[M]][o[x]];l=l+b;o=O[l];h[o[p]]=h[o[d]]-o[t];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[K]))l=l+b;o=O[l];h[o[k]][o[a]]=h[o[x]];l=l+b;o=O[l];h[o[e]]=n[o[P]];l=l+b;o=O[l];h[o[p]]=u[o[M]];l=l+b;o=O[l];h[o[B]]=h[o[H]][o[x]];break end while(f)/(((-0x1d+577)+-#'iPipeh i love You'))==1264 do h[o[k]][o[d]]=o[U];l=l+b;o=O[l];h[o[k]]=n[o[K]];l=l+b;o=O[l];h[o[m]][o[P]]=o[s];l=l+b;o=O[l];h[o[p]]=n[o[P]];l=l+b;o=O[l];h[o[p]][o[d]]=o[c];l=l+b;o=O[l];l=o[K];break end;break;end break;end break;end break;end break;end break;end while 3613==(f)/((0x2fa+-18))do f=(5004537)while(0x321-441)>=L do f-= f f=(819720)while L<=(0x197+-59)do f-= f f=(5932875)while(-#[[this video is sponsored by manscaped your balls will thank you]]+(887-0x1e3))>=L do f-= f f=(8049977)while((746-0x18e)+-#[[arab porn]])>=L do f-= f f=(2573285)while L<=((0x30f-433)+-#"mbb is a frag")do f-= f local k;local f;f=o[B];k=h[o[a]];h[f+1]=k;h[f]=k[o[c]];l=l+b;o=O[l];h[o[e]]=o[d];l=l+b;o=O[l];f=o[e]h[f](r(h,f+i,o[H]))l=l+b;o=O[l];h[o[p]]=(o[K]~=0);l=l+b;o=O[l];n[o[H]]=h[o[p]];break;end while(f)/((-43+0x32a))==3355 do f=(9265550)while L>(-#[[this is a meme string]]+(776-0x1a1))do f-= f local o=o[p]local O,l=D(h[o](h[o+i]))S=l+o-b local l=0;for o=o,S do l=l+b;h[o]=O[l];end;break end while(f)/(((0x6908a/186)+-#[[monkey mode]]))==4025 do local B;local f;h[o[m]]=o[d];l=l+b;o=O[l];f=o[p]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];f=o[k];B=h[o[M]];h[f+1]=B;h[f]=B[o[t]];l=l+b;o=O[l];h[o[F]]=o[H];l=l+b;o=O[l];h[o[k]]=n[o[K]];l=l+b;o=O[l];h[o[k]]=o[P];l=l+b;o=O[l];h[o[e]]=h[o[M]][h[o[c]]];l=l+b;o=O[l];h[o[m]]=h[o[K]][o[x]];break end;break;end break;end while(f)/((0x1e97-3944))==2071 do f=(1015305)while L<=(((0x64b-816)-0x1b8)+-#[[W4rboy was here]])do f-= f h[o[e]]=o[K];l=l+b;o=O[l];h[o[F]]={};l=l+b;o=O[l];h[o[m]]=o[P];l=l+b;o=O[l];h[o[p]]=o[a];l=l+b;o=O[l];h[o[m]]=o[a];l=l+b;o=O[l];h[o[e]]=o[H];l=l+b;o=O[l];h[o[k]]=o[K];l=l+b;o=O[l];h[o[F]]=o[d];l=l+b;o=O[l];h[o[p]]=o[P];l=l+b;o=O[l];h[o[m]]=o[M];break;end while 1695==(f)/(((153860/0xf5)+-#'Only a to Z 0 to 9 is allowed'))do f=(1755696)while(0x2d8-387)<L do f-= f local f;h[o[k]]=u[o[d]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[x]];l=l+b;o=O[l];h[o[k]]=u[o[d]];l=l+b;o=O[l];h[o[k]]=h[o[d]][o[c]];l=l+b;o=O[l];f=o[m];do return r(h,f,f+o[d])end;l=l+b;o=O[l];do return end;break end while 2778==(f)/((1385-0x2f1))do local f;local k;h[o[F]]=h[o[a]][o[s]];l=l+b;o=O[l];h[o[p]]=h[o[a]][o[s]];l=l+b;o=O[l];h[o[B]]=h[o[a]][o[t]];l=l+b;o=O[l];h[o[e]]=h[o[H]][o[x]];l=l+b;o=O[l];h[o[F]]=h[o[P]][o[t]];l=l+b;o=O[l];h[o[B]]=h[o[a]][o[c]];l=l+b;o=O[l];h[o[F]][o[d]]=o[U];l=l+b;o=O[l];h[o[p]]=h[o[d]][o[s]];l=l+b;o=O[l];h[o[m]]=h[o[K]][o[U]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[x]];l=l+b;o=O[l];h[o[p]]=u[o[d]];l=l+b;o=O[l];h[o[F]]=h[o[H]][o[x]];l=l+b;o=O[l];h[o[F]]=o[d];l=l+b;o=O[l];h[o[B]]=o[K];l=l+b;o=O[l];h[o[p]]=o[P];l=l+b;o=O[l];h[o[m]]=o[d];l=l+b;o=O[l];k=o[B]h[k]=h[k](r(h,k+b,o[P]))l=l+b;o=O[l];f={h,o};f[i][f[N][p]]=f[b][f[N][x]]+f[i][f[N][M]];l=l+b;o=O[l];h[o[m]][o[a]]=h[o[t]];break end;break;end break;end break;end while(f)/((0x6b0+(-0x76+31)))==3651 do f=(3646860)while L<=((0x27544/206)-0x1b5)do f-= f f=(6445900)while L<=((1400/0x4)+-#"elbicho")do f-= f h[o[m]]=h[o[K]]%o[x];break;end while(f)/((3749-0x784))==3532 do f=(5870280)while(-83+0x1ab)<L do f-= f local B;local f;h[o[k]]=o[K];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];f=o[p];B=h[o[P]];h[f+1]=B;h[f]=B[o[x]];l=l+b;o=O[l];h[o[e]]=n[o[H]];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];h[o[m]]=h[o[M]][o[w]];l=l+b;o=O[l];if(h[o[k]]==o[x])then l=l+i;else l=o[P];end;break end while(f)/((-70+0x67c))==3692 do local f=o[k];local k=o[w];local O=f+2 local f={h[f](h[f+1],h[O])};for o=1,k do h[O+o]=f[o];end;local f=f[1]if f then h[O]=f l=o[d];else l=l+b;end;break end;break;end break;end while 1330==(f)/(((574750/0xd1)+-#[[amongass]]))do f=(4979828)while((-23+0x17d)+-#"deadphonelua")>=L do f-= f local k;local f;h[o[B]]=o[P];l=l+b;o=O[l];f=o[F]h[f](r(h,f+i,o[H]))l=l+b;o=O[l];h[o[F]]=o[M];l=l+b;o=O[l];f=o[B];k=h[o[d]];h[f+1]=k;h[f]=k[h[o[x]]];l=l+b;o=O[l];h[o[m]]=o[d];l=l+b;o=O[l];h[o[p]]=u[o[M]];l=l+b;o=O[l];h[o[e]]=o[H];l=l+b;o=O[l];h[o[e]]=h[o[d]][h[o[s]]];l=l+b;o=O[l];h[o[p]]=o[K];l=l+b;o=O[l];h[o[B]]=h[o[M]][h[o[s]]];break;end while(f)/((-#[[dies of cringe]]+(0x84f36/223)))==2051 do f=(430156)while((28258/0x47)+-#[[if found dad when back from milk then print yay end]])<L do f-= f local l=o[F]h[l](r(h,l+i,o[a]))break end while 124==(f)/(((0x38ec8/(-#"Shrimps was here"+(8632/0x68)))+-#"nicowashere"))do h[o[p]]=n[o[a]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[c]];l=l+b;o=O[l];h[o[p]][o[a]]=h[o[x]];l=l+b;o=O[l];h[o[e]]=n[o[d]];l=l+b;o=O[l];h[o[p]]=n[o[H]];l=l+b;o=O[l];h[o[e]]=h[o[K]][o[x]];l=l+b;o=O[l];h[o[e]]=h[o[d]][o[x]];l=l+b;o=O[l];h[o[k]][o[d]]=h[o[c]];l=l+b;o=O[l];do return end;break end;break;end break;end break;end break;end while 792==(f)/(((((0x51261-166214)+-#[[suck my balls]])/153)+-#'if found dad when back from milk then print yay end'))do f=(3156023)while(-102+(-114+0x23a))>=L do f-= f f=(1571680)while(25974/(205-0x83))>=L do f-= f f=(575688)while L<=(0x2cb-(0x1bb+-77))do f-= f local P;local f;f=o[m]h[f](r(h,f+i,o[d]))l=l+b;o=O[l];h[o[B]]=o[d];l=l+b;o=O[l];n[o[M]]=h[o[e]];l=l+b;o=O[l];h[o[B]]=o[d];l=l+b;o=O[l];h[o[F]]=h[o[d]][h[o[U]]];l=l+b;o=O[l];f=o[k];P=h[o[H]];h[f+1]=P;h[f]=P[o[s]];break;end while(f)/((248+-0x52))==3468 do f=(77693)while L>(53550/0x99)do f-= f local L;local f;h[o[B]]=h[o[P]][o[c]];l=l+b;o=O[l];f=o[p];L=h[o[M]];h[f+1]=L;h[f]=L[o[c]];l=l+b;o=O[l];h[o[B]]=o[d];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];h[o[m]]=n[o[K]];l=l+b;o=O[l];h[o[e]]=h[o[M]][o[x]];l=l+b;o=O[l];h[o[k]]=h[o[K]][o[x]];l=l+b;o=O[l];h[o[m]][o[K]]=h[o[s]];break end while 77==(f)/((-#"meme strings be like"+(2156-0x467)))do local b=o[H];local l=h[b]for o=b+1,o[t]do l=l..h[o];end;h[o[p]]=l;break end;break;end break;end while 1520==(f)/((0x3e5a6/247))do f=(5595560)while(0x2e1-385)>=L do f-= f local L;local f;h[o[m]]=o[P];l=l+b;o=O[l];f=o[k]h[f](r(h,f+i,o[K]))l=l+b;o=O[l];f=o[p];L=h[o[M]];h[f+1]=L;h[f]=L[o[t]];l=l+b;o=O[l];h[o[B]]=o[d];l=l+b;o=O[l];h[o[p]]=n[o[a]];l=l+b;o=O[l];h[o[B]]=o[d];l=l+b;o=O[l];h[o[p]]=h[o[a]][h[o[x]]];break;end while 2371==(f)/((4782-0x976))do f=(9100920)while L>(-#'Big hairy logs are yummy'+(0x18c+-19))do f-= f local f=o[m];local b={};for o=1,#g do local o=g[o];for l=0,#o do local o=o[l];local O=o[1];local l=o[2];if O==h and l>=f then b[l]=O[l];o[1]=b;end;end;end;break end while 2235==(f)/((-75+0x1033))do local L;local f;f=o[e]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];f=o[e];L=h[o[K]];h[f+1]=L;h[f]=L[o[s]];l=l+b;o=O[l];h[o[k]]=u[o[M]];l=l+b;o=O[l];h[o[p]]=o[d];l=l+b;o=O[l];h[o[m]]=h[o[P]][h[o[U]]];l=l+b;o=O[l];h[o[k]]=o[K];l=l+b;o=O[l];h[o[B]]=h[o[P]][h[o[w]]];l=l+b;o=O[l];h[o[m]]=o[M];l=l+b;o=O[l];f=o[F]h[f](r(h,f+i,o[d]))l=l+b;o=O[l];h[o[F]]=o[K];break end;break;end break;end break;end while 2357==(f)/((0xac1-1414))do f=(914560)while(790-(0x1d6+-37))>=L do f-= f f=(1110092)while L<=(0x1ce+-107)do f-= f local k;local f;h[o[p]]=o[a];l=l+b;o=O[l];f=o[e]h[f](r(h,f+i,o[P]))l=l+b;o=O[l];f=o[e];k=h[o[d]];h[f+1]=k;h[f]=k[o[c]];l=l+b;o=O[l];h[o[p]]=o[H];l=l+b;o=O[l];h[o[F]]=n[o[M]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[x]];break;end while 764==(f)/((-#[[this video is sponsored by manscaped your balls will thank you]]+(233310/0x9a)))do f=(4403438)while(66216/((0x1b8-241)+-#'tunnelposting'))<L do f-= f local o=o[p];S=o+A-1;for l=o,S do local o=z[l-o];h[l]=o;end;break end while(f)/(((6857-0xda1)+-#'you get no absolute bitches'))==1318 do h[o[B]]=n[o[M]];l=l+b;o=O[l];h[o[m]]=h[o[P]][o[x]];l=l+b;o=O[l];h[o[F]][o[H]]=h[o[t]];l=l+b;o=O[l];h[o[e]]=n[o[M]];l=l+b;o=O[l];h[o[B]][o[d]]=h[o[x]];l=l+b;o=O[l];do return end;break end;break;end break;end while 640==(f)/((2984-0x613))do f=(6236340)while(-#'false'+((0x53-100)+0x17c))>=L do f-= f h[o[B]]=n[o[a]];break;end while 1718==(f)/((874830/(-0x5e+335)))do f=(6100976)while(-125+0x1e4)<L do f-= f if h[o[B]]then l=l+b;else l=o[P];end;break end while 2318==(f)/((-#[[fatee is gay 0nly on top]]+(0x31ee0/77)))do local L;local f;h[o[F]]=h[o[M]][o[x]];l=l+b;o=O[l];f=o[B];L=h[o[P]];h[f+1]=L;h[f]=L[o[U]];l=l+b;o=O[l];h[o[k]]=o[d];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[K]))l=l+b;o=O[l];f=o[p];L=h[o[M]];h[f+1]=L;h[f]=L[o[U]];l=l+b;o=O[l];h[o[p]]=o[H];l=l+b;o=O[l];h[o[F]]=u[o[P]];l=l+b;o=O[l];f=o[B]h[f]=h[f]()l=l+b;o=O[l];h[o[F]]=n[o[P]];l=l+b;o=O[l];f=o[m];L=h[o[M]];h[f+1]=L;h[f]=L[o[t]];break end;break;end break;end break;end break;end break;end while(f)/((512622/0xc6))==1933 do f=(7193850)while(868-0x1f0)>=L do f-= f f=(2422758)while L<=(-0x64+466)do f-= f f=(12172000)while(-0x68+467)>=L do f-= f f=(13142754)while L<=((849-0x1da)+-#"impulse is hot")do f-= f local L;local f;h[o[k]]=h[o[M]][o[c]];l=l+b;o=O[l];f=o[B];L=h[o[H]];h[f+1]=L;h[f]=L[o[x]];l=l+b;o=O[l];h[o[e]]=o[M];l=l+b;o=O[l];f=o[m]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];f=o[k];L=h[o[d]];h[f+1]=L;h[f]=L[o[U]];l=l+b;o=O[l];h[o[p]]=o[a];l=l+b;o=O[l];h[o[m]]=u[o[H]];l=l+b;o=O[l];f=o[k]h[f]=h[f]()l=l+b;o=O[l];h[o[e]]=n[o[M]];l=l+b;o=O[l];f=o[m];L=h[o[M]];h[f+1]=L;h[f]=L[o[U]];break;end while 3754==(f)/((-#"monkey mode"+(0x1ba8-3568)))do f=(4882524)while L>(-#"nigglet"+((0x38c+-99)-0x1b8))do f-= f if(o[e]<h[o[t]])then l=o[M];else l=l+i;end;break end while 2031==(f)/(((0x32490/84)+-48))do local p;local m;local f;h[o[e]]=o[M];l=l+b;o=O[l];h[o[F]]=o[P];l=l+b;o=O[l];h[o[k]]=#h[o[a]];l=l+b;o=O[l];h[o[B]]=o[H];l=l+b;o=O[l];f=o[B];m=h[f]p=h[f+2];if(p>0)then if(m>h[f+1])then l=o[d];else h[f+3]=m;end elseif(m<h[f+1])then l=o[a];else h[f+3]=m;end break end;break;end break;end while 3580==(f)/((-19+0xd5b))do f=(1078378)while L<=(0x2f6-394)do f-= f local f;h[o[B]][o[P]]=o[c];l=l+b;o=O[l];h[o[e]][o[K]]=o[w];l=l+b;o=O[l];h[o[e]][o[H]]=o[U];l=l+b;o=O[l];h[o[m]][o[M]]=o[c];l=l+b;o=O[l];h[o[p]]=u[o[d]];l=l+b;o=O[l];h[o[F]]=h[o[a]][o[w]];l=l+b;o=O[l];h[o[k]]=o[a];l=l+b;o=O[l];h[o[p]]=o[K];l=l+b;o=O[l];h[o[F]]=o[P];l=l+b;o=O[l];f=o[p]h[f]=h[f](r(h,f+b,o[M]))break;end while(f)/((873-0x1df))==2737 do f=(11592529)while L>(0x306-409)do f-= f local p;local f;h[o[k]]=o[K];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[P]))l=l+b;o=O[l];f=o[e];p=h[o[d]];h[f+1]=p;h[f]=p[o[s]];l=l+b;o=O[l];h[o[F]]=o[a];l=l+b;o=O[l];h[o[m]]=o[a];l=l+b;o=O[l];f=o[e]h[f](r(h,f+i,o[P]))l=l+b;o=O[l];f=o[e];p=h[o[M]];h[f+1]=p;h[f]=p[o[c]];l=l+b;o=O[l];h[o[m]]=o[P];l=l+b;o=O[l];f=o[F]h[f](r(h,f+i,o[H]))l=l+b;o=O[l];f=o[e];p=h[o[M]];h[f+1]=p;h[f]=p[o[w]];l=l+b;o=O[l];h[o[k]]=o[P];l=l+b;o=O[l];h[o[B]]=o[M];l=l+b;o=O[l];h[o[e]]=n[o[d]];l=l+b;o=O[l];h[o[B]]=o[K];l=l+b;o=O[l];h[o[m]]=h[o[H]][h[o[U]]];l=l+b;o=O[l];h[o[F]]=o[H];l=l+b;o=O[l];h[o[F]]=h[o[M]][h[o[U]]];l=l+b;o=O[l];h[o[m]]=o[a];l=l+b;o=O[l];h[o[e]]=o[M];break end while 3679==(f)/(((0x1e1b6/39)+-#"moon on top"))do local L;local f;h[o[m]]=n[o[M]];l=l+b;o=O[l];f=o[k];L=h[o[a]];h[f+1]=L;h[f]=L[o[U]];l=l+b;o=O[l];h[o[B]]=o[M];l=l+b;o=O[l];h[o[m]]=n[o[H]];l=l+b;o=O[l];f=o[m];L=h[o[M]];h[f+1]=L;h[f]=L[o[w]];l=l+b;o=O[l];h[o[B]]=o[P];l=l+b;o=O[l];f=o[e]h[f]=h[f](r(h,f+b,o[H]))l=l+b;o=O[l];h[o[e]]=h[o[K]][o[s]];l=l+b;o=O[l];h[o[p]]=h[o[M]][o[t]];l=l+b;o=O[l];h[o[k]]=h[o[d]][o[w]];break end;break;end break;end break;end while 2094==(f)/((0x92a-1189))do f=(8431592)while L<=(805-0x1b4)do f-= f f=(4054400)while L<=((817-0x1ba)+-#[[Gay porn]])do f-= f local o=o[p];do return h[o],h[o+1]end break;end while 1600==(f)/((((-#[[Nicuse will go in history]]+(-0x18+11))+0xa27)+-#[[Your cookie has been leaked]]))do f=(11564925)while L>(33856/0x5c)do f-= f local f;h[o[B]]=u[o[K]];l=l+b;o=O[l];h[o[p]]=h[o[M]][o[w]];l=l+b;o=O[l];h[o[m]]=h[o[a]];l=l+b;o=O[l];f=o[F]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[m]]();l=l+b;o=O[l];do return end;break end while 2845==(f)/(((676284/0xa6)+-#"hamburger"))do local L;local f;h[o[p]]={};l=l+b;o=O[l];h[o[m]][o[H]]=o[x];l=l+b;o=O[l];h[o[p]]=u[o[P]];l=l+b;o=O[l];f=o[B]h[f]=h[f]()l=l+b;o=O[l];h[o[m]][o[M]]=h[o[w]];l=l+b;o=O[l];h[o[e]]=n[o[d]];l=l+b;o=O[l];f=o[e];L=h[o[P]];h[f+1]=L;h[f]=L[o[t]];l=l+b;o=O[l];h[o[B]]=o[d];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];h[o[e]][o[H]]=h[o[s]];break end;break;end break;end while(f)/((-#"furries should die"+(-0x6b+3388)))==2584 do f=(1261128)while L<=(-#'if syn then syn dot request get beliveri12 coma nicuse ass end'+(0x134d0/183))do f-= f local o=o[k];local l=h[o];for o=o+1,S do y(l,h[o])end;break;end while 561==(f)/((496808/0xdd))do f=(986119)while((-0x1f+417)+-#'qwertyui is hot')<L do f-= f local k;local P,L;local f;h[o[e]]=u[o[a]];l=l+b;o=O[l];h[o[p]]=h[o[M]][o[x]];l=l+b;o=O[l];h[o[B]]=o[M];l=l+b;o=O[l];h[o[p]]=o[a];l=l+b;o=O[l];h[o[e]]=o[d];l=l+b;o=O[l];f=o[F]P,L=D(h[f](r(h,f+1,o[M])))S=L+f-1 k=0;for o=f,S do k=k+b;h[o]=P[k];end;l=l+b;o=O[l];f=o[m]h[f](r(h,f+i,S))l=l+b;o=O[l];l=o[K];break end while(f)/((-#"waste of sperm"+(-119+(0x1929-3255))))==323 do local k;local m,L;local f;h[o[p]]=n[o[K]];l=l+b;o=O[l];h[o[p]]=u[o[M]];l=l+b;o=O[l];h[o[e]]=h[o[M]][o[t]];l=l+b;o=O[l];h[o[p]]=o[a];l=l+b;o=O[l];h[o[B]]=o[d];l=l+b;o=O[l];h[o[F]]=o[P];l=l+b;o=O[l];f=o[e]m,L=D(h[f](r(h,f+1,o[a])))S=L+f-1 k=0;for o=f,S do k=k+b;h[o]=m[k];end;l=l+b;o=O[l];f=o[B]h[f](r(h,f+i,S))l=l+b;o=O[l];do return end;break end;break;end break;end break;end break;end while 1990==(f)/((0x1c86-3687))do f=(14250494)while(-#"You are an absolute baboon"+(-31+0x1b3))>=L do f-= f f=(3709825)while L<=(-#"pls free synapse x i am gamer girl uwu"+(911-0x1f2))do f-= f f=(9165648)while(812-0x1b7)>=L do f-= f h[o[B]]=h[o[K]][o[t]];l=l+b;o=O[l];h[o[B]]=n[o[a]];l=l+b;o=O[l];h[o[m]]=h[o[d]][o[x]];l=l+b;o=O[l];h[o[F]]=h[o[d]][o[c]];l=l+b;o=O[l];if(h[o[F]]~=h[o[c]])then l=l+i;else l=o[P];end;break;end while 2972==(f)/(((-103+0xc81)+-#'jjsplot on top'))do f=(226291)while(803-0x1ad)<L do f-= f local l=o[k]h[l]=h[l](r(h,l+b,o[K]))break end while 169==(f)/((0x51128/248))do local L;local f;h[o[m]]=o[d];l=l+b;o=O[l];f=o[B]h[f]=h[f](r(h,f+b,o[M]))l=l+b;o=O[l];f=o[p];L=h[o[K]];h[f+1]=L;h[f]=L[o[t]];l=l+b;o=O[l];h[o[F]]=n[o[P]];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];h[o[p]]=h[o[H]][o[w]];l=l+b;o=O[l];if(o[m]<=h[o[s]])then l=o[K];else l=l+i;end;break end;break;end break;end while(f)/((0x1d0a-3779))==1015 do f=(8941784)while(0x1d3+-91)>=L do f-= f local L;local f;h[o[B]]=o[K];l=l+b;o=O[l];f=o[F]h[f](r(h,f+i,o[P]))l=l+b;o=O[l];f=o[m];L=h[o[M]];h[f+1]=L;h[f]=L[o[c]];l=l+b;o=O[l];h[o[k]]=o[M];l=l+b;o=O[l];h[o[B]]=n[o[H]];l=l+b;o=O[l];h[o[k]]=o[M];l=l+b;o=O[l];h[o[F]]=h[o[d]][h[o[s]]];l=l+b;o=O[l];h[o[p]]=o[K];l=l+b;o=O[l];h[o[B]]=h[o[H]][h[o[w]]];break;end while(f)/((-#[[how to use visual studio jk jk dont take it seriously what 6 hours per messange]]+(3746+-0x60)))==2504 do f=(4839775)while L>(0x336-445)do f-= f local f;local B;local P,m;local f;h[o[p]]=u[o[a]];l=l+b;o=O[l];h[o[k]]=u[o[M]];l=l+b;o=O[l];h[o[p]]=(o[M]~=0);l=l+b;o=O[l];f=o[k]P,m=D(h[f](h[f+i]))S=m+f-b B=0;for o=f,S do B=B+b;h[o]=P[B];end;l=l+b;o=O[l];f=o[p]P={h[f](r(h,f+1,S))};B=0;for o=f,o[c]do B=B+b;h[o]=P[B];end l=l+b;o=O[l];l=o[H];break end while(f)/(((526851/(-#"you cut your pubes with nail clippers"+(0x19b0/24)))+-#[[lego hax]]))==2185 do local M;local f;f=o[k]h[f]=h[f](h[f+i])l=l+b;o=O[l];h[o[e]]();l=l+b;o=O[l];h[o[e]]=h[o[P]][o[c]];l=l+b;o=O[l];h[o[m]]=h[o[K]][o[x]];l=l+b;o=O[l];h[o[m]]=h[o[H]][o[w]];l=l+b;o=O[l];f=o[k];M=h[o[a]];h[f+1]=M;h[f]=M[o[x]];break end;break;end break;end break;end while(f)/((0xcb54e/217))==3713 do f=(8381560)while(-0x52+463)>=L do f-= f f=(3190566)while(834-0x1c7)>=L do f-= f local P;local L,K;local f;f=o[B]L,K=D(h[f](h[f+i]))S=K+f-b P=0;for o=f,S do P=P+b;h[o]=L[P];end;l=l+b;o=O[l];f=o[F]h[f](r(h,f+i,S))l=l+b;o=O[l];for o=o[p],o[a]do h[o]=nil;end;l=l+b;o=O[l];h[o[k]]=u[o[d]];l=l+b;o=O[l];h[o[m]]=h[o[M]];l=l+b;o=O[l];h[o[F]]=o[M];break;end while(f)/(((550220/(491-0x10f))+-#'free pornhub premium'))==1286 do f=(7599722)while L>((-#"federal communication"+(-1155/0xe7))+406)do f-= f local B;local f;h[o[k]]=h[o[d]][o[w]];l=l+b;o=O[l];f=o[k];B=h[o[M]];h[f+1]=B;h[f]=B[o[t]];l=l+b;o=O[l];h[o[k]]=o[M];l=l+b;o=O[l];f=o[F]h[f]=h[f](r(h,f+b,o[K]))l=l+b;o=O[l];h[o[e]]=n[o[M]];l=l+b;o=O[l];h[o[e]]=h[o[K]][o[U]];l=l+b;o=O[l];h[o[e]]=h[o[d]][o[w]];l=l+b;o=O[l];h[o[F]][o[M]]=h[o[U]];break end while 2446==(f)/((6315-0xc88))do if(h[o[m]]<o[t])then l=l+i;else l=o[H];end;break end;break;end break;end while 3784==(f)/(((0x11d8-2338)+-#'zeynox was here'))do f=(6340991)while L<=(0x1cd+-78)do f-= f f=(2931335)while L>(787-0x195)do f-= f h[o[k]]=h[o[K]]%o[t];break end while(f)/((((0x28ef-5262)-0xa57)+-#[[Ok guys relax Theyre just fucking socks Its impossible for socks to turn me gay My heterosexuality will be fine dudes]]))==1195 do h[o[e]]=h[o[M]]-h[o[w]];l=l+b;o=O[l];h[o[e]]=h[o[K]][o[x]];l=l+b;o=O[l];h[o[m]]=h[o[a]]-h[o[U]];l=l+b;o=O[l];h[o[k]]=h[o[P]][o[U]];l=l+b;o=O[l];h[o[p]]=h[o[a]]*h[o[c]];l=l+b;o=O[l];do return h[o[p]]end l=l+b;o=O[l];do return end;break end;break;end while 2617==(f)/((2454+-0x1f))do f=(898936)while L>(-#[[nicuse is nil skull]]+(76167/0xbd))do f-= f if(h[o[m]]<h[o[c]])then l=o[P];else l=l+i;end;break end while(f)/((-#[[number 15 you get no bitches]]+(901-((-79+0x26f)+-#'Nicuse is good at sucking dick'))))==2504 do local f;h[o[m]]=h[o[K]][o[w]];l=l+b;o=O[l];h[o[m]]=h[o[P]]-o[w];l=l+b;o=O[l];f=o[k]h[f]=h[f](r(h,f+b,o[a]))l=l+b;o=O[l];h[o[F]][o[d]]=h[o[t]];l=l+b;o=O[l];h[o[k]]=n[o[K]];l=l+b;o=O[l];h[o[p]]=u[o[H]];l=l+b;o=O[l];h[o[B]]=h[o[P]][o[x]];l=l+b;o=O[l];h[o[B]]=h[o[d]][o[t]];l=l+b;o=O[l];h[o[B]]=h[o[H]][o[w]];l=l+b;o=O[l];h[o[B]]=h[o[M]]-o[U];break end;break;end break;end break;end break;end break;end break;end break;end break;end l+= i end;end);end;return v(j(),{},q())()end)_msec({[(-#'funtime foxy and funtime freddy having sex real'+(359+-0x75))]='\115\116'..(function(o)return(o and'(-#"e621DotNet"+((-0x6b+379)-162))')or'\114\105'or'\120\58'end)(((0x7b0/123)+-#[[MemeStrings]])==((0x89-104)+-#"Nsrds GAYYYYAIAHAKAJAVAHAUA"))..'\110g',[((45738/0x3f)+-#"El pepe")]='\108\100'..(function(o)return(o and'(0x78+-20)')or'\101\120'or'\119\111'end)(((0xa8/8)+-#"warboy hates you")==(522/0x57))..'\112',[(-#{(function()return#{('fLMkFb'):find("\77")}>0 and 1 or 0 end);(function()return#{('fLMkFb'):find("\77")}>0 and 1 or 0 end),1}+262)]=(function(o)return(o and'(176+-0x4c)')and'\98\121'or'\100\120'end)((-#'no h'+(0x3f-((-34+0x78)+-#[[i bought a boost for this string]])))==(-#'ratio no one cares yo momma dead yo daddy left'+(0x1650/112)))..'\116\101',[((0x36b-482)+-#[[Innovative and Im made of rubber so that anything]])]='\99'..(function(o)return(o and'(13900/((455-0x112)+-#"Reduce meme string slowmode when plsplspls"))')and'\90\19\157'or'\104\97'end)((-#"Impulse youtube ez"+(149-0x7e))==(0x5b-88))..'\114',[(1240-0x29a)]='\116\97'..(function(o)return(o and'(14800/0x94)')and'\64\113'or'\98\108'end)((-0x59+95)==(635/0x7f))..'\101',[(-#{1,(function()return#{('HffoLo'):find("\102")}>0 and 1 or 0 end),31,31,34}+430)]=(function(o)return(o and'(-#"qwertyui is not hot and is a skid"+(-48+0xb5))')or'\115\117'or'\78\107'end)((-#"zeynox was here"+(97-0x4f))==(0x7c-93))..'\98',[(((1044+-0x6e)+-0x48)+-#[[Should have used luraph]])]='\99\111'..(function(o)return(o and'(13000/0x82)')and'\110\99'or'\110\105\103\97'end)((0x7c+-93)==(-0x40+95))..'\97\116',[(1301-0x2a3)]=(function(o,l)return(o and'(-#\'send nudes\'+(249-(16819/0x79)))')and'\48\159\158\188\10'or'\109\97'end)((0x113/55)==(-87+0x5d))..'\116\104',[(2845-(-91+0x614))]=(function(l,o)return((0x54+-79)==(102+-0x63)and'\48'..'\195'or l..((not'\20\95\69'and'\90'..'\180'or o)))or'\199\203\95'end),[(211275/0xe1)]='\105\110'..(function(o,l)return(o and'(-#"my name jeff"+(0x2fb0/109))')and'\90\115\138\115\15'or'\115\101'end)(((-0x23+985)/190)==(0x51-50))..'\114\116',[(-#{56,38,'nil',38;1;'nil'}+1049)]='\117\110'..(function(o,l)return(o and'(275-0xaf)')or'\112\97'or'\20\38\154'end)((-#'zxcvbnm'+((983-0x21b)/0x25))==(0xb4-149))..'\99\107',[(43836/(0xb6d/75))]='\115\101'..(function(o)return(o and'((296-0xb2)+-#[[my heart is racing]])')and'\110\112\99\104'or'\108\101'end)((0x19/5)==(6231/0xc9))..'\99\116',[(0x9ca-1274)]='\116\111\110'..(function(o,l)return(o and'(-#"holy shit"+((0x142-186)+-27))')and'\117\109\98'or'\100\97\120\122'end)((-0x42+71)==(795/0x9f))..'\101\114'},{[((0x362e/146)+-#'how to join the kkk')]=((getfenv))},((getfenv))()) end)()
+
+local function GenerateSeed(Type)
+        local GeneratedSeed 
+            if Type == "Finish" then
+                GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChildWhichIsA("Tool"), "EXECQQ")
+            elseif Type == "Hit" then 
+                GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChildWhichIsA("Tool"), "43TRFWJ", "Normal", tick(), true) 
+            elseif Type == "BreakSafe" then 
+                GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChild("Crowbar"), "DZDRRRKI", ClosestSafe(5), "Register") 
+            elseif Type == "BreakRegister" then
+                GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChildWhichIsA("Tool"), "DZDRRRKI", ClosestRegister(10), "Register") 
+            elseif Type == "BreakDoor" then
+                GeneratedSeed = ReplicatedStorage.Events:FindFirstChild("XMHH.1"):InvokeServer("\240\159\154\168", tick(), Character:FindFirstChildWhichIsA("Tool"), "DZDRRRKI", ClosestDoor(10), "Door") 
+			end
+	return GeneratedSeed
+end
+--#endregion
+--#region Signal Events
+Players.PlayerAdded:Connect(function(PlayerAdded)
+if PlayerAdded ~= Player then
+    PlayerAdded.CharacterAdded:Connect(function(CharacterAdded)
+        table.insert(Information.Clients.Characters, CharacterAdded)
+    end)
+    PlayerAdded.CharacterRemoving:Connect(function(CharacterRemoved)
+        TableRemove(Information.Clients.Characters, CharacterRemoved)
+    end)
+    table.insert(Information.Clients.Client, PlayerAdded)
+end 
+end)
+
+Players.PlayerRemoving:Connect(function(ClientRemoved)
+TableRemove(Information.Clients.Client, ClientRemoved)
+end)
+
+Workspace.Filter.ChildAdded:Connect(function(Object)
+    if Object.Parent == Workspace.Filter.SpawnedBread then
+        table.insert(Information.Map.SpawnedCash, Object)
+    elseif Object.Parent == Workspace.Filter.SpawnedTools then
+        table.insert(Information.Map.SpawnedTools, Object)
+    elseif Object.Parent == Workspace.Filter.SpawnedPiles then
+        table.insert(Information.Map.SpawnedScraps, Object)
+    end
+end)
+
+Workspace.Filter.ChildRemoved:Connect(function(Object)
+    if Object.Parent == Workspace.Filter.SpawnedBread then
+        TableRemove(Information.Map.SpawnedCash, Object)
+    elseif Object.Parent == Workspace.Filter.SpawnedTools then
+        TableRemove(Information.Map.SpawnedTools, Object)
+    elseif Object.Parent == Workspace.Filter.SpawnedPiles then
+        TableRemove(Information.Map.SpawnedScraps, Object)
+    end
+end)
+
+for _, Connection in next, getconnections(LogService.MessageOut) do
+    Connection:Disable() 
+end 
+for _, Connection in next, getconnections(ScriptContext.Error) do
+    Connection:Disable()
+end 
+for _, PlayerConnected in next, Players:GetPlayers() do
+    table.insert(Information.Clients.Client, PlayerConnected)
+end 
+for _, Character in next, Workspace.Characters:GetChildren() do
+    table.insert(Information.Clients.Characters, Character)
+end 
+for _, Object in next, Workspace.Filter.SpawnedBread:GetChildren() do
+    table.insert(Information.Map.SpawnedCash, Object)
+end
+for _, Object in next, Workspace.Filter.SpawnedTools:GetChildren() do
+    table.insert(Information.Map.SpawnedTools, Object)
+end 
+for _, Object in next, Workspace.Filter.SpawnedPiles:GetChildren() do
+    table.insert(Information.Map.SpawnedScraps, Object)
+end 
+for _, Object in next, Workspace.Map.Shopz:GetChildren() do
+    table.insert(Information.Map.Dealers, Object)
+end
+--#endregion
+--Admins Check--
+game.Players.PlayerAdded:Connect(function(AdminUserCheck)
+    if AdminUserCheck.UserId == 68246168 or AdminUserCheck.UserId == 955294 or AdminUserCheck.UserId == 1095419 or AdminUserCheck.UserId == 50585425 or AdminUserCheck.UserId == 48405917 or AdminUserCheck.UserId == 9212846 or AdminUserCheck.UserId == 47352513 or AdminUserCheck.UserId == 48058122 then
+		Notify(NS.Title,NS.Icon,"Mod Alert\n"..AdminUserCheck.Name..", Is in the server.", 120)
+    elseif AdminUserCheck.UserId == 42066711 or AdminUserCheck.UserId == 513615792 then
+		Notify(NS.Title,NS.Icon,"Contractors Alert\n"..AdminUserCheck.Name..", Is in the server.", 120)
+    elseif AdminUserCheck.UserId == 151691292 or AdminUserCheck.UserId == 92504899 or AdminUserCheck.UserId == 31967243 then
+		Notify(NS.Title,NS.Icon,"Devs Alert\n"..AdminUserCheck.Name..", Is in the server.", 120)
+    elseif AdminUserCheck.UserId == 29761878 then
+		Notify(NS.Title,NS.Icon,"Owner Alert\n"..AdminUserCheck.Name..", Is in the server.", 120)
+    end
+end)
+
+for i, v in pairs(game.Players:GetPlayers()) do
+    if v.UserId == 68246168 or v.UserId == 955294 or v.UserId == 1095419 or v.UserId == 50585425 or v.UserId == 48405917 or v.UserId == 9212846 or v.UserId == 47352513 or v.UserId == 48058122 then
+        Notify(NS.Title,NS.Icon,"Mod Alert\n"..v.Name..", Is in the server.", 120)
+    elseif v.UserId == 42066711 or v.UserId == 513615792 then
+		Notify(NS.Title,NS.Icon,"Contractors Alert\n"..v.Name..", Is in the server.", 120)
+    elseif v.UserId == 151691292 or v.UserId == 92504899 or v.UserId == 31967243 then
+		Notify(NS.Title,NS.Icon,"Devs Alert\n"..v.Name..", Is in the server.", 120)
+    elseif v.UserId == 29761878 then
+		Notify(NS.Title,NS.Icon,"Owner Alert\n"..v.Name..", Is in the server.", 120)
+    end
+end
+--Admin Check End--
+local function Bypass()
+    local Args = {"A", "B", "GP", "EN"}
+    local function ScanTable(Table)
+        for i, v in ipairs(Args) do
+            if (not rawget(Table, v)) then
+                return false
+                end
+            end  
+            return true 
+        end
+    local Functions do
+        for i,v in pairs(getgc(true)) do
+            if typeof(v) == "table" and ScanTable(v) then
+                Functions = v
+                break
+            end 
+        end 
+    end 
+    if Functions and (Functions.A and Functions.B) then
+        hookfunction(Functions.A, function() end)
+        hookfunction(Functions.B, function() end)
+    end 
+end 
+--#region Silent Aim
+local Mouse = Player:GetMouse()
+local WorldToScreen = Cam.WorldToScreenPoint
+local WorldToViewportPoint = Cam.WorldToViewportPoint
+local GetPartsObscuringTarget = Cam.GetPartsObscuringTarget
+local ExpectedArguments = {
+	Raycast = {
+		ArgCountRequired = 3,
+			Args = {
+				"Instance", "Vector3", "Vector3", "RaycastParams"
+			}
+		}
+	};
 
 
+	local SilentAIMFov = Drawing.new("Circle")
+	SilentAIMFov.Thickness = 1
+	SilentAIMFov.NumSides = 100
+	SilentAIMFov.Radius = 360
+	SilentAIMFov.Filled = false
+	SilentAIMFov.Visible = false
+	SilentAIMFov.ZIndex = 999
+	SilentAIMFov.Transparency = 1
+	SilentAIMFov.Color = Color3.fromRGB(25,25,25)
+	SilentSettings.Visible = false
+	--Silent Aim Functions--
+	local function GetPositionOnScreen(Vector)
+		local Vec3, OnScreen = WorldToScreen(Cam, Vector)
+		return Vector2.new(Vec3.X, Vec3.Y), OnScreen
+	end
+
+	local function ValidateArguments(Args, RayMethod)
+		local Matches = 0
+
+		if #Args < RayMethod.ArgCountRequired then
+			return false
+		end
+
+		for Pos, Argument in next, Args do
+			if typeof(Argument) == RayMethod.Args[Pos] then
+				Matches = Matches + 1
+			end
+		end
+
+		return Matches >= RayMethod.ArgCountRequired
+	end
+
+	local function GetDirection(Origin, Position)
+		return (Position - Origin).Unit * (Origin - Position).Magnitude
+	end
+
+	local function GetMousePosition()
+		return Vector2.new(Mouse.X, Mouse.Y)
+	end
+
+		local function IsPlayerVisible(TargetPlayer)
+		local PlayerCharacter = TargetPlayer.Character
+		local LocalPlayerCharacter = Player.Character
+
+		if not (PlayerCharacter or LocalPlayerCharacter) then return end 
+
+		local PlayerRoot = game.FindFirstChild(PlayerCharacter, SilentSettings.Main.TargetPart) or game.FindFirstChild(PlayerCharacter, "HumanoidRootPart")
+
+		if not PlayerRoot then return end 
+
+		local CastPoints, IgnoreList = {PlayerRoot.Position, LocalPlayerCharacter, PlayerCharacter}, {LocalPlayerCharacter, PlayerCharacter}
+		local ObscuringObjects = #GetPartsObscuringTarget(Cam, CastPoints, IgnoreList)
+
+		return ((ObscuringObjects == 0 and true) or (ObscuringObjects > 0 and false))
+	end
+
+	local function GetClosestPlayer()
+		if not SilentSettings.Main.TargetPart then return end
+
+		local Closest
+		local DistanceToMouse
+
+		for _, v in next, game.GetChildren(Players) do
+			if v == Player then continue end
+			if SilentSettings.Main.TeamCheck and v.Team == Player.Team then continue end
+
+			local Character = v.Character
+			if not Character then continue end
+
+			if SilentSettings.Main.VisibleCheck and not IsPlayerVisible(v) then continue end
+
+			local HumanoidRootPart = game.FindFirstChild(Character, "HumanoidRootPart")
+			local Humanoid = game.FindFirstChild(Character, "Humanoid")
+
+			if not HumanoidRootPart or not Humanoid or Humanoid and Humanoid.Health <= 0 then continue end
+
+			local ScreenPosition, OnScreen = GetPositionOnScreen(HumanoidRootPart.Position)
+
+			if not OnScreen then continue end
+
+			local Distance = (GetMousePosition() - ScreenPosition).Magnitude
+			if Distance <= (DistanceToMouse or (SilentSettings.Main.Enabled and SilentSettings.FOVSettings.Radius) or 2000) then
+				Closest = ((SilentSettings.Main.TargetPart == "Random" and Character[ValidTargetParts[math.random(1, #ValidTargetParts)]]) or Character[SilentSettings.Main.TargetPart])
+				DistanceToMouse = Distance
+			end
+		end
+		return Closest
+	end
+--#endregion
+if game:IsLoaded() then Bypass() end
+--#region Esp Handlers
+		local function DealerSESP(Dealer, Stock)
+			local ItemName = Drawing.new("Text")
+			ItemName.Visible = false
+			ItemName.Center = true
+			ItemName.Outline = true
+			ItemName.Font = 2
+			ItemName.Size = 13
+			ItemName.Color = Color3.new(1, 2.5, 2.5)
+			ItemName.Text = "Dealer"
+
+			local RarityText = Drawing.new("Text")
+			RarityText.Visible = false
+			RarityText.Center = true
+			RarityText.Outline = true
+			RarityText.Font = 2
+			RarityText.Size = 13
+			RarityText.Color = Color3.new(1, 2.5, 2.5)
+			RarityText.Text = "Type"
+
+			local DistanceText = Drawing.new("Text")
+			DistanceText.Visible = false
+			DistanceText.Center = true
+			DistanceText.Outline = true
+			DistanceText.Font = 2
+			DistanceText.Size = 13
+			DistanceText.Color = Color3.new(1, 2.5, 2.5)
+			DistanceText.Text = "Distance"
+
+			local function InfoUpdate()
+				local Iu
+
+				Iu = RunService.RenderStepped:Connect(function()
+					if Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(Stock).Value == 0 then
+						ItemName.Visible = false
+						RarityText.Visible = false
+						DistanceText.Visible = false
+
+						Iu:Disconnect()
+					else
+						local Vector, OnScreen = Cam:WorldToViewportPoint(Dealer:FindFirstChild("MainPart").Position)
+
+						if OnScreen then
+							ItemName.Position = Vector2.new(Vector.X, Vector.Y - 30)
+							RarityText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+							DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
+
+							ItemName.Visible = false
+							RarityText.Visible = false
+							DistanceText.Visible = false
+
+							local ItemDistance = math.ceil((Dealer.MainPart.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
+
+							if ESPSettings.DealerSESP.Enabled == true then 
+								if ItemDistance < ESPSettings.DealerSESP.Distance then
+										RarityText.Text = "Stock: "..Stock
+										RarityText.Color = Color3.fromRGB(72, 255, 0)
+										if ESPSettings.DealerSESP.Enabled == true then
+											ItemName.Visible = true
+											RarityText.Visible = true
+											DistanceText.Visible = true
+										else
+											ItemName.Visible = false
+											RarityText.Visible = false
+											DistanceText.Visible = false
+										end
+
+									DistanceText.Text = "["..tostring(ItemDistance).."]"
+									if Stock == sstockk then
+										ItemName.Visible = true
+										RarityText.Visible = true
+										DistanceText.Visible = true
+
+									else
+										ItemName.Visible = false
+										RarityText.Visible = false
+										DistanceText.Visible = false
+
+									end
+								else
+									ItemName.Visible = false
+									RarityText.Visible = false
+									DistanceText.Visible = false
+								end
+							else
+								ItemName.Visible = false
+								RarityText.Visible = false
+								DistanceText.Visible = false
+
+								Iu:Disconnect()
+							end
+						else
+							ItemName.Visible = false
+							RarityText.Visible = false
+							DistanceText.Visible = false
+						end
+					end
+				end)
+			end
+			coroutine.wrap(InfoUpdate)()
+		end
+			local function ScrapESP(Scrap)
+				local ItemName = Drawing.new("Text")
+				ItemName.Visible = false
+				ItemName.Center = true
+				ItemName.Outline = true
+				ItemName.Font = 2
+				ItemName.Size = 13
+				ItemName.Color = Color3.new(1, 2.5, 2.5)
+				ItemName.Text = "Scrap"
+
+				local RarityText = Drawing.new("Text")
+				RarityText.Visible = false
+				RarityText.Center = true
+				RarityText.Outline = true
+				RarityText.Font = 2
+				RarityText.Size = 13
+				RarityText.Color = Color3.new(1, 2.5, 2.5)
+				RarityText.Text = "Type"
+
+				local DistanceText = Drawing.new("Text")
+				DistanceText.Visible = false
+				DistanceText.Center = true
+				DistanceText.Outline = true
+				DistanceText.Font = 2
+				DistanceText.Size = 13
+				DistanceText.Color = Color3.new(1, 2.5, 2.5)
+				DistanceText.Text = "Distance"
+
+				local function InfoUpdate()
+					local Iu
+
+					Iu = RunService.RenderStepped:Connect(function()
+						if not workspace:IsAncestorOf(Scrap) then
+							ItemName.Visible = false
+							RarityText.Visible = false
+							DistanceText.Visible = false
+
+							Iu:Disconnect()
+						else
+							local Vector, OnScreen = Cam:WorldToViewportPoint(Scrap:FindFirstChild("MeshPart").Position)
+
+							if OnScreen then
+								ItemName.Position = Vector2.new(Vector.X, Vector.Y - 30)
+								RarityText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+								DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
+
+								ItemName.Visible = false
+								RarityText.Visible = false
+								DistanceText.Visible = false
+
+								local ItemDistance = math.ceil((Scrap.MeshPart.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
+
+								if ESPSettings.ScrapESP.Enabled == true then
+									if ItemDistance < ESPSettings.ScrapESP.Distance then
+										if tostring(Scrap:FindFirstChild("MeshPart"):FindFirstChild("Particle").Color) == "0 1 1 1 0 1 1 1 1 0 " then
+											RarityText.Text = "Rarity: Bad"
+											RarityText.Color = ESPSettings.ScrapESP.RarityColors.Bad
+											if ESPSettings.ScrapESP.BadOnly == true then
+												ItemName.Visible = true
+												RarityText.Visible = true
+												DistanceText.Visible = true
+											else
+												ItemName.Visible = false
+												RarityText.Visible = false
+												DistanceText.Visible = false
+											end
+										end
+
+										DistanceText.Text = "["..tostring(ItemDistance).."]"
+									else
+										ItemName.Visible = false
+										RarityText.Visible = false
+										DistanceText.Visible = false
+									end
+								else
+									ItemName.Visible = false
+									RarityText.Visible = false
+									DistanceText.Visible = false
+
+									Iu:Disconnect()
+								end
+							else
+								ItemName.Visible = false
+								RarityText.Visible = false
+								DistanceText.Visible = false
+							end
+						end
+					end)
+				end
+				coroutine.wrap(InfoUpdate)()
+			end
+
+			local function BoxESP(Scrap)
+				local ItemName = Drawing.new("Text")
+				ItemName.Visible = false
+				ItemName.Center = true
+				ItemName.Outline = true
+				ItemName.Font = 2
+				ItemName.Size = 13
+				ItemName.Color = Color3.new(1, 2.5, 2.5)
+				ItemName.Text = "Box"
+
+				local RarityText = Drawing.new("Text")
+				RarityText.Visible = false
+				RarityText.Center = true
+				RarityText.Outline = true
+				RarityText.Font = 2
+				RarityText.Size = 13
+				RarityText.Color = Color3.new(1, 2.5, 2.5)
+				RarityText.Text = "Type"
+
+				local DistanceText = Drawing.new("Text")
+				DistanceText.Visible = false
+				DistanceText.Center = true
+				DistanceText.Outline = true
+				DistanceText.Font = 2
+				DistanceText.Size = 13
+				DistanceText.Color = Color3.new(1, 2.5, 2.5)
+				DistanceText.Text = "Distance"
+
+				local function InfoUpdate()
+					local Iu
+
+					Iu = RunService.RenderStepped:Connect(function()
+						if not workspace:IsAncestorOf(Scrap) then
+							ItemName.Visible = false
+							RarityText.Visible = false
+							DistanceText.Visible = false
+
+							Iu:Disconnect()
+						else
+							local Vector, OnScreen = Cam:WorldToViewportPoint(Scrap:FindFirstChild("MeshPart").Position)
+
+							if OnScreen then
+								ItemName.Position = Vector2.new(Vector.X, Vector.Y - 30)
+								RarityText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+								DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
+
+								ItemName.Visible = false
+								RarityText.Visible = false
+								DistanceText.Visible = false
+
+								local ItemDistance = math.ceil((Scrap.MeshPart.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
+
+								if ESPSettings.ScrapESP.Enabled == true then
+									if ItemDistance < ESPSettings.ScrapESP.Distance then
+										if tostring(Scrap:FindFirstChild("MeshPart"):FindFirstChild("Particle").Color) == "0 0.184314 1 0.4 0 1 0.184314 1 0.4 0 " then
+											RarityText.Text = "Rarity: Good"
+											RarityText.Color = ESPSettings.ScrapESP.RarityColors.Good
+
+											if ESPSettings.ScrapESP.GoodOnly == true then
+												ItemName.Visible = true
+												RarityText.Visible = true
+												DistanceText.Visible = true
+											else
+												ItemName.Visible = false
+												RarityText.Visible = false
+												DistanceText.Visible = false
+											end
+										elseif tostring(Scrap:FindFirstChild("MeshPart"):FindFirstChild("Particle").Color) == "0 1 0.184314 0.184314 0 1 1 0.184314 0.184314 0 " then
+											RarityText.Text = "Rarity: Rare"
+											RarityText.Color = ESPSettings.ScrapESP.RarityColors.Rare
+
+											if ESPSettings.ScrapESP.RareOnly == true then
+												ItemName.Visible = true
+												RarityText.Visible = true
+												DistanceText.Visible = true
+											else
+												ItemName.Visible = false
+												RarityText.Visible = false
+												DistanceText.Visible = false
+											end
+										else
+											RarityText.Text = "Rarity: Legnedary"
+											RarityText.Color = ESPSettings.ScrapESP.RarityColors.Legendary
+											if ESPSettings.ScrapESP.LegendaryOnly == true then
+												ItemName.Visible = true
+												RarityText.Visible = true
+												DistanceText.Visible = true
+											else
+												ItemName.Visible = false
+												RarityText.Visible = false
+												DistanceText.Visible = false
+											end
+										end
+
+										DistanceText.Text = "["..tostring(ItemDistance).."]"
+									else
+										ItemName.Visible = false
+										RarityText.Visible = false
+										DistanceText.Visible = false
+									end
+								else
+									ItemName.Visible = false
+									RarityText.Visible = false
+									DistanceText.Visible = false
+
+									Iu:Disconnect()
+								end
+							else
+								ItemName.Visible = false
+								RarityText.Visible = false
+								DistanceText.Visible = false
+							end
+						end
+					end)
+				end
+				coroutine.wrap(InfoUpdate)()
+			end
+
+			--SafeESP 
+			local function SafeESP(Vault, RarityValue)
+				local ItemName = Drawing.new("Text")
+				ItemName.Visible = false
+				ItemName.Center = true
+				ItemName.Outline = true
+				ItemName.Font = 2
+				ItemName.Size = 13
+				ItemName.Color = Color3.new(1, 2.5, 2.5)
+				ItemName.Text = "Safe"
+
+				local RarityText = Drawing.new("Text")
+				RarityText.Visible = false
+				RarityText.Center = true
+				RarityText.Outline = true
+				RarityText.Font = 2
+				RarityText.Size = 13
+				RarityText.Color = Color3.new(1, 2.5, 2.5)
+				RarityText.Text = "Type"
+
+				local StatusText = Drawing.new("Text")
+				StatusText.Visible = false
+				StatusText.Center = true
+				StatusText.Outline = true
+				StatusText.Font = 2
+				StatusText.Size = 13
+				StatusText.Color = Color3.new(1, 2.5, 2.5)
+				StatusText.Text = "Status"
+
+				local DistanceText = Drawing.new("Text")
+				DistanceText.Visible = false
+				DistanceText.Center = true
+				DistanceText.Outline = true
+				DistanceText.Font = 2
+				DistanceText.Size = 13
+				DistanceText.Color = Color3.new(1, 2.5, 2.5)
+				DistanceText.Text = "Distance"
+
+				local function InfoUpdate()
+					local Iu
+
+					Iu = RunService.RenderStepped:Connect(function()
+						if not workspace:IsAncestorOf(Vault) then
+							ItemName.Visible = false
+							RarityText.Visible = false
+							StatusText.Visible = false
+							DistanceText.Visible = false
+
+							Iu:Disconnect()
+						else
+							local Vector, OnScreen = Cam:WorldToViewportPoint(Vault:FindFirstChild("MainPart").Position)
+
+							if OnScreen then
+								ItemName.Position = Vector2.new(Vector.X, Vector.Y - 30)
+								RarityText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+								StatusText.Position = Vector2.new(Vector.X, Vector.Y - 0)
+								DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
+
+								ItemName.Visible = false
+								RarityText.Visible = false
+								StatusText.Visible = false
+								DistanceText.Visible = false
+
+								local ItemDistance = math.ceil((Vault:FindFirstChild("MainPart").Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
+
+								if ESPSettings.SafeESP.Enabled == true then
+									if ItemDistance < ESPSettings.SafeESP.Distance then
+										if RarityValue == 2 then
+											RarityText.Text = "Rarity: Good"
+											RarityText.Color = Color3.new(0, 2.5, 0)
+
+											if ESPSettings.SafeESP.SmallOnly == true then
+												ItemName.Visible = true
+												RarityText.Visible = true
+												StatusText.Visible = true
+												DistanceText.Visible = true
+											else
+												ItemName.Visible = false
+												RarityText.Visible = false
+												StatusText.Visible = false
+												DistanceText.Visible = false
+											end
+										elseif RarityValue == 3 then
+											RarityText.Text = "Rarity: Rare"
+											RarityText.Color = Color3.new(1, 0, 0)
+
+											if ESPSettings.SafeESP.BigOnly == true then
+												ItemName.Visible = true
+												RarityText.Visible = true
+												StatusText.Visible = true
+												DistanceText.Visible = true
+											else
+												ItemName.Visible = false
+												RarityText.Visible = false
+												StatusText.Visible = false
+												DistanceText.Visible = false
+											end
+										end
+
+										DistanceText.Text = "["..tostring(ItemDistance).."]"
+
+										if Vault.Values.Broken.Value == false then
+											StatusText.Text = "UnBroken"
+
+											ItemName.Visible = true
+											RarityText.Visible = true
+											StatusText.Visible = true
+											DistanceText.Visible = true
+
+										else
+											StatusText.Text = "Broken"
+
+											ItemName.Visible = false
+											RarityText.Visible = false
+											StatusText.Visible = false
+											DistanceText.Visible = false
+
+										end
+									else
+										ItemName.Visible = false
+										RarityText.Visible = false
+										StatusText.Visible = false
+										DistanceText.Visible = false
+									end
+								else
+									ItemName.Visible = false
+									RarityText.Visible = false
+									StatusText.Visible = false
+									DistanceText.Visible = false
+
+									Iu:Disconnect()
+								end
+							else
+								ItemName.Visible = false
+								RarityText.Visible = false
+								StatusText.Visible = false
+								DistanceText.Visible = false
+							end
+						end
+					end)
+				end
+				coroutine.wrap(InfoUpdate)()
+			end
+			
+
+			--  // RegisterESP 
+			local function RegisterESP(Register)
+				local ItemName = Drawing.new("Text")
+				ItemName.Visible = false
+				ItemName.Center = true
+				ItemName.Outline = true
+				ItemName.Font = 2
+				ItemName.Size = 13
+				ItemName.Color = Color3.new(1, 2.5, 2.5)
+				ItemName.Text = "Register"
+
+				local StatusText = Drawing.new("Text")
+				StatusText.Visible = false
+				StatusText.Center = true
+				StatusText.Outline = true
+				StatusText.Font = 2
+				StatusText.Size = 13
+				StatusText.Color = Color3.new(1, 2.5, 2.5)
+				StatusText.Text = "Status"
+
+				local DistanceText = Drawing.new("Text")
+				DistanceText.Visible = false
+				DistanceText.Center = true
+				DistanceText.Outline = true
+				DistanceText.Font = 2
+				DistanceText.Size = 13
+				DistanceText.Color = Color3.new(1, 2.5, 2.5)
+				DistanceText.Text = "Distance"
+
+				local function InfoUpdate()
+					local Iu
+
+					Iu = RunService.RenderStepped:Connect(function()
+						if not workspace:IsAncestorOf(Register) then
+							ItemName.Visible = false
+							StatusText.Visible = false
+							DistanceText.Visible = false
+
+							Iu:Disconnect()
+						else
+							local Vector, OnScreen = Cam:WorldToViewportPoint(Register:FindFirstChild("MainPart").Position)
+
+							if OnScreen then
+								ItemName.Position = Vector2.new(Vector.X, Vector.Y - 20)
+								StatusText.Position = Vector2.new(Vector.X, Vector.Y - 0)
+								DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
+
+								ItemName.Visible = false
+								StatusText.Visible = false
+								DistanceText.Visible = false
+
+								local ItemDistance = math.ceil((Register:FindFirstChild("MainPart").Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
+
+								if ESPSettings.RegisterESP.Enabled == true then
+									if ItemDistance < ESPSettings.RegisterESP.Distance then
+										ItemName.Visible = true
+										StatusText.Visible = true
+										DistanceText.Visible = true
+
+										DistanceText.Text = "["..tostring(ItemDistance).."]"
+
+										if Register.Values.Broken.Value == false then
+											StatusText.Text = "UnBroken"
+
+											ItemName.Visible = true
+											StatusText.Visible = true
+											DistanceText.Visible = true
+
+										else
+											StatusText.Text = "Broken"
+
+											ItemName.Visible = false
+											StatusText.Visible = false
+											DistanceText.Visible = false
+
+										end
+									else
+										ItemName.Visible = false
+										StatusText.Visible = false
+										DistanceText.Visible = false
+									end
+								else
+									ItemName.Visible = false
+									StatusText.Visible = false
+									DistanceText.Visible = false
+
+									Iu:Disconnect()
+								end
+							else
+								ItemName.Visible = false
+								StatusText.Visible = false
+								DistanceText.Visible = false
+							end
+						end
+					end)
+				end
+				coroutine.wrap(InfoUpdate)()
+			end
+--#endregion
+			
+
+			--Scrap Added
+			game:GetService("Workspace").Filter.SpawnedPiles.ChildAdded:Connect(function(Object)
+				if ESPSettings.ScrapESP.Enabled == true then
+					coroutine.wrap(ScrapESP)(Object)
+				end
+			end)
+			--Infinite Stamina
+			
+		local oldStamina
+		oldStamina =
+			hookfunction(
+				getupvalue(getrenv()._G.S_Take, 2),
+				function(v1, ...)
+					if (Settings.InfiniteStamina) then
+					v1 = 0
+				end
+					return oldStamina(v1, ...)
+				end
+			)
+		-- #endregion
+		local StaminaTake = getrenv()._G.S_Take
+        local StaminaFunc = getupvalue(StaminaTake, 2) 
+        
+        for i, v in pairs(getupvalues(StaminaFunc)) do
+            if type(v) == "function" and getinfo(v).name == "Upt_S" then
+                local OldFunction; 
+        
+                OldFunction = hookfunction(v, function(...)
+                    if Settings.InfiniteStamina == true then
+                        local CharacterVar = game:GetService("Players").LocalPlayer.Character
+						local CharacterVar2 = game:GetService("Players").LocalPlayer.CharacterAdded:wait()
+                        if not CharacterVar or not CharacterVar.Parent then
+        
+                            getupvalue(StaminaFunc, 6).S = 100
+                        elseif CharacterVar2 then
+                            getupvalue(StaminaFunc, 6).S = 100
+                        end
+                    end
+        
+                    return OldFunction(...)
+                end)
+            end
+        end
+			
+
+			--No Jump Cooldown
+			local __newindex
+			__newindex = hookmetamethod(game, "__newindex", function(t, k, v)
+				if (t:IsDescendantOf(Character) and k == "Jump" and v == false) then
+					if Settings.NoJumpCooldown == true then
+						return
+					end
+				end
+
+				return __newindex(t, k, v)
+			end)
+			
+-- #region Auto Pickup
+coroutine.wrap(function()
+	RunService.RenderStepped:Connect(function()
+		if Settings.AutoPickScrap == true then
+			for i, v in pairs(game:GetService("Workspace").Filter.SpawnedPiles:GetChildren()) do
+				if Settings.IsDead == false then
+					if (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - v:FindFirstChild("MeshPart").Position).Magnitude < 5 then
+						if CoolDowns.AutoPickUps.ScrapCooldown == false then
+							CoolDowns.AutoPickUps.ScrapCooldown = true
+							game:GetService("ReplicatedStorage").Events.PIC_PU:FireServer(string.reverse(v:GetAttribute("zp")))
+
+							wait(1)
+
+							CoolDowns.AutoPickUps.ScrapCooldown = false
+						end
+					end
+				end 
+			end
+		end
+	end)
+end)()
+
+coroutine.wrap(function()
+	RunService.RenderStepped:Connect(function()
+		if Settings.AutoPickTools == true then
+			for i, v in pairs(game:GetService("Workspace").Filter.SpawnedTools:GetChildren()) do
+				if Settings.IsDead == false then
+					if (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - v:FindFirstChildWhichIsA("MeshPart").Position).Magnitude < 5 then
+						if CoolDowns.AutoPickUps.ToolCooldown == false then
+							CoolDowns.AutoPickUps.ToolCooldown = true
+							game:GetService("ReplicatedStorage").Events.PIC_TLO:FireServer(v:FindFirstChildWhichIsA("MeshPart"))
+
+							wait(1)
+
+							CoolDowns.AutoPickUps.ToolCooldown = false
+						end
+					end
+				end
+			end
+		end
+	end)
+end)()
+
+coroutine.wrap(function()
+	RunService.RenderStepped:Connect(function()
+		if Settings.AutoPickCash == true then
+			for i, v in pairs(game:GetService("Workspace").Filter.SpawnedBread:GetChildren()) do
+				if Settings.IsDead == false then
+					if (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - v.Position).Magnitude < 5 then
+						if CoolDowns.AutoPickUps.MoneyCooldown == false then
+							CoolDowns.AutoPickUps.MoneyCooldown = true
+							game:GetService("ReplicatedStorage").Events.CZDPZUS:FireServer(v)
+
+							wait(1)
+
+							CoolDowns.AutoPickUps.MoneyCooldown = false
+						end
+					end
+				end
+			end
+		end
+	end)
+end)()
+-- #endregion
+
+			--FlashBang
+			game.Workspace.Camera.ChildAdded:Connect(function(Item)
+				if Settings.NoFlashbang == true then
+					if Item.Name == "BlindEffect" then
+						Item.Enabled = false
+					end
+				end
+			end)
+
+			game.Players.LocalPlayer.PlayerGui.ChildAdded:Connect(function(Item)
+				if Item.Name == "FlashedGUI" then
+					if Settings.NoFlashbang == true then
+						Item.Enabled = false
+					end
+				end
+			end)
+			
+
+			--Smoke
+			game.Workspace.Debris.ChildAdded:Connect(function(Item)
+				if Item.Name == "SmokeExplosion" then
+					if Settings.NoSmoke == true then
+						wait(0.1)
+						Item.Particle1:Destroy()
+						Item.Particle2:Destroy()
+					end
+				end
+			end)
+
+			game.Players.LocalPlayer.PlayerGui.ChildAdded:Connect(function(Item)
+				if Item.Name == "SmokeScreenGUI" then
+					if Settings.NoSmoke == true then
+						Item.Enabled = false
+					end
+				end
+			end)
+
+			--Pepper Spray Aura
+			coroutine.wrap(function()
+				RunService.RenderStepped:Connect(function()
+					wait(1)
+					if Settings.PepperSprayAura == true then
+						if Settings.IsDead == false then
+							if Player.Character:FindFirstChild("Pepper-spray") then
+								for i,v in pairs(Players:GetChildren()) do
+									if (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - v.Character:FindFirstChild("HumanoidRootPart").Position).Magnitude < 15 then
+										Character["Pepper-spray"].RemoteEvent:FireServer("Spray", true)
+										Character["Pepper-spray"].RemoteEvent:FireServer("Hit", v.Character)
+									else
+										Character["Pepper-spray"].RemoteEvent:FireServer("Spray", false)
+									end
+								end
+							end
+						end
+					end
+				end)
+			end)()
+			
+
+			--No Fail Lockpick
+			game.Players.LocalPlayer.PlayerGui.ChildAdded:Connect(function(Item)
+				if Settings.NoFailLockpick == true then
+					if Item.Name == "LockpickGUI" then
+						Item.MF["LP_Frame"].Frames.B1.Bar.UIScale.Scale = 10
+						Item.MF["LP_Frame"].Frames.B2.Bar.UIScale.Scale = 10
+						Item.MF["LP_Frame"].Frames.B3.Bar.UIScale.Scale = 10
+					end
+				elseif Settings.NoFailLockpick == false then
+					if Item.Name == "LockpickGUI" then
+						Item.MF["LP_Frame"].Frames.B1.Bar.UIScale.Scale = 1
+						Item.MF["LP_Frame"].Frames.B2.Bar.UIScale.Scale = 1
+						Item.MF["LP_Frame"].Frames.B3.Bar.UIScale.Scale = 1
+					end
+				end
+			end)
+			
+
+			--Dead Checker
+			game.Players.LocalPlayer.CharacterAdded:Connect(function(Character)
+				repeat wait() until game.Players.LocalPlayer.Character ~= nil and game.Players.LocalPlayer.Character.Parent ~= nil
+
+				Character = Player.Character
+				Settings.IsDead = false
+
+				Character:FindFirstChild("Humanoid").Died:Connect(function()
+
+						if Settings.IsDead == false then
+							Settings.IsDead = true 
+						end
+				end)
+			end)
+
+			if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character.Parent then
+				Settings.IsDead = false
+			end
+			
+
+            --Gun Mods
+			local function GunModules()
+				for i,v in pairs(getgc(true)) do 
+					if type(v) == 'table' and rawget(v, 'EquipTime') then 
+						if Settings.GunMods.NoRecoil == true then
+							coroutine.resume(coroutine.create(function()
+								v.Recoil = Settings.GunMods.Values.RecoilAmmount
+								v.CameraRecoilingEnabled = false
+								v.AngleX_Min = 0 
+								v.AngleX_Max = 0 
+								v.AngleY_Min = 0
+								v.AngleY_Max = 0
+								v.AngleZ_Min = 0
+								v.AngleZ_Max = 0
+							end))
+						end
+						if Settings.GunMods.Spread == true then
+							coroutine.resume(coroutine.create(function()
+								v.Spread = Settings.GunMods.Values.SpreadAmmount
+							end))
+						end
+						if Settings.GunMods.InstantEquip == true then
+							coroutine.resume(coroutine.create(function()
+								v.EquipTime = 0
+							end))
+						end
+						if Settings.GunMods.Removes.EquipAnim == true then
+							coroutine.resume(coroutine.create(function()
+								v.EquipAnimSpeed = 10000
+							end))
+						end
+						if Settings.GunMods.InstantAim == true then
+							coroutine.resume(coroutine.create(function()
+								v.AimSettings.AimSpeed = 0
+							end))
+							coroutine.resume(coroutine.create(function()
+								v.SniperSettings.AimSpeed = 0
+							end))
+						if Settings.GunMods.Removes.AimAnim == true then
+							coroutine.resume(coroutine.create(function()
+								v.SniperSettings.AimAnimSpeed = 10000
+							end))
+						end
+						end
+					end
+				end
+			end
+		
+		game:GetService("Players").LocalPlayer.CharacterAdded:Connect(function(Character)
+			Character.ChildAdded:Connect(function(Object)
+				if Object:IsA("Tool") then
+					GunModules()
+				end
+			end)
+		end)
+		
+		if game:GetService("Players").LocalPlayer.Character ~= nil then
+			game:GetService("Players").LocalPlayer.Character.ChildAdded:Connect(function(Object)
+				if Object:IsA("Tool") then
+					GunModules()
+				end
+			end)
+		end
+
+            coroutine.resume(coroutine.create(function()
+				RunService.RenderStepped:Connect(function()
+					if SilentSettings.FOVSettings.Visible then 
+						SilentAIMFov.Visible = SilentSettings.FOVSettings.Visible
+						SilentAIMFov.Color = SilentSettings.SilentAimColor
+						SilentAIMFov.Position = GetMousePosition() + Vector2.new(0, 36)
+					end
+				end)
+			end))
+
+			local oldNamecall
+			oldNamecall = hookmetamethod(game, "__namecall", function(...)
+				local Method = getnamecallmethod()
+				local Arguments = {...}
+				local self = Arguments[1]
+	
+				if SilentSettings.Main.Enabled and self == workspace then
+					if Method == "Raycast" then
+						if ValidateArguments(Arguments, ExpectedArguments.Raycast) then
+							local A_Origin = Arguments[2]
+	
+							local HitPart = GetClosestPlayer()
+							if HitPart then
+								Arguments[3] = GetDirection(A_Origin, HitPart.Position)
+	
+								return oldNamecall(unpack(Arguments))
+							end
+						end
+					end
+				end
+				return oldNamecall(...)
+			end)
+
+			-- #region Anti Stuff
+
+		local MT = getrawmetatable(game)
+		setreadonly(MT, false)
+		local NameCall = MT.__namecall
+
+		MT.__namecall = newcclosure(function(self, ...)
+			local Method = getnamecallmethod()
+			local Args = {...}
+
+			if Method == "FireServer" and Args[1] == "BHHh" then
+				if Settings.NoBarbwire == true then
+					return wait(9e9)
+				end	
+			elseif Method == "FireServer" and Args[1] == "FlllD" or Args[1] == "FlllH" then
+				if Settings.NoFallDamage == true then
+					return wait(9e9)
+				end
+			elseif Method == "FireServer" and Args[1] == "__--r" or Args[1] == "HITRGP" then
+				if Settings.NoRagdoll == true then
+					return wait(9e9)
+				end
+			elseif Method == "FireServer" and Args[1] == "FllH" then
+				if Settings.NoDowned == true then
+					return wait(9e9)
+				end
+			end
+
+			return NameCall(self, ...)
+		end)
+			
+
+			--Anti Afk
+			local VirtualUser = game:GetService("VirtualUser")
+
+			Player.Idled:connect(function()
+				VirtualUser:Button2Down(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+				wait(1)
+				VirtualUser:Button2Up(Vector2.new(0,0), workspace.CurrentCamera.CFrame)
+			end)
+			
+            --DealerESP
+			LibraryESP:AddObjectListener(workspace.Map.Shopz, {
+				Name = "Dealer",
+				CustomName = "Dealer",
+				Color = Color3.fromRGB(197, 253, 255),
+				IsEnabled = "DealerESP"
+			})
+
+			LibraryESP:AddObjectListener(workspace.Map.Shopz, {
+				Name = "ArmoryDealer",
+				CustomName = "Armory Dealer",
+				Color = Color3.fromRGB(158, 168, 255),
+				IsEnabled = "ArmoryDealerESP"
+			})
+			
+
+			--AtmESP 
+			LibraryESP:AddObjectListener(workspace.Map.ATMz, {
+				Name = "ATM",
+				CustomName = "ATM",
+				Color = Color3.fromRGB(197, 255, 120),
+				IsEnabled = "AtmESP"
+			})
+
+
+			RunService.RenderStepped:Connect(function()
+					
+				if Settings.CamFovToggled == true then
+					game.Workspace.Camera.FieldOfView = Settings.CamFov
+				else
+					game.Workspace.Camera.FieldOfView = 70
+				end
+
+				if Settings.FullBright == true then
+					game:GetService("Lighting").Brightness = 1
+					game:GetService("Lighting").ClockTime = 14
+					game:GetService("Lighting").FogEnd = 100000
+					game:GetService("Lighting").GlobalShadows = false
+					game:GetService("Lighting").OutdoorAmbient = Color3.fromRGB(128, 128, 128)
+				end
+
+				if Settings.UnlockDoorsNearby == true then
+					if Settings.IsDead == false then
+						for i, v in pairs(game:GetService("Workspace").Map.Doors:GetChildren()) do
+							if (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - v:FindFirstChild("DoorBase").Position).Magnitude <= 5 then
+								if v:FindFirstChild("Values"):FindFirstChild("Locked").Value == true then
+									v:FindFirstChild("Events"):FindFirstChild("Toggle"):FireServer("Unlock", v.Lock)
+								end
+							end
+						end
+					end
+				end
+
+				if Settings.OpenDoorsNearby == true then
+					if Settings.IsDead == false then
+						for i, v in pairs(game:GetService("Workspace").Map.Doors:GetChildren()) do
+							if (game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart").Position - v:FindFirstChild("DoorBase").Position).Magnitude <= 5 then
+								if v:FindFirstChild("Values"):FindFirstChild("Open").Value == false then
+									v:FindFirstChild("Events"):FindFirstChild("Toggle"):FireServer("Open", v.Knob2)
+								end
+							end
+						end
+					end
+				end
+
+				if Settings.IsDead == false then
+					if Player.Character:FindFirstChild("Pepper-spray") then
+						if Settings.InfinitePepperSpray == true then
+							game.Players.LocalPlayer.Character["Pepper-spray"].Ammo.Value = 100
+							game.Players.LocalPlayer.Character["Pepper-spray"].RemoteEvent:FireServer("Update", 100)
+						end
+					end
+				end
+
+				if Settings.IsDead == false then
+					if Settings.WalkSpeed.Enabled == true then
+						Player.Character:FindFirstChild("Humanoid").WalkSpeed = Settings.WalkSpeed.Amount
+					end
+
+					if Settings.JumpPower.Enabled == true then
+						Player.Character:FindFirstChild("Humanoid").JumpPower = Settings.JumpPower.Amount
+					end
+				end
+
+
+				if Player.PlayerGui:FindFirstChild("MouseGUI") then
+					Player.PlayerGui:FindFirstChild("MouseGUI").HitmarkerSound.Volume = Settings.VolumeHitsound
+					Player.PlayerGui:FindFirstChild("MouseGUI").HeadshotSound.Volume = Settings.VolumeHitsound
+				end
+			end)
+--#region AuraHits
+
+--#region BreakSafe
+local function AutoBreakSafe(Safe)
+	local HitArgs = {}
+	HitArgs[1] = "\240\159\154\168"
+	HitArgs[2] = tick()
+	HitArgs[3] = Character:FindFirstChild("Crowbar")
+	HitArgs[4] = "2389ZFX33"
+	HitArgs[5] = GenerateSeed("BreakSafe")
+	HitArgs[6] = false
+	HitArgs[7] = Character:FindFirstChild("Crowbar"):FindFirstChild("Handle")
+	HitArgs[8] = Safe.MainPart
+	HitArgs[9] = Safe
+	HitArgs[10] = Safe.MainPart.Position
+	HitArgs[11] = Safe.MainPart.Position
+	for i=1, 4 do
+		ReplicatedStorage.Events["XMHH2.1"]:FireServer(unpack(HitArgs))
+    end
+end
+task.spawn(function()
+while wait(1) do
+	if Settings.AutoBreakSafes then
+		pcall(function()
+			local ClosesSafe, ValuesFolder = ClosestSafe(5)
+				if Character:FindFirstChild("Crowbar") then
+					if ValuesFolder.Broken.Value == false then
+						if (ClosesSafe.MainPart.Position - Character.HumanoidRootPart.Position).magnitude < 5 then
+							AutoBreakSafe(ClosesSafe)
+						end
+					end
+				end
+			end)
+		end
+	end
+end)
+--#endregion
+--#region KillAura
+local function KillAura(Target)
+	local HitArgs = {}
+    HitArgs[1] = "\240\159\154\168"
+    HitArgs[2] = tick()
+    HitArgs[3] = Character:FindFirstChildOfClass("Tool")
+    HitArgs[4] = "2389ZFX33"
+    HitArgs[5] = GenerateSeed("Hit")
+    HitArgs[6] = false
+    HitArgs[7] = Character["Left Arm"]
+    HitArgs[8] = Target["Head"]
+    HitArgs[9] = Target
+    HitArgs[10] = Target["Head"].Position
+    HitArgs[11] = Target["Head"].Position
+    for i=1, 4 do
+		ReplicatedStorage.Events["XMHH2.1"]:FireServer(unpack(HitArgs))
+    end
+end
+
+task.spawn(function()
+    while wait(0.07) do
+        if Settings.Killaura then
+            pcall(function()
+                for _,v in next, Players:GetChildren() do
+                    if v.Character and v~=Player then
+                        if v.Character:FindFirstChildOfClass("Humanoid") and v.Character:FindFirstChild("HumanoidRootPart") then
+                            if v.Character.Humanoid.Health > 4 then
+                                if (v.Character.HumanoidRootPart.Position - Character.HumanoidRootPart.Position).magnitude < 20 then
+                                    KillAura(v.Character)
+                                end
+                            end
+                        end
+                    end
+                end
+            end)
+        end
+    end
+end)
+--#enderegion
+
+--#region TpHit
+local function Hit(Target, Part, Debounce, Debounce2)
+	local BackTp = Character.HumanoidRootPart.CFrame
+	local Seed = GenerateSeed("Hit")
+	wait(Debounce)
+		Character.HumanoidRootPart.CFrame = Target["HumanoidRootPart"].CFrame + Vector3.new(0,2,0)
+		wait(Debounce2)
+
+        for _,v in next, Players:GetChildren() do if v ~= Player and v.Character then if v.Character:FindFirstChildOfClass("Humanoid") then
+            if (Character.HumanoidRootPart.Position - v.Character.HumanoidRootPart.Position).magnitude < 15 then
+		
+				local HitArgs = {}
+				HitArgs[1] = "\240\159\154\168"
+				HitArgs[2] = time
+				HitArgs[3] = Character:FindFirstChildOfClass("Tool")
+				HitArgs[4] = "2389ZFX33"
+				HitArgs[5] = Seed
+				HitArgs[6] = false
+				HitArgs[7] = Character["Right Arm"]
+				HitArgs[8] = v.Character[Part]
+				HitArgs[9] = v.Character
+				HitArgs[10] = Character["Right Arm"].Position
+				HitArgs[11] = v.Character[Part].Position
+				ReplicatedStorage.Events["XMHH2.1"]:FireServer(unpack(HitArgs)) ReplicatedStorage.Events["XMHH2.1"]:FireServer(unpack(HitArgs)) 
+				ReplicatedStorage.Events["XMHH2.1"]:FireServer(unpack(HitArgs)) ReplicatedStorage.Events["XMHH2.1"]:FireServer(unpack(HitArgs))
+			end
+		end
+	end
+end
+	Character.HumanoidRootPart.CFrame = BackTp
+end
+
+local function Get(String)
+    local Found
+    local strl = String:lower()
+
+        for i,v in next, Players:GetChildren() do
+            if v.Name:lower():sub(1, #String) == String:lower() or v.DisplayName:lower():sub(1, #String) == String:lower() then
+                Found = v.Character
+            end
+		end
+
+    return Found  
+end
+--#endregion
+--#enderegion
+
+local meta, old = getrawmetatable(game), {};
+            for i, v in next, meta do old[i] = v end;
+            
+            local char = '˞';
+            
+            setreadonly(meta, false);
+            
+            meta.__namecall = newcclosure(function(...)
+                local method = getnamecallmethod();
+                local args = {...};
+            
+                if method == 'FireServer' and args[1].Name == 'SayMessageRequest' and Settings.EZBypass then
+                    args[2] = string.gsub(args[2], 'ez', function(c)
+                        return char .. c;
+                    end);
+                    args[2] = string.gsub(args[2], 'Ez', function(c)
+                        return char .. c;
+                    end);
+                    args[2] = string.gsub(args[2], 'eZ', function(c)
+                        return char .. c;
+                    end);
+                    args[2] = string.gsub(args[2], 'EZ', function(c)
+                        return char .. c;
+                    end);
+            
+                    return old.__namecall(unpack(args));
+                end;
+            
+                return old.__namecall(...);
+            end);
+	setreadonly(meta, true);
+
+
+local SShub = Library:CreateWindow(Name, Vector2.new(492, 600))
+CoreGui:FindFirstChild(Name).main.top.title.Text = Name.."|"..GameName.."|"
+local General = SShub:CreateTab("General")
+local Combat = SShub:CreateTab("Combat")
+local Misc = SShub:CreateTab("Misc")
+local Visuals = SShub:CreateTab("Visuals")
+local Teleports = SShub:CreateTab("Teleports")
+local Settingss = SShub:CreateTab("Settings")
+
+local MainL = General:CreateSector("Player", "left")
+local MainL2 = General:CreateSector("Anti Stuff", "right")
+
+local MainCo = Combat:CreateSector("SilentAim", "left")
+local MainGun = Combat:CreateSector("Mods", "right")
+local MainAur = Combat:CreateSector("Stuff", "right")
+
+local MainMs = Misc:CreateSector("Misc", "left")
+local MainAu = Misc:CreateSector("Auto Farms", "right")
+
+local MainP = Visuals:CreateSector("Player ESP", "left")
+local MainScrap = Visuals:CreateSector("Scrap ESP", "right")
+local MainSafes = Visuals:CreateSector("Safes ESP", "right")
+local MainRegister = Visuals:CreateSector("Register ESP", "right")
+local MainTStock = Visuals:CreateSector("Stock ESP", "left")
+
+local MainTele = Teleports:CreateSector("Teleports", "right")
+local MainT = Teleports:CreateSector("Teleports", "left")
+local MainT1 = Teleports:CreateSector("Closests Teleportation", "left")
+
+local MainC = Settingss:CreateSector("Credits", "left")
+local MainUI = Settingss:CreateSector("UI", "left")
+Settingss:CreateConfigSystem("right")
+
+local InfStamina = MainL:AddToggle("Infinite Stamina", Settings.InfiniteStamina, function(V)
+	Settings.InfiniteStamina = V
+end, "InfiniteStamina")
+InfStamina:AddKeybind("None", "InfiniteStamina Keybind")
+
+MainL:AddToggle("No Jump Cooldown", Settings.NoJumpCooldown, function(V)
+	Settings.NoJumpCooldown = V
+end,"NoJumpCooldown")
+
+MainL:AddToggle("Infinite Jump", Settings.SpaceJump, function(V)
+	Settings.SpaceJump = V
+
+	game:GetService("UserInputService").JumpRequest:connect(function()
+		if Settings.SpaceJump == true then
+			game:GetService"Players".LocalPlayer.Character:FindFirstChildOfClass'Humanoid':ChangeState("Jumping")
+		end
+	end)
+end,"InfiniteJump")
+
+MainL:AddToggle("Full Brightness", Settings.FullBright, function(V)
+	Settings.FullBright = V
+end, "FullBright")
+
+local LockPickNofail = MainL:AddToggle("No Fail Lockpick", Settings.NoFailLockpick, function(V)
+	Settings.NoFailLockpick = V
+end,"NoFailLockPick")
+LockPickNofail:AddKeybind("None", "NoFailLockPick Keybind")
+
+MainL:AddToggle("No Flash", Settings.NoFlashbang, function(V)
+	Settings.NoFlashbang = V
+end,"NoFlash")
+
+MainL:AddToggle("No Smoke", Settings.NoSmoke, function(V)
+	Settings.NoSmoke = V
+end,"NoSmoke")
+
+MainL:AddSlider("Camera Max Zoom", 10, Settings.Zoom, 3000, 10, function(V)
+	Player.CameraMaxZoomDistance = V
+end,"CameraZoom")
+
+local AntiDowned = MainL2:AddToggle("Anti Downed", false, function(V)
+	Settings.NoDowned = V
+end, "AntiDowned")
+AntiDowned:AddKeybind("None", "AntiDowned Keybind")
+
+local AntiStomp = MainL2:AddToggle("Anti Stomp", false, function(V)
+	Settings.AntiStomp = V
+	local Downed = ReplicatedStorage.CharStats[game:GetService("Players").LocalPlayer.Name].Downed
+	Downed.Changed:Connect(function()
+		if Downed.Value == true and Settings.AntiStomp == true then
+			for i, v in pairs(game:GetService("Players").LocalPlayer.Character:GetChildren()) do
+				if v:IsA("BasePart") then
+					v:Destroy()
+				end
+			end
+		end
+	end)
+end, "AntiStomp")
+
+AntiStomp:AddKeybind("None", "AntiStomp Keybind")
+
+local DisableBarbwire = MainL2:AddToggle("Disable Barbwire", Settings.NoBarbwire, function(V)
+	Settings.NoBarbwire = V
+end, "DisableBarbwire")
+DisableBarbwire:AddKeybind("None", "DisableBarbwire Keybind")
+local DisableFall = MainL2:AddToggle("Disable Fall Damage", Settings.NoFallDamage, function(V)
+	Settings.NoFallDamage = V
+end, "DisableFall")
+DisableFall:AddKeybind("None", "DisableFall Keybind")
+local DisableRagdoll = MainL2:AddToggle("Disable Ragdoll", Settings.NoRagdoll, function(V)
+	Settings.NoRagdoll = V
+end, "DisableRagdoll")
+DisableRagdoll:AddKeybind("None", "DisableRagdoll Keybind")
+
+MainL:AddSeperator("Player Mods")
+local FovToggle = MainL:AddToggle("Fov", Settings.CamFovToggled, function(V)
+	Settings.CamFovToggled = V
+end, "FieldOfView")
+
+FovToggle:AddKeybind("None", "FieldOfView Keybind")
+
+MainL:AddSlider("Field Of View", 70, Settings.CamFov, 120, 10, function(V)
+	Settings.CamFov = V
+end,"FieldOfViewSlider")
+
+local WalkSpeedToggle = MainL:AddToggle("WalkSpeed Toggler", Settings.WalkSpeed.Enabled, function(V)
+	Settings.WalkSpeed.Enabled = V
+end, "WalkSpeed")
+
+WalkSpeedToggle:AddKeybind("None", "WalkSpeed Keybind")
+
+local JumpPowerToggle = MainL:AddToggle("JumpPower Toggler", Settings.JumpPower.Enabled, function(V)
+	Settings.JumpPower.Enabled = V
+end, "JumpPower")
+
+JumpPowerToggle:AddKeybind("None", "JumpPower Keybind")
+
+MainL:AddSlider("WalkSpeed", 16, Settings.WalkSpeed.Amount, 100, 10, function(V)
+	Settings.WalkSpeed.Amount = V
+end,"WalkSpeedAmmountSlider")
+
+MainL:AddSlider("JumpPower", 30, Settings.JumpPower.Amount, 150, 10, function(V)
+	Settings.JumpPower.Amount = V
+end,"JumpPowerAmmountSlider")
+
+local AutoScrap = MainAu:AddToggle("Auto Pick Scrap", Settings.AutoPickScrap, function(V)
+	Settings.AutoPickScrap = V
+end, "AutoPickScrap")
+AutoScrap:AddKeybind("None", "AutoPickScrap Keybind")
+
+local AutoTools = MainAu:AddToggle("Auto Pick Tools", Settings.AutoPickTools, function(V)
+	Settings.AutoPickTools = V
+end, "AutoPickTools")
+AutoTools:AddKeybind("None", "AutoPickTools Keybind")
+
+local AutoCash = MainAu:AddToggle("Auto Pick Cash", Settings.AutoPickCash, function(V)
+	Settings.AutoPickCash = V
+end, "AutoPickCash")
+AutoCash:AddKeybind("None", "AutoPickCash Keybind")
+
+local AutoSafes = MainAu:AddToggle("Auto Break Safes", Settings.AutoBreakSafes, function(V)
+	Settings.AutoBreakSafes = V
+end, "AutoBreakSafes")
+AutoSafes:AddKeybind("None", "AutoBreakSafes Keybind")
+
+MainMs:AddToggle("Chat Logs", Settings.ShowChatLogs, function(V)
+	Settings.ShowChatLogs = V
+
+	if V == true then
+		local ChatFrame = game.Players.LocalPlayer.PlayerGui.Chat.Frame
+		ChatFrame.ChatChannelParentFrame.Visible = true
+		ChatFrame.ChatBarParentFrame.Position = ChatFrame.ChatChannelParentFrame.Position + UDim2.new(UDim.new(), ChatFrame.ChatChannelParentFrame.Size.Y)
+	elseif V == false then
+		local ChatFrame = game.Players.LocalPlayer.PlayerGui.Chat.Frame
+		ChatFrame.ChatChannelParentFrame.Visible = false
+		ChatFrame.ChatBarParentFrame.Position = ChatFrame.ChatChannelParentFrame.Position + UDim2.new(0, 0, 0, 0)
+	end
+end,"ChatLogs")
+MainMs:AddToggle("Ez Bypass", Settings.EZBypass, function(V)
+	Settings.EZBypass = V
+end,"EzByPass")
+MainMs:AddSeperator("Doors")
+MainMs:AddToggle("Unlock Nearby Doors", Settings.UnlockDoorsNearby, function(V)
+	Settings.UnlockDoorsNearby = V
+end,"UnlockNearbyDoors")
+
+MainMs:AddToggle("Open Nearby Doors", Settings.OpenDoorsNearby, function(V)
+	Settings.OpenDoorsNearby = V
+end,"OpenNearbyDoors")
+
+MainMs:AddToggle("NoClip Doors", Settings.NoClipD, function(V)
+	Settings.NoClipD = V
+
+	if Settings.NoClipD == true then
+		for _, v in pairs(game:GetService("Workspace").Map.Doors:GetChildren()) do
+			if v:FindFirstChild("DoorBase") then
+				v.DoorBase.CanCollide = false
+			end
+			if v:FindFirstChild("DoorA") then
+				v.DoorA.CanCollide = false
+			end
+			if v:FindFirstChild("DoorB") then
+				v.DoorB.CanCollide = false
+			end
+			if v:FindFirstChild("DoorC") then
+				v.DoorC.CanCollide = false
+			end
+			if v:FindFirstChild("DoorD") then
+				v.DoorD.CanCollide = false
+			end
+		end
+	else
+		for _, v in pairs(game:GetService("Workspace").Map.Doors:GetChildren()) do
+			if v:FindFirstChild("DoorBase") then
+				v.DoorBase.CanCollide = true
+			end
+			if v:FindFirstChild("DoorA") then
+				v.DoorA.CanCollide = true
+			end
+			if v:FindFirstChild("DoorB") then
+				v.DoorB.CanCollide = true
+			end
+			if v:FindFirstChild("DoorC") then
+				v.DoorC.CanCollide = true
+			end
+			if v:FindFirstChild("DoorD") then
+				v.DoorD.CanCollide = true
+			end
+		end
+	end
+end,"DoorNoClip")
+
+MainGun:AddToggle("No Recoil", Settings.GunMods.NoRecoil, function(V)
+	Settings.GunMods.NoRecoil = V
+end,"NoRecoil")
+
+MainGun:AddSlider("Recoil Ammount", 0, Settings.GunMods.Values.RecoilAmmount, 50, 10, function(V)
+	Settings.GunMods.Values.RecoilAmmount = V
+end,"RecoilAmmountSlider")
+
+MainGun:AddToggle("No Spread", Settings.GunMods.Spread, function(V)
+	Settings.GunMods.Spread = V
+end,"NoSpread")
+
+MainGun:AddSlider("Spread Ammount", 0, Settings.GunMods.Values.SpreadAmmount, 50, 10, function(V)
+	Settings.GunMods.Values.SpreadAmmount = V
+end,"SpreadAmmountSlider")
+
+MainGun:AddToggle("Instant Equip", Settings.GunMods.InstantEquip, function(V)
+	Settings.GunMods.InstantEquip = V
+end,"InstantEquip")
+
+MainGun:AddToggle("Remove Equip Animation", Settings.GunMods.InstantEquip, function(V)
+	Settings.GunMods.Removes.EquipAnim = V
+end,"RemoveEquiAnimation")
+
+MainGun:AddToggle("Instant Aim", Settings.GunMods.InstantAim, function(V)
+	Settings.GunMods.InstantAim = V
+end,"InstantAim")
+
+MainGun:AddToggle("Remove Aim Ainimation", Settings.GunMods.InstantEquip, function(V)
+	Settings.GunMods.Removes.AimAnim = V
+end,"RemoveAimAnimation")
+
+MainGun:AddSeperator("xd")
+MainGun:AddToggle("Wall Bang", Settings.WallBang, function(V)
+	Settings.WallBang = V
+	if V == true then
+		game:service[[Workspace]]:FindFirstChild('Map'):FindFirstChild('Parts'):FindFirstChild('M_Parts').Parent = game:service[[Workspace]]:FindFirstChild('Characters')
+	elseif V == false then
+		game:service[[Workspace]]:FindFirstChild('Characters'):FindFirstChild('M_Parts').Parent = game:service[[Workspace]]:FindFirstChild('Map'):FindFirstChild('Parts')
+	end
+end,"WallBang")
+
+MainGun:AddButton("Melee God Mode", function()
+	loadstring(game:HttpGet("https://raw.githubusercontent.com/Tobias020108Back/YBA-AUT/main/Criminality-Semi-Godmode.lua", true))()
+end)
+
+MainGun:AddSeperator("Pepper Spray")
+MainGun:AddToggle("Infinite Pepper Spray", Settings.InfinitePepperSpray, function(V)
+	Settings.InfinitePepperSpray = V
+end,"InfinitePepperSpray")
+
+MainGun:AddToggle("Pepper Spray Aura", Settings.PepperSprayAura, function(V)
+	Settings.PepperSprayAura = V
+end,"PepperSprayAura")
+--Silent Aim
+local SilentToggle = MainCo:AddToggle("Silent Aim", SilentSettings.Main.Enabled, function(V)
+	SilentSettings.Main.Enabled = V
+end, "SilentAimToggle")
+
+SilentToggle:AddKeybind("None", "SilentAimToggle Keybind")
+
+local VisibleCheck = MainCo:AddToggle("Visible Check", false, function(V)
+	 SilentSettings.Main.VisibleCheck = V
+end, "VisibleCheck")
+VisibleCheck:AddKeybind("None", "VisibleCheck Keybind")
+MainCo:AddDropdown("Hit Part", {"Head", "Torso", "Random"}, "Head", false, function(V)
+	SilentSettings.Main.TargetPart = V
+end,"HitPartSilentAim")
+
+MainCo:AddSeperator("Fov Settings")
+
+local SilentAimToggle = MainCo:AddToggle("Silent Aim Fov", SilentSettings.FOVSettings.Visible, function(V)
+	SilentSettings.FOVSettings.Visible = V
+	SilentAIMFov.Visible = V
+end, "SilentAimFov")
+
+SilentAimToggle:AddKeybind("None", "SilentAimFov Keybind")
+
+MainCo:AddSlider("Radius", 5, SilentSettings.FOVSettings.Radius, 1080, 10, function(V)
+	SilentSettings.FOVSettings.Radius = V
+	SilentAIMFov.Radius = V
+end,"RadiusSilentAim")
+
+local KillAuraT = MainAur:AddToggle("KillAura", Settings.Killaura, function(V)
+	Settings.Killaura = V
+end, "KillAura")
+
+KillAuraT:AddKeybind("None", "KillAura Keybind")
+
+MainAur:AddSeperator("Tp Hit")
+
+MainAur:AddTextbox("Player", false, function(V)
+	Settings.TpHit.Name = V
+	Notify(NS.Title,NS.Icon,"Tp Hit", "Current Player is: "..Settings.TpHit.Name,5)
+end,"TpHitPlayer")
+
+MainAur:AddDropdown("Weapon", {"Fists", "FireAxe", "Chainsaw", "Bat"}, Settings.TpHit.Weapon, false, function(V)
+	Settings.TpHit.Weapon = V
+end,"TpHitDropDownWep")
+
+MainAur:AddDropdown("Hit Part", {"Head", "Torso"}, Settings.TpHit.HitPart, false, function(V)
+	Settings.TpHit.HitPart = V
+end,"TpHitDropDownPart")
+
+MainAur:AddButton("Tp Hit", function()
+local Target = Get(Settings.TpHit.Name)
+	if Settings.TpHit.Weapon == "Fists" then
+		Hit(Target, Settings.TpHit.HitPart, Settings.TpHit.Configs.Fists, Settings.TpHit.Configs.Fists[2])
+	elseif Settings.TpHit.Weapon == "FireAxe" then
+		Hit(Target, Settings.TpHit.HitPart, Settings.TpHit.Configs.FireAxe, Settings.TpHit.Configs.FireAxe[2])
+	elseif Settings.TpHit.Weapon == "Chainsaw" then
+		Hit(Target, Settings.TpHit.HitPart, Settings.TpHit.Configs.Chainsaw, Settings.TpHit.Configs.Chainsaw[2])
+	elseif Settings.TpHit.Weapon == "Bat" then
+		Hit(Target, Settings.TpHit.HitPart, Settings.TpHit.Configs.Bat, Settings.TpHit.Configs.Bat[2])
+	end
+end)
+
+--Player Visuals
+local PlayerESPsToggle = MainP:AddToggle("Toggle ESP's", ESPSettings.PlayerESP.Enabled, function(V)
+	ESPSettings.PlayerESP.Enabled = V
+
+	LibraryESP.Tracers = ESPSettings.PlayerESP.TracersOn
+	LibraryESP.Names = ESPSettings.PlayerESP.NamesOn
+	LibraryESP.Health = ESPSettings.PlayerESP.HealthOn
+	LibraryESP.Distance = ESPSettings.PlayerESP.DistanceOn
+	LibraryESP.Tool = ESPSettings.PlayerESP.ToolOn
+	LibraryESP.Boxes = ESPSettings.PlayerESP.BoxesOn
+	LibraryESP.FaceCamera = ESPSettings.PlayerESP.FaceCamOn
+	LibraryESP:Toggle(ESPSettings.PlayerESP.Enabled)
+end, "PlayerESPsToggle")
+
+PlayerESPsToggle:AddKeybind("None", "PlayerESPsToggle Keybind")
+
+MainP:AddSlider("ESP Distance", 0, ESPSettings.PlayerESP.Distance, 2000, 10, function(V)
+	LibraryESP.DistanceS = V
+	ESPSettings.PlayerESP.Distance = V
+end,"ESPDistance")
+
+local BoxColor = MainP:AddToggle("Boxes", ESPSettings.PlayerESP.BoxesOn, function(V)
+	ESPSettings.PlayerESP.BoxesOn = V
+	LibraryESP.Boxes = ESPSettings.PlayerESP.BoxesOn
+end,"BoxesES")
+
+BoxColor:AddColorpicker(ESPSettings.PlayerESP.Colors.BoxColor, function(V)
+	ESPSettings.PlayerESP.Colors.BoxColor = V
+end,"BoxESColor")
+
+local TracerColor = MainP:AddToggle("Tracers", ESPSettings.PlayerESP.TracersOn, function(V)
+	ESPSettings.PlayerESP.TracersOn = V
+	LibraryESP.Tracers = ESPSettings.PlayerESP.TracersOn
+end,"TracersES")
+
+TracerColor:AddColorpicker(ESPSettings.PlayerESP.Colors.TracerColor, function(V)
+	ESPSettings.PlayerESP.Colors.TracerColor = V
+end,"TracersESColor")
+
+local NameColor = MainP:AddToggle("Name", ESPSettings.PlayerESP.NamesOn, function(V)
+	ESPSettings.PlayerESP.NamesOn = V
+	LibraryESP.Names = ESPSettings.PlayerESP.NamesOn
+end,"NameES")
+
+NameColor:AddColorpicker(ESPSettings.PlayerESP.Colors.NameColor, function(V)
+	ESPSettings.PlayerESP.Colors.NameColor = V
+end,"NameESColor")
+
+local HealthColor = MainP:AddToggle("Health", ESPSettings.PlayerESP.HealthOn, function(V)
+	ESPSettings.PlayerESP.HealthOn = V
+	LibraryESP.Health = ESPSettings.PlayerESP.HealthOn
+end,"HealthES")
+
+HealthColor:AddColorpicker(ESPSettings.PlayerESP.Colors.HealthColor, function(V)
+	ESPSettings.PlayerESP.Colors.HealthColor = V
+end,"HealthESColor")
+
+local DistanceColor = MainP:AddToggle("Distance", ESPSettings.PlayerESP.DistanceOn, function(V)
+	ESPSettings.PlayerESP.DistanceOn = V
+	LibraryESP.Distance = ESPSettings.PlayerESP.DistanceOn
+end,"DistanceES")
+
+DistanceColor:AddColorpicker(ESPSettings.PlayerESP.Colors.DistanceColor, function(V)
+	ESPSettings.PlayerESP.Colors.DistanceColor = V
+end,"DistanceESColor")
+
+local ToolColor = MainP:AddToggle("Tool", ESPSettings.PlayerESP.ToolOn, function(V)
+	ESPSettings.PlayerESP.ToolOn = V
+	LibraryESP.Tool = ESPSettings.PlayerESP.ToolOn
+end,"ToolES")
+
+ToolColor:AddColorpicker(ESPSettings.PlayerESP.Colors.ToolColor, function(V)
+	ESPSettings.PlayerESP.Colors.ToolColor = V
+end,"ToolESColor")
+
+MainP:AddToggle("Face Cam", ESPSettings.PlayerESP.FaceCamOn, function(V)
+	ESPSettings.PlayerESP.FaceCamOn = V
+	LibraryESP.FaceCamera = ESPSettings.PlayerESP.FaceCamOn
+end,"FaceCamES")
+
+MainP:AddSeperator("Dealer")
+
+MainP:AddToggle("Illegal Dealer", false, function(V)
+	LibraryESP.DealerESP = V
+end,"IllegalDealerESP")
+
+MainP:AddToggle("Armory Dealer", false, function(V)
+	LibraryESP.ArmoryDealerESP = V
+end,"ArmoryDealerESP")
+
+MainP:AddToggle("ATM ESP", false, function(V)
+	LibraryESP.AtmESP = V
+end,"ATMESP")
+
+
+--Scrap Visuals
+local ScrapESPToggle = MainScrap:AddToggle("Scrap ESP", ESPSettings.ScrapESP.Enabled, function(V)
+	ESPSettings.ScrapESP.Enabled = V
+
+	if V == true then
+		for i, v in pairs(game:GetService("Workspace").Filter.SpawnedPiles:GetChildren()) do
+			coroutine.wrap(ScrapESP)(v)
+		end
+	end
+end, "ScrapESPToggle")
+ScrapESPToggle:AddKeybind("None", "ScrapESPToggle Keybind")
+MainScrap:AddSeperator("Rarity")
+
+local BadScrapColor = MainScrap:AddToggle("Bad Only", ESPSettings.ScrapESP.BadOnly, function(V)
+	ESPSettings.ScrapESP.BadOnly = V
+end,"BadOnly")
+
+BadScrapColor:AddColorpicker(ESPSettings.ScrapESP.RarityColors.Bad, function(V)
+	ESPSettings.ScrapESP.RarityColors.Bad = V
+end,"BadScrapColor")
+
+-- MainScrap:AddSeperator("Distance")
+
+MainScrap:AddSlider("Scrap Distance", 0, ESPSettings.ScrapESP.Distance, 2000, 10, function(V)
+	ESPSettings.ScrapESP.Distance = V
+end,"ScrapDistance")
+
+
+--Safe Visuals
+local SafeESPToggle = MainSafes:AddToggle("Safe ESP", ESPSettings.SafeESP.Enabled, function(V)
+	ESPSettings.SafeESP.Enabled = V
+
+	if V == true then
+		for i, v in pairs(game:GetService("Workspace").Map.BredMakurz:GetChildren()) do
+			if tonumber(v:FindFirstChild("Type").Value) == 2 then
+				coroutine.wrap(SafeESP)(v, 2)
+			elseif tonumber(v:FindFirstChild("Type").Value) == 3 then
+				coroutine.wrap(SafeESP)(v, 3)
+			end
+		end
+	end
+end, "SafeESPToggle")
+
+SafeESPToggle:AddKeybind("None", "SafeESPToggle Keybind")
+
+MainSafes:AddSeperator("Rarity")
+
+MainSafes:AddToggle("Big Only", ESPSettings.SafeESP.BigOnly, function(V)
+	ESPSettings.SafeESP.BigOnly = V
+end,"BigOnly")
+
+MainSafes:AddToggle("Small Only", ESPSettings.SafeESP.SmallOnly, function(V)
+	ESPSettings.SafeESP.SmallOnly = V
+end,"SmallOnly")
+
+MainSafes:AddSeperator("Distance")
+
+MainSafes:AddSlider("Safe Distance", 0, ESPSettings.SafeESP.Distance, 2000, 10, function(V)
+	ESPSettings.SafeESP.Distance = V
+end,"SafeDistance")
+
+
+--Register Visuals
+local RegisterESPToggle = MainRegister:AddToggle("Register ESP", ESPSettings.RegisterESP.Enabled, function(V)
+	ESPSettings.RegisterESP.Enabled = V
+
+	if V == true then
+		for i, v in pairs(game:GetService("Workspace").Map.BredMakurz:GetChildren()) do
+			if tonumber(v:FindFirstChild("Type").Value) == 1 then
+				coroutine.wrap(RegisterESP)(v)
+			end
+		end
+	end
+end, "RegisterESPToggle")
+RegisterESPToggle:AddKeybind("None", "RegisterESPToggle Keybind")
+MainRegister:AddSeperator("Distance")
+
+MainRegister:AddSlider("Register Distance", 0, ESPSettings.RegisterESP.Distance, 2000, 10, function(V)
+	ESPSettings.RegisterESP.Distance = V
+end,"RegisterDistance")
+
+--#region Teleports
+local Teleports = {
+    Start = tick(),
+    Cooldown = false,
+    Time = 5,
+    Time_To_Wait = 0
+}
+local function Teleport(Pos)
+    if Character.HumanoidRootPart and not Teleports.Cooldown then
+        Character.HumanoidRootPart.CFrame = CFrame.new(0,-9e9, 0)
+        wait(1.1)
+        Character.HumanoidRootPart.CFrame = Pos
+        Teleports.Cooldown = true
+        wait(Teleports.Time)
+        Teleports.Cooldown = false
+    end
+end
+local TeleportLocation = "Tower"
+
+MainT:AddDropdown("Location", {"Tower","Illegal Pizza","?","Vibe-Check","Subway","Cafe-Locker","HideOut","Thrift Store","Gas Station","Factory","WareHouse","JunkYard"}, TeleportLocation, false, function(V)
+	TeleportLocation = V
+end,"TeleportsDropDown")
+MainT:AddButton("Teleport", function()
+if TeleportLocation == "Tower" then
+	Teleport(CFrame.new(-4506.96337890625, 105.5683822631836, -820.3717651367188))
+elseif TeleportLocation == "Illegal Pizza" then
+	Teleport(CFrame.new(-4421.701171875, 5.200174808502197, -137.64849853515625))
+elseif TeleportLocation == "?" then
+	Teleport(CFrame.new(-4288.22802734375, -94.16966247558594, -814.4773559570312))
+elseif TeleportLocation == "Vibe-Check" then
+	Teleport(CFrame.new(-4776.74072265625, -201.26571655273438, -935.8676147460938))
+elseif TeleportLocation == "Subway" then
+	Teleport(CFrame.new(-4707.42041015625, -32.30079650878906, -699.1838989257812))
+elseif TeleportLocation == "Cafe-Locker" then
+	Teleport(CFrame.new(-4670.06103515625, 6.000002861022949, -257.1016845703125))
+elseif TeleportLocation == "HideOut" then
+	Teleport(CFrame.new(-4696.15087890625, 16.973363876342773, -948.1644897460938))
+elseif TeleportLocation == "Thrift Store" then
+	Teleport(CFrame.new(-4660.08056640625, 4.101564407348633, -152.4844512939453))
+elseif TeleportLocation == "Gas Station" then
+	Teleport(CFrame.new(-4431.490234375, 4.027345657348633, 193.07431030273438))
+elseif TeleportLocation == "Factory" then
+	Teleport(CFrame.new(-4410.919921875, 5.599993705749512, -554.301025390625))
+elseif TeleportLocation == "WareHouse" then
+	Teleport(CFrame.new(-4628.36962890625, 6.699222087860107, -562.562744140625))
+elseif TeleportLocation == "JunkYard" then
+	Teleport(CFrame.new(-3838.040771484375, 3.900392532348633, -507.172119140625))
+end
+end)
+MainT:AddButton("Fix Air Stuck", function()
+	ReplicatedStorage.Events.__DFfDD:FireServer("__--r", Vector3.new(0,0,0), CFrame.new(0,0,0))
+end)
+MainT1:AddButton("Safe (50 Stunds)", function()
+local Object = ClosestSafe(50)
+	if Object.MainPart then
+		Teleport(Object.MainPart.CFrame * CFrame.new(0,2,-2))
+	end
+end)
+MainT1:AddButton("Scrap", function()
+local Object = ClosestScrap()
+	if Object.MeshPart then
+		Teleport(Object.MeshPart.CFrame * CFrame.new(0,2,0))
+	end
+end)
+MainT1:AddButton("Dealer", function()
+local Object = ClosestDealer()
+	if Object.MainPart then
+		Teleport(Object.MainPart.CFrame * CFrame.new(0,2,-2))
+	end
+end)
+--[[
+local Example:AddKeybind("None", "flag")
+
+MainExample:AddToggle("WW", Toggle, function(V)
+
+end, "flag")
+
+MainExample:AddSlider("WW", 0, Default, Max, 10, function(V)
+
+end,"flag")
+
+MainExample:AddColorpicker(Default, function(V)
+
+end,"flag")
+
+MainExample:AddDropdown("WW", {"Items"}, "Default", MultiChoice, function(V)
+
+end,"flag")
+
+MainExample:AddButton("WW", function()
+	
+end)
+]]
+sstockk = "Crowbar"
+RunService.Stepped:Connect(function()
+for i, Dealer in pairs(Workspace.Map.Shopz:GetChildren()) do 
+	if Dealer:FindFirstChild("Type").Value == "IllegalStore" then
+		local Value = Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value
+		local oldValue = Value
+			if oldValue ~= Value then
+				if Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value == 0 then
+				elseif Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value >= 1 then
+					coroutine.wrap(DealerSESP)(Dealer, sstockk)
+				end
+				oldValue = Value
+			end
+		end
+	end
+end)
+
+local Stock2 = MainTStock:AddLabel("")
+local Stock1 = MainTStock:AddLabel("")
+MainTStock:AddDropdown("Select Stock", {"SlayerArmour","SlayerSword","__NecromancerKit","CursedDagger","PumpkinHelmet","TheCure","Hammer","Coal","Knuckledusters","Nunchucks","Crowbar","Golfclub","Taiga","Shovel","Rambo","Bat ","Katana","Metal-Bat", "Shiv","Fire-Axe","Bayonet","Chainsaw","Balisong","Uzi","Tommy","MAC-10","G-17","Deagle","M1911","RPG-7","SKS","Mare","AKS-74U","TEC-9","Beretta","Itchaca-37","AKM","BackpackA_1","VestA_3","VestA_2","VestA_1","HelmetA_2","HelmetA_1","BodyFlashlight_1","Smoke-Grenade","C4","Stun-Grenade","Flashbang","Antidote","Rage-potion","Medkit","Bandage","Splint","Lockpick"}, sstockk, false, function(V)
+	sstockk = V
+	for i, Dealer in pairs(Workspace.Map.Shopz:GetChildren()) do 
+		if Dealer:FindFirstChild("Type").Value == "IllegalStore" then
+			if Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value == 0 then
+			elseif Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value >= 1 then
+				coroutine.wrap(DealerSESP)(Dealer, sstockk)
+			end
+		end
+	end
+end,"StockTable")
+if stocked == true then
+	Notify(NS.Title,NS.Icon,sstockk.." On Stock!",5)
+end
+RunService.Stepped:Connect(function()
+	Stock2:Refresh("Re-Stock: "..game:GetService("Workspace").Map.Shopz.Dealer.RestockTime.Value)
+		for i, Dealer in pairs(Workspace.Map.Shopz:GetChildren()) do 
+			if Dealer:FindFirstChild("Type").Value == "IllegalStore" then
+				if Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value == 0 then
+					Stock1:Refresh("Not Stocked")
+					stocked = false
+				elseif Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value >= 1 then
+					Stock1:Refresh("Stocked!")
+					stocked = true
+				end
+			end
+		end
+	end)
+
+local ESPDS = MainTStock:AddToggle("ESP Dealer Stocked", ESPSettings.DealerSESP.Enabled, function(V)
+	ESPSettings.DealerSESP.Enabled = V
+	for i, Dealer in pairs(Workspace.Map.Shopz:GetChildren()) do 
+		if Dealer:FindFirstChild("Type").Value == "IllegalStore" then
+			if Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value == 0 then
+			elseif Dealer:FindFirstChild("CurrentStocks"):FindFirstChild(sstockk).Value >= 1 then
+				coroutine.wrap(DealerSESP)(Dealer, sstockk)
+			end
+		end
+	end
+end, "ESPDealerStock")
+ESPDS:AddKeybind("None", "ESPDealerStock1")
+--#endregion
+local function TeleportAreaNew(Cframe)
+	local User = game.Players.LocalPlayer.Character.HumanoidRootPart
+	User.CFrame = Cframe
+end
+
+local db = false
+local db1 = false
+local db2 = false
+local db3 = false
+
+local function PartThin(p)
+	p.Anchored = true
+	p.Size = Vector3.new(2, 10, 2)
+	p.Material = Enum.Material.ForceField
+	p.Color = Color3.fromRGB(255, 255, 255)
+	p.CanCollide = false
+	p.Transparency = 1
+end
+
+local part = Instance.new("Part", workspace)
+PartThin(part)
+part.Position = Vector3.new(-4766.666, -32.768, -818.809)
+
+local part1 = Instance.new("Part", workspace)
+PartThin(part1)
+part1.Position = Vector3.new(-4770.976, -198.929, -842.684)
+
+local tow = Instance.new("Part", workspace)
+PartThin(tow)
+tow.Position = Vector3.new(-4525.734, 9.314, -778.03)
+
+local tow1 = Instance.new("Part", workspace)
+PartThin(tow1)
+tow1.Position = Vector3.new(-4525.795, 85.759, -778.03)
+
+part.Touched:Connect(function()
+	if Player and Settings.ElevatorTP then
+		if not db and not db1 then
+			db = true
+			TeleportAreaNew(CFrame.new(-4770.976, -198.929, -842.684))
+			wait(1)
+			db = false
+		end
+	end
+end)
+
+part1.Touched:Connect(function()
+	if Player and Settings.ElevatorTP then
+		if not db1 and not db then
+			db1 = true
+			TeleportAreaNew(CFrame.new(-4766.666, -32.768, -818.809))
+			wait(1)
+			db1 = false
+		end
+	end
+end)
+
+tow.Touched:Connect(function()
+	if Player and Settings.TowerTP then
+		if not db2 and not db3 then
+			db2 = true
+			TeleportAreaNew(CFrame.new(-4525.795, 85.759, -778.03))
+			wait(1)
+			db2 = false
+		end
+	end
+end)
+
+tow1.Touched:Connect(function()
+	if Player and Settings.TowerTP then
+		if not db3 and not db2 then
+			db3 = true
+			TeleportAreaNew(CFrame.new(-4525.734, 9.314, -778.03))
+			wait(1)
+			db3 = false
+		end
+	end
+end)
+
+MainTele:AddToggle("Elevator", Settings.ElevatorTP, function(V)
+	Settings.ElevatorTP = V
+
+	if Settings.ElevatorTP == true then
+		part.Transparency = 0
+		part1.Transparency = 0
+	else
+		part.Transparency = 1
+		part1.Transparency = 1
+	end
+end)
+
+MainTele:AddToggle("Tower", Settings.TowerTP, function(V)
+	Settings.TowerTP = V
+
+	if Settings.TowerTP == true then
+		tow.Transparency = 0
+		tow1.Transparency = 0
+	else
+		tow.Transparency = 1
+		tow1.Transparency = 1
+	end
+end)
+
+MainTele:AddSeperator("Quick Elevator")
+
+MainTele:AddButton("Elevator Up", function()
+	TeleportAreaNew(CFrame.new(-4768.198, -34.303, -817.605))
+end)
+
+MainTele:AddButton("Elevator Down", function()
+	TeleportAreaNew(CFrame.new(-4776.88, -201.662, -823.827))
+end)
+
+MainTele:AddSeperator("Quick Tower")
+
+MainTele:AddButton("Tower Up", function()
+	TeleportAreaNew(CFrame.new(-4519.51, 85.714, -773.943))
+end)
+--#endregion
+MainC:AddLabel("Owner - Tupi")
+
+local ToggleToggleUI = MainUI:AddToggle("UI Shortcut", true, function(V)
+	RunService.RenderStepped:Wait()
+	game:GetService("CoreGui"):FindFirstChild(Name).Enabled = V
+end)
+
+ToggleToggleUI:AddKeybind(Enum.KeyCode.LeftAlt, "Ui Keybind")
+
+MainUI:AddColorpicker("Accent 1", _G.LibraryConfg.AccentColors.Accent1, function(V)
+Library.theme.accentcolor = V
+SShub:UpdateTheme()
+end,"COLOR1")
+
+MainUI:AddColorpicker("Accent 2", _G.LibraryConfg.AccentColors.Accent2, function(V)
+Library.theme.accentcolor2 = V
+SShub:UpdateTheme()
+end,"COLOR2")
+
+MainUI:AddColorpicker("Text Color", _G.LibraryConfg.AccentColors.TabTextColor, function(V)
+Library.theme.tabstextcolor = V
+SShub:UpdateTheme()
+end,"TEXT1")
+RunService.Stepped:Connect(function()
+	UpdateChar()
+	LibraryESP.Colors.BoxColor = ESPSettings.PlayerESP.Colors.BoxColor
+	LibraryESP.Colors.NameColor = ESPSettings.PlayerESP.Colors.NameColor
+	LibraryESP.Colors.DistanceColor = ESPSettings.PlayerESP.Colors.DistanceColor
+	LibraryESP.Colors.HealthColor = ESPSettings.PlayerESP.Colors.HealthColor
+	LibraryESP.Colors.ToolColor = ESPSettings.PlayerESP.Colors.ToolColor 
+	LibraryESP.Colors.TracerColor = ESPSettings.PlayerESP.Colors.TracerColor
+end)
+end)
+
+if Success then
+print("[2/2] Load Success")
+end
+
+if Error then
+	Notify(NS.Title,NS.Icon,"Error, Copied to clipboard")
+	print("[Error] Copied to clipboard")
+	setclipboard(tostring(Error))
+end
