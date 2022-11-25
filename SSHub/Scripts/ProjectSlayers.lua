@@ -495,7 +495,7 @@ spawn(function()
             end
     end
 end)
-local SShub = Library:CreateWindow({Title = Name.." | [🔥👹 UPDATE 1] Project Slayers | Script Req: Have Good Ethernet | Toggle: End",Center = true, AutoShow = true})
+local SShub = Library:CreateWindow({Title = Name.." | "..GameName.." | Script Req: Have Good Ethernet | Toggle: End",Center = true, AutoShow = true})
 local Farm = SShub:AddTab("Farm & Mods")
 local Visuals = SShub:AddTab("Visuals")
 local Teleports = SShub:AddTab("Teleports")
