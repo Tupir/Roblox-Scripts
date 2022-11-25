@@ -5,11 +5,11 @@ GameSupport = {
 	},
 	["6152116144"] = {
 		Name = "ProjectSlayers",
-		Script = "Map"
+		Script = "ProjectSlayers"
 	},
 	["11468159863"] = {
 		Name = "ProjectSlayers2",
-		Script = "Map"
+		Script = "ProjectSlayers"
 	},
 	["2753915549"] = {
 		Name = "BloxFruits1",
