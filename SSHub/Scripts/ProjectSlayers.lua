@@ -209,10 +209,11 @@ local World = 1
     elseif game.PlaceId == 6152116144 then
         World = 1
     end
+
 local Bosses = {}
 
 if World == 2 then
-    local First = {
+    local Second = {
         ["Akeza"] = CFrame.new(2020.34, 556.071, -125.497),
         ["Rengoku"] = CFrame.new(3667.58, 673.185, -408.076),
         ["Inosuke"] = CFrame.new(1588.55, 300.281, -359.55),
@@ -220,10 +221,10 @@ if World == 2 then
         ["Enme"] = CFrame.new(3192.03, 368.384, -3901.33),
         ["Muichiro Tokito"] = CFrame.new(4410.76, 673.457, -550.114),
         ["Swampy"] = CFrame.new(-1364.9, 601.273, -207.818)
-    };
-    Bosses = First
+    }
+    Bosses = Second
 elseif World == 1 then
-    local Second = {
+    local First = {
         ["Sabito"] = CFrame.new(1230.93, 275.351, -2845.19),
         ["Zanegutsu Kuuchie"] = CFrame.new(-217.212, 425.857, -2283.64),
         ["Shiron"] = CFrame.new(3192.03, 368.384, -3901.33),
@@ -234,19 +235,37 @@ elseif World == 1 then
         ["Susamaru"] = CFrame.new(1347.36, 315.792, -4583.32),
         ["Slasher"] = CFrame.new(4357.25, 342.193, -4382),
         ["Bandit Zuko"] = CFrame.new(174.627, 283.407, -1969.9)
-    };
-    Bosses = Second
+    }
+    Bosses = First
 end
 
-local BossCheck = {
-    ["Inosuke"] = false,
-    ["Renpeke Kuuchie"] = false,
-    ["Enme"] = false,
-    ["Muichiro Tokito"] = false,
-    ["Swampy"] = false,
-    ["Akeza"] = false,
-    ["Rengoku"] = false
-}
+local BossCheck = {}
+if World == 2 then
+    local Second = {
+        ["Inosuke"] = false,
+        ["Renpeke Kuuchie"] = false,
+        ["Enme"] = false,
+        ["Muichiro Tokito"] = false,
+        ["Swampy"] = false,
+        ["Akeza"] = false,
+        ["Rengoku"] = false
+    }
+    BossCheck = Second
+elseif World == 1 then
+    local First = {
+        ["Sabito"] = false,
+        ["Zanegutsu Kuuchie"] = false,
+        ["Shiron"] = false,
+        ["Sanemi"] = false,
+        ["Giyu"] = false,
+        ["Nezuko"] = false,
+        ["Yahaba"] = false,
+        ["Susamaru"] = false,
+        ["Slasher"] = false,
+        ["Bandit Zuko"] = false
+    }
+    BossCheck = First
+end
 spawn(function()
     while wait() do
         pcall(function()
@@ -552,19 +571,28 @@ Toggles.FarmAllBosses:OnChanged(function()
     Settings.FarmAllBosses = Toggles.FarmAllBosses.Value
 end)
 local FarmAllBossesLabel = MainCo:AddLabel("Status: Loading...")
-
+MainCo:AddDivider()
+MainCo:AddLabel("If autofarms dont working u can go to Options > Bring Mob\nit may will fix it a bit.",true)
+MainCo:AddDivider()
 local BreathCheck = MainCr:AddLabel("...")
 local DemonCheck = MainCr:AddLabel("...")
 
-if World == 2 then
-    local BossCheckLabel = MainC4:AddLabel("Inosuke: Loading...")
-    local BossCheckLabel1 = MainC4:AddLabel("Renpeke Kuuchie: Loading...")
-    local BossCheckLabel2 = MainC4:AddLabel("Enme: Loading...")
-    local BossCheckLabel3 = MainC4:AddLabel("Muichiro Tokito: Loading...")
-    local BossCheckLabel4 = MainC4:AddLabel("Swampy: Loading...")
-    local BossCheckLabel5 = MainC4:AddLabel("Akeza: Loading...")
-    local BossCheckLabel6 = MainC4:AddLabel("Rengoku: Loading...")
+local BossCheckLabel = MainC4:AddLabel("Loading...")
+local BossCheckLabel1 = MainC4:AddLabel("Loading...")
+local BossCheckLabel2 = MainC4:AddLabel("Loading...")
+local BossCheckLabel3 = MainC4:AddLabel("Loading...")
+local BossCheckLabel4 = MainC4:AddLabel("Loading...")
+local BossCheckLabel5 = MainC4:AddLabel("Loading...")
+local BossCheckLabel6 = MainC4:AddLabel("Loading...")
+local BossCheckLabel7
+local BossCheckLabel8
+local BossCheckLabel9
+if World == 1 then
+    BossCheckLabel7 = MainC4:AddLabel("Loading...")
+    BossCheckLabel8 = MainC4:AddLabel("Loading...")
+    BossCheckLabel9 = MainC4:AddLabel("Loading...")
 end
+
 spawn(function()
     while wait() do
         pcall(function()
@@ -574,39 +602,82 @@ spawn(function()
             DemonCheck:SetText("Demon Progress: " .. Demon["1"].Value .. " / " .. Demon["2"].Value)
             SelectedBossFarmLabel:SetText("Status: "..SelectedBossFarm)
             FarmAllBossesLabel:SetText("Status: "..FarmAllBosses)
-            if World == 2 then
                 for i,v in pairs(BossCheck) do
-                    if i == "Inosuke" and v then
-                        BossCheckLabel:SetText("Inosuke: 🟢")
-                    elseif i == "Renpeke Kuuchie" and v then
-                        BossCheckLabel1:SetText("Renpeke Kuuchie: 🟢")
-                    elseif i == "Enme" and v then
-                        BossCheckLabel2:SetText("Enme: 🟢")
-                    elseif i == "Muichiro Tokito" and v then
-                        BossCheckLabel3:SetText("Muichiro Tokito: 🟢")
-                    elseif i == "Swampy" and v then
-                        BossCheckLabel4:SetText("Swampy: 🟢")
-                    elseif i == "Akeza" and v then
-                        BossCheckLabel5:SetText("Akeza: 🟢")
-                    elseif i == "Rengoku" and v then
-                        BossCheckLabel6:SetText("Rengoku: 🟢")
-                    elseif i == "Inosuke" and not v then
-                        BossCheckLabel:SetText("Inosuke: 🔴")
-                    elseif i == "Renpeke Kuuchie" and not v then
-                        BossCheckLabel1:SetText("Renpeke Kuuchie: 🔴")
-                    elseif i == "Enme" and not v then
-                        BossCheckLabel2:SetText("Enme: 🔴")
-                    elseif i == "Muichiro Tokito" and not v then
-                        BossCheckLabel3:SetText("Muichiro Tokito: 🔴")
-                    elseif i == "Swampy" and not v then
-                        BossCheckLabel4:SetText("Swampy: 🔴")
-                    elseif i == "Akeza" and not v then
-                        BossCheckLabel5:SetText("Akeza: 🔴")
-                    elseif i == "Rengoku" and not v then
-                        BossCheckLabel6:SetText("Rengoku: 🔴")
+                    if World == 2 then
+                        if i == "Inosuke" and v then
+                            BossCheckLabel:SetText("Inosuke: 🟢")
+                        elseif i == "Renpeke Kuuchie" and v then
+                            BossCheckLabel1:SetText("Renpeke Kuuchie: 🟢")
+                        elseif i == "Enme" and v then
+                            BossCheckLabel2:SetText("Enme: 🟢")
+                        elseif i == "Muichiro Tokito" and v then
+                            BossCheckLabel3:SetText("Muichiro Tokito: 🟢")
+                        elseif i == "Swampy" and v then
+                            BossCheckLabel4:SetText("Swampy: 🟢")
+                        elseif i == "Akeza" and v then
+                            BossCheckLabel5:SetText("Akeza: 🟢")
+                        elseif i == "Rengoku" and v then
+                            BossCheckLabel6:SetText("Rengoku: 🟢")
+                        elseif i == "Inosuke" and not v then
+                            BossCheckLabel:SetText("Inosuke: 🔴")
+                        elseif i == "Renpeke Kuuchie" and not v then
+                            BossCheckLabel1:SetText("Renpeke Kuuchie: 🔴")
+                        elseif i == "Enme" and not v then
+                            BossCheckLabel2:SetText("Enme: 🔴")
+                        elseif i == "Muichiro Tokito" and not v then
+                            BossCheckLabel3:SetText("Muichiro Tokito: 🔴")
+                        elseif i == "Swampy" and not v then
+                            BossCheckLabel4:SetText("Swampy: 🔴")
+                        elseif i == "Akeza" and not v then
+                            BossCheckLabel5:SetText("Akeza: 🔴")
+                        elseif i == "Rengoku" and not v then
+                            BossCheckLabel6:SetText("Rengoku: 🔴")
+                        end
+                    elseif World == 1 then
+                        if i == "Sabito" and v then
+                            BossCheckLabel:SetText("Sabito: 🟢")
+                        elseif i == "Zanegutsu Kuuchie" and v then
+                            BossCheckLabel1:SetText("Zanegutsu Kuuchie: 🟢")
+                        elseif i == "Shiron" and v then
+                            BossCheckLabel2:SetText("Shiron: 🟢")
+                        elseif i == "Sanemi" and v then
+                            BossCheckLabel3:SetText("Sanemi: 🟢")
+                        elseif i == "Giyu" and v then
+                            BossCheckLabel4:SetText("Giyu: 🟢")
+                        elseif i == "Nezuko" and v then
+                            BossCheckLabel5:SetText("Nezuko: 🟢")
+                        elseif i == "Yahaba" and v then
+                            BossCheckLabel6:SetText("Yahaba: 🟢")
+                        elseif i == "Susamaru" and v then
+                            BossCheckLabel7:SetText("Susamaru: 🟢")
+                        elseif i == "Slasher" and v then
+                            BossCheckLabel8:SetText("Slasher: 🟢")
+                        elseif i == "Bandit Zuko" and v then
+                            BossCheckLabel9:SetText("Bandit Zuko: 🟢")
+
+                        elseif i == "Sabito" and not v then
+                            BossCheckLabel:SetText("Sabito: 🔴")
+                        elseif i == "Zanegutsu Kuuchie" and not v then
+                            BossCheckLabel1:SetText("Zanegutsu Kuuchie: 🔴")
+                        elseif i == "Shiron" and not v then
+                            BossCheckLabel2:SetText("Shiron: 🔴")
+                        elseif i == "Sanemi" and not v then
+                            BossCheckLabel3:SetText("Sanemi: 🔴")
+                        elseif i == "Giyu" and not v then
+                            BossCheckLabel4:SetText("Giyu: 🔴")
+                        elseif i == "Nezuko" and not v then
+                            BossCheckLabel5:SetText("Nezuko: 🔴")
+                        elseif i == "Yahaba" and not v then
+                            BossCheckLabel6:SetText("Yahaba: 🔴")
+                        elseif i == "Susamaru" and not v then
+                            BossCheckLabel7:SetText("Susamaru: 🔴")
+                        elseif i == "Slasher" and not v then
+                            BossCheckLabel8:SetText("Slasher: 🔴")
+                        elseif i == "Bandit Zuko" and not v then
+                            BossCheckLabel9:SetText("Bandit Zuko: 🔴")
+                        end
                     end
                 end
-            end
         end)
     end
 end)
