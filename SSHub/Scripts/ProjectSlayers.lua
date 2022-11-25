@@ -556,14 +556,15 @@ local FarmAllBossesLabel = MainCo:AddLabel("Status: Loading...")
 local BreathCheck = MainCr:AddLabel("...")
 local DemonCheck = MainCr:AddLabel("...")
 
-local BossCheckLabel = MainC4:AddLabel("Inosuke: Loading...")
-local BossCheckLabel1 = MainC4:AddLabel("Renpeke Kuuchie: Loading...")
-local BossCheckLabel2 = MainC4:AddLabel("Enme: Loading...")
-local BossCheckLabel3 = MainC4:AddLabel("Muichiro Tokito: Loading...")
-local BossCheckLabel4 = MainC4:AddLabel("Swampy: Loading...")
-local BossCheckLabel5 = MainC4:AddLabel("Akeza: Loading...")
-local BossCheckLabel6 = MainC4:AddLabel("Rengoku: Loading...")
-
+if World == 2 then
+    local BossCheckLabel = MainC4:AddLabel("Inosuke: Loading...")
+    local BossCheckLabel1 = MainC4:AddLabel("Renpeke Kuuchie: Loading...")
+    local BossCheckLabel2 = MainC4:AddLabel("Enme: Loading...")
+    local BossCheckLabel3 = MainC4:AddLabel("Muichiro Tokito: Loading...")
+    local BossCheckLabel4 = MainC4:AddLabel("Swampy: Loading...")
+    local BossCheckLabel5 = MainC4:AddLabel("Akeza: Loading...")
+    local BossCheckLabel6 = MainC4:AddLabel("Rengoku: Loading...")
+end
 spawn(function()
     while wait() do
         pcall(function()
