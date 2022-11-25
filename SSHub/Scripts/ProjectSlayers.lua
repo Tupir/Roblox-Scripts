@@ -327,9 +327,9 @@ spawn(function()
                                                     v.HumanoidRootPart.CFrame = FarmingPos
                                                     end
                                                     if not Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
-                                                        TeleportTween(v.HumanoidRootPart.CFrame*CFrame.new(0,100,0))
+                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,100,0)
                                                     elseif Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
-                                                        TeleportTween(v.HumanoidRootPart.CFrame*CFrame.new(0,0,3))
+                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,0,3)
                                                     end
                                                     if Settings.SelectedBossFarm == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
                                                         Settings.KillAura.Enabled = false
@@ -399,9 +399,9 @@ spawn(function()
                                                     v.HumanoidRootPart.CFrame = FarmingPos
                                                 end
                                                 if not Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                                    TeleportTween(v.HumanoidRootPart.CFrame*CFrame.new(0,100,0))
+                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,100,0)
                                                 elseif Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                                    TeleportTween(v.HumanoidRootPart.CFrame*CFrame.new(0,0,3))
+                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,0,3)
                                                 end
                                                 if Settings.FarmAllBosses == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm then
                                                     Settings.KillAura.Enabled = false
@@ -466,9 +466,9 @@ spawn(function()
                                                 v.HumanoidRootPart.CFrame = FarmingPos
                                             end
                                             if not Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
-                                                TeleportTween(v.HumanoidRootPart.CFrame*CFrame.new(0,100,0))
+                                                Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,100,0)
                                             elseif Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
-                                                TeleportTween(v.HumanoidRootPart.CFrame*CFrame.new(0,0,3))
+                                                Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,0,3)
                                             end
                                             if Settings.DemonsFarm == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses then
                                                 Settings.KillAura.Enabled = false
@@ -610,7 +610,6 @@ MainC3:AddDropdown('FarmMethod', {Values = {"Fists","Sword","Scythe","Claws"}, D
     Options.FarmMethod:OnChanged(function()
         Settings.KillAura.TypeSelected = Options.FarmMethod.Value
     end)
-MainC3:AddLabel("Secure: 🟢\nKickeable: ⚠️\nFists🟢\nSword⚠️\nScythe⚠️\nClaws⚠️")
 MainC3:AddToggle('BringMob', {Text = 'Bring Mob',Default = Settings.BringMob,Tooltip = 'Always bring the mob when farming'})
 Toggles.BringMob:OnChanged(function()
     Settings.BringMob = Toggles.BringMob.Value
