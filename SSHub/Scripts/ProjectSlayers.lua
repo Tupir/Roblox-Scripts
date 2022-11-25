@@ -208,13 +208,13 @@ local Bosses = {}
 
 if game.PlaceId == 11468159863 then
     local First = {
+        ["Akeza"] = CFrame.new(2020.34, 556.071, -125.497),
+        ["Rengoku"] = CFrame.new(3667.58, 673.185, -408.076),
         ["Inosuke"] = CFrame.new(1588.55, 300.281, -359.55),
         ["Renpeke Kuuchie"] = CFrame.new(-1201.97, 601.276, -627.884),
         ["Enme"] = CFrame.new(3192.03, 368.384, -3901.33),
         ["Muichiro Tokito"] = CFrame.new(4410.76, 673.457, -550.114),
-        ["Swampy"] = CFrame.new(-1364.9, 601.273, -207.818),
-        ["Akeza"] = CFrame.new(2020.34, 556.071, -125.497),
-        ["Rengoku"] = CFrame.new(3667.58, 673.185, -408.076)
+        ["Swampy"] = CFrame.new(-1364.9, 601.273, -207.818)
     };
     Bosses = First
 elseif game.PlaceId == 6152116144 then
