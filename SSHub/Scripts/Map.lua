@@ -21,6 +21,9 @@ local Settings = {
     NoSunDmg = true,
     AutoLootChest = false,
     FarmAllBosses = false,
+    SelectedDemons = "",
+    DemonsFarm = false,
+    BringMob = false
 };
 
 local ESPSettings = {
@@ -78,6 +81,16 @@ local Success, Error = pcall(function()
     local antifall2 = nil
     local antifallnpc = nil
     local antifall = nil
+    local function TableRemove(Table, Item)
+        local Index = nil
+        for i, v in ipairs (Table) do 
+            if (v == Item) then
+                Index = i 
+            end
+        end
+    table.remove(Table, Index)
+    end
+
      local function noclip()
         for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
             if v:IsA("BasePart") and v.CanCollide == true then
@@ -90,7 +103,7 @@ local Success, Error = pcall(function()
     local noclipE = nil
     local function TeleportTween(To)
         Distance = (To.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
-        if Distance < 170 then
+        if Distance < 200 then
             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = To
             Speed = 350
         elseif Distance < 1000 then
@@ -109,12 +122,14 @@ local Success, Error = pcall(function()
         end
         Tween:Play()
         Tween.Completed:Wait()
+        pcall(function()
             Tween = nil
             antifall:Destroy()
             noclipE:Disconnect()
+        end)
     end
-    local function args(style, count)
-        if style == "fist_combat" then
+    local function args(Type, style, count)
+        if Type == 1 then
             return {
                 [1] = style,
                 [2] = nil,
@@ -124,72 +139,64 @@ local Success, Error = pcall(function()
                 [6] = count,
                 [7] = "kick"
             }
-        else
+        elseif Type == 2 then
             return {
                 [1] = style,
-                [2] = Plr,
-                [3] = Plr.Character,
-                [4] = Plr.Character:WaitForChild("HumanoidRootPart"),
-                [5] = Plr.Character:WaitForChild("Humanoid"),
-                [6] = count,
-                [7] = nil,
-                [8] = nil
-            }
-        end
-    end
-    local function args2(style, count)
-        if style == "fist_combat" then
-            return {
-                [1] = "fist_combat",
                 [2] = nil,
                 [3] = Plr.Character,
                 [4] = nil,
                 [5] = Plr.Character:WaitForChild("Humanoid"),
                 [6] = count
             }
-        else
-            return {
-                [1] = style,
-                [2] = Plr,
-                [3] = Plr.Character,
-                [4] = Plr.Character:WaitForChild("HumanoidRootPart"),
-                [5] = Plr.Character:WaitForChild("Humanoid"),
-                [6] = count,
-                [7] = nil,
-                [8] = nil
-            }
         end
     end
+
 local Hitting = false
     task.spawn(function()
         while task.wait() do
-            if Settings.KillAura.Enabled and Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") and Plr.Character:FindFirstChild("Humanoid") then
+            if Settings.KillAura.Enabled and not Settings.PlrDied and Plr.Character:FindFirstChild("HumanoidRootPart") and Plr.Character:FindFirstChild("Humanoid") then
                 if Settings.KillAura.TypeSelected == "Fists" then
                     Hitting=true
-                    wait(0.2)
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args("fist_combat", 7))) --7!!
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args("fist_combat", 7))) --7!!
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args2("fist_combat", 919))) --919!!
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args("fist_combat", 7))) --7!!
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args2("fist_combat", 919))) --919!!
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args("fist_combat", 7))) --7!!
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args2("fist_combat", 919))) --919!!
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args("fist_combat", 7))) --7!!
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args2("fist_combat", 919))) --919!!
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args("fist_combat", 7))) --7!!
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args2("fist_combat", 919))) --919!!
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args("fist_combat", 7))) --7!!
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args2("fist_combat", 919))) --919!!
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args("fist_combat", 7))) --7!!
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args2("fist_combat", 919))) --919!!
-                    wait(0.2)
+                    wait(.2)
+                    game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
+                    for i = 1, 7 do
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"fist_combat", 7)))
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"fist_combat", 919)))
+                    end
+                    wait(.2)
                     Hitting=false
                     wait(2.5)
                 elseif Settings.KillAura.TypeSelected == "Sword" then
                     Hitting=true
-                    for i = 1, 5 do
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args("Sword_Combat_Slash", 919))) 
+                    wait(.2)
+                    game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
+                    for i = 1, 7 do
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"Sword_Combat_Slash", 7)))
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"Sword_Combat_Slash", 919)))
                     end
+                    wait(.2)
+                    Hitting=false
+                    wait(2.5)
+                elseif Settings.KillAura.TypeSelected == "Scythe" then
+                    Hitting=true
+                    wait(.2)
+                    game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
+                    for i = 1, 7 do
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"Scythe_Combat_Slash", 7)))
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"Scythe_Combat_Slash", 919)))
+                    end
+                    wait(.2)
+                    Hitting=false
+                    wait(2.5)
+                elseif Settings.KillAura.TypeSelected == "Claws" then
+                    Hitting=true
+                    wait(.2)
+                    game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
+                    for i = 1, 7 do
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"claw_Combat_Slash", 7)))
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"claw_Combat_Slash", 919)))
+                    end
+                    wait(.2)
                     Hitting=false
                     wait(2.5)
                 end
@@ -197,18 +204,61 @@ local Hitting = false
         end
     end)
 
-    local Bosses = {
-        ["Sabito"] = CFrame.new(689.451843, 261.933289, -2469.948, -0.990007997, -2.02267403e-09, -0.141011208, 3.4283596e-09, 1, -3.8413809e-08, 0.141011208, -3.85134129e-08, -0.990007997),
-        ["Zanegutsu Kuuchie"] = CFrame.new(-366.581635, 425.857422, -2371.77124, -0.998583674, -7.39169579e-08, 0.0532043427, -7.35017522e-08, 1, 9.76061187e-09, -0.0532043427, 5.8361751e-09, -0.998583674),
-        ["Shiron"] = CFrame.new(3001.71753, 316.000519, -3806.40601, -0.998922288, -7.88841792e-09, -0.0464141443, -9.13921649e-09, 1, 2.67364477e-08, 0.0464141443, 2.71318221e-08, -0.998922288),
-        ["Sanemi"] = CFrame.new(1792.31458, 334.338989, -3521.31104, 0.862527311, -5.19402583e-08, -0.506010473, 8.30083167e-08, 1, 3.88463874e-08, 0.506010473, -7.55091492e-08, 0.862527311),
-        ["Giyu"] = CFrame.new(3042.948, 317.109528, -3013.40601, 0.342933595, 0, 0.939359665, 0, 1, 0, -0.939359665, 0, 0.342933595),
-        ["Nezuko"] = CFrame.new(3839.87256, 342.214478, -4177.88428, 0.99924922, -3.67285011e-08, 0.0387428068, 3.67143471e-08, 1, 1.07676823e-09, -0.0387428068, 3.46457113e-10, 0.99924922),
-        ["Yahaba"] = CFrame.new(1379.59412, 312.892059, -4574.09717, -0.568984509, 0.74243319, -0.353623569, -0.0247124936, -0.445259601, -0.89506042, -0.82197684, -0.500536621, 0.27169317),
-        ["Susamaru"] = CFrame.new(1379.59412, 312.892059, -4574.09717, -0.568984509, 0.74243319, -0.353623569, -0.0247124936, -0.445259601, -0.89506042, -0.82197684, -0.500536621, 0.27169317),
-        ["Bandit Zuko"] = CFrame.new(120.362045, 282.207642, -1743.01636, 0.999990761, 2.85735684e-08, 0.00429180823, -2.90243012e-08, 1, 1.04959462e-07, -0.00429180823, -1.0508306e-07, 0.999990761)
-    };
+local Bosses = {}
 
+if game.PlaceId == 11468159863 then
+    local First = {
+        ["Inosuke"] = CFrame.new(1588.55, 300.281, -359.55),
+        ["Renpeke Kuuchie"] = CFrame.new(-1201.97, 601.276, -627.884),
+        ["Enme"] = CFrame.new(3192.03, 368.384, -3901.33),
+        ["Muichiro Tokito"] = CFrame.new(4410.76, 673.457, -550.114),
+        ["Swampy"] = CFrame.new(-1364.9, 601.273, -207.818),
+        ["Akeza"] = CFrame.new(2020.34, 556.071, -125.497),
+        ["Rengoku"] = CFrame.new(3667.58, 673.185, -408.076)
+    };
+    Bosses = First
+elseif game.PlaceId == 6152116144 then
+    local Second = {
+        ["Sabito"] = CFrame.new(1230.93, 275.351, -2845.19),
+        ["Zanegutsu Kuuchie"] = CFrame.new(-217.212, 425.857, -2283.64),
+        ["Shiron"] = CFrame.new(3192.03, 368.384, -3901.33),
+        ["Sanemi"] = CFrame.new(1598.74, 348.832, -3688.97),
+        ["Giyu"] = CFrame.new(3067.07, 314.459, -3004.74),
+        ["Nezuko"] = CFrame.new(3549.87, 342.065, -4596.74),
+        ["Yahaba"] = CFrame.new(1385.68, 315.965, -4655.61),
+        ["Susamaru"] = CFrame.new(1347.36, 315.792, -4583.32),
+        ["Slasher"] = CFrame.new(4357.25, 342.193, -4382),
+        ["Bandit Zuko"] = CFrame.new(174.627, 283.407, -1969.9)
+    };
+    Bosses = Second
+end
+
+local BossCheck = {
+    ["Inosuke"] = false,
+    ["Renpeke Kuuchie"] = false,
+    ["Enme"] = false,
+    ["Muichiro Tokito"] = false,
+    ["Swampy"] = false,
+    ["Akeza"] = false,
+    ["Rengoku"] = false
+}
+spawn(function()
+    while wait() do
+        pcall(function()
+            for _,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
+                if v:IsA("Humanoid") then
+                    v = v.Parent
+                    if v.Humanoid.Health > 0 then
+                        BossCheck[v.Name] = true
+                    else
+                        BossCheck[v.Name] = false
+                    end
+                end
+            end
+        end)
+    end
+end)
+    
 Plr.Character:WaitForChild("Humanoid").Died:Connect(function()
     Settings.PlrDied = true
 end)
@@ -226,11 +276,13 @@ spawn(function()
                     local remote = chest:WaitForChild("Add_To_Inventory")
 
                     for _,v in next, chest:WaitForChild("Drops"):GetChildren() do
-                        remote:InvokeServer(v.Name)
-                        if v.Name == "Ore" then
-                            remote:InvokeServer(v.Name)
-                        elseif not game:GetService("ReplicatedStorage")["Player_Data"][game:GetService("Players").LocalPlayer.Name].Inventory:FindFirstChild(v.Name, true) then
-                            remote:InvokeServer(v.Name)
+                        mag = (Plr.Character.HumanoidRootPart.Position - chest.Root.Position).Magnitude
+                        if mag < 1000 then 
+                            if string.find(v.Name, "Ore") or string.find(v.Name, "Elixir") then
+                                remote:InvokeServer(v.Name)
+                            elseif not game:GetService("ReplicatedStorage")["Player_Data"][game:GetService("Players").LocalPlayer.Name].Inventory:FindFirstChild(v.Name, true) then
+                                remote:InvokeServer(v.Name)
+                            end
                         end
                     end
                 end
@@ -238,110 +290,212 @@ spawn(function()
         end)
     end
 end)
+--Selected Boss
+local SelectedBossFarm = "Waiting..."
 spawn(function()
     while wait() do
         pcall(function()
+            if Settings.SelectedBossFarm and Settings.FarmAllBosses then
+                SelectedBossFarm = "Error"
+            end
             if Settings.SelectedBossFarm and not Settings.FarmAllBosses then
+                SelectedBossFarm = "Correct"
                 for i,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
-                    if string.match(v.Name, Settings.SelectedBoss) then
-                        for i2,v2 in pairs(Bosses) do
-                            if string.match(i2,v.Name) then
-                                if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
-                                    TeleportTween(v2)
-                                end
-                                if v.Humanoid and not Settings.PlrDied and v.Humanoid.Health > 0 then
-                                    TeleportTween(v.HumanoidRootPart.CFrame)
+                    if Settings.SelectedBossFarm and not Settings.FarmAllBosses  then
+                        if v:IsA("Humanoid") then
+                            v = v.Parent
+                            if string.match(v.Name, Settings.SelectedBoss) and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
+                                for i2,v2 in pairs(Bosses) do
+                                    if Settings.SelectedBossFarm and not Settings.FarmAllBosses then
+                                        if string.match(v.Name,i2) and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
+                                            if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and Settings.SelectedBossFarm and not Settings.FarmAllBosses  and string.match(v.Name, Settings.SelectedBoss) then
+                                                if Tween then Tween:Cancel() Tween = nil end
+                                                TeleportTween(v2)
+                                            end
+                                            if v.HumanoidRootPart and v.Humanoid and not Settings.PlrDied and v.Humanoid.Health > 0 and Settings.SelectedBossFarm and not Settings.FarmAllBosses and string.match(v.Name, Settings.SelectedBoss) then
+                                                if Tween then Tween:Cancel() Tween = nil end
+                                                TeleportTween(v.HumanoidRootPart.CFrame)
 
-                                    antifall2 = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
-                                    antifall2.Velocity = Vector3.new(0, 0, 0)
-                                    antifallnpc = Instance.new("BodyVelocity", v.HumanoidRootPart)
-                                    antifallnpc.Velocity = Vector3.new(0, 0, 0)
-                                    Settings.KillAura.Enabled = true
-                                    Settings.KillAura.TypeSelected = "Fists"
-                                    local FarmingPos = v.HumanoidRootPart.CFrame
-                                    while wait() and Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
-                                        v.HumanoidRootPart.CFrame = FarmingPos
-                                        if not Hitting then
-                                            Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,100,0)
-                                        elseif Hitting then
-                                            Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,3)
+                                                antifall2 = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
+                                                antifall2.Velocity = Vector3.new(0, 0, 0)
+                                                antifallnpc = Instance.new("BodyVelocity", v.HumanoidRootPart)
+                                                antifallnpc.Velocity = Vector3.new(0, 0, 0)
+                                                Settings.KillAura.Enabled = true
+                                                local FarmingPos = v.HumanoidRootPart.CFrame
+                                                while wait() and Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
+                                                    if Settings.BringMob then
+                                                    v.HumanoidRootPart.CFrame = FarmingPos
+                                                    end
+                                                    if not Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
+                                                        Plr.Character.HumanoidRootPart.CFrame = FarmingPos * CFrame.new(0,100,0)
+                                                    elseif Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
+                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,3)
+                                                    end
+                                                    if Settings.SelectedBossFarm == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
+                                                        Settings.KillAura.Enabled = false
+                                                        FarmingPos = nil
+                                                        antifall2:Destroy()
+                                                        antifallnpc:Destroy()
+                                                        wait(2)
+                                                        break
+                                                    end
+                                                end
+                                                if Settings.SelectedBossFarm == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
+                                                    Settings.KillAura.Enabled = false
+                                                    FarmingPos = nil
+                                                    antifall2:Destroy()
+                                                    antifallnpc:Destroy()
+                                                    wait(2)
+                                                end
+                                            end
                                         end
-                                        if Settings.SelectedBossFarm == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied then
-                                            Settings.KillAura.Enabled = false
-                                            antifall2:Destroy()
-                                            antifallnpc:Destroy()
-                                            wait(2)
-                                            break;
-                                        end
-                                    end
-                                    if Settings.SelectedBossFarm == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied then
-                                        Settings.KillAura.Enabled = false
-                                        antifall2:Destroy()
-                                        antifallnpc:Destroy()
-                                        wait(2)
+                                    else
+                                        break
                                     end
                                 end
                             end
                         end
+                    else
+                        break
                     end
                 end
             end
         end)
     end
 end)
+--All Bosses
+local FarmAllBosses = "Waiting..."
 spawn(function()
     while wait() do
         pcall(function()
-            if Settings.FarmAllBosses then
+            if Settings.FarmAllBosses and Settings.SelectedBossFarm then
+                FarmAllBosses = "Error"
+            end
+            if Settings.FarmAllBosses and not Settings.SelectedBossFarm then
+                FarmAllBosses = "Correct"
                 for i,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
-                    if v:IsA("Humanoid") then
-                        v = v.Parent
-                        for i2,v2 in pairs(Bosses) do
-                            if string.match(i2,v.Name) then
-                                if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 then
-                                    TeleportTween(v2)
-                                end
-                                if v.Humanoid and not Settings.PlrDied and v.Humanoid.Health > 0 then
-                                    TeleportTween(v.HumanoidRootPart.CFrame)
+                    if Settings.FarmAllBosses and not Settings.SelectedBossFarm then
+                        if v:IsA("Humanoid") then
+                            v = v.Parent
+                            for i2,v2 in pairs(Bosses) do
+                                if Settings.FarmAllBosses and not Settings.SelectedBossFarm then
+                                    if string.match(i2,v.Name) and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
+                                        if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
+                                            if Tween then Tween:Cancel() Tween = nil end
+                                            TeleportTween(v2)
+                                        end
+                                        if v.HumanoidRootPart and v.Humanoid and not Settings.PlrDied and v.Humanoid.Health > 0 and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
+                                            if Tween then Tween:Cancel() Tween = nil end
+                                            TeleportTween(v.HumanoidRootPart.CFrame)
 
-                                    antifall2 = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
-                                    antifall2.Velocity = Vector3.new(0, 0, 0)
-                                    antifallnpc = Instance.new("BodyVelocity", v.HumanoidRootPart)
-                                    antifallnpc.Velocity = Vector3.new(0, 0, 0)
-                                    Settings.KillAura.Enabled = true
-                                    Settings.KillAura.TypeSelected = "Fists"
-                                    local FarmingPos = v.HumanoidRootPart.CFrame
-                                    while wait() and Settings.FarmAllBosses and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
-                                        v.HumanoidRootPart.CFrame = FarmingPos
-                                        if not Hitting then
-                                            Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,100,0)
-                                        elseif Hitting then
-                                            Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,3)
-                                        end
-                                        if Settings.FarmAllBosses == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied then
-                                            Settings.KillAura.Enabled = false
-                                            antifall2:Destroy()
-                                            antifallnpc:Destroy()
-                                            wait(2)
-                                            break;
+                                            antifall2 = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
+                                            antifall2.Velocity = Vector3.new(0, 0, 0)
+                                            antifallnpc = Instance.new("BodyVelocity", v.HumanoidRootPart)
+                                            antifallnpc.Velocity = Vector3.new(0, 0, 0)
+                                            Settings.KillAura.Enabled = true
+                                            local FarmingPos = v.HumanoidRootPart.CFrame
+                                            while wait() and Settings.FarmAllBosses  and not Settings.SelectedBossFarm and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
+                                                if Settings.BringMob then
+                                                    v.HumanoidRootPart.CFrame = FarmingPos
+                                                end
+                                                if not Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
+                                                    Plr.Character.HumanoidRootPart.CFrame = FarmingPos * CFrame.new(0,100,0)
+                                                elseif Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
+                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,3)
+                                                end
+                                                if Settings.FarmAllBosses == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm then
+                                                    Settings.KillAura.Enabled = false
+                                                    antifall2:Destroy()
+                                                    antifallnpc:Destroy()
+                                                    wait(2)
+                                                    break
+                                                end
+                                            end
+                                            if Settings.FarmAllBosses == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm then
+                                                Settings.KillAura.Enabled = false
+                                                FarmingPos = nil
+                                                antifall2:Destroy()
+                                                antifallnpc:Destroy()
+                                                wait(2)
+                                            end
                                         end
                                     end
-                                    if Settings.FarmAllBosses == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied then
-                                        Settings.KillAura.Enabled = false
-                                        antifall2:Destroy()
-                                        antifallnpc:Destroy()
-                                        wait(2)
-                                    end
+                                else
+                                    break
                                 end
                             end
                         end
+                    else
+                        break
                     end
                 end
             end
         end)
     end
 end)
-local SShub = Library:CreateWindow({Title = Name.." | "..GameName.." | Script Req: Have Good Ethernet | Toggle: End",Center = true, AutoShow = true})
+--Demons
+local DemonsFarm = "Waiting..."
+spawn(function()
+    while wait() do
+            if Settings.DemonsFarm and Settings.FarmAllBosses or Settings.DemonsFarm and Settings.SelectedBossFarm then
+                DemonsFarm = "Error"
+            end
+            if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+                DemonsFarm = "Correct"
+                for i,v in pairs(game:GetService("Workspace").Mobs.Demons:GetDescendants()) do
+                    if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+                        if v:IsA("Humanoid") then
+                            v = v.Parent
+                            if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+                                if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+                                    if Tween then Tween:Cancel() Tween = nil end
+                                    TeleportTween(CFrame.new(v.Humanoid.WalkToPoint))
+                                end
+                                if v.HumanoidRootPart and v.Humanoid and not Settings.PlrDied and v.Humanoid.Health > 0 and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+                                    if Tween then Tween:Cancel() Tween = nil end
+                                        TeleportTween(CFrame.new(v.Humanoid.WalkToPoint))
+
+                                        antifall2 = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
+                                        antifall2.Velocity = Vector3.new(0, 0, 0)
+                                        antifallnpc = Instance.new("BodyVelocity", v.HumanoidRootPart)
+                                        antifallnpc.Velocity = Vector3.new(0, 0, 0)
+                                        Settings.KillAura.Enabled = true
+                                        local FarmingPos = v.HumanoidRootPart.CFrame
+                                        while wait() and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
+                                            if Settings.BringMob then
+                                                v.HumanoidRootPart.CFrame = FarmingPos
+                                            end
+                                            if not Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+                                                Plr.Character.HumanoidRootPart.CFrame = FarmingPos * CFrame.new(0,100,0)
+                                            elseif Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+                                                Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,3)
+                                            end
+                                            if Settings.DemonsFarm == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses then
+                                                Settings.KillAura.Enabled = false
+                                                antifall2:Destroy()
+                                                antifallnpc:Destroy()
+                                                wait(2)
+                                                break
+                                            end
+                                        end
+                                        if Settings.DemonsFarm == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses then
+                                            Settings.KillAura.Enabled = false
+                                            FarmingPos = nil
+                                            antifall2:Destroy()
+                                            antifallnpc:Destroy()
+                                            wait(2)
+                                        end
+                                end
+                            end
+                        end
+                    else
+                        break
+                    end
+                end
+            end
+    end
+end)
+local SShub = Library:CreateWindow({Title = Name.." | [🔥👹 UPDATE 1] Project Slayers | Script Req: Have Good Ethernet | Toggle: End",Center = true, AutoShow = true})
 local Farm = SShub:AddTab("Farm & Mods")
 local General = SShub:AddTab("General")
 local Misc = SShub:AddTab("Misc")
@@ -353,8 +507,13 @@ local Mainz1 = General:AddLeftTabbox("Mods")
 local MainL = Mainz1:AddTab("Main")
 local MainL1 = Mainz1:AddTab("Player")
 local MainL2 = General:AddRightGroupbox("Anti Stuff")
-local MainCo = Farm:AddLeftGroupbox("Testing")
-local MainCo1 = Farm:AddRightGroupbox("Testing")
+local MainCoo = Farm:AddLeftTabbox("Farming")
+local MainCo = MainCoo:AddTab("Bosses")
+local MainC1 = MainCoo:AddTab("Demon's")
+local MainC2 = MainCoo:AddTab("Npc's")
+local MainC3 = MainCoo:AddTab("Options")
+local MainC4 = Farm:AddRightGroupbox("Spawned Bosses")
+local MainCr = Farm:AddRightGroupbox("Testing")
 
 local MainMsz1 = Misc:AddLeftTabbox("Misc")
 local MainMs = MainMsz1:AddTab("Misc")
@@ -381,25 +540,39 @@ SaveManager:SetLibrary(Library)
 SaveManager:SetFolder(Name..'/'..game.PlaceId)
 SaveManager:BuildConfigSection(Settingss)
 
+if game.PlaceId == 11468159863 then
+    MainCo:AddDropdown('BossesDropdown', {Values = {"Inosuke","Renpeke Kuuchie","Enme","Muichiro Tokito","Swampy","Akeza","Rengoku"}, Default = 1, Multi = false, Text = 'Bosses', Tooltip = 'Select ur boss'})
+    Options.BossesDropdown:OnChanged(function()
+        Settings.SelectedBoss = Options.BossesDropdown.Value
+    end)
+elseif game.PlaceId == 6152116144 then
+    MainCo:AddDropdown('BossesDropdown', {Values = {"Sabito","Zanegutsu Kuuchie","Shiron","Sanemi","Giyu","Nezuko","Yahaba","Susamaru","Slasher","Bandit Zuko"}, Default = 1, Multi = false, Text = 'Bosses', Tooltip = 'Select ur boss'})
+    Options.BossesDropdown:OnChanged(function()
+        Settings.SelectedBoss = Options.BossesDropdown.Value
+    end)
+end
 
-
-MainCo:AddDropdown('BossesDropdown', {Values = {"Sabito","Zanegutsu Kuuchie","Shiron","Sanemi","Giyu","Nezuko","Yahaba","Bandit Zuko","Susamaru"}, Default = 1, Multi = false, Text = 'Bosses', Tooltip = 'Select ur boss'})
-Options.BossesDropdown:OnChanged(function()
-    Settings.SelectedBoss = Options.BossesDropdown.Value
-end)
 MainCo:AddToggle('SelectedBossFarm', {Text = 'Farm Boss (Selected)',Default = Settings.SelectedBossFarm,Tooltip = 'Farm ur selected Boss'})
 Toggles.SelectedBossFarm:OnChanged(function()
     Settings.SelectedBossFarm = Toggles.SelectedBossFarm.Value
 end)
-
+local SelectedBossFarmLabel = MainCo:AddLabel("Status: Loading...")
 MainCo:AddToggle('FarmAllBosses', {Text = 'Farm All Bosses ',Default = Settings.FarmAllBosses,Tooltip = 'Farm all bosses'})
 Toggles.FarmAllBosses:OnChanged(function()
     Settings.FarmAllBosses = Toggles.FarmAllBosses.Value
 end)
+local FarmAllBossesLabel = MainCo:AddLabel("Status: Loading...")
 
+local BreathCheck = MainCr:AddLabel("...")
+local DemonCheck = MainCr:AddLabel("...")
 
-local BreathCheck = MainCo1:AddLabel("Loading...")
-local DemonCheck = MainCo1:AddLabel("Loading...")
+local BossCheckLabel = MainC4:AddLabel("Inosuke: Loading...")
+local BossCheckLabel1 = MainC4:AddLabel("Renpeke Kuuchie: Loading...")
+local BossCheckLabel2 = MainC4:AddLabel("Enme: Loading...")
+local BossCheckLabel3 = MainC4:AddLabel("Muichiro Tokito: Loading...")
+local BossCheckLabel4 = MainC4:AddLabel("Swampy: Loading...")
+local BossCheckLabel5 = MainC4:AddLabel("Akeza: Loading...")
+local BossCheckLabel6 = MainC4:AddLabel("Rengoku: Loading...")
 
 spawn(function()
     while wait() do
@@ -408,15 +581,61 @@ spawn(function()
             local Demon = game:GetService("ReplicatedStorage")["Player_Data"][Plr.Name].DemonProgress
             BreathCheck:SetText("Breathing Progress: " .. Breath["1"].Value .. " / " .. Breath["2"].Value)
             DemonCheck:SetText("Demon Progress: " .. Demon["1"].Value .. " / " .. Demon["2"].Value)
+            SelectedBossFarmLabel:SetText("Status: "..SelectedBossFarm)
+            FarmAllBossesLabel:SetText("Status: "..FarmAllBosses)
+            for i,v in pairs(BossCheck) do
+                if i == "Inosuke" and v then
+                    BossCheckLabel:SetText("Inosuke: 🟢")
+                elseif i == "Renpeke Kuuchie" and v then
+                    BossCheckLabel1:SetText("Renpeke Kuuchie: 🟢")
+                elseif i == "Enme" and v then
+                    BossCheckLabel2:SetText("Enme: 🟢")
+                elseif i == "Muichiro Tokito" and v then
+                    BossCheckLabel3:SetText("Muichiro Tokito: 🟢")
+                elseif i == "Swampy" and v then
+                    BossCheckLabel4:SetText("Swampy: 🟢")
+                elseif i == "Akeza" and v then
+                    BossCheckLabel5:SetText("Akeza: 🟢")
+                elseif i == "Rengoku" and v then
+                    BossCheckLabel6:SetText("Rengoku: 🟢")
+                elseif i == "Inosuke" and not v then
+                    BossCheckLabel:SetText("Inosuke: 🔴")
+                elseif i == "Renpeke Kuuchie" and not v then
+                    BossCheckLabel1:SetText("Renpeke Kuuchie: 🔴")
+                elseif i == "Enme" and not v then
+                    BossCheckLabel2:SetText("Enme: 🔴")
+                elseif i == "Muichiro Tokito" and not v then
+                    BossCheckLabel3:SetText("Muichiro Tokito: 🔴")
+                elseif i == "Swampy" and not v then
+                    BossCheckLabel4:SetText("Swampy: 🔴")
+                elseif i == "Akeza" and not v then
+                    BossCheckLabel5:SetText("Akeza: 🔴")
+                elseif i == "Rengoku" and not v then
+                    BossCheckLabel6:SetText("Rengoku: 🔴")
+                end
+            end
         end)
     end
 end)
-MainCo1:AddToggle('NoSunDmg', {Text = 'No Sun Damage',Default = Settings.NoSunDmg,Tooltip = 'Dont recive damage from sun as a demon'})
+MainC1:AddToggle('DemonsFarm', {Text = 'Farm All Demons',Default = Settings.DemonsFarm,Tooltip = 'Farm All Demons'})
+Toggles.DemonsFarm:OnChanged(function()
+    Settings.DemonsFarm = Toggles.DemonsFarm.Value
+end)
+MainC3:AddDropdown('FarmMethod', {Values = {"Fists","Sword","Scythe","Claws"}, Default = 1, Multi = false, Text = 'Farm Method', Tooltip = 'Select farm method, it will up mastery on the selected one'})
+    Options.FarmMethod:OnChanged(function()
+        Settings.KillAura.TypeSelected = Options.FarmMethod.Value
+    end)
+MainC3:AddToggle('BringMob', {Text = 'Bring Mob',Default = Settings.BringMob,Tooltip = 'Always bring the mob when farming'})
+Toggles.BringMob:OnChanged(function()
+    Settings.BringMob = Toggles.BringMob.Value
+end)
+
+MainCr:AddToggle('NoSunDmg', {Text = 'No Sun Damage',Default = Settings.NoSunDmg,Tooltip = 'Dont recive damage from sun as a demon'})
 Toggles.NoSunDmg:OnChanged(function()
     Settings.NoSunDmg = Toggles.NoSunDmg.Value
     game:GetService("Players").LocalPlayer.PlayerScripts["Small_Scripts"].Gameplay["Sun_Damage"].Disabled = Settings.NoSunDmg
 end)
-MainCo1:AddToggle('AutoChest', {Text = 'Auto Loot Chests',Default = Settings.AutoLootChest,Tooltip = 'Auto Loot Boss Chests'})
+MainCr:AddToggle('AutoChest', {Text = 'Auto Loot Chests',Default = Settings.AutoLootChest,Tooltip = 'Auto Loot Boss Chests'})
 Toggles.AutoChest:OnChanged(function()
     Settings.AutoLootChest = Toggles.AutoChest.Value
 end)
@@ -425,7 +644,7 @@ local Villages = {
     ["Kiribating Village"] = CFrame.new(120.362045, 282.207642, -1743.01636, 0.999990761, 2.85735684e-08, 0.00429180823, -2.90243012e-08, 1, 1.04959462e-07, -0.00429180823, -1.0508306e-07, 0.999990761),
     ["Zapiwara Cave [Demon Art Spins]"] = CFrame.new(-38.216156, 275.869537, -2403.53711, -0.244779825, 1.40672629e-08, 0.969578683, -3.9969752e-08, 1, -2.45993981e-08, -0.969578683, -4.47752555e-08, -0.244779825),
     ["Ushumaro Village"] = CFrame.new(-90.0373688, 354.723511, -3170.00439, 0.817297578, -1.0121405e-08, 0.576215804, 3.12666586e-08, 1, -2.6782951e-08, -0.576215804, 3.99059843e-08, 0.817297578),
-    ["Butterf:ly Mansion"] = CFrame.new(3001.71753, 316.000519, -3806.40601, -0.998922288, -7.88841792e-09, -0.0464141443, -9.13921649e-09, 1, 2.67364477e-08, 0.0464141443, 2.71318221e-08, -0.998922288),
+    ["Butterfly Mansion"] = CFrame.new(3001.71753, 316.000519, -3806.40601, -0.998922288, -7.88841792e-09, -0.0464141443, -9.13921649e-09, 1, 2.67364477e-08, 0.0464141443, 2.71318221e-08, -0.998922288),
     ["Final Selection"] = CFrame.new(5258.51709, 365.857056, -2422.04443, 0.0163344685, -1.36483918e-08, -0.999866605, -6.17656548e-09, 1, -1.37511176e-08, 0.999866605, 6.40035847e-09, 0.0163344685),
     ["Zapiwara Mountain"] = CFrame.new(-366.581635, 425.857422, -2371.77124, -0.998583674, -7.39169579e-08, 0.0532043427, -7.35017522e-08, 1, 9.76061187e-09, -0.0532043427, 5.8361751e-09, -0.998583674),
     ["Wind Trainer"] = CFrame.new(1797.46521, 334.100983, -3466.552, 0.99727422, 7.59257635e-09, -0.0737840235, -2.28731412e-09, 1, 7.19870812e-08, 0.0737840235, -7.16220967e-08, 0.99727422),
@@ -446,6 +665,7 @@ Options.LocationsDropDown:OnChanged(function()
     Settings.SelectedLocation = Options.LocationsDropDown.Value
 end)
 MainT:AddButton("Tween", function()
+    if Tween then Tween:Cancel() Tween = nil end
     TeleportTween(Villages[Settings.SelectedLocation])
 end)
 
@@ -454,13 +674,19 @@ Options.BreathLocationsDropDown:OnChanged(function()
     Settings.SelectedBreathLocation = Options.BreathLocationsDropDown.Value
 end)
 MainT1:AddButton("Tween", function()
+    if Tween then Tween:Cancel() Tween = nil end
     TeleportTween(Breaths[Settings.SelectedBreathLocation])
 end)
 MainTr:AddButton("Stop Tween", function()
-    TeleportTween(Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
+    if Tween then Tween:Cancel() Tween = nil end
 end)
 MainTele:AddButton("Server Hop (Low Players)", function()
+    game:GetService("TeleportService"):TeleportCancel()
     Module:Teleport(game.PlaceId)
+end)
+MainTele:AddButton("Rejoin", function()
+game:GetService("TeleportService"):TeleportCancel()
+game:GetService("TeleportService"):Teleport(game.PlaceId, Plr)
 end)
 --Player Visuals
 local PlayerESPsToggle = MainP:AddToggle('PlayerESPsToggle', {Text = "Toggle ESP's",Default = ESPSettings.PlayerESP.Enabled,Tooltip = 'Show other players trought walls'})
