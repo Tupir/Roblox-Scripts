@@ -327,7 +327,7 @@ spawn(function()
                                                     v.HumanoidRootPart.CFrame = FarmingPos
                                                     end
                                                     if not Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
-                                                        Plr.Character.HumanoidRootPart.CFrame = FarmingPos * CFrame.new(0,100,0)
+                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,100,0)
                                                     elseif Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
                                                         Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,3)
                                                     end
@@ -399,7 +399,7 @@ spawn(function()
                                                     v.HumanoidRootPart.CFrame = FarmingPos
                                                 end
                                                 if not Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                                    Plr.Character.HumanoidRootPart.CFrame = FarmingPos * CFrame.new(0,100,0)
+                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,100,0)
                                                 elseif Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
                                                     Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,3)
                                                 end
@@ -466,7 +466,7 @@ spawn(function()
                                                 v.HumanoidRootPart.CFrame = FarmingPos
                                             end
                                             if not Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
-                                                Plr.Character.HumanoidRootPart.CFrame = FarmingPos * CFrame.new(0,100,0)
+                                                Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,100,0)
                                             elseif Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
                                                 Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame * CFrame.new(0,0,3)
                                             end
