@@ -79,9 +79,7 @@ local Success, Error = pcall(function()
     local Plr = Players.LocalPlayer
     local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
     --#endregion
-    local antifall2 = nil
-    local antifallnpc = nil
-    local antifall = nil
+
     local function TableRemove(Table, Item)
         local Index = nil
         for i, v in ipairs (Table) do 
@@ -92,16 +90,16 @@ local Success, Error = pcall(function()
     table.remove(Table, Index)
     end
 
-     local function noclip()
+    local function NoclipF()
         for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
             if v:IsA("BasePart") and v.CanCollide == true then
                 v.CanCollide = false
-                game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
+                Plr.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
             end
         end
     end
+
     local Tween
-    local noclipE = nil
     local function TeleportTween(To)
         Distance = (To.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
         if Distance < 200 then
@@ -116,19 +114,22 @@ local Success, Error = pcall(function()
             game.Players.LocalPlayer.Character.HumanoidRootPart,
             TweenInfo.new(Distance/Speed, Enum.EasingStyle.Linear),
             {CFrame = To})
-        noclipE = game:GetService("RunService").Stepped:Connect(noclip) 
+        local NoFall
         if not Plr.Character.HumanoidRootPart:FindFirstChild("BodyVelocity") then
-        antifall = Instance.new("BodyVelocity", Players.LocalPlayer.Character.HumanoidRootPart)
-        antifall.Velocity = Vector3.new(0, 0, 0)
+            NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
+            NoFall.Velocity = Vector3.new(0, 0, 0)
         end
+        local Noclip = nil
+        Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
         Tween:Play()
         Tween.Completed:Wait()
         pcall(function()
             Tween = nil
-            antifall:Destroy()
-            noclipE:Disconnect()
+            NoFall:Destroy()
+            Noclip:Disconnect()
         end)
     end
+    
     local function args(Type, style, count)
         if Type == 1 then
             return {
@@ -158,6 +159,7 @@ local Hitting = false
             if Settings.KillAura.Enabled and not Settings.PlrDied and Plr.Character:FindFirstChild("HumanoidRootPart") and Plr.Character:FindFirstChild("Humanoid") then
                 if Settings.KillAura.TypeSelected == "Fists" then
                     Hitting=true
+                    Notify("Hitting")
                     wait(.2)
                     game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
                     for i = 1, 7 do
@@ -165,6 +167,7 @@ local Hitting = false
                         game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"fist_combat", 919)))
                     end
                     wait(.2)
+                    Notify("not Hitting")
                     Hitting=false
                     wait(2.5)
                 elseif Settings.KillAura.TypeSelected == "Sword" then
@@ -267,6 +270,7 @@ elseif World == 1 then
     }
     BossCheck = First
 end
+
 spawn(function()
     while wait() do
         pcall(function()
@@ -291,6 +295,7 @@ end)
 Plr.CharacterAdded:Connect(function()
     Settings.PlrDied = false
 end)
+
 spawn(function()
     while wait() do
         pcall(function()
@@ -341,35 +346,46 @@ spawn(function()
                                                 if Tween then Tween:Cancel() Tween = nil end
                                                 TeleportTween(v.HumanoidRootPart.CFrame)
 
-                                                antifall2 = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
-                                                antifall2.Velocity = Vector3.new(0, 0, 0)
-                                                antifallnpc = Instance.new("BodyVelocity", v.HumanoidRootPart)
-                                                antifallnpc.Velocity = Vector3.new(0, 0, 0)
+                                                local NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
+                                                local NoFall1 = Instance.new("BodyVelocity", v.HumanoidRootPart)
+                                                NoFall.Velocity = Vector3.new(0, 0, 0)
+                                                NoFall1.Velocity = Vector3.new(0, 0, 0)
+                                                local Noclip = nil
+                                                Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
+                                                
                                                 Settings.KillAura.Enabled = true
                                                 local FarmingPos = v.HumanoidRootPart.CFrame
+                                                local Re
                                                 while wait() and Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
-                                                    if Settings.BringMob then
-                                                    v.HumanoidRootPart.CFrame = FarmingPos
-                                                    end
-                                                    if not Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
-                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
-                                                    elseif Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
-                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,0,3)
-                                                    end
-                                                    if Settings.SelectedBossFarm == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
-                                                        Settings.KillAura.Enabled = false
-                                                        FarmingPos = nil
-                                                        antifall2:Destroy()
-                                                        antifallnpc:Destroy()
-                                                        wait(2)
-                                                        break
-                                                    end
+                                                        Re = RunService.RenderStepped:Connect(function()
+                                                            pcall(function()
+                                                                if Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
+                                                                    if Settings.BringMob then
+                                                                        v.HumanoidRootPart.CFrame = FarmingPos
+                                                                    end
+                                                                    if not Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
+                                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
+                                                                    elseif Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
+                                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame* CFrame.new(0, 5, 0)*CFrame.Angles(math.rad(-90), 0, 0)
+                                                                    end
+                                                                elseif not Settings.SelectedBossFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
+                                                                    Settings.KillAura.Enabled = false
+                                                                    FarmingPos = nil
+                                                                    Noclip:Disconnect()
+                                                                    NoFall:Destroy()
+                                                                    NoFall1:Destroy()
+                                                                    Re:Disconnect()
+                                                                    wait(2)
+                                                                end
+                                                            end)
+                                                        end)
                                                 end
-                                                if Settings.SelectedBossFarm == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
+                                                if not Settings.SelectedBossFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
                                                     Settings.KillAura.Enabled = false
                                                     FarmingPos = nil
-                                                    antifall2:Destroy()
-                                                    antifallnpc:Destroy()
+                                                    Noclip:Disconnect()
+                                                    NoFall:Destroy()
+                                                    NoFall1:Destroy()
                                                     wait(2)
                                                 end
                                             end
@@ -413,34 +429,46 @@ spawn(function()
                                             if Tween then Tween:Cancel() Tween = nil end
                                             TeleportTween(v.HumanoidRootPart.CFrame)
 
-                                            antifall2 = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
-                                            antifall2.Velocity = Vector3.new(0, 0, 0)
-                                            antifallnpc = Instance.new("BodyVelocity", v.HumanoidRootPart)
-                                            antifallnpc.Velocity = Vector3.new(0, 0, 0)
+                                            local NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
+                                            local NoFall1 = Instance.new("BodyVelocity", v.HumanoidRootPart)
+                                            NoFall.Velocity = Vector3.new(0, 0, 0)
+                                            NoFall1.Velocity = Vector3.new(0, 0, 0)
+                                            local Noclip = nil
+                                            Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
+
                                             Settings.KillAura.Enabled = true
                                             local FarmingPos = v.HumanoidRootPart.CFrame
-                                            while wait() and Settings.FarmAllBosses  and not Settings.SelectedBossFarm and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
-                                                if Settings.BringMob then
-                                                    v.HumanoidRootPart.CFrame = FarmingPos
-                                                end
-                                                if not Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
-                                                elseif Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,0,3)
-                                                end
-                                                if Settings.FarmAllBosses == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm then
-                                                    Settings.KillAura.Enabled = false
-                                                    antifall2:Destroy()
-                                                    antifallnpc:Destroy()
-                                                    wait(2)
-                                                    break
-                                                end
+                                            local Re
+                                            while wait() and Settings.FarmAllBosses and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
+                                                    Re = RunService.RenderStepped:Connect(function()
+                                                        pcall(function()
+                                                            if Settings.FarmAllBosses and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
+                                                                if Settings.BringMob then
+                                                                    v.HumanoidRootPart.CFrame = FarmingPos
+                                                                end
+                                                                if not Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
+                                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
+                                                                elseif Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
+                                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame* CFrame.new(0, 5, 0)*CFrame.Angles(math.rad(-90), 0, 0)
+                                                                end
+                                                            elseif not Settings.FarmAllBosses or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm then
+                                                                Settings.KillAura.Enabled = false
+                                                                FarmingPos = nil
+                                                                Noclip:Disconnect()
+                                                                NoFall:Destroy()
+                                                                NoFall1:Destroy()
+                                                                Re:Disconnect()
+                                                                wait(2)
+                                                            end
+                                                        end)
+                                                    end)
                                             end
-                                            if Settings.FarmAllBosses == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm then
+                                            if not Settings.FarmAllBosses or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm then
                                                 Settings.KillAura.Enabled = false
                                                 FarmingPos = nil
-                                                antifall2:Destroy()
-                                                antifallnpc:Destroy()
+                                                Noclip:Disconnect()
+                                                NoFall:Destroy()
+                                                NoFall1:Destroy()
                                                 wait(2)
                                             end
                                         end
@@ -462,6 +490,7 @@ end)
 local DemonsFarm = "Waiting..."
 spawn(function()
     while wait() do
+        pcall(function()
             if Settings.DemonsFarm and Settings.FarmAllBosses or Settings.DemonsFarm and Settings.SelectedBossFarm then
                 DemonsFarm = "Error"
             end
@@ -478,38 +507,50 @@ spawn(function()
                                 end
                                 if v.HumanoidRootPart and v.Humanoid and not Settings.PlrDied and v.Humanoid.Health > 0 and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
                                     if Tween then Tween:Cancel() Tween = nil end
-                                        TeleportTween(CFrame.new(v.Humanoid.WalkToPoint))
+                                    TeleportTween(CFrame.new(v.Humanoid.WalkToPoint))
 
-                                        antifall2 = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
-                                        antifall2.Velocity = Vector3.new(0, 0, 0)
-                                        antifallnpc = Instance.new("BodyVelocity", v.HumanoidRootPart)
-                                        antifallnpc.Velocity = Vector3.new(0, 0, 0)
-                                        Settings.KillAura.Enabled = true
-                                        local FarmingPos = v.HumanoidRootPart.CFrame
-                                        while wait() and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
-                                            if Settings.BringMob then
-                                                v.HumanoidRootPart.CFrame = FarmingPos
-                                            end
-                                            if not Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
-                                                Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
-                                            elseif Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
-                                                Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,0,3)
-                                            end
-                                            if Settings.DemonsFarm == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses then
-                                                Settings.KillAura.Enabled = false
-                                                antifall2:Destroy()
-                                                antifallnpc:Destroy()
-                                                wait(2)
-                                                break
-                                            end
-                                        end
-                                        if Settings.DemonsFarm == false or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses then
-                                            Settings.KillAura.Enabled = false
-                                            FarmingPos = nil
-                                            antifall2:Destroy()
-                                            antifallnpc:Destroy()
-                                            wait(2)
-                                        end
+                                    local NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
+                                    local NoFall1 = Instance.new("BodyVelocity", v.HumanoidRootPart)
+                                    NoFall.Velocity = Vector3.new(0, 0, 0)
+                                    NoFall1.Velocity = Vector3.new(0, 0, 0)
+                                    local Noclip = nil
+                                    Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
+
+                                    Settings.KillAura.Enabled = true
+                                    local FarmingPos = v.HumanoidRootPart.CFrame
+                                    local Re
+                                    while wait() and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
+                                        Re = RunService.RenderStepped:Connect(function()
+                                            pcall(function()
+                                                if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
+                                                    if Settings.BringMob then
+                                                        v.HumanoidRootPart.CFrame = FarmingPos
+                                                    end
+                                                    if not Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
+                                                    elseif Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame* CFrame.new(0, 5, 0)*CFrame.Angles(math.rad(-90), 0, 0)
+                                                    end
+                                                elseif not Settings.DemonsFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses then
+                                                    Settings.KillAura.Enabled = false
+                                                    FarmingPos = nil
+                                                    Noclip:Disconnect()
+                                                    NoFall:Destroy()
+                                                    NoFall1:Destroy()
+                                                    Re:Disconnect()
+                                                    wait(2)
+                                                end
+                                            end)
+                                        end)
+                                    end
+                                    if not Settings.DemonsFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses then
+                                        Settings.KillAura.Enabled = false
+                                        FarmingPos = nil
+                                        Noclip:Disconnect()
+                                        NoFall:Destroy()
+                                        NoFall1:Destroy()
+                                        wait(2)
+                                    end
                                 end
                             end
                         end
@@ -518,6 +559,7 @@ spawn(function()
                     end
                 end
             end
+        end)
     end
 end)
 local SShub = Library:CreateWindow({Title = Name.." | "..GameName.." | Script Req: Have Good Ethernet | Toggle: End",Center = true, AutoShow = true})
@@ -528,8 +570,7 @@ local Settingss = SShub:AddTab("Settings")
 
 local MainCoo = Farm:AddLeftTabbox("Farming")
 local MainCo = MainCoo:AddTab("Bosses")
-local MainC1 = MainCoo:AddTab("Demon's")
-local MainC2 = MainCoo:AddTab("Npc's")
+local MainC1 = MainCoo:AddTab("Demon & Npc")
 local MainC3 = MainCoo:AddTab("Options")
 local MainC4 = Farm:AddRightGroupbox("Spawned Bosses")
 local MainCr = Farm:AddRightGroupbox("Info & Some Mods")
@@ -572,6 +613,13 @@ Toggles.FarmAllBosses:OnChanged(function()
     Settings.FarmAllBosses = Toggles.FarmAllBosses.Value
 end)
 local FarmAllBossesLabel = MainCo:AddLabel("Status: Loading...")
+
+MainC1:AddToggle('DemonsFarm', {Text = 'Farm All Demons',Default = Settings.DemonsFarm,Tooltip = 'Farm All Demons'})
+Toggles.DemonsFarm:OnChanged(function()
+    Settings.DemonsFarm = Toggles.DemonsFarm.Value
+end)
+local DemonsFarmLabel = MainC1:AddLabel("Status: Loading...")
+
 MainCo:AddDivider()
 MainCo:AddLabel("If autofarms dont working correctly u can go to\nOptions > Bring Mob it may will fix it a bit.\nBe sure no one is close to boss.\nU can try change farm altitude in Options too.",true)
 MainCo:AddDivider()
@@ -603,6 +651,7 @@ spawn(function()
             DemonCheck:SetText("Demon Progress: " .. Demon["1"].Value .. " / " .. Demon["2"].Value)
             SelectedBossFarmLabel:SetText("Status: "..SelectedBossFarm)
             FarmAllBossesLabel:SetText("Status: "..FarmAllBosses)
+            DemonsFarmLabel:SetText("Status: "..DemonsFarm)
                 for i,v in pairs(BossCheck) do
                     if World == 2 then
                         if i == "Inosuke" and v then
@@ -682,15 +731,12 @@ spawn(function()
         end)
     end
 end)
-MainC1:AddToggle('DemonsFarm', {Text = 'Farm All Demons',Default = Settings.DemonsFarm,Tooltip = 'Farm All Demons'})
-Toggles.DemonsFarm:OnChanged(function()
-    Settings.DemonsFarm = Toggles.DemonsFarm.Value
-end)
+
 MainC3:AddDropdown('FarmMethod', {Values = {"Fists","Sword","Scythe","Claws"}, Default = 1, Multi = false, Text = 'Farm Method', Tooltip = 'Select farm method, it will up mastery on the selected one'})
     Options.FarmMethod:OnChanged(function()
         Settings.KillAura.TypeSelected = Options.FarmMethod.Value
 end)
-MainC3:AddSlider('FarmAltitude', {Text = 'Farm Altitude (Recommended Default)',Default = Settings.FarmAltitude,Min = 10,Max = 150,Rounding = 0,Compact = false})
+MainC3:AddSlider('FarmAltitude', {Text = 'Farm Altitude (Recommended Default)',Default = Settings.FarmAltitude,Min = -50,Max = 150,Rounding = 0,Compact = false})
 Options.FarmAltitude:OnChanged(function()
     Settings.FarmAltitude = Options.FarmAltitude.Value
 end)
