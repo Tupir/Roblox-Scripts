@@ -1,4 +1,4 @@
-local GravLibrary
+local GravLibrary = {}
 
 local random = Random.new()
 local letters = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'}
@@ -21,7 +21,7 @@ local function getRandomString(length, includeCapitals)
 end
 
 function GravLibrary:SetNoGravity(HumanoidRootPart)
-    local NoGravity
+    local NoGravity = {}
 
     local BodyVelocity = Instance.new("BodyVelocity", HumanoidRootPart)
     BodyVelocity.Velocity = Vector3.new(0, 0, 0)
