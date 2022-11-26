@@ -29,7 +29,9 @@ function GravLibrary:SetNoGravity(HumanoidRootPart)
     BodyVelocity.Name = BName
 
     function NoGravity:Remove()
-        HumanoidRootPart:FindFirstChild(BName):Destroy()
+	pcall)function()
+        BodyVelocity:Destroy()
+	end)
     end
     return NoGravity
 end
