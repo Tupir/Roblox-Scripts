@@ -23,7 +23,8 @@ local Settings = {
     FarmAllBosses = false,
     SelectedDemons = "",
     DemonsFarm = false,
-    BringMob = false
+    BringMob = false,
+    FarmAltitude = 90
 };
 
 local ESPSettings = {
@@ -351,7 +352,7 @@ spawn(function()
                                                     v.HumanoidRootPart.CFrame = FarmingPos
                                                     end
                                                     if not Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
-                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,100,0)
+                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                                     elseif Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
                                                         Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,0,3)
                                                     end
@@ -423,7 +424,7 @@ spawn(function()
                                                     v.HumanoidRootPart.CFrame = FarmingPos
                                                 end
                                                 if not Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,100,0)
+                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                                 elseif Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
                                                     Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,0,3)
                                                 end
@@ -490,7 +491,7 @@ spawn(function()
                                                 v.HumanoidRootPart.CFrame = FarmingPos
                                             end
                                             if not Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
-                                                Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,100,0)
+                                                Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                             elseif Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
                                                 Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,0,3)
                                             end
@@ -572,7 +573,7 @@ Toggles.FarmAllBosses:OnChanged(function()
 end)
 local FarmAllBossesLabel = MainCo:AddLabel("Status: Loading...")
 MainCo:AddDivider()
-MainCo:AddLabel("If autofarms dont working u can go to Options > Bring Mob\nit may will fix it a bit.",true)
+MainCo:AddLabel("If autofarms dont working correctly u can go to\nOptions > Bring Mob it may will fix it a bit.\nBe sure no one is close to boss.\nU can try change farm altitude in Options too.",true)
 MainCo:AddDivider()
 local BreathCheck = MainCr:AddLabel("...")
 local DemonCheck = MainCr:AddLabel("...")
@@ -688,7 +689,11 @@ end)
 MainC3:AddDropdown('FarmMethod', {Values = {"Fists","Sword","Scythe","Claws"}, Default = 1, Multi = false, Text = 'Farm Method', Tooltip = 'Select farm method, it will up mastery on the selected one'})
     Options.FarmMethod:OnChanged(function()
         Settings.KillAura.TypeSelected = Options.FarmMethod.Value
-    end)
+end)
+MainC3:AddSlider('FarmAltitude', {Text = 'Farm Altitude (Recommended Default)',Default = Settings.FarmAltitude,Min = 10,Max = 120,Rounding = 2,Compact = false})
+Options.FarmAltitude:OnChanged(function()
+    Settings.FarmAltitude = Options.FarmAltitude.Value
+end)
 MainC3:AddToggle('BringMob', {Text = 'Bring Mob',Default = Settings.BringMob,Tooltip = 'Always bring the mob when farming'})
 Toggles.BringMob:OnChanged(function()
     Settings.BringMob = Toggles.BringMob.Value
