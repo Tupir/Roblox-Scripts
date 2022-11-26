@@ -690,7 +690,7 @@ MainC3:AddDropdown('FarmMethod', {Values = {"Fists","Sword","Scythe","Claws"}, D
     Options.FarmMethod:OnChanged(function()
         Settings.KillAura.TypeSelected = Options.FarmMethod.Value
 end)
-MainC3:AddSlider('FarmAltitude', {Text = 'Farm Altitude (Recommended Default)',Default = Settings.FarmAltitude,Min = 10,Max = 120,Rounding = 2,Compact = false})
+MainC3:AddSlider('FarmAltitude', {Text = 'Farm Altitude (Recommended Default)',Default = Settings.FarmAltitude,Min = 10,Max = 150,Rounding = 1,Compact = false})
 Options.FarmAltitude:OnChanged(function()
     Settings.FarmAltitude = Options.FarmAltitude.Value
 end)
