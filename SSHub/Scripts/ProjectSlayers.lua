@@ -159,7 +159,6 @@ local Hitting = false
             if Settings.KillAura.Enabled and not Settings.PlrDied and Plr.Character:FindFirstChild("HumanoidRootPart") and Plr.Character:FindFirstChild("Humanoid") then
                 if Settings.KillAura.TypeSelected == "Fists" then
                     Hitting=true
-                    Notify("Hitting")
                     wait(.2)
                     game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
                     for i = 1, 7 do
@@ -167,7 +166,6 @@ local Hitting = false
                         game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"fist_combat", 919)))
                     end
                     wait(.2)
-                    Notify("not Hitting")
                     Hitting=false
                     wait(2.5)
                 elseif Settings.KillAura.TypeSelected == "Sword" then
@@ -357,7 +355,7 @@ spawn(function()
                                                 local FarmingPos = v.HumanoidRootPart.CFrame
                                                 local Re
                                                 while wait() and Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
-                                                        Re = RunService.RenderStepped:Connect(function()
+                                                        
                                                             pcall(function()
                                                                 if Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
                                                                     if Settings.BringMob then
@@ -378,7 +376,7 @@ spawn(function()
                                                                     wait(2)
                                                                 end
                                                             end)
-                                                        end)
+
                                                 end
                                                 if not Settings.SelectedBossFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
                                                     Settings.KillAura.Enabled = false
@@ -440,7 +438,7 @@ spawn(function()
                                             local FarmingPos = v.HumanoidRootPart.CFrame
                                             local Re
                                             while wait() and Settings.FarmAllBosses and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
-                                                    Re = RunService.RenderStepped:Connect(function()
+
                                                         pcall(function()
                                                             if Settings.FarmAllBosses and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
                                                                 if Settings.BringMob then
@@ -461,7 +459,7 @@ spawn(function()
                                                                 wait(2)
                                                             end
                                                         end)
-                                                    end)
+
                                             end
                                             if not Settings.FarmAllBosses or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm then
                                                 Settings.KillAura.Enabled = false
@@ -520,7 +518,7 @@ spawn(function()
                                     local FarmingPos = v.HumanoidRootPart.CFrame
                                     local Re
                                     while wait() and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
-                                        Re = RunService.RenderStepped:Connect(function()
+
                                             pcall(function()
                                                 if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
                                                     if Settings.BringMob then
@@ -541,7 +539,7 @@ spawn(function()
                                                     wait(2)
                                                 end
                                             end)
-                                        end)
+
                                     end
                                     if not Settings.DemonsFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses then
                                         Settings.KillAura.Enabled = false
