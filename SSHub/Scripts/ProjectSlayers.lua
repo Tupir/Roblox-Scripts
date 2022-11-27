@@ -27,6 +27,7 @@ local Settings = {
     BringMob = false,
     FarmAltitude = 90,
     InfStamina = false,
+    InfBreath = false,
     MugenTrain = false
 };
 
@@ -327,10 +328,29 @@ spawn(function()
                 if Settings.InfStamina then
                     getrenv()._G:Stamina(-9e9)
                 end
+                if Settings.InfBreath then
+                    getrenv()._G:Breath(-9e9)
+                end
             end)
         end)
     end
 end)
+local function ClosestDemon()
+    local Target = nil; local magn = math.huge
+    for i,v in pairs(game:GetService("Workspace").Mobs:GetDescendants()) do
+        if v:IsA("Humanoid") then
+            v = v.Parent
+            if string.find(v.Name, "Demon") then
+                local mag = (Plr.Character.HumanoidRootPart.Position - v.Humanoid.WalkToPoint).Magnitude
+                if mag < magn then 
+                    magn = mag 
+                    Target = v
+                end
+            end
+        end
+    end
+    return Target
+end
 local function ClosestEnemy()
     local Target = nil; local magn = math.huge
     for i,v in pairs(game:GetService("Workspace").Mobs:GetDescendants()) do
@@ -366,7 +386,7 @@ spawn(function()
                         pcall(function()
                             if Settings.MugenTrain and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
                                 if Settings.BringMob then
-                                    Enemy.HumanoidRootPart.CFrame = FarmingPos*CFrame.Angles(0, 0, 0)
+                                    Enemy.HumanoidRootPart.CFrame = FarmingPos
                                 end
                                 if not Hitting and Settings.MugenTrain then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
@@ -384,7 +404,7 @@ spawn(function()
                             end
                         end)
                     end
-                    if not Settings.SelectedBossFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
+                    if not Settings.MugenTrain or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                         Settings.KillAura.Enabled = false
                         FarmingPos = nil
                         Noclip:Disconnect()
@@ -436,7 +456,7 @@ spawn(function()
                                                             pcall(function()
                                                                 if Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
                                                                     if Settings.BringMob then
-                                                                        v.HumanoidRootPart.CFrame = FarmingPos*CFrame.Angles(0, 0, 0)
+                                                                        v.HumanoidRootPart.CFrame = FarmingPos
                                                                     end
                                                                     if not Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
                                                                         Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
@@ -518,7 +538,7 @@ spawn(function()
                                                         pcall(function()
                                                             if Settings.FarmAllBosses and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
                                                                 if Settings.BringMob then
-                                                                    v.HumanoidRootPart.CFrame = FarmingPos*CFrame.Angles(0, 0, 0)
+                                                                    v.HumanoidRootPart.CFrame = FarmingPos
                                                                 end
                                                                 if not Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
                                                                     Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
@@ -566,37 +586,36 @@ local DemonsFarm = "Waiting..."
 spawn(function()
     while task.wait() do
         pcall(function()
-            if Settings.DemonsFarm and Settings.FarmAllBosses or Settings.DemonsFarm and Settings.SelectedBossFarm then
+            if Settings.DemonsFarm then
                 DemonsFarm = "Error"
             end
-            if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+            if Settings.DemonsFarm then
                 DemonsFarm = "Correct"
-                local Enemy = ClosestEnemy()
-                if string.find(Enemy.Name, "Demon") then
-                    if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
-                        if not Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+                local Enemy = ClosestDemon()
+                    if Settings.DemonsFarm then
+                        if not Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and Settings.DemonsFarm then
                             if Tween then Tween:Cancel() Tween = nil end
                             TeleportTween(CFrame.new(Enemy.Humanoid.WalkToPoint))
-                        elseif Enemy.HumanoidRootPart and Enemy.Humanoid and not Settings.PlrDied and Enemy.Humanoid.Health > 0 and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+                        elseif Enemy.HumanoidRootPart and Enemy.Humanoid and not Settings.PlrDied and Enemy.Humanoid.Health > 0 and Settings.DemonsFarm then
                             if Tween then Tween:Cancel() Tween = nil end
-                            TeleportTween(CFrame.new(Enemy.Humanoid.WalkToPoint))
+                            TeleportTween(Enemy.HumanoidRootPart.CFrame)
                             local NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
                             NoFall.Velocity = Vector3.new(0, 0, 0)
                             local Noclip = nil
                             Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
                             Settings.KillAura.Enabled = true
                             local FarmingPos = Enemy.HumanoidRootPart.CFrame
-                            while task.wait() and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied do
-                                if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
+                            while task.wait() and Settings.DemonsFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied do
+                                if Settings.DemonsFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
                                     if Settings.BringMob then
-                                        Enemy.HumanoidRootPart.CFrame = FarmingPos*CFrame.Angles(0, 0, 0)
+                                        Enemy.HumanoidRootPart.CFrame = FarmingPos
                                     end
                                     if not Hitting and Settings.DemonsFarm then
                                         Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                     elseif Hitting and Settings.DemonsFarm then
                                         Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame* CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                     end
-                                elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses or not Settings.DemonsFarm then
+                                elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                     Settings.KillAura.Enabled = false
                                     FarmingPos = nil
                                     Noclip:Disconnect()
@@ -606,7 +625,7 @@ spawn(function()
                                     end
                                 end
                             end
-                            if not Settings.DemonsFarm or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses then
+                            if not Settings.DemonsFarm or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                 Settings.KillAura.Enabled = false
                                 FarmingPos = nil
                                 Noclip:Disconnect()
@@ -617,7 +636,6 @@ spawn(function()
                             end
                         end
                     end
-                end
             end
         end)
     end
@@ -675,16 +693,16 @@ Toggles.FarmAllBosses:OnChanged(function()
 end)
 local FarmAllBossesLabel = MainCo:AddLabel("Status: Loading...")
 
-MainC1:AddToggle('DemonsFarm', {Text = 'Farm All Demons (Laggy ⚠️)',Default = Settings.DemonsFarm,Tooltip = 'Farm All Demons'})
+MainC1:AddToggle('DemonsFarm', {Text = 'Farm All Demons',Default = Settings.DemonsFarm,Tooltip = 'Farm All Demons'})
 Toggles.DemonsFarm:OnChanged(function()
     Settings.DemonsFarm = Toggles.DemonsFarm.Value
 end)
+local DemonsFarmLabel = MainC1:AddLabel("Status: Loading...")
 MainC1:AddToggle('MugenTrain', {Text = 'Mugen Train',Default = Settings.MugenTrain,Tooltip = '???'})
 Toggles.MugenTrain:OnChanged(function()
     Settings.MugenTrain = Toggles.MugenTrain.Value
 end)
 
-local DemonsFarmLabel = MainC1:AddLabel("Status: Loading...")
 MainCo:AddDivider()
 MainCo:AddLabel("If autofarms dont working correctly u can go to\nOptions > Bring Mob it may will fix it a bit.\nBe sure no one is close to boss.\nU can try change farm altitude in Options too.",true)
 MainCo:AddDivider()
@@ -823,8 +841,14 @@ MainCr:AddToggle('InfStamina', {Text = 'Inf Stamina',Default = Settings.InfStami
 Toggles.InfStamina:OnChanged(function()
     Settings.InfStamina = Toggles.InfStamina.Value
 end)
+MainCr:AddToggle('InfBreath', {Text = 'Inf Breath',Default = Settings.InfBreath,Tooltip = 'U have infinite Health'})
+Toggles.InfBreath:OnChanged(function()
+    Settings.InfBreath = Toggles.InfBreath.Value
+end)
 
-local Villages = {
+local Villages = {}
+if World == 1 then
+    local First = {
     ["Kiribating Village"] = CFrame.new(120.362045, 282.207642, -1743.01636, 0.999990761, 2.85735684e-08, 0.00429180823, -2.90243012e-08, 1, 1.04959462e-07, -0.00429180823, -1.0508306e-07, 0.999990761),
     ["Zapiwara Cave [Demon Art Spins]"] = CFrame.new(-38.216156, 275.869537, -2403.53711, -0.244779825, 1.40672629e-08, 0.969578683, -3.9969752e-08, 1, -2.45993981e-08, -0.969578683, -4.47752555e-08, -0.244779825),
     ["Ushumaro Village"] = CFrame.new(-90.0373688, 354.723511, -3170.00439, 0.817297578, -1.0121405e-08, 0.576215804, 3.12666586e-08, 1, -2.6782951e-08, -0.576215804, 3.99059843e-08, 0.817297578),
@@ -836,7 +860,26 @@ local Villages = {
     ["Waroru Cave"] = CFrame.new(689.451843, 261.933289, -2469.948, -0.990007997, -2.02267403e-09, -0.141011208, 3.4283596e-09, 1, -3.8413809e-08, 0.141011208, -3.85134129e-08, -0.990007997),
     ["Ouwbayashi Home"] = CFrame.new(1241.24353, 320.429382, -4568.84521, 0.0538635328, 2.40611175e-08, -0.998548329, -7.93333221e-09, 1, 2.36681608e-08, 0.998548329, 6.64696431e-09, 0.0538635328),
     ["Dangerous Woods"] = CFrame.new(3839.87256, 342.214478, -4177.88428, 0.99924922, -3.67285011e-08, 0.0387428068, 3.67143471e-08, 1, 1.07676823e-09, -0.0387428068, 3.46457113e-10, 0.99924922)
-};
+    }
+    Villages = First
+elseif World == 2 then
+    local Second = {
+        ["asd"] = CFrame.new(),
+        ["asd"] = CFrame.new(),
+        ["asd"] = CFrame.new(),
+        ["asd"] = CFrame.new(),
+        ["asd"] = CFrame.new(),
+        ["asd"] = CFrame.new(),
+        ["asd"] = CFrame.new(),
+        ["asd"] = CFrame.new(),
+        ["asd"] = CFrame.new(),
+        ["asd"] = CFrame.new(),
+        ["asd"] = CFrame.new(),
+        ["asd"] = CFrame.new(),
+        ["asd"] = CFrame.new()
+    }
+    Villages = Second
+end
 local Breaths = {
     ["Urokodaki - Water"] = CFrame.new(705.209229, 261.426819, -2409.51587, -0.566798735, -5.48522401e-08, -0.641887605, -7.38932258e-08, 1, 2.8182352e-09, 0.641887605, 4.95921633e-08, -0.566798735),
     ["Shinobo - Insect"] = CFrame.new(2873.81177, 316.95871, -3917.9397, 0.40715313, 4.81208531e-08, 0.91335988, -8.85969982e-08, 1, -1.31911939e-08, -0.91335988, -7.55501048e-08, 0.40715313),
@@ -848,6 +891,7 @@ MainT:AddDropdown('LocationsDropDown', {Values = {"Kiribating Village","Zapiwara
 Options.LocationsDropDown:OnChanged(function()
     Settings.SelectedLocation = Options.LocationsDropDown.Value
 end)
+
 MainT:AddButton("Tween", function()
     if Tween then Tween:Cancel() Tween = nil end
     TeleportTween(Villages[Settings.SelectedLocation])
