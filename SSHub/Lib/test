@@ -1,14 +1,14 @@
 
 local LibAdapter = {}
 
-local function Adapt()
+function LibAdapter:Adapt()
     local Adapts = {}
     local Library = loadstring(game:GetObjects("rbxassetid://8245761742")[1].Source)("Pepsis World")
-    
-    function Adapt:CreateWindow(Name, Info)
+
+    function Adapts:CreateWindow(NameF, InfoF)
         local InfoT = {}
-        InfoT.Name = Name
-        InfoT.Info = Info
+        InfoT.Name = NameF
+        InfoT.Info = InfoF
         local Window = Library:CreateWindow({Name=InfoT.Name,Info=InfoT.Info,1})
         return InfoT
     end
