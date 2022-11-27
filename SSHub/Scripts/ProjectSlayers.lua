@@ -365,7 +365,7 @@ spawn(function()
                                                                     if not Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
                                                                         Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                                                     elseif Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
-                                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame* CFrame.new(0, 5, 0)*CFrame.Angles(math.rad(-90), 0, 0)
+                                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame* CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                                                     end
                                                                 elseif not Settings.SelectedBossFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
                                                                     Settings.KillAura.Enabled = false
@@ -448,7 +448,7 @@ spawn(function()
                                                                 if not Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
                                                                     Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                                                 elseif Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame* CFrame.new(0, 5, 0)*CFrame.Angles(math.rad(-90), 0, 0)
+                                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame* CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                                                 end
                                                             elseif not Settings.FarmAllBosses or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm then
                                                                 Settings.KillAura.Enabled = false
@@ -528,7 +528,7 @@ spawn(function()
                                                     if not Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
                                                         Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                                     elseif Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
-                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame* CFrame.new(0, 5, 0)*CFrame.Angles(math.rad(-90), 0, 0)
+                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame* CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                                     end
                                                 elseif not Settings.DemonsFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses then
                                                     Settings.KillAura.Enabled = false
