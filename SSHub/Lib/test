@@ -5,12 +5,21 @@ function LibAdapter:Adapt()
     local Adapts = {}
     local Library = loadstring(game:GetObjects("rbxassetid://8245761742")[1].Source)("Pepsis World")
 --Adapts:CreateWindow("Window",nil,{true, Theme})
-    function Adapts:CreateWindow(Name, Info, Credit, Theme)
+    function Adapts:CreateWindow(Name, Theme, DefaultTheme)
         local Window = {}
         if Theme[1] == true then
-            local Window = Library:CreateWindow({Name = Name,Info = Info, Credit = Credit, Theme = Theme[1], DefaultTheme = Theme[2]})
+            --Credit
+            --Info
+            local Window = Library:CreateWindow({
+            Name = Name, 
+            DefaultTheme = DefaultTheme, 
+            Themeable = {
+                Info = Theme[2],
+                Credit = Theme[3]
+            },
+        })
         end
-        local Window = Library:CreateWindow({Name = Name,Info = Info, Credit = Credit})
+        local Window = Library:CreateWindow({Name = Name, DefaultTheme = DefaultTheme})
         return Window
     end
     return Adapts
