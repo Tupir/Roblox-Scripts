@@ -800,7 +800,7 @@ Toggles.CivilianFarm:OnChanged(function()
     Settings.CivilianFarm = Toggles.CivilianFarm.Value
 end)
 local CivilianFarmLabel = MainC1:AddLabel("Status: Loading...")
-MainC1:AddToggle('NearestEnemyFarm', {Text = 'Farms Nearest Enemy',Default = Settings.NearestEnemyFarm,Tooltip = '???'})
+MainC1:AddToggle('NearestEnemyFarm', {Text = 'Farms Nearest Enemy',Default = Settings.NearestEnemyFarm,Tooltip = 'Farm All Nearest Enemy'})
 Toggles.NearestEnemyFarm:OnChanged(function()
     Settings.NearestEnemyFarm = Toggles.NearestEnemyFarm.Value
 end)
