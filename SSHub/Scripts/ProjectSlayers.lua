@@ -7,6 +7,7 @@ local NS = {
 local function Notify(Title, Icon, Text, Duration)
 	game.StarterGui:SetCore("SendNotification", {Title = Title or ""; Text = Text or ""; Icon = Icon or ""; Duration = tonumber(Duration) or 3 })
 end
+
 --#endregion
 local Settings = {
     SelectedLocation = "",
@@ -122,7 +123,7 @@ local Success, Error = pcall(function()
         local Noclip = nil
         Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
         Tween:Play()
-        Tween.Completed:Wait()
+        Tween.Completed:wait()
         pcall(function()
             Tween = nil
             NoFall:Destroy()
@@ -270,7 +271,7 @@ elseif World == 1 then
 end
 
 spawn(function()
-    while wait() do
+    while task.wait() do
         pcall(function()
             for _,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
                 if v:IsA("Humanoid") then
@@ -295,7 +296,7 @@ Plr.CharacterAdded:Connect(function()
 end)
 
 spawn(function()
-    while wait() do
+    while task.wait() do
         pcall(function()
             if Settings.AutoLootChest then
                 local chest = game:GetService("Workspace").Debree:FindFirstChild("Loot_Chest")
@@ -321,7 +322,7 @@ end)
 --Selected Boss
 local SelectedBossFarm = "Waiting..."
 spawn(function()
-    while wait() do
+    while task.wait() do
         pcall(function()
             if Settings.SelectedBossFarm and Settings.FarmAllBosses then
                 SelectedBossFarm = "Error"
@@ -354,7 +355,7 @@ spawn(function()
                                                 Settings.KillAura.Enabled = true
                                                 local FarmingPos = v.HumanoidRootPart.CFrame
                                                 local Re
-                                                while wait() and Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
+                                                while task.wait() and Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
                                                         
                                                             pcall(function()
                                                                 if Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
@@ -405,7 +406,7 @@ end)
 --All Bosses
 local FarmAllBosses = "Waiting..."
 spawn(function()
-    while wait() do
+    while task.wait() do
         pcall(function()
             if Settings.FarmAllBosses and Settings.SelectedBossFarm then
                 FarmAllBosses = "Error"
@@ -437,7 +438,7 @@ spawn(function()
                                             Settings.KillAura.Enabled = true
                                             local FarmingPos = v.HumanoidRootPart.CFrame
                                             local Re
-                                            while wait() and Settings.FarmAllBosses and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
+                                            while task.wait() and Settings.FarmAllBosses and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
 
                                                         pcall(function()
                                                             if Settings.FarmAllBosses and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
@@ -487,7 +488,7 @@ end)
 --Demons
 local DemonsFarm = "Waiting..."
 spawn(function()
-    while wait() do
+    while task.wait() do
         pcall(function()
             if Settings.DemonsFarm and Settings.FarmAllBosses or Settings.DemonsFarm and Settings.SelectedBossFarm then
                 DemonsFarm = "Error"
@@ -517,7 +518,7 @@ spawn(function()
                                     Settings.KillAura.Enabled = true
                                     local FarmingPos = v.HumanoidRootPart.CFrame
                                     local Re
-                                    while wait() and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
+                                    while task.wait() and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
 
                                             pcall(function()
                                                 if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
@@ -641,7 +642,7 @@ if World == 1 then
 end
 
 spawn(function()
-    while wait() do
+    while task.wait() do
         pcall(function()
             local Breath = game:GetService("ReplicatedStorage")["Player_Data"][Plr.Name].BreathingProgress
             local Demon = game:GetService("ReplicatedStorage")["Player_Data"][Plr.Name].DemonProgress
