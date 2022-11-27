@@ -25,7 +25,8 @@ local Settings = {
     SelectedDemons = "",
     DemonsFarm = false,
     BringMob = false,
-    FarmAltitude = 90
+    FarmAltitude = 90,
+    InfStamina = false
 };
 
 local ESPSettings = {
@@ -245,47 +246,30 @@ end
 local BossCheck = {}
 if World == 2 then
     local Second = {
-        ["Inosuke"] = false,
-        ["Renpeke Kuuchie"] = false,
-        ["Enme"] = false,
-        ["Muichiro Tokito"] = false,
-        ["Swampy"] = false,
-        ["Akeza"] = false,
-        ["Rengoku"] = false
+        ["Inosuke"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Renpeke Kuuchie"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Enme"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Muichiro Tokito"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Swampy"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Akeza"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Rengoku"] = {Alive = false, MaxHealth = 1, Health = 1}
     }
     BossCheck = Second
 elseif World == 1 then
     local First = {
-        ["Sabito"] = false,
-        ["Zanegutsu Kuuchie"] = false,
-        ["Shiron"] = false,
-        ["Sanemi"] = false,
-        ["Giyu"] = false,
-        ["Nezuko"] = false,
-        ["Yahaba"] = false,
-        ["Susamaru"] = false,
-        ["Slasher"] = false,
-        ["Bandit Zuko"] = false
+        ["Sabito"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Zanegutsu Kuuchie"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Shiron"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Sanemi"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Giyu"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Nezuko"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Yahaba"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Susamaru"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Slasher"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Bandit Zuko"] = {Alive = false, MaxHealth = 1, Health = 1}
     }
     BossCheck = First
 end
-
-spawn(function()
-    while task.wait() do
-        pcall(function()
-            for _,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
-                if v:IsA("Humanoid") then
-                    v = v.Parent
-                    if v.Humanoid.Health > 0 then
-                        BossCheck[v.Name] = true
-                    else
-                        BossCheck[v.Name] = false
-                    end
-                end
-            end
-        end)
-    end
-end)
     
 Plr.Character:WaitForChild("Humanoid").Died:Connect(function()
     Settings.PlrDied = true
@@ -298,24 +282,51 @@ end)
 spawn(function()
     while task.wait() do
         pcall(function()
-            if Settings.AutoLootChest then
-                local chest = game:GetService("Workspace").Debree:FindFirstChild("Loot_Chest")
-            
-                if chest and #chest:WaitForChild("Drops"):GetChildren() > 0 then
-                    local remote = chest:WaitForChild("Add_To_Inventory")
-
-                    for _,v in next, chest:WaitForChild("Drops"):GetChildren() do
-                        mag = (Plr.Character.HumanoidRootPart.Position - chest.Root.Position).Magnitude
-                        if mag < 1000 then 
-                            if string.find(v.Name, "Ore") or string.find(v.Name, "Elixir") then
-                                remote:InvokeServer(v.Name)
-                            elseif not game:GetService("ReplicatedStorage")["Player_Data"][game:GetService("Players").LocalPlayer.Name].Inventory:FindFirstChild(v.Name, true) then
-                                remote:InvokeServer(v.Name)
+            task.spawn(function()
+                for _,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
+                    if v:IsA("Humanoid") then
+                        v = v.Parent
+                        for i2,v2 in pairs(BossCheck) do
+                            if string.match(v.Name,i2) then
+                                if v.Humanoid.Health > 1 then
+                                    BossCheck[v.Name].MaxHealth = v.Humanoid.MaxHealth
+                                end
+                                BossCheck[v.Name].Health = math.round(v.Humanoid.Health)
+                                if v.Humanoid.Health > 0 then
+                                    BossCheck[v.Name].Alive = true
+                                else
+                                    BossCheck[v.Name].Alive = false
+                                end
                             end
                         end
                     end
                 end
-            end
+            end)
+            task.spawn(function()
+                if Settings.AutoLootChest then
+                    local chest = game:GetService("Workspace").Debree:FindFirstChild("Loot_Chest")
+                
+                    if chest and #chest:WaitForChild("Drops"):GetChildren() > 0 then
+                        local remote = chest:WaitForChild("Add_To_Inventory")
+
+                        for _,v in next, chest:WaitForChild("Drops"):GetChildren() do
+                            mag = (Plr.Character.HumanoidRootPart.Position - chest.Root.Position).Magnitude
+                            if mag < 1000 then 
+                                if string.find(v.Name, "Ore") or string.find(v.Name, "Elixir") then
+                                    remote:InvokeServer(v.Name)
+                                elseif not game:GetService("ReplicatedStorage")["Player_Data"][game:GetService("Players").LocalPlayer.Name].Inventory:FindFirstChild(v.Name, true) then
+                                    remote:InvokeServer(v.Name)
+                                end
+                            end
+                        end
+                    end
+                end
+            end)
+            task.spawn(function()
+                if Settings.InfStamina then
+                    getrenv()._G:Stamina(-9e9)
+                end
+            end)
         end)
     end
 end)
@@ -495,60 +506,58 @@ spawn(function()
             end
             if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
                 DemonsFarm = "Correct"
-                for i,v in pairs(game:GetService("Workspace").Mobs.Demons:GetDescendants()) do
+                for i,v in pairs(game:GetService("Workspace").Mobs:GetDescendants()) do
                     if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
                         if v:IsA("Humanoid") then
                             v = v.Parent
-                            if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
-                                if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
-                                    if Tween then Tween:Cancel() Tween = nil end
-                                    TeleportTween(CFrame.new(v.Humanoid.WalkToPoint))
-                                end
-                                if v.HumanoidRootPart and v.Humanoid and not Settings.PlrDied and v.Humanoid.Health > 0 and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
-                                    if Tween then Tween:Cancel() Tween = nil end
-                                    TeleportTween(CFrame.new(v.Humanoid.WalkToPoint))
-
-                                    local NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
-                                    local NoFall1 = Instance.new("BodyVelocity", v.HumanoidRootPart)
-                                    NoFall.Velocity = Vector3.new(0, 0, 0)
-                                    NoFall1.Velocity = Vector3.new(0, 0, 0)
-                                    local Noclip = nil
-                                    Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
-
-                                    Settings.KillAura.Enabled = true
-                                    local FarmingPos = v.HumanoidRootPart.CFrame
-                                    local Re
-                                    while task.wait() and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
-
-                                            pcall(function()
-                                                if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
-                                                    if Settings.BringMob then
-                                                        v.HumanoidRootPart.CFrame = FarmingPos
-                                                    end
-                                                    if not Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
-                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
-                                                    elseif Hitting and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
-                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame* CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
-                                                    end
-                                                elseif not Settings.DemonsFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses then
-                                                    Settings.KillAura.Enabled = false
-                                                    FarmingPos = nil
-                                                    Noclip:Disconnect()
-                                                    NoFall:Destroy()
-                                                    NoFall1:Destroy()
-                                                    Re:Disconnect()
-                                                    wait(2)
-                                                end
-                                            end)
-
+                            if string.find(v.Name, "Demon") then
+                                if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+                                    if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+                                        if Tween then Tween:Cancel() Tween = nil end
+                                        TeleportTween(CFrame.new(v.Humanoid.WalkToPoint))
                                     end
-                                    if not Settings.DemonsFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses then
-                                        Settings.KillAura.Enabled = false
-                                        FarmingPos = nil
-                                        Noclip:Disconnect()
-                                        NoFall:Destroy()
-                                        NoFall1:Destroy()
-                                        wait(2)
+                                    if v.HumanoidRootPart and v.Humanoid and not Settings.PlrDied and v.Humanoid.Health > 0 and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm then
+                                        if Tween then Tween:Cancel() Tween = nil end
+                                        TeleportTween(CFrame.new(v.Humanoid.WalkToPoint))
+
+                                        local NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
+                                        local NoFall1 = Instance.new("BodyVelocity", v.HumanoidRootPart)
+                                        NoFall.Velocity = Vector3.new(0, 0, 0)
+                                        NoFall1.Velocity = Vector3.new(0, 0, 0)
+                                        local Noclip = nil
+                                        Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
+
+                                        Settings.KillAura.Enabled = true
+                                        local FarmingPos = v.HumanoidRootPart.CFrame
+                                        local Re
+                                        while task.wait() and Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
+                                            if Settings.DemonsFarm and not Settings.FarmAllBosses or Settings.DemonsFarm and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
+                                                if Settings.BringMob then
+                                                    v.HumanoidRootPart.CFrame = FarmingPos
+                                                end
+                                                if not Hitting and Settings.DemonsFarm then
+                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
+                                                elseif Hitting and Settings.DemonsFarm then
+                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame* CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
+                                                end
+                                            elseif not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses or not Settings.DemonsFarm then
+                                                Settings.KillAura.Enabled = false
+                                                FarmingPos = nil
+                                                Noclip:Disconnect()
+                                                NoFall:Destroy()
+                                                NoFall1:Destroy()
+                                                Re:Disconnect()
+                                                wait(2)
+                                            end
+                                        end
+                                        if not Settings.DemonsFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses then
+                                            Settings.KillAura.Enabled = false
+                                            FarmingPos = nil
+                                            Noclip:Disconnect()
+                                            NoFall:Destroy()
+                                            NoFall1:Destroy()
+                                            wait(2)
+                                        end
                                     end
                                 end
                             end
@@ -561,7 +570,8 @@ spawn(function()
         end)
     end
 end)
-local SShub = Library:CreateWindow({Title = Name.." | "..GameName.." | Script Req: Have Good Ethernet | Toggle: End",Center = true, AutoShow = true})
+
+local SShub = Library:CreateWindow({Title = Name.." | "..GameName.." | Script Req: Have Good Ethernet | Toggle: End",Center = true, AutoShow = true, Size = UDim2.fromOffset(635, 600)})
 local Farm = SShub:AddTab("Farm & Mods")
 local Visuals = SShub:AddTab("Visuals")
 local Teleports = SShub:AddTab("Teleports")
@@ -613,7 +623,7 @@ Toggles.FarmAllBosses:OnChanged(function()
 end)
 local FarmAllBossesLabel = MainCo:AddLabel("Status: Loading...")
 
-MainC1:AddToggle('DemonsFarm', {Text = 'Farm All Demons',Default = Settings.DemonsFarm,Tooltip = 'Farm All Demons'})
+MainC1:AddToggle('DemonsFarm', {Text = 'Farm All Demons (Laggy ⚠️)',Default = Settings.DemonsFarm,Tooltip = 'Farm All Demons'})
 Toggles.DemonsFarm:OnChanged(function()
     Settings.DemonsFarm = Toggles.DemonsFarm.Value
 end)
@@ -651,82 +661,82 @@ spawn(function()
             SelectedBossFarmLabel:SetText("Status: "..SelectedBossFarm)
             FarmAllBossesLabel:SetText("Status: "..FarmAllBosses)
             DemonsFarmLabel:SetText("Status: "..DemonsFarm)
-                for i,v in pairs(BossCheck) do
-                    if World == 2 then
-                        if i == "Inosuke" and v then
-                            BossCheckLabel:SetText("Inosuke: 🟢")
-                        elseif i == "Renpeke Kuuchie" and v then
-                            BossCheckLabel1:SetText("Renpeke Kuuchie: 🟢")
-                        elseif i == "Enme" and v then
-                            BossCheckLabel2:SetText("Enme: 🟢")
-                        elseif i == "Muichiro Tokito" and v then
-                            BossCheckLabel3:SetText("Muichiro Tokito: 🟢")
-                        elseif i == "Swampy" and v then
-                            BossCheckLabel4:SetText("Swampy: 🟢")
-                        elseif i == "Akeza" and v then
-                            BossCheckLabel5:SetText("Akeza: 🟢")
-                        elseif i == "Rengoku" and v then
-                            BossCheckLabel6:SetText("Rengoku: 🟢")
-                        elseif i == "Inosuke" and not v then
-                            BossCheckLabel:SetText("Inosuke: 🔴")
-                        elseif i == "Renpeke Kuuchie" and not v then
-                            BossCheckLabel1:SetText("Renpeke Kuuchie: 🔴")
-                        elseif i == "Enme" and not v then
-                            BossCheckLabel2:SetText("Enme: 🔴")
-                        elseif i == "Muichiro Tokito" and not v then
-                            BossCheckLabel3:SetText("Muichiro Tokito: 🔴")
-                        elseif i == "Swampy" and not v then
-                            BossCheckLabel4:SetText("Swampy: 🔴")
-                        elseif i == "Akeza" and not v then
-                            BossCheckLabel5:SetText("Akeza: 🔴")
-                        elseif i == "Rengoku" and not v then
-                            BossCheckLabel6:SetText("Rengoku: 🔴")
-                        end
-                    elseif World == 1 then
-                        if i == "Sabito" and v then
-                            BossCheckLabel:SetText("Sabito: 🟢")
-                        elseif i == "Zanegutsu Kuuchie" and v then
-                            BossCheckLabel1:SetText("Zanegutsu Kuuchie: 🟢")
-                        elseif i == "Shiron" and v then
-                            BossCheckLabel2:SetText("Shiron: 🟢")
-                        elseif i == "Sanemi" and v then
-                            BossCheckLabel3:SetText("Sanemi: 🟢")
-                        elseif i == "Giyu" and v then
-                            BossCheckLabel4:SetText("Giyu: 🟢")
-                        elseif i == "Nezuko" and v then
-                            BossCheckLabel5:SetText("Nezuko: 🟢")
-                        elseif i == "Yahaba" and v then
-                            BossCheckLabel6:SetText("Yahaba: 🟢")
-                        elseif i == "Susamaru" and v then
-                            BossCheckLabel7:SetText("Susamaru: 🟢")
-                        elseif i == "Slasher" and v then
-                            BossCheckLabel8:SetText("Slasher: 🟢")
-                        elseif i == "Bandit Zuko" and v then
-                            BossCheckLabel9:SetText("Bandit Zuko: 🟢")
+            for i,v in pairs(BossCheck) do
+                if World == 2 then
+                    if i == "Inosuke" and v.Alive then
+                        BossCheckLabel:SetText("Inosuke: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Renpeke Kuuchie" and v.Alive then
+                        BossCheckLabel1:SetText("Renpeke Kuuchie: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Enme" and v.Alive then
+                        BossCheckLabel2:SetText("Enme: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Muichiro Tokito" and v.Alive then
+                        BossCheckLabel3:SetText("Muichiro Tokito: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Swampy" and v.Alive then
+                        BossCheckLabel4:SetText("Swampy: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Akeza" and v.Alive then
+                        BossCheckLabel5:SetText("Akeza: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Rengoku" and v.Alive then
+                        BossCheckLabel6:SetText("Rengoku: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Inosuke" and not v.Alive then
+                        BossCheckLabel:SetText("Inosuke: 🔴")
+                    elseif i == "Renpeke Kuuchie" and not v.Alive then
+                        BossCheckLabel1:SetText("Renpeke Kuuchie: 🔴")
+                    elseif i == "Enme" and not v.Alive then
+                        BossCheckLabel2:SetText("Enme: 🔴")
+                    elseif i == "Muichiro Tokito" and not v.Alive then
+                        BossCheckLabel3:SetText("Muichiro Tokito: 🔴")
+                    elseif i == "Swampy" and not v.Alive then
+                        BossCheckLabel4:SetText("Swampy: 🔴")
+                    elseif i == "Akeza" and not v.Alive then
+                        BossCheckLabel5:SetText("Akeza: 🔴")
+                    elseif i == "Rengoku" and not v.Alive then
+                        BossCheckLabel6:SetText("Rengoku: 🔴")
+                    end
+                elseif World == 1 then
+                    if i == "Sabito" and v.Alive then
+                        BossCheckLabel:SetText("Sabito: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Zanegutsu Kuuchie" and v.Alive then
+                        BossCheckLabel1:SetText("Zanegutsu Kuuchie: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Shiron" and v.Alive then
+                        BossCheckLabel2:SetText("Shiron: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Sanemi" and v.Alive then
+                        BossCheckLabel3:SetText("Sanemi: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Giyu" and v.Alive then
+                        BossCheckLabel4:SetText("Giyu: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Nezuko" and v.Alive then
+                        BossCheckLabel5:SetText("Nezuko: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Yahaba" and v.Alive then
+                        BossCheckLabel6:SetText("Yahaba: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Susamaru" and v.Alive then
+                        BossCheckLabel7:SetText("Susamaru: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Slasher" and v.Alive then
+                        BossCheckLabel8:SetText("Slasher: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Bandit Zuko" and v.Alive then
+                        BossCheckLabel9:SetText("Bandit Zuko: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
 
-                        elseif i == "Sabito" and not v then
-                            BossCheckLabel:SetText("Sabito: 🔴")
-                        elseif i == "Zanegutsu Kuuchie" and not v then
-                            BossCheckLabel1:SetText("Zanegutsu Kuuchie: 🔴")
-                        elseif i == "Shiron" and not v then
-                            BossCheckLabel2:SetText("Shiron: 🔴")
-                        elseif i == "Sanemi" and not v then
-                            BossCheckLabel3:SetText("Sanemi: 🔴")
-                        elseif i == "Giyu" and not v then
-                            BossCheckLabel4:SetText("Giyu: 🔴")
-                        elseif i == "Nezuko" and not v then
-                            BossCheckLabel5:SetText("Nezuko: 🔴")
-                        elseif i == "Yahaba" and not v then
-                            BossCheckLabel6:SetText("Yahaba: 🔴")
-                        elseif i == "Susamaru" and not v then
-                            BossCheckLabel7:SetText("Susamaru: 🔴")
-                        elseif i == "Slasher" and not v then
-                            BossCheckLabel8:SetText("Slasher: 🔴")
-                        elseif i == "Bandit Zuko" and not v then
-                            BossCheckLabel9:SetText("Bandit Zuko: 🔴")
-                        end
+                    elseif i == "Sabito" and not v.Alive then
+                        BossCheckLabel:SetText("Sabito: 🔴")
+                    elseif i == "Zanegutsu Kuuchie" and not v.Alive then
+                        BossCheckLabel1:SetText("Zanegutsu Kuuchie: 🔴")
+                    elseif i == "Shiron" and not v.Alive then
+                        BossCheckLabel2:SetText("Shiron: 🔴")
+                    elseif i == "Sanemi" and not v.Alive then
+                        BossCheckLabel3:SetText("Sanemi: 🔴")
+                    elseif i == "Giyu" and not v.Alive then
+                        BossCheckLabel4:SetText("Giyu: 🔴")
+                    elseif i == "Nezuko" and not v.Alive then
+                        BossCheckLabel5:SetText("Nezuko: 🔴")
+                    elseif i == "Yahaba" and not v.Alive then
+                        BossCheckLabel6:SetText("Yahaba: 🔴")
+                    elseif i == "Susamaru" and not v.Alive then
+                        BossCheckLabel7:SetText("Susamaru: 🔴")
+                    elseif i == "Slasher" and not v.Alive then
+                        BossCheckLabel8:SetText("Slasher: 🔴")
+                    elseif i == "Bandit Zuko" and not v.Alive then
+                        BossCheckLabel9:SetText("Bandit Zuko: 🔴")
                     end
                 end
+            end
         end)
     end
 end)
@@ -752,6 +762,10 @@ end)
 MainCr:AddToggle('AutoChest', {Text = 'Auto Loot Chests',Default = Settings.AutoLootChest,Tooltip = 'Auto Loot Boss Chests'})
 Toggles.AutoChest:OnChanged(function()
     Settings.AutoLootChest = Toggles.AutoChest.Value
+end)
+MainCr:AddToggle('InfStamina', {Text = 'Inf Stamina',Default = Settings.InfStamina,Tooltip = 'U have infinite stamina'})
+Toggles.InfStamina:OnChanged(function()
+    Settings.InfStamina = Toggles.InfStamina.Value
 end)
 
 local Villages = {
@@ -791,6 +805,16 @@ MainT1:AddButton("Tween", function()
     if Tween then Tween:Cancel() Tween = nil end
     TeleportTween(Breaths[Settings.SelectedBreathLocation])
 end)
+if World == 1 then
+    MainTr:AddButton("Teleport to Muzan", function()
+        if Tween then Tween:Cancel() Tween = nil end
+        if workspace:FindFirstChild("Muzan") then
+            TeleportTween(CFrame.new(workspace:WaitForChild("Muzan"):WaitForChild("SpawnPos").Value))
+        else
+            Notify(NS.Title,NS.Icon,"Muzan not spawned wait for night",3)
+        end
+    end)
+end
 MainTr:AddButton("Stop Tween", function()
     if Tween then Tween:Cancel() Tween = nil end
 end)
