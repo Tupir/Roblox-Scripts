@@ -800,11 +800,11 @@ Toggles.CivilianFarm:OnChanged(function()
     Settings.CivilianFarm = Toggles.CivilianFarm.Value
 end)
 local CivilianFarmLabel = MainC1:AddLabel("Status: Loading...")
-MainC1:AddToggle('NearestEnemyFarm', {Text = 'Farms Nearest Enemy (Better for Mugen Train)',Default = Settings.NearestEnemyFarm,Tooltip = '???'})
+MainC1:AddToggle('NearestEnemyFarm', {Text = 'Farms Nearest Enemy',Default = Settings.NearestEnemyFarm,Tooltip = '???'})
 Toggles.NearestEnemyFarm:OnChanged(function()
     Settings.NearestEnemyFarm = Toggles.NearestEnemyFarm.Value
 end)
-
+MainC1:AddLabel("(Better for Mugen Train)")
 MainCo:AddDivider()
 MainCo:AddLabel("If autofarms dont working correctly u can go to\nOptions > Bring Mob it may will fix it a bit.\nBe sure no one is close to boss.\nU can try change farm altitude in Options too.",true)
 MainCo:AddDivider()
