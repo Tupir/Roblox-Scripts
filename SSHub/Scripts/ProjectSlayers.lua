@@ -449,8 +449,8 @@ spawn(function()
                                                                     Noclip:Disconnect()
                                                                     NoFall:Destroy()
                                                                     if Settings.AutoLootChest then
-                                    wait(2)
-                                end
+                                                                        wait(2)
+                                                                    end
                                                                 end
                                                             end)
 
@@ -461,8 +461,8 @@ spawn(function()
                                                     Noclip:Disconnect()
                                                     NoFall:Destroy()
                                                     if Settings.AutoLootChest then
-                                    wait(2)
-                                end
+                                                        wait(2)
+                                                    end
                                                 end
                                             end
                                         end
@@ -531,8 +531,8 @@ spawn(function()
                                                                 Noclip:Disconnect()
                                                                 NoFall:Destroy()
                                                                 if Settings.AutoLootChest then
-                                    wait(2)
-                                end
+                                                                    wait(2)
+                                                                end
                                                             end
                                                         end)
 
@@ -543,8 +543,8 @@ spawn(function()
                                                 Noclip:Disconnect()
                                                 NoFall:Destroy()
                                                 if Settings.AutoLootChest then
-                                    wait(2)
-                                end
+                                                    wait(2)
+                                                end
                                             end
                                         end
                                     end
@@ -608,8 +608,8 @@ spawn(function()
                                                 Noclip:Disconnect()
                                                 NoFall:Destroy()
                                                 if Settings.AutoLootChest then
-                                    wait(2)
-                                end
+                                                    wait(2)
+                                                end
                                             end
                                         end
                                         if not Settings.DemonsFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm or Settings.FarmAllBosses then
@@ -618,8 +618,8 @@ spawn(function()
                                             Noclip:Disconnect()
                                             NoFall:Destroy()
                                             if Settings.AutoLootChest then
-                                    wait(2)
-                                end
+                                                wait(2)
+                                            end
                                         end
                                     end
                                 end
