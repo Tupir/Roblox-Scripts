@@ -450,8 +450,10 @@ coroutine.wrap(function()
                             elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                 Settings.KillAura.Enabled = false
                                 FarmingPos = nil
-                                if Settings.AutoLootChest or Settings.AutoEatSoul then
-                                    wait(2)
+                                if Settings.AutoLootChest == true or Settings.AutoEatSoul == true then
+                                    Noclip:Disconnect()
+                                    NoFall:Destroy()
+                                    wait(1)
                                 end
                             end
                         end)
@@ -515,10 +517,10 @@ coroutine.wrap(function()
                                                                 elseif not Settings.SelectedBossFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
                                                                     Settings.KillAura.Enabled = false
                                                                     FarmingPos = nil
-                                                                    Noclip:Disconnect()
-                                                                    NoFall:Destroy()
-                                                                    if Settings.AutoLootChest then
-                                                                        wait(2)
+                                                                    if Settings.AutoLootChest == true then
+                                                                        Noclip:Disconnect()
+                                                                        NoFall:Destroy()
+                                                                        wait(1)
                                                                     end
                                                                 end
                                                             end)
@@ -529,9 +531,6 @@ coroutine.wrap(function()
                                                     FarmingPos = nil
                                                     Noclip:Disconnect()
                                                     NoFall:Destroy()
-                                                    if Settings.AutoLootChest then
-                                                        wait(2)
-                                                    end
                                                 end
                                             end
                                         end
@@ -590,7 +589,9 @@ coroutine.wrap(function()
                                                     Settings.KillAura.Enabled = false
                                                     FarmingPos = nil
                                                     if Settings.AutoLootChest then
-                                                        wait(2)
+                                                        Noclip:Disconnect()
+                                                        NoFall:Destroy()
+                                                        wait(1)
                                                     end
                                                 end
                                             end)
@@ -635,8 +636,10 @@ coroutine.wrap(function()
                                 elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                     Settings.KillAura.Enabled = false
                                     FarmingPos = nil
-                                    if Settings.AutoLootChest then
-                                        wait(2)
+                                    if Settings.AutoLootChest == true then
+                                        Noclip:Disconnect()
+                                        NoFall:Destroy()
+                                        wait(1)
                                     end
                                 end
                             end)
@@ -691,11 +694,6 @@ coroutine.wrap(function()
                                 elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                     Settings.KillAura.Enabled = false
                                     FarmingPos = nil
-                                    Noclip:Disconnect()
-                                    NoFall:Destroy()
-                                    if Settings.AutoLootChest then
-                                        wait(2)
-                                    end
                                 end
                             end
                             if not Settings.DemonsFarm or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
@@ -703,9 +701,6 @@ coroutine.wrap(function()
                                 FarmingPos = nil
                                 Noclip:Disconnect()
                                 NoFall:Destroy()
-                                if Settings.AutoLootChest then
-                                    wait(2)
-                                end
                             end
                         end
                     end
@@ -753,7 +748,7 @@ coroutine.wrap(function()
                                 Noclip:Disconnect()
                                 NoFall:Destroy()
                                 if Settings.AutoEatSoul then
-                                    wait(2)
+                                    wait(1)
                                 end
                             end
                         end
@@ -762,9 +757,6 @@ coroutine.wrap(function()
                             FarmingPos = nil
                             Noclip:Disconnect()
                             NoFall:Destroy()
-                            if Settings.AutoEatSoul then
-                                wait(2)
-                            end
                         end
                     end
                 end
