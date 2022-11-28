@@ -23,6 +23,7 @@ local Settings = {
     AutoLootChest = false,
     AutoEatSoul = false,
     FarmAllBosses = false,
+    FarmAllBossesType = "",
     SelectedDemons = "",
     DemonsFarm = false,
     BringMob = false,
@@ -134,7 +135,7 @@ local Success, Error = pcall(function()
             Noclip:Disconnect()
         end)
     end
-    
+
     local function args(Type, style, count)
         if Type == 1 then
             return {
@@ -210,7 +211,7 @@ local Hitting = false
             end
         end
     end)
-local World = 1
+local World
     if game.PlaceId == 11468159863 then
         World = 2
     elseif game.PlaceId == 6152116144 then
@@ -227,7 +228,8 @@ if World == 2 then
         ["Renpeke"] = CFrame.new(-1201.97, 601.276, -627.884),
         ["Enme"] = CFrame.new(1598.01220703125, 483.6178283691406, -687.4105834960938),
         ["Muichiro Tokito"] = CFrame.new(4410.76, 673.457, -550.114),
-        ["Swampy"] = CFrame.new(-1364.9, 601.273, -207.818)
+        ["Swampy"] = CFrame.new(-1364.9, 601.273, -207.818),
+        ["Slasher"] = CFrame.new(906.9873046875, 487.3731689453125, -1319.0191650390625)
     }
     Bosses = Second
 elseif World == 1 then
@@ -254,6 +256,7 @@ if World == 2 then
         ["Enme"] = {Alive = false, MaxHealth = 1, Health = 1},
         ["Muichiro Tokito"] = {Alive = false, MaxHealth = 1, Health = 1},
         ["Swampy"] = {Alive = false, MaxHealth = 1, Health = 1},
+        ["Slasher"] = {Alive = false, MaxHealth = 1, Health = 1},
         ["Akeza"] = {Alive = false, MaxHealth = 1, Health = 1},
         ["Rengoku"] = {Alive = false, MaxHealth = 1, Health = 1}
     }
@@ -282,10 +285,10 @@ Plr.CharacterAdded:Connect(function()
     Settings.PlrDied = false
 end)
 
-spawn(function()
+task.spawn(function()
     while task.wait() do
         pcall(function()
-                for _,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
+                for _,v in pairs(game:GetService("Workspace").Mobs:GetDescendants()) do
                     if v:IsA("Humanoid") then
                         v = v.Parent
                         for i2,v2 in pairs(BossCheck) do
@@ -358,22 +361,6 @@ local function ClosestCivilian()
     end
     return Target
 end
-local function ClosestBoss()
-    local Target = nil; local magn = math.huge
-    for i,v in pairs(game:GetService("Workspace").Mobs:GetDescendants()) do
-        if v:IsA("Humanoid") then
-            v = v.Parent
-            if string.find(v.Parent.Parent.Name, "Bosses") then
-                local mag = (Plr.Character.HumanoidRootPart.Position - v.Humanoid.WalkToPoint).Magnitude
-                if mag < magn then 
-                    magn = mag 
-                    Target = v
-                end
-            end
-        end
-    end
-    return Target
-end
 local function ClosestDemon()
     local Target = nil; local magn = math.huge
     for i,v in pairs(game:GetService("Workspace").Mobs:GetDescendants()) do
@@ -404,7 +391,24 @@ local function ClosestEnemy()
     end
     return Target
 end
-spawn(function()
+local function ClosestBoss()
+    local Target = nil; local magn = math.huge
+    for i,v in pairs(game:GetService("Workspace").Mobs:GetDescendants()) do
+        if v:IsA("Humanoid") then
+            v = v.Parent
+            if string.find(v.Parent.Parent.Name, "Bosses") then
+                local mag = (Plr.Character.HumanoidRootPart.Position - v.Humanoid.WalkToPoint).Magnitude
+                if mag < magn then 
+                    magn = mag 
+                    Target = v
+                end
+            end
+        end
+    end
+    return Target, Bosses[Target.Name]
+end
+
+task.spawn(function()
     while task.wait() do
         pcall(function()
             if Settings.NearestEnemyFarm then
@@ -412,7 +416,8 @@ spawn(function()
                 if not Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then             
                     if Tween then Tween:Cancel() Tween = nil end
                     TeleportTween(CFrame.new(Enemy.Humanoid.WalkToPoint))
-                elseif Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
+                end
+                if Settings.NearestEnemyFarm and Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
                     if Tween then Tween:Cancel() Tween = nil end
                     TeleportTween(Enemy.HumanoidRootPart.CFrame)
                     local NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
@@ -423,34 +428,29 @@ spawn(function()
                     local FarmingPos = Enemy.HumanoidRootPart.CFrame
                     while task.wait() and Settings.NearestEnemyFarm and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied do
                         pcall(function()
-                            if Settings.NearestEnemyFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
+                            if Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
                                 if Settings.BringMob then
                                     Enemy.HumanoidRootPart.CFrame = FarmingPos
                                 end
                                 if not Hitting and Settings.NearestEnemyFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                 elseif Hitting and Settings.NearestEnemyFarm then
-                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame* CFrame.new(0, 5, -3)*CFrame.Angles(math.rad(-90), 0, 0)
+                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 0, -2)
                                 end
-                            elseif not Settings.NearestEnemyFarm or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
+                            elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                 Settings.KillAura.Enabled = false
                                 FarmingPos = nil
-                                Noclip:Disconnect()
-                                NoFall:Destroy()
-                                if Settings.AutoLootChest then
+                                if Settings.AutoLootChest or Settings.AutoEatSoul then
                                     wait(2)
                                 end
                             end
                         end)
                     end
-                    if not Settings.NearestEnemyFarm or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
+                    if not Settings.NearestEnemyFarm or Settings.PlrDied then
                         Settings.KillAura.Enabled = false
                         FarmingPos = nil
                         Noclip:Disconnect()
                         NoFall:Destroy()
-                        if Settings.AutoLootChest then
-                            wait(2)
-                        end
                     end
                 end
             end
@@ -459,7 +459,7 @@ spawn(function()
 end)
 --Selected Boss
 local SelectedBossFarm = "Waiting..."
-spawn(function()
+task.spawn(function()
     while task.wait() do
         pcall(function()
             if Settings.SelectedBossFarm and Settings.FarmAllBosses then
@@ -490,7 +490,7 @@ spawn(function()
                                                 
                                                 Settings.KillAura.Enabled = true
                                                 local FarmingPos = v.HumanoidRootPart.CFrame
-                                                while task.wait() and Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
+                                                while task.wait() and Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied and string.match(v.Name, Settings.SelectedBoss) do
                                                         
                                                             pcall(function()
                                                                 if Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
@@ -500,7 +500,7 @@ spawn(function()
                                                                     if not Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
                                                                         Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                                                     elseif Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
-                                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame* CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
+                                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0, 3, 2)*CFrame.Angles(math.rad(-30), 0, 0)
                                                                     end
                                                                 elseif not Settings.SelectedBossFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
                                                                     Settings.KillAura.Enabled = false
@@ -541,79 +541,102 @@ spawn(function()
 end)
 --All Bosses
 local FarmAllBosses = "Waiting..."
-spawn(function()
+
+task.spawn(function()
     while task.wait() do
         pcall(function()
-            if Settings.FarmAllBosses and Settings.SelectedBossFarm then
-                FarmAllBosses = "Error"
-            end
-            if Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                FarmAllBosses = "Correct"
-                for i,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
-                    if Settings.FarmAllBosses and not Settings.SelectedBossFarm then
+            if Settings.FarmAllBosses then
+                if Settings.FarmAllBossesType == "List" then
+                    for i,v in pairs(game:GetService("Workspace").Mobs:GetDescendants()) do
                         if v:IsA("Humanoid") then
                             v = v.Parent
                             for i2,v2 in pairs(Bosses) do
-                                if Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                    if string.match(i2,v.Name) and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                        if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                            if Tween then Tween:Cancel() Tween = nil end
-                                            TeleportTween(v2)
-                                        end
-                                        if v.HumanoidRootPart and v.Humanoid and not Settings.PlrDied and v.Humanoid.Health > 0 and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                            if Tween then Tween:Cancel() Tween = nil end
-                                            TeleportTween(v.HumanoidRootPart.CFrame)
-
-                                            local NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
-                                            
-                                            NoFall.Velocity = Vector3.new(0, 0, 0)
-                                            local Noclip = nil
-                                            Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
-
-                                            Settings.KillAura.Enabled = true
-                                            local FarmingPos = v.HumanoidRootPart.CFrame
-                                            while task.wait() and Settings.FarmAllBosses and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied do
-
-                                                        pcall(function()
-                                                            if Settings.FarmAllBosses and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
-                                                                if Settings.BringMob then
-                                                                    v.HumanoidRootPart.CFrame = FarmingPos
-                                                                end
-                                                                if not Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
-                                                                elseif Hitting and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame* CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
-                                                                end
-                                                            elseif not Settings.FarmAllBosses or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm then
-                                                                Settings.KillAura.Enabled = false
-                                                                FarmingPos = nil
-                                                                Noclip:Disconnect()
-                                                                NoFall:Destroy()
-                                                                if Settings.AutoLootChest then
-                                                                    wait(2)
-                                                                end
-                                                            end
-                                                        end)
-
-                                            end
-                                            if not Settings.FarmAllBosses or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.SelectedBossFarm then
-                                                Settings.KillAura.Enabled = false
-                                                FarmingPos = nil
-                                                Noclip:Disconnect()
-                                                NoFall:Destroy()
-                                                if Settings.AutoLootChest then
-                                                    wait(2)
+                                if string.find(i2, v.Name) then
+                                    if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and not Settings.PlrDied then
+                                        if Tween then Tween:Cancel() Tween = nil end
+                                        TeleportTween(v2)
+                                    end
+                                    if v:FindFirstChild("HumanoidRootPart") and v.Humanoid and v.Humanoid.Health > 0 and not Settings.PlrDied and Settings.FarmAllBosses and Settings.FarmAllBossesType == "List" then
+                                        if Tween then Tween:Cancel() Tween = nil end
+                                        TeleportTween(v.HumanoidRootPart.CFrame)
+                                        local NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)                     
+                                        NoFall.Velocity = Vector3.new(0, 0, 0)
+                                        local Noclip = nil
+                                        Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
+                                        Settings.KillAura.Enabled = true
+                                        local FarmingPos = v.HumanoidRootPart.CFrame
+                                        while task.wait() and Settings.FarmAllBosses and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied and Settings.FarmAllBossesType == "List"  do
+                                            pcall(function()
+                                                if Settings.FarmAllBosses and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
+                                                    if Settings.BringMob then
+                                                        v.HumanoidRootPart.CFrame = FarmingPos
+                                                    end
+                                                    if not Hitting and Settings.FarmAllBosses then
+                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
+                                                    elseif Hitting and Settings.FarmAllBosses then
+                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0, 3, 2)*CFrame.Angles(math.rad(-30), 0, 0)
+                                                    end
+                                                elseif not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied then
+                                                    Settings.KillAura.Enabled = false
+                                                    FarmingPos = nil
+                                                    if Settings.AutoLootChest then
+                                                        wait(2)
+                                                    end
                                                 end
-                                            end
+                                            end)
+                                        end
+                                        if not Settings.FarmAllBosses or Settings.PlrDied or Settings.FarmAllBossesType == "Closest" then
+                                            Settings.KillAura.Enabled = false
+                                            FarmingPos = nil
+                                            Noclip:Disconnect()
+                                            NoFall:Destroy()
                                         end
                                     end
-                                else
-                                    break
                                 end
                             end
                         end
-                    else
-                        break
+                    end
+                elseif Settings.FarmAllBossesType == "Closest" then
+                    local Enemy, Pos = ClosestBoss()
+                    if not Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
+                        if Tween then Tween:Cancel() Tween = nil end
+                        TeleportTween(Pos)
+                    end
+                    if Enemy:FindFirstChild("HumanoidRootPart") and Enemy.Humanoid and Enemy.Humanoid.Health > 0 and not Settings.PlrDied and Settings.FarmAllBosses and Settings.FarmAllBossesType == "Closest" then
+                        if Tween then Tween:Cancel() Tween = nil end
+                        TeleportTween(Enemy.HumanoidRootPart.CFrame)
+                        local NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)                     
+                        NoFall.Velocity = Vector3.new(0, 0, 0)
+                        local Noclip = nil
+                        Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
+                        Settings.KillAura.Enabled = true
+                        local FarmingPos = Enemy.HumanoidRootPart.CFrame
+                        while task.wait() and Settings.FarmAllBosses and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied and Settings.FarmAllBossesType == "Closest" do
+                            pcall(function()
+                                if Settings.FarmAllBosses and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
+                                    if Settings.BringMob then
+                                        Enemy.HumanoidRootPart.CFrame = FarmingPos
+                                    end
+                                    if not Hitting and Settings.FarmAllBosses then
+                                        Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
+                                    elseif Hitting and Settings.FarmAllBosses then
+                                        Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 3, 2)*CFrame.Angles(math.rad(-30), 0, 0)
+                                    end
+                                elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
+                                    Settings.KillAura.Enabled = false
+                                    FarmingPos = nil
+                                    if Settings.AutoLootChest then
+                                        wait(2)
+                                    end
+                                end
+                            end)
+                        end
+                        if not Settings.FarmAllBosses or Settings.PlrDied or Settings.FarmAllBossesType == "List" then
+                            Settings.KillAura.Enabled = false
+                            FarmingPos = nil
+                            Noclip:Disconnect()
+                            NoFall:Destroy()
+                        end
                     end
                 end
             end
@@ -622,7 +645,7 @@ spawn(function()
 end)
 --Demons
 local DemonsFarm = "Waiting..."
-spawn(function()
+task.spawn(function()
     while task.wait() do
         pcall(function()
             if Settings.DemonsFarm then
@@ -635,7 +658,8 @@ spawn(function()
                         if not Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and Settings.DemonsFarm then
                             if Tween then Tween:Cancel() Tween = nil end
                             TeleportTween(CFrame.new(Enemy.Humanoid.WalkToPoint))
-                        elseif Enemy.HumanoidRootPart and Enemy.Humanoid and not Settings.PlrDied and Enemy.Humanoid.Health > 0 and Settings.DemonsFarm then
+                        end
+                        if Enemy.HumanoidRootPart and Enemy.Humanoid and not Settings.PlrDied and Enemy.Humanoid.Health > 0 and Settings.DemonsFarm then
                             if Tween then Tween:Cancel() Tween = nil end
                             TeleportTween(Enemy.HumanoidRootPart.CFrame)
                             local NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
@@ -652,7 +676,7 @@ spawn(function()
                                     if not Hitting and Settings.DemonsFarm then
                                         Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                     elseif Hitting and Settings.DemonsFarm then
-                                        Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame* CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
+                                        Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 3, 2)*CFrame.Angles(math.rad(-30), 0, 0)
                                     end
                                 elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                     Settings.KillAura.Enabled = false
@@ -680,7 +704,7 @@ spawn(function()
     end
 end)
 local CivilianFarm = "Waiting..."
-spawn(function()
+task.spawn(function()
     while task.wait() do
         pcall(function()
             if Settings.CivilianFarm then
@@ -693,7 +717,8 @@ spawn(function()
                     if not Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and Settings.CivilianFarm then
                         if Tween then Tween:Cancel() Tween = nil end
                         TeleportTween(CFrame.new(Enemy.Humanoid.WalkToPoint))
-                    elseif Enemy.HumanoidRootPart and Enemy.Humanoid and not Settings.PlrDied and Enemy.Humanoid.Health > 0 and Settings.CivilianFarm then
+                    end
+                    if Enemy.HumanoidRootPart and Enemy.Humanoid and not Settings.PlrDied and Enemy.Humanoid.Health > 0 and Settings.CivilianFarm then
                         if Tween then Tween:Cancel() Tween = nil end
                         TeleportTween(Enemy.HumanoidRootPart.CFrame)
                         local NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
@@ -710,7 +735,7 @@ spawn(function()
                                 if not Hitting and Settings.CivilianFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                 elseif Hitting and Settings.CivilianFarm then
-                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame* CFrame.new(0, 5, -3)*CFrame.Angles(math.rad(-90), 0, 0)
+                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame* CFrame.new(0, 5, 02.5)
                                 end
                             elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                 Settings.KillAura.Enabled = false
@@ -768,7 +793,7 @@ SaveManager:SetFolder(Name..'/'..game.PlaceId)
 SaveManager:BuildConfigSection(Settingss)
 
 if game.PlaceId == 11468159863 then
-    MainCo:AddDropdown('BossesDropdown', {Values = {"Inosuke","Renpeke","Enme","Muichiro Tokito","Swampy","Akeza","Rengoku"}, Default = 1, Multi = false, Text = 'Bosses', Tooltip = 'Select ur boss'})
+    MainCo:AddDropdown('BossesDropdown', {Values = {"Inosuke","Renpeke","Enme","Muichiro Tokito","Swampy","Slasher","Akeza","Rengoku"}, Default = 1, Multi = false, Text = 'Bosses', Tooltip = 'Select ur boss'})
     Options.BossesDropdown:OnChanged(function()
         Settings.SelectedBoss = Options.BossesDropdown.Value
     end)
@@ -784,11 +809,13 @@ Toggles.SelectedBossFarm:OnChanged(function()
     Settings.SelectedBossFarm = Toggles.SelectedBossFarm.Value
 end)
 local SelectedBossFarmLabel = MainCo:AddLabel("Status: Loading...")
+
 MainCo:AddToggle('FarmAllBosses', {Text = 'Farm All Bosses ',Default = Settings.FarmAllBosses,Tooltip = 'Farm all bosses'})
 Toggles.FarmAllBosses:OnChanged(function()
     Settings.FarmAllBosses = Toggles.FarmAllBosses.Value
 end)
 local FarmAllBossesLabel = MainCo:AddLabel("Status: Loading...")
+
 
 MainC1:AddToggle('DemonsFarm', {Text = 'Farm All Demons',Default = Settings.DemonsFarm,Tooltip = 'Farm All Demons'})
 Toggles.DemonsFarm:OnChanged(function()
@@ -818,16 +845,15 @@ local BossCheckLabel3 = MainC4:AddLabel("Loading...")
 local BossCheckLabel4 = MainC4:AddLabel("Loading...")
 local BossCheckLabel5 = MainC4:AddLabel("Loading...")
 local BossCheckLabel6 = MainC4:AddLabel("Loading...")
-local BossCheckLabel7
+local BossCheckLabel7 = MainC4:AddLabel("Loading...")
 local BossCheckLabel8
 local BossCheckLabel9
 if World == 1 then
-    BossCheckLabel7 = MainC4:AddLabel("Loading...")
     BossCheckLabel8 = MainC4:AddLabel("Loading...")
     BossCheckLabel9 = MainC4:AddLabel("Loading...")
 end
 
-spawn(function()
+task.spawn(function()
     while task.wait() do
         pcall(function()
             local Breath = game:GetService("ReplicatedStorage")["Player_Data"][Plr.Name].BreathingProgress
@@ -850,10 +876,12 @@ spawn(function()
                         BossCheckLabel3:SetText("Muichiro Tokito: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
                     elseif i == "Swampy" and v.Alive then
                         BossCheckLabel4:SetText("Swampy: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                    elseif i == "Slasher" and v.Alive then
+                        BossCheckLabel5:SetText("Slasher: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
                     elseif i == "Akeza" and v.Alive then
-                        BossCheckLabel5:SetText("Akeza: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        BossCheckLabel6:SetText("Akeza: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
                     elseif i == "Rengoku" and v.Alive then
-                        BossCheckLabel6:SetText("Rengoku: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        BossCheckLabel7:SetText("Rengoku: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
                     elseif i == "Inosuke" and not v.Alive then
                         BossCheckLabel:SetText("Inosuke: 🔴")
                     elseif i == "Renpeke" and not v.Alive then
@@ -864,10 +892,12 @@ spawn(function()
                         BossCheckLabel3:SetText("Muichiro Tokito: 🔴")
                     elseif i == "Swampy" and not v.Alive then
                         BossCheckLabel4:SetText("Swampy: 🔴")
+                    elseif i == "Slasher" and not v.Alive then
+                        BossCheckLabel5:SetText("Slasher: 🔴")
                     elseif i == "Akeza" and not v.Alive then
-                        BossCheckLabel5:SetText("Akeza: 🔴")
+                        BossCheckLabel6:SetText("Akeza: 🔴")
                     elseif i == "Rengoku" and not v.Alive then
-                        BossCheckLabel6:SetText("Rengoku: 🔴")
+                        BossCheckLabel7:SetText("Rengoku: 🔴")
                     end
                 elseif World == 1 then
                     if i == "Sabito" and v.Alive then
@@ -918,11 +948,15 @@ spawn(function()
     end
 end)
 
-MainC3:AddDropdown('FarmMethod', {Values = {"Fists","Sword","Scythe","Claws"}, Default = 1, Multi = false, Text = 'Farm Method', Tooltip = 'Select farm method, it will up mastery on the selected one'})
+MainC3:AddDropdown('FarmMethod', {Values = {"Fists","Sword","Scythe","Claws"}, Default = 1, Multi = false, Text = 'Farm Method (For Mastery)', Tooltip = 'Select farm method, it will up mastery on the selected one'})
     Options.FarmMethod:OnChanged(function()
         Settings.KillAura.TypeSelected = Options.FarmMethod.Value
 end)
-MainC3:AddSlider('FarmAltitude', {Text = 'Farm Altitude (Recommended Default)',Default = Settings.FarmAltitude,Min = -50,Max = 150,Rounding = 0,Compact = false})
+MainC3:AddDropdown('FarmAllBossesType', {Values = {"List","Closest"}, Default = 1, Multi = false, Text = 'Farm All Bosses Method', Tooltip = 'Select ur Farm Method'})
+Options.FarmAllBossesType:OnChanged(function()
+    Settings.FarmAllBossesType = Options.FarmAllBossesType.Value
+end)
+MainC3:AddSlider('FarmAltitude', {Text = 'Farm Altitude (Recommended Default)',Default = Settings.FarmAltitude,Min = -30,Max = 150,Rounding = 0,Compact = false})
 Options.FarmAltitude:OnChanged(function()
     Settings.FarmAltitude = Options.FarmAltitude.Value
 end)
@@ -958,12 +992,12 @@ if World == 1 then
     local First = {
     ["Kiribating Village"] = CFrame.new(120.362045, 282.207642, -1743.01636, 0.999990761, 2.85735684e-08, 0.00429180823, -2.90243012e-08, 1, 1.04959462e-07, -0.00429180823, -1.0508306e-07, 0.999990761),
     ["Zapiwara Cave [Demon Art Spins]"] = CFrame.new(-38.216156, 275.869537, -2403.53711, -0.244779825, 1.40672629e-08, 0.969578683, -3.9969752e-08, 1, -2.45993981e-08, -0.969578683, -4.47752555e-08, -0.244779825),
-    ["Ushumaro Village"] = CFrame.new(-90.0373688, 354.723511, -3170.00439, 0.817297578, -1.0121405e-08, 0.576215804, 3.12666586e-08, 1, -2.6782951e-08, -0.576215804, 3.99059843e-08, 0.817297578),
+    ["Ush2ma3o Village"] = CFrame.new(-30.0373688, 354.723511, -3170.00439, 0.817297578, -1.0121405e-08, 0.576215804, 3.12666586e-08, 1, -2.6782951e-08, -0.576215804, 3.99059843e-08, 0.817297578),
     ["Butterfly Mansion"] = CFrame.new(3001.71753, 316.000519, -3806.40601, -0.998922288, -7.88841792e-09, -0.0464141443, -9.13921649e-09, 1, 2.67364477e-08, 0.0464141443, 2.71318221e-08, -0.998922288),
     ["Final Selection"] = CFrame.new(5258.51709, 365.857056, -2422.04443, 0.0163344685, -1.36483918e-08, -0.999866605, -6.17656548e-09, 1, -1.37511176e-08, 0.999866605, 6.40035847e-09, 0.0163344685),
     ["Zapiwara Mountain"] = CFrame.new(-366.581635, 425.857422, -2371.77124, -0.998583674, -7.39169579e-08, 0.0532043427, -7.35017522e-08, 1, 9.76061187e-09, -0.0532043427, 5.8361751e-09, -0.998583674),
     ["Wind Trainer"] = CFrame.new(1797.46521, 334.100983, -3466.552, 0.99727422, 7.59257635e-09, -0.0737840235, -2.28731412e-09, 1, 7.19870812e-08, 0.0737840235, -7.16220967e-08, 0.99727422),
-    ["Kabiwaru Village"] = CFrame.new(2015.54297, 315.908813, -3051.2251, -0.956531584, -6.76903866e-08, -0.291628718, -6.4477355e-08, 1, -2.0628141e-08, 0.291628718, -9.2802005e-10, -0.956531584),
+    ["Kabiwaru Village"] = CFrame2ne3(2015.54297, 315.908813, -3051.2251, -0.956531584, -6.76903866e-08, -0.291628718, -6.4477355e-08, 1, -2.0628141e-08, 0.291628718, -9.2802005e-10, -0.956531584),
     ["Waroru Cave"] = CFrame.new(689.451843, 261.933289, -2469.948, -0.990007997, -2.02267403e-09, -0.141011208, 3.4283596e-09, 1, -3.8413809e-08, 0.141011208, -3.85134129e-08, -0.990007997),
     ["Ouwbayashi Home"] = CFrame.new(1241.24353, 320.429382, -4568.84521, 0.0538635328, 2.40611175e-08, -0.998548329, -7.93333221e-09, 1, 2.36681608e-08, 0.998548329, 6.64696431e-09, 0.0538635328),
     ["Dangerous Woods"] = CFrame.new(3839.87256, 342.214478, -4177.88428, 0.99924922, -3.67285011e-08, 0.0387428068, 3.67143471e-08, 1, 1.07676823e-09, -0.0387428068, 3.46457113e-10, 0.99924922)
@@ -974,7 +1008,7 @@ elseif World == 2 then
         ["Nomay Village"] = CFrame.new(3562.02734375, 673.1098022460938, -2109.169189453125 ),
         ["Cave 1 [Demon Art Spins]"] = CFrame.new(4233.64599609375, 673.673095703125, 586.3038330078125),
         ["Mugen Train Station"] = CFrame.new(787.9573974609375, 497.2205810546875, 906.1786499023438),
-        ["Rengoku's Home"] = CFrame.new(3710.548828125, 673.1098022460938, -308.9883728027344),
+        ["Rengoku's Home"] = CFrame.new(3710.528838125, 673.1098022460938, -308.9883728027344),
         ["Frozen Lake"] = CFrame.new(2049.289794921875, 483.02081298828125, -769.8289184570312),
         ["Village 2"] = CFrame.new(1205.9620361328125, 569.3946533203125, 77.27154541015625),
         ["Mist trainer location"] = CFrame.new(4325.09912109375, 673.032470703125, -569.9601440429688),
