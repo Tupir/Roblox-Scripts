@@ -31,6 +31,7 @@ local Settings = {
     InfStamina = false,
     InfBreath = false,
     NearestEnemyFarm = false,
+    ShowChatLogs = true,
     AliveBossesList = false
 };
 
@@ -992,6 +993,19 @@ end)
 MainCr:AddToggle('AutoChest', {Text = 'Auto Loot Chests',Default = Settings.AutoLootChest,Tooltip = 'Auto Loot Nearby Chests'})
 Toggles.AutoChest:OnChanged(function()
     Settings.AutoLootChest = Toggles.AutoChest.Value
+end)
+MainCr:AddToggle('ShowChatLogs', {Text = 'Show Chat Logs',Default = Settings.ShowChatLogs,Tooltip = 'Show roblox chat'})
+Toggles.ShowChatLogs:OnChanged(function()
+    Settings.ShowChatLogs = Toggles.ShowChatLogs.Value
+    if Toggles.ShowChatLogs.Value == true then
+		local ChatFrame = game.Players.LocalPlayer.PlayerGui.Chat.Frame
+		ChatFrame.ChatChannelParentFrame.Visible = true
+		ChatFrame.ChatBarParentFrame.Position = ChatFrame.ChatChannelParentFrame.Position + UDim2.new(UDim.new(), ChatFrame.ChatChannelParentFrame.Size.Y)
+	elseif Toggles.ShowChatLogs.Value == false then
+		local ChatFrame = game.Players.LocalPlayer.PlayerGui.Chat.Frame
+		ChatFrame.ChatChannelParentFrame.Visible = false
+		ChatFrame.ChatBarParentFrame.Position = ChatFrame.ChatChannelParentFrame.Position + UDim2.new(0, 0, 0, 0)
+	end
 end)
 MainCr:AddToggle('AutoEatSoul', {Text = 'Auto Eat Souls',Default = Settings.AutoEatSoul,Tooltip = 'Auto Eat Nearby Souls'})
 Toggles.AutoEatSoul:OnChanged(function()
