@@ -339,7 +339,7 @@ coroutine.wrap(function()
                                     for _,v2 in next, v:WaitForChild("Drops"):GetChildren() do
                                         if string.find(v2.Name, "Ore") or string.find(v2.Name, "Elixir") then
                                             Remote:InvokeServer(v2.Name)
-                                        elseif not game:GetService("ReplicatedStorage")["Player_Data"][game:GetService("Players").LocalPlayer.Name].Inventory:FindFirstChild(v.Name, true) then
+                                        elseif not game:GetService("ReplicatedStorage")["Player_Data"][Plr.Name].Inventory:FindFirstChild(v2.Name, true) then
                                             Remote:InvokeServer(v2.Name)
                                         end
                                     end
