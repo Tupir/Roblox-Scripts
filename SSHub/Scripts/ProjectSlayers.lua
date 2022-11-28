@@ -30,7 +30,8 @@ local Settings = {
     FarmAltitude = 90,
     InfStamina = false,
     InfBreath = false,
-    NearestEnemyFarm = false
+    NearestEnemyFarm = false,
+    AliveBossesList = false
 };
 
 local ESPSettings = {
@@ -160,57 +161,60 @@ local Success, Error = pcall(function()
     end
 
 local Hitting = false
-    task.spawn(function()
+    coroutine.wrap(function()
         while task.wait() do
-            if Settings.KillAura.Enabled and not Settings.PlrDied and Plr.Character:FindFirstChild("HumanoidRootPart") and Plr.Character:FindFirstChild("Humanoid") then
-                if Settings.KillAura.TypeSelected == "Fists" then
-                    Hitting=true
-                    wait(.2)
-                    game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
-                    for i = 1, 7 do
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"fist_combat", 7)))
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"fist_combat", 919)))
+            if Settings.KillAura.Enabled then
+                if not Settings.PlrDied and Plr.Character:FindFirstChild("HumanoidRootPart") and Plr.Character:FindFirstChild("Humanoid") then
+                    if Settings.KillAura.TypeSelected == "Fists" then
+                        Hitting=true
+                        wait(.1)
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
+                        for i = 1, 7 do
+                            game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"fist_combat", 7)))
+                            game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"fist_combat", 919)))
+                        end
+                        wait(.1)
+                        Hitting=false
+                        wait(2)
+                    elseif Settings.KillAura.TypeSelected == "Sword" then
+                        Hitting=true
+                        wait(.1)
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
+                        for i = 1, 8 do
+                            game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"Sword_Combat_Slash", 7)))
+                            game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"Sword_Combat_Slash", 919)))
+                        end
+                        wait(.1)
+                        Hitting=false
+                        wait(2)
+                    elseif Settings.KillAura.TypeSelected == "Scythe" then
+                        Hitting=true
+                        wait(.1)
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
+                        for i = 1, 7 do
+                            game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"Scythe_Combat_Slash", 7)))
+                            game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"Scythe_Combat_Slash", 919)))
+                        end
+                        wait(.1)
+                        Hitting=false
+                        wait(2)
+                    elseif Settings.KillAura.TypeSelected == "Claws" then
+                        Hitting=true
+                        wait(.1)
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
+                        for i = 1, 7 do
+                            game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"claw_Combat_Slash", 919)))
+                            game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"claw_Combat_Slash", 919)))
+                        end
+                        wait(.1)
+                        Hitting=false
+                        wait(2)
                     end
-                    wait(.2)
-                    Hitting=false
-                    wait(2.5)
-                elseif Settings.KillAura.TypeSelected == "Sword" then
-                    Hitting=true
-                    wait(.2)
-                    game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
-                    for i = 1, 7 do
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"Sword_Combat_Slash", 7)))
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"Sword_Combat_Slash", 919)))
-                    end
-                    wait(.2)
-                    Hitting=false
-                    wait(2.5)
-                elseif Settings.KillAura.TypeSelected == "Scythe" then
-                    Hitting=true
-                    wait(.2)
-                    game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
-                    for i = 1, 7 do
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"Scythe_Combat_Slash", 7)))
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"Scythe_Combat_Slash", 919)))
-                    end
-                    wait(.2)
-                    Hitting=false
-                    wait(2.5)
-                elseif Settings.KillAura.TypeSelected == "Claws" then
-                    Hitting=true
-                    wait(.2)
-                    game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
-                    for i = 1, 7 do
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"claw_Combat_Slash", 7)))
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"claw_Combat_Slash", 919)))
-                    end
-                    wait(.2)
-                    Hitting=false
-                    wait(2.5)
                 end
             end
         end
-    end)
+    end)()
+
 local World
     if game.PlaceId == 11468159863 then
         World = 2
@@ -228,8 +232,7 @@ if World == 2 then
         ["Renpeke"] = CFrame.new(-1201.97, 601.276, -627.884),
         ["Enme"] = CFrame.new(1598.01220703125, 483.6178283691406, -687.4105834960938),
         ["Muichiro Tokito"] = CFrame.new(4410.76, 673.457, -550.114),
-        ["Swampy"] = CFrame.new(-1364.9, 601.273, -207.818),
-        ["Slasher"] = CFrame.new(906.9873046875, 487.3731689453125, -1319.0191650390625)
+        ["Swampy"] = CFrame.new(-1364.9, 601.273, -207.818)
     }
     Bosses = Second
 elseif World == 1 then
@@ -256,7 +259,6 @@ if World == 2 then
         ["Enme"] = {Alive = false, MaxHealth = 1, Health = 1},
         ["Muichiro Tokito"] = {Alive = false, MaxHealth = 1, Health = 1},
         ["Swampy"] = {Alive = false, MaxHealth = 1, Health = 1},
-        ["Slasher"] = {Alive = false, MaxHealth = 1, Health = 1},
         ["Akeza"] = {Alive = false, MaxHealth = 1, Health = 1},
         ["Rengoku"] = {Alive = false, MaxHealth = 1, Health = 1}
     }
@@ -285,18 +287,18 @@ Plr.CharacterAdded:Connect(function()
     Settings.PlrDied = false
 end)
 
-task.spawn(function()
+coroutine.wrap(function()
     while task.wait() do
         pcall(function()
-                for _,v in pairs(game:GetService("Workspace").Mobs:GetDescendants()) do
+                for _,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
                     if v:IsA("Humanoid") then
                         v = v.Parent
                         for i2,v2 in pairs(BossCheck) do
                             if string.match(v.Name,i2) then
                                 if v.Humanoid.Health > 1 then
                                     BossCheck[v.Name].MaxHealth = v.Humanoid.MaxHealth
+                                    BossCheck[v.Name].Health = math.round(v.Humanoid.Health)
                                 end
-                                BossCheck[v.Name].Health = math.round(v.Humanoid.Health)
                                 if v.Humanoid.Health > 0 then
                                     BossCheck[v.Name].Alive = true
                                 else
@@ -310,7 +312,7 @@ task.spawn(function()
                     local Debree = game:GetService("Workspace").Debree
                     for _,v in next, Debree:GetChildren() do
                         if string.match(v.Name, "Soul") then
-                            mag = (Plr.Character.HumanoidRootPart.Position - v.Handle.Position).Magnitude
+                            local mag = (Plr.Character.HumanoidRootPart.Position - v.Handle.Position).Magnitude
                             if mag < 200 then
                                 local remote = v.Handle:WaitForChild("Eatthedamnsoul")
                                 remote:FireServer()
@@ -325,7 +327,7 @@ task.spawn(function()
                         local remote = chest:WaitForChild("Add_To_Inventory")
 
                         for _,v in next, chest:WaitForChild("Drops"):GetChildren() do
-                            mag = (Plr.Character.HumanoidRootPart.Position - chest.Root.Position).Magnitude
+                            local mag = (Plr.Character.HumanoidRootPart.Position - chest.Root.Position).Magnitude
                             if mag < 1000 then 
                                 if string.find(v.Name, "Ore") or string.find(v.Name, "Elixir") then
                                     remote:InvokeServer(v.Name)
@@ -344,7 +346,7 @@ task.spawn(function()
                 end
         end)
     end
-end)
+end)()
 local function ClosestCivilian()
     local Target = nil; local magn = math.huge
     for i,v in pairs(game:GetService("Workspace").Mobs:GetDescendants()) do
@@ -393,22 +395,20 @@ local function ClosestEnemy()
 end
 local function ClosestBoss()
     local Target = nil; local magn = math.huge
-    for i,v in pairs(game:GetService("Workspace").Mobs:GetDescendants()) do
+    for i,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
         if v:IsA("Humanoid") then
             v = v.Parent
-            if string.find(v.Parent.Parent.Name, "Bosses") then
-                local mag = (Plr.Character.HumanoidRootPart.Position - v.Humanoid.WalkToPoint).Magnitude
-                if mag < magn then 
-                    magn = mag 
-                    Target = v
-                end
+            local mag = (Plr.Character.HumanoidRootPart.Position - v.Humanoid.WalkToPoint).Magnitude
+            if mag < magn then 
+                magn = mag 
+                Target = v
             end
         end
     end
     return Target, Bosses[Target.Name]
 end
 
-task.spawn(function()
+coroutine.wrap(function()
     while task.wait() do
         pcall(function()
             if Settings.NearestEnemyFarm then
@@ -435,7 +435,7 @@ task.spawn(function()
                                 if not Hitting and Settings.NearestEnemyFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                 elseif Hitting and Settings.NearestEnemyFarm then
-                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 0, -2)
+                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                 end
                             elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                 Settings.KillAura.Enabled = false
@@ -456,10 +456,10 @@ task.spawn(function()
             end
         end)
     end
-end)
+end)()
 --Selected Boss
 local SelectedBossFarm = "Waiting..."
-task.spawn(function()
+coroutine.wrap(function()
     while task.wait() do
         pcall(function()
             if Settings.SelectedBossFarm and Settings.FarmAllBosses then
@@ -500,7 +500,7 @@ task.spawn(function()
                                                                     if not Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
                                                                         Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                                                     elseif Hitting and Settings.SelectedBossFarm and not Settings.FarmAllBosses then
-                                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0, 3, 2)*CFrame.Angles(math.rad(-30), 0, 0)
+                                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                                                     end
                                                                 elseif not Settings.SelectedBossFarm or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
                                                                     Settings.KillAura.Enabled = false
@@ -538,16 +538,16 @@ task.spawn(function()
             end
         end)
     end
-end)
+end)()
 --All Bosses
 local FarmAllBosses = "Waiting..."
 
-task.spawn(function()
+coroutine.wrap(function()
     while task.wait() do
         pcall(function()
             if Settings.FarmAllBosses then
-                if Settings.FarmAllBossesType == "List" then
-                    for i,v in pairs(game:GetService("Workspace").Mobs:GetDescendants()) do
+                if Settings.FarmAllBossesType == "List" and Settings.FarmAllBosses then
+                    for i,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
                         if v:IsA("Humanoid") then
                             v = v.Parent
                             for i2,v2 in pairs(Bosses) do
@@ -574,7 +574,7 @@ task.spawn(function()
                                                     if not Hitting and Settings.FarmAllBosses then
                                                         Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                                     elseif Hitting and Settings.FarmAllBosses then
-                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0, 3, 2)*CFrame.Angles(math.rad(-30), 0, 0)
+                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                                     end
                                                 elseif not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied then
                                                     Settings.KillAura.Enabled = false
@@ -596,7 +596,7 @@ task.spawn(function()
                             end
                         end
                     end
-                elseif Settings.FarmAllBossesType == "Closest" then
+                elseif Settings.FarmAllBossesType == "Closest" and Settings.FarmAllBosses then
                     local Enemy, Pos = ClosestBoss()
                     if not Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
                         if Tween then Tween:Cancel() Tween = nil end
@@ -620,7 +620,7 @@ task.spawn(function()
                                     if not Hitting and Settings.FarmAllBosses then
                                         Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                     elseif Hitting and Settings.FarmAllBosses then
-                                        Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 3, 2)*CFrame.Angles(math.rad(-30), 0, 0)
+                                        Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                     end
                                 elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                     Settings.KillAura.Enabled = false
@@ -642,10 +642,10 @@ task.spawn(function()
             end
         end)
     end
-end)
+end)()
 --Demons
 local DemonsFarm = "Waiting..."
-task.spawn(function()
+coroutine.wrap(function()
     while task.wait() do
         pcall(function()
             if Settings.DemonsFarm then
@@ -676,7 +676,7 @@ task.spawn(function()
                                     if not Hitting and Settings.DemonsFarm then
                                         Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                     elseif Hitting and Settings.DemonsFarm then
-                                        Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 3, 2)*CFrame.Angles(math.rad(-30), 0, 0)
+                                        Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                     end
                                 elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                     Settings.KillAura.Enabled = false
@@ -702,9 +702,9 @@ task.spawn(function()
             end
         end)
     end
-end)
+end)()
 local CivilianFarm = "Waiting..."
-task.spawn(function()
+coroutine.wrap(function()
     while task.wait() do
         pcall(function()
             if Settings.CivilianFarm then
@@ -735,7 +735,7 @@ task.spawn(function()
                                 if not Hitting and Settings.CivilianFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
                                 elseif Hitting and Settings.CivilianFarm then
-                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame* CFrame.new(0, 5, 02.5)
+                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame* CFrame.new(0, 0, -0.5)
                                 end
                             elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                 Settings.KillAura.Enabled = false
@@ -761,7 +761,7 @@ task.spawn(function()
             end
         end)
     end
-end)
+end)()
 
 local SShub = Library:CreateWindow({Title = Name.." | "..GameName.." | Script Req: Have Good Ethernet and Fps | Toggle: End",Center = true, AutoShow = true, Size = UDim2.fromOffset(635, 600)})
 local Farm = SShub:AddTab("Farm & Mods")
@@ -793,7 +793,7 @@ SaveManager:SetFolder(Name..'/'..game.PlaceId)
 SaveManager:BuildConfigSection(Settingss)
 
 if game.PlaceId == 11468159863 then
-    MainCo:AddDropdown('BossesDropdown', {Values = {"Inosuke","Renpeke","Enme","Muichiro Tokito","Swampy","Slasher","Akeza","Rengoku"}, Default = 1, Multi = false, Text = 'Bosses', Tooltip = 'Select ur boss'})
+    MainCo:AddDropdown('BossesDropdown', {Values = {"Inosuke","Renpeke","Enme","Muichiro Tokito","Swampy","Akeza","Rengoku"}, Default = 1, Multi = false, Text = 'Bosses', Tooltip = 'Select ur boss'})
     Options.BossesDropdown:OnChanged(function()
         Settings.SelectedBoss = Options.BossesDropdown.Value
     end)
@@ -837,23 +837,43 @@ MainCo:AddLabel("If autofarms dont working correctly u can go to\nOptions > Brin
 MainCo:AddDivider()
 local BreathCheck = MainCr:AddLabel("...")
 local DemonCheck = MainCr:AddLabel("...")
-
-local BossCheckLabel = MainC4:AddLabel("Loading...")
-local BossCheckLabel1 = MainC4:AddLabel("Loading...")
-local BossCheckLabel2 = MainC4:AddLabel("Loading...")
-local BossCheckLabel3 = MainC4:AddLabel("Loading...")
-local BossCheckLabel4 = MainC4:AddLabel("Loading...")
-local BossCheckLabel5 = MainC4:AddLabel("Loading...")
-local BossCheckLabel6 = MainC4:AddLabel("Loading...")
-local BossCheckLabel7 = MainC4:AddLabel("Loading...")
+MainC4:AddToggle('AliveBossesList', {Text = 'Update Alive Bosses List',Default = Settings.AliveBossesList,Tooltip = ''})
+Toggles.AliveBossesList:OnChanged(function()
+    Settings.AliveBossesList = Toggles.AliveBossesList.Value
+end)
+local BossCheckLabel
+local BossCheckLabel1
+local BossCheckLabel2
+local BossCheckLabel3
+local BossCheckLabel4
+local BossCheckLabel5
+local BossCheckLabel6
+local BossCheckLabel7
 local BossCheckLabel8
 local BossCheckLabel9
+
 if World == 1 then
+    BossCheckLabel = MainC4:AddLabel("Loading...")
+    BossCheckLabel1 = MainC4:AddLabel("Loading...")
+    BossCheckLabel2 = MainC4:AddLabel("Loading...")
+    BossCheckLabel3 = MainC4:AddLabel("Loading...")
+    BossCheckLabel4 = MainC4:AddLabel("Loading...")
+    BossCheckLabel5 = MainC4:AddLabel("Loading...")
+    BossCheckLabel6 = MainC4:AddLabel("Loading...")
+    BossCheckLabel7 = MainC4:AddLabel("Loading...")
     BossCheckLabel8 = MainC4:AddLabel("Loading...")
     BossCheckLabel9 = MainC4:AddLabel("Loading...")
+elseif World == 2 then
+    BossCheckLabel = MainC4:AddLabel("Loading...")
+    BossCheckLabel1 = MainC4:AddLabel("Loading...")
+    BossCheckLabel2 = MainC4:AddLabel("Loading...")
+    BossCheckLabel3 = MainC4:AddLabel("Loading...")
+    BossCheckLabel4 = MainC4:AddLabel("Loading...")
+    BossCheckLabel5 = MainC4:AddLabel("Loading...")
+    BossCheckLabel6 = MainC4:AddLabel("Loading...")
 end
 
-task.spawn(function()
+coroutine.wrap(function()
     while task.wait() do
         pcall(function()
             local Breath = game:GetService("ReplicatedStorage")["Player_Data"][Plr.Name].BreathingProgress
@@ -864,91 +884,88 @@ task.spawn(function()
             FarmAllBossesLabel:SetText("Status: "..FarmAllBosses)
             DemonsFarmLabel:SetText("Status: "..DemonsFarm)
             CivilianFarmLabel:SetText("Status: "..CivilianFarm)
-            for i,v in pairs(BossCheck) do
-                if World == 2 then
-                    if i == "Inosuke" and v.Alive then
-                        BossCheckLabel:SetText("Inosuke: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Renpeke" and v.Alive then
-                        BossCheckLabel1:SetText("Renpeke: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Enme" and v.Alive then
-                        BossCheckLabel2:SetText("Enme: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Muichiro Tokito" and v.Alive then
-                        BossCheckLabel3:SetText("Muichiro Tokito: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Swampy" and v.Alive then
-                        BossCheckLabel4:SetText("Swampy: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Slasher" and v.Alive then
-                        BossCheckLabel5:SetText("Slasher: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Akeza" and v.Alive then
-                        BossCheckLabel6:SetText("Akeza: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Rengoku" and v.Alive then
-                        BossCheckLabel7:SetText("Rengoku: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Inosuke" and not v.Alive then
-                        BossCheckLabel:SetText("Inosuke: 🔴")
-                    elseif i == "Renpeke" and not v.Alive then
-                        BossCheckLabel1:SetText("Renpeke: 🔴")
-                    elseif i == "Enme" and not v.Alive then
-                        BossCheckLabel2:SetText("Enme: 🔴")
-                    elseif i == "Muichiro Tokito" and not v.Alive then
-                        BossCheckLabel3:SetText("Muichiro Tokito: 🔴")
-                    elseif i == "Swampy" and not v.Alive then
-                        BossCheckLabel4:SetText("Swampy: 🔴")
-                    elseif i == "Slasher" and not v.Alive then
-                        BossCheckLabel5:SetText("Slasher: 🔴")
-                    elseif i == "Akeza" and not v.Alive then
-                        BossCheckLabel6:SetText("Akeza: 🔴")
-                    elseif i == "Rengoku" and not v.Alive then
-                        BossCheckLabel7:SetText("Rengoku: 🔴")
-                    end
-                elseif World == 1 then
-                    if i == "Sabito" and v.Alive then
-                        BossCheckLabel:SetText("Sabito: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Zanegutsu Kuuchie" and v.Alive then
-                        BossCheckLabel1:SetText("Zanegutsu Kuuchie: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Shiron" and v.Alive then
-                        BossCheckLabel2:SetText("Shiron: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Sanemi" and v.Alive then
-                        BossCheckLabel3:SetText("Sanemi: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Giyu" and v.Alive then
-                        BossCheckLabel4:SetText("Giyu: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Nezuko" and v.Alive then
-                        BossCheckLabel5:SetText("Nezuko: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Yahaba" and v.Alive then
-                        BossCheckLabel6:SetText("Yahaba: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Susamaru" and v.Alive then
-                        BossCheckLabel7:SetText("Susamaru: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Slasher" and v.Alive then
-                        BossCheckLabel8:SetText("Slasher: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-                    elseif i == "Bandit Zuko" and v.Alive then
-                        BossCheckLabel9:SetText("Bandit Zuko: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
-
-                    elseif i == "Sabito" and not v.Alive then
-                        BossCheckLabel:SetText("Sabito: 🔴")
-                    elseif i == "Zanegutsu Kuuchie" and not v.Alive then
-                        BossCheckLabel1:SetText("Zanegutsu Kuuchie: 🔴")
-                    elseif i == "Shiron" and not v.Alive then
-                        BossCheckLabel2:SetText("Shiron: 🔴")
-                    elseif i == "Sanemi" and not v.Alive then
-                        BossCheckLabel3:SetText("Sanemi: 🔴")
-                    elseif i == "Giyu" and not v.Alive then
-                        BossCheckLabel4:SetText("Giyu: 🔴")
-                    elseif i == "Nezuko" and not v.Alive then
-                        BossCheckLabel5:SetText("Nezuko: 🔴")
-                    elseif i == "Yahaba" and not v.Alive then
-                        BossCheckLabel6:SetText("Yahaba: 🔴")
-                    elseif i == "Susamaru" and not v.Alive then
-                        BossCheckLabel7:SetText("Susamaru: 🔴")
-                    elseif i == "Slasher" and not v.Alive then
-                        BossCheckLabel8:SetText("Slasher: 🔴")
-                    elseif i == "Bandit Zuko" and not v.Alive then
-                        BossCheckLabel9:SetText("Bandit Zuko: 🔴")
+            if Settings.AliveBossesList then
+                for i,v in pairs(BossCheck) do
+                    if World == 2 then
+                        if i == "Inosuke" and v.Alive then
+                            BossCheckLabel:SetText("Inosuke: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Renpeke" and v.Alive then
+                            BossCheckLabel1:SetText("Renpeke: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Enme" and v.Alive then
+                            BossCheckLabel2:SetText("Enme: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Muichiro Tokito" and v.Alive then
+                            BossCheckLabel3:SetText("Muichiro Tokito: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Swampy" and v.Alive then
+                            BossCheckLabel4:SetText("Swampy: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Akeza" and v.Alive then
+                            BossCheckLabel5:SetText("Akeza: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Rengoku" and v.Alive then
+                            BossCheckLabel6:SetText("Rengoku: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Inosuke" and not v.Alive then
+                            BossCheckLabel:SetText("Inosuke: 🔴")
+                        elseif i == "Renpeke" and not v.Alive then
+                            BossCheckLabel1:SetText("Renpeke: 🔴")
+                        elseif i == "Enme" and not v.Alive then
+                            BossCheckLabel2:SetText("Enme: 🔴")
+                        elseif i == "Muichiro Tokito" and not v.Alive then
+                            BossCheckLabel3:SetText("Muichiro Tokito: 🔴")
+                        elseif i == "Swampy" and not v.Alive then
+                            BossCheckLabel4:SetText("Swampy: 🔴")
+                        elseif i == "Akeza" and not v.Alive then
+                            BossCheckLabel5:SetText("Akeza: 🔴")
+                        elseif i == "Rengoku" and not v.Alive then
+                            BossCheckLabel6:SetText("Rengoku: 🔴")
+                        end
+                    elseif World == 1 then
+                        if i == "Sabito" and v.Alive then
+                            BossCheckLabel:SetText("Sabito: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Zanegutsu Kuuchie" and v.Alive then
+                            BossCheckLabel1:SetText("Zanegutsu Kuuchie: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Shiron" and v.Alive then
+                            BossCheckLabel2:SetText("Shiron: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Sanemi" and v.Alive then
+                            BossCheckLabel3:SetText("Sanemi: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Giyu" and v.Alive then
+                            BossCheckLabel4:SetText("Giyu: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Nezuko" and v.Alive then
+                            BossCheckLabel5:SetText("Nezuko: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Yahaba" and v.Alive then
+                            BossCheckLabel6:SetText("Yahaba: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Susamaru" and v.Alive then
+                            BossCheckLabel7:SetText("Susamaru: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Slasher" and v.Alive then
+                            BossCheckLabel8:SetText("Slasher: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Bandit Zuko" and v.Alive then
+                            BossCheckLabel9:SetText("Bandit Zuko: 🟢 Health: ("..v.MaxHealth.."/"..v.Health..")")
+                        elseif i == "Sabito" and not v.Alive then
+                            BossCheckLabel:SetText("Sabito: 🔴")
+                        elseif i == "Zanegutsu Kuuchie" and not v.Alive then
+                            BossCheckLabel1:SetText("Zanegutsu Kuuchie: 🔴")
+                        elseif i == "Shiron" and not v.Alive then
+                            BossCheckLabel2:SetText("Shiron: 🔴")
+                        elseif i == "Sanemi" and not v.Alive then
+                            BossCheckLabel3:SetText("Sanemi: 🔴")
+                        elseif i == "Giyu" and not v.Alive then
+                            BossCheckLabel4:SetText("Giyu: 🔴")
+                        elseif i == "Nezuko" and not v.Alive then
+                            BossCheckLabel5:SetText("Nezuko: 🔴")
+                        elseif i == "Yahaba" and not v.Alive then
+                            BossCheckLabel6:SetText("Yahaba: 🔴")
+                        elseif i == "Susamaru" and not v.Alive then
+                            BossCheckLabel7:SetText("Susamaru: 🔴")
+                        elseif i == "Slasher" and not v.Alive then
+                            BossCheckLabel8:SetText("Slasher: 🔴")
+                        elseif i == "Bandit Zuko" and not v.Alive then
+                            BossCheckLabel9:SetText("Bandit Zuko: 🔴")
+                        end
                     end
                 end
             end
         end)
     end
-end)
+end)()
 
-MainC3:AddDropdown('FarmMethod', {Values = {"Fists","Sword","Scythe","Claws"}, Default = 1, Multi = false, Text = 'Farm Method (For Mastery)', Tooltip = 'Select farm method, it will up mastery on the selected one'})
+MainC3:AddDropdown('FarmMethod', {Values = {"Fists","Sword","Scythe","Claws"}, Default = 1, Multi = false, Text = 'Auto Farms Method (Mastery)', Tooltip = 'Select farm method, it will up mastery on the selected one'})
     Options.FarmMethod:OnChanged(function()
         Settings.KillAura.TypeSelected = Options.FarmMethod.Value
 end)
