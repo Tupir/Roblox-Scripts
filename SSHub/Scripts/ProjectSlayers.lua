@@ -984,16 +984,6 @@ MainC3:AddToggle('BringMob', {Text = 'Bring Mob',Default = Settings.BringMob,Too
 Toggles.BringMob:OnChanged(function()
     Settings.BringMob = Toggles.BringMob.Value
 end)
-
-MainCr:AddToggle('NoSunDmg', {Text = 'No Sun Damage',Default = Settings.NoSunDmg,Tooltip = 'Dont recive damage from sun as a demon'})
-Toggles.NoSunDmg:OnChanged(function()
-    Settings.NoSunDmg = Toggles.NoSunDmg.Value
-    game:GetService("Players").LocalPlayer.PlayerScripts["Small_Scripts"].Gameplay["Sun_Damage"].Disabled = Settings.NoSunDmg
-end)
-MainCr:AddToggle('AutoChest', {Text = 'Auto Loot Chests',Default = Settings.AutoLootChest,Tooltip = 'Auto Loot Nearby Chests'})
-Toggles.AutoChest:OnChanged(function()
-    Settings.AutoLootChest = Toggles.AutoChest.Value
-end)
 MainCr:AddToggle('ShowChatLogs', {Text = 'Show Chat Logs',Default = Settings.ShowChatLogs,Tooltip = 'Show roblox chat'})
 Toggles.ShowChatLogs:OnChanged(function()
     Settings.ShowChatLogs = Toggles.ShowChatLogs.Value
@@ -1006,6 +996,15 @@ Toggles.ShowChatLogs:OnChanged(function()
 		ChatFrame.ChatChannelParentFrame.Visible = false
 		ChatFrame.ChatBarParentFrame.Position = ChatFrame.ChatChannelParentFrame.Position + UDim2.new(0, 0, 0, 0)
 	end
+end)
+MainCr:AddToggle('NoSunDmg', {Text = 'No Sun Damage',Default = Settings.NoSunDmg,Tooltip = 'Dont recive damage from sun as a demon'})
+Toggles.NoSunDmg:OnChanged(function()
+    Settings.NoSunDmg = Toggles.NoSunDmg.Value
+    game:GetService("Players").LocalPlayer.PlayerScripts["Small_Scripts"].Gameplay["Sun_Damage"].Disabled = Settings.NoSunDmg
+end)
+MainCr:AddToggle('AutoChest', {Text = 'Auto Loot Chests',Default = Settings.AutoLootChest,Tooltip = 'Auto Loot Nearby Chests'})
+Toggles.AutoChest:OnChanged(function()
+    Settings.AutoLootChest = Toggles.AutoChest.Value
 end)
 MainCr:AddToggle('AutoEatSoul', {Text = 'Auto Eat Souls',Default = Settings.AutoEatSoul,Tooltip = 'Auto Eat Nearby Souls'})
 Toggles.AutoEatSoul:OnChanged(function()
