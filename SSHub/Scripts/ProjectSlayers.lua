@@ -321,18 +321,20 @@ coroutine.wrap(function()
                     end
                 end
                 if Settings.AutoLootChest then
-                    local chest = game:GetService("Workspace").Debree:FindFirstChild("Loot_Chest")
-                
-                    if chest and #chest:WaitForChild("Drops"):GetChildren() > 0 then
-                        local remote = chest:WaitForChild("Add_To_Inventory")
-
-                        for _,v in next, chest:WaitForChild("Drops"):GetChildren() do
-                            local mag = (Plr.Character.HumanoidRootPart.Position - chest.Root.Position).Magnitude
-                            if mag < 1000 then 
-                                if string.find(v.Name, "Ore") or string.find(v.Name, "Elixir") then
-                                    remote:InvokeServer(v.Name)
-                                elseif not game:GetService("ReplicatedStorage")["Player_Data"][game:GetService("Players").LocalPlayer.Name].Inventory:FindFirstChild(v.Name, true) then
-                                    remote:InvokeServer(v.Name)
+                    local Debree = game:GetService("Workspace").Debree
+                    for _,v in next, Debree:GetChildren() do
+                        if string.match(v.Name, "Loot_Chest") then
+                            local mag = (Plr.Character.HumanoidRootPart.Position - v.Root.Position).Magnitude
+                            if mag < 200 then
+                                if v and #v:WaitForChild("Drops"):GetChildren() > 0 then
+                                    local Remote = v:WaitForChild("Add_To_Inventory")
+                                    for _,v2 in next, v:WaitForChild("Drops"):GetChildren() do
+                                        if string.find(v2.Name, "Ore") or string.find(v2.Name, "Elixir") then
+                                            Remote:InvokeServer(v2.Name)
+                                        elseif not game:GetService("ReplicatedStorage")["Player_Data"][game:GetService("Players").LocalPlayer.Name].Inventory:FindFirstChild(v.Name, true) then
+                                            Remote:InvokeServer(v2.Name)
+                                        end
+                                    end
                                 end
                             end
                         end
@@ -987,19 +989,19 @@ Toggles.NoSunDmg:OnChanged(function()
     Settings.NoSunDmg = Toggles.NoSunDmg.Value
     game:GetService("Players").LocalPlayer.PlayerScripts["Small_Scripts"].Gameplay["Sun_Damage"].Disabled = Settings.NoSunDmg
 end)
-MainCr:AddToggle('AutoChest', {Text = 'Auto Loot Chests',Default = Settings.AutoLootChest,Tooltip = 'Auto Loot Boss Chests'})
+MainCr:AddToggle('AutoChest', {Text = 'Auto Loot Chests',Default = Settings.AutoLootChest,Tooltip = 'Auto Loot Nearby Chests'})
 Toggles.AutoChest:OnChanged(function()
     Settings.AutoLootChest = Toggles.AutoChest.Value
 end)
-MainCr:AddToggle('AutoEatSoul', {Text = 'Auto Eat Souls',Default = Settings.AutoEatSoul,Tooltip = 'Auto Eat Civilian Souls'})
+MainCr:AddToggle('AutoEatSoul', {Text = 'Auto Eat Souls',Default = Settings.AutoEatSoul,Tooltip = 'Auto Eat Nearby Souls'})
 Toggles.AutoEatSoul:OnChanged(function()
     Settings.AutoEatSoul = Toggles.AutoEatSoul.Value
 end)
-MainCr:AddToggle('InfStamina', {Text = 'Inf Stamina',Default = Settings.InfStamina,Tooltip = 'U have infinite stamina'})
+MainCr:AddToggle('InfStamina', {Text = 'Inf Stamina',Default = Settings.InfStamina,Tooltip = 'U have infinite Stamina'})
 Toggles.InfStamina:OnChanged(function()
     Settings.InfStamina = Toggles.InfStamina.Value
 end)
-MainCr:AddToggle('InfBreath', {Text = 'Inf Breath',Default = Settings.InfBreath,Tooltip = 'U have infinite Health'})
+MainCr:AddToggle('InfBreath', {Text = 'Inf Breath',Default = Settings.InfBreath,Tooltip = 'U have infinite Breath'})
 Toggles.InfBreath:OnChanged(function()
     Settings.InfBreath = Toggles.InfBreath.Value
 end)
