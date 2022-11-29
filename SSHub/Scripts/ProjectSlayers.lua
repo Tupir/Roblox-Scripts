@@ -1290,7 +1290,7 @@ if Error then
         local Request = http_request or request or HttpPost or syn.request
         local Final = {Url = WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
         Request(Final)
-        Notify(NS.Title,NS.Icon,"Error, Copied to clipboard\n"..tostring(Error))
+        Notify(NS.Title,NS.Icon,"Error, Copied to clipboard")
         print("[Error] Copied to clipboard - "..tostring(Error))
         setclipboard(tostring(Error))
     end)
