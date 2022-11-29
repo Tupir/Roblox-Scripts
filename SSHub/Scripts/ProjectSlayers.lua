@@ -1,4 +1,9 @@
-loadstring(game:HttpGet("https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Testing.lua", true))()
+local Time = .0
+task.spawn(function()
+    while task.wait(.1) do
+        Time = Time + .1
+    end
+end)
 local Name = "SSHub"
 --#region Notify
 local NS = {
@@ -8,7 +13,10 @@ local NS = {
 local function Notify(Title, Icon, Text, Duration)
 	game.StarterGui:SetCore("SendNotification", {Title = Title or ""; Text = Text or ""; Icon = Icon or ""; Duration = tonumber(Duration) or 3 })
 end
-
+loadstring(game:HttpGet("https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Testing.lua", true))()
+print("Stage [2/2] Loader")
+print("[1/2] Loading...")
+Notify(NS.Title,NS.Icon,"Loading...",3)
 --#endregion
 local WeebHook = "https://discord.com/api/webhooks/1046955945621737502/HsniRn_0kRUhfXqIb5eI6csZqYwQwWOFm-d1ZJKwk4eoFvvELEnxsD8u_ow-koBGqNzB"
 local Settings = {
@@ -62,8 +70,6 @@ local ESPSettings = {
 };
 
 local Success, Error = pcall(function()
-    print("Stage [2/2] Loader")
-    print("[1/2] Loading...")
     --#region Libs
     local repo = 'https://raw.githubusercontent.com/wally-rblx/LinoriaLib/main/'
     local Library = loadstring(game:HttpGet(repo .. 'Library.lua'))()
@@ -1290,6 +1296,8 @@ end)
 
 if Success then
     print("[2/2] Load Success")
+    print(Time)
+    Notify(NS.Title,NS.Icon,"Successfully Loaded\nIn: "..math.round(Time).." Seconds.",3)
 end
     
 if Error then
