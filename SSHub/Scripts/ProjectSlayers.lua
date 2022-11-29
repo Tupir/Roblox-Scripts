@@ -434,22 +434,18 @@ local function ClosestBoss()
     end
     return Target, Bosses[Target.Name]
 end
-local NearestEnemyFarm = "Waiting..."
 coroutine.wrap(function()
     local NoFall
     local Noclip = nil
     while task.wait() do
         pcall(function()
-            if Settings.NearestEnemyFarm and (Settings.DemonsFarm or Settings.CivilianFarm or Settings.SelectedBossFarm or Settings.FarmAllBosses) then
-                NearestEnemyFarm = "Error"
-            elseif Settings.NearestEnemyFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.SelectedBossFarm or Settings.FarmAllBosses) then
-                NearestEnemyFarm = "Correct"
+            if Settings.NearestEnemyFarm then
                 local Enemy = ClosestEnemy()
                 if not Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then             
                     if Tween then Tween:Cancel() Tween = nil end
                     TeleportTween(CFrame.new(Enemy.Humanoid.WalkToPoint))
                 end
-                if Settings.NearestEnemyFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.SelectedBossFarm or Settings.FarmAllBosses) and Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
+                if Settings.NearestEnemyFarm and Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
                     if Tween then Tween:Cancel() Tween = nil end
                     TeleportTween(Enemy.HumanoidRootPart.CFrame)
                     if not Plr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
@@ -461,15 +457,15 @@ coroutine.wrap(function()
                     end
                     Settings.KillAura.Enabled = true
                     local FarmingPos = Enemy.HumanoidRootPart.CFrame
-                    while task.wait() and Settings.NearestEnemyFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.SelectedBossFarm or Settings.FarmAllBosses) and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied do
+                    while task.wait() and Settings.NearestEnemyFarm and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied do
                         pcall(function()
                             if Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
                                 if Settings.BringMob then
                                     Enemy.HumanoidRootPart.CFrame = FarmingPos
                                 end
-                                if not Hitting and Settings.NearestEnemyFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.SelectedBossFarm or Settings.FarmAllBosses) then
+                                if not Hitting and Settings.NearestEnemyFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
-                                elseif Hitting and Settings.NearestEnemyFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.SelectedBossFarm or Settings.FarmAllBosses) then
+                                elseif Hitting and Settings.NearestEnemyFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                 end
                             elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
@@ -481,7 +477,7 @@ coroutine.wrap(function()
                             end
                         end)
                     end
-                    if not Settings.NearestEnemyFarm or Settings.DemonsFarm or Settings.CivilianFarm or Settings.SelectedBossFarm or Settings.FarmAllBosses or Settings.PlrDied then
+                    if not Settings.NearestEnemyFarm or Settings.PlrDied then
                         Settings.KillAura.Enabled = false
                         FarmingPos = nil
                         Noclip:Disconnect()
@@ -495,29 +491,25 @@ coroutine.wrap(function()
     end
 end)()
 --Selected Boss
-local SelectedBossFarm = "Waiting..."
 coroutine.wrap(function()
     local NoFall
     local Noclip = nil
     while task.wait() do
         pcall(function() 
-            if Settings.SelectedBossFarm and (Settings.DemonsFarm or Settings.CivilianFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) then
-                SelectedBossFarm = "Error"
-            elseif Settings.SelectedBossFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) then
-                SelectedBossFarm = "Correct"
+            if Settings.SelectedBossFarm and not Settings.FarmAllBosses then
                 for i,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
-                    if Settings.SelectedBossFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses)  then
+                    if Settings.SelectedBossFarm and not Settings.FarmAllBosses then
                         if v:IsA("Humanoid") then
                             v = v.Parent
-                            if string.match(v.Name, Settings.SelectedBoss) and Settings.SelectedBossFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) then
+                            if string.match(v.Name, Settings.SelectedBoss) then
                                 for i2,v2 in pairs(Bosses) do
-                                    if Settings.SelectedBossFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) then
-                                        if string.match(v.Name,i2) and Settings.SelectedBossFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) then
-                                            if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and Settings.SelectedBossFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses)  and string.match(v.Name, Settings.SelectedBoss) then
+                                    if Settings.SelectedBossFarm and not Settings.FarmAllBosses then
+                                        if string.match(v.Name,i2) then
+                                            if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and Settings.SelectedBossFarm and not Settings.FarmAllBosses and string.match(v.Name, Settings.SelectedBoss) then
                                                 if Tween then Tween:Cancel() Tween = nil end
                                                 TeleportTween(v2)
                                             end
-                                            if v.HumanoidRootPart and v.Humanoid and not Settings.PlrDied and v.Humanoid.Health > 0 and Settings.SelectedBossFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) and string.match(v.Name, Settings.SelectedBoss) then
+                                            if v.HumanoidRootPart and v.Humanoid and not Settings.PlrDied and v.Humanoid.Health > 0 and Settings.SelectedBossFarm and not Settings.FarmAllBosses and string.match(v.Name, Settings.SelectedBoss) then
                                                 if Tween then Tween:Cancel() Tween = nil end
                                                 TeleportTween(v.HumanoidRootPart.CFrame)
                                                 if not Plr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
@@ -529,29 +521,27 @@ coroutine.wrap(function()
                                                 end
                                                 Settings.KillAura.Enabled = true
                                                 local FarmingPos = v.HumanoidRootPart.CFrame
-                                                while task.wait() and Settings.SelectedBossFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied and string.match(v.Name, Settings.SelectedBoss) do
-                                                        
-                                                            pcall(function()
-                                                                if Settings.SelectedBossFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
-                                                                    if Settings.BringMob then
-                                                                        v.HumanoidRootPart.CFrame = FarmingPos
-                                                                    end
-                                                                    if not Hitting and Settings.SelectedBossFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) then
-                                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
-                                                                    elseif Hitting and Settings.SelectedBossFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) then
-                                                                        Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
-                                                                    end
-                                                                elseif not Settings.SelectedBossFarm and not (Settings.DemonsFarm or Settings.CivilianFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
-                                                                    Settings.KillAura.Enabled = false
-                                                                    FarmingPos = nil
-                                                                    if Settings.AutoLootChest == true then
-                                                                        wait(1)
-                                                                    end
-                                                                end
-                                                            end)
-
+                                                while task.wait() and Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied and string.match(v.Name, Settings.SelectedBoss) do
+                                                    pcall(function()
+                                                        if Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
+                                                            if Settings.BringMob then
+                                                                v.HumanoidRootPart.CFrame = FarmingPos
+                                                            end
+                                                            if not Hitting and Settings.SelectedBossFarm then
+                                                                Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
+                                                            elseif Hitting and Settings.SelectedBossFarm then
+                                                                Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
+                                                            end
+                                                        elseif not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied then
+                                                            Settings.KillAura.Enabled = false
+                                                            FarmingPos = nil
+                                                            if Settings.AutoLootChest == true then
+                                                                wait(1)
+                                                            end
+                                                        end
+                                                    end)
                                                 end
-                                                if not Settings.SelectedBossFarm or Settings.DemonsFarm or Settings.CivilianFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or Settings.FarmAllBosses or not string.match(v.Name, Settings.SelectedBoss) then
+                                                if not Settings.SelectedBossFarm or Settings.FarmAllBosses or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or not string.match(v.Name, Settings.SelectedBoss) then
                                                     Settings.KillAura.Enabled = false
                                                     FarmingPos = nil
                                                     Noclip:Disconnect()
@@ -576,78 +566,81 @@ coroutine.wrap(function()
     end
 end)()
 --All Bosses
-local FarmAllBosses = "Waiting..."
-
 coroutine.wrap(function()
     local NoFall
     local Noclip = nil
     while task.wait() do
         pcall(function()
-            if Settings.FarmAllBosses and (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) then
-                FarmAllBosses = "Error"
-            elseif Settings.FarmAllBosses and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) and Settings.AllBossesType == "List" then
-                FarmAllBosses = "Correct"
+            if Settings.FarmAllBosses and not Settings.SelectedBossFarm and Settings.AllBossesType == "List" then
 				for i,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
-                    if v:IsA("Humanoid") then
-                        v = v.Parent
-                        for i2,v2 in pairs(Bosses) do
-                            if string.find(i2, v.Name) then
-                                if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and not Settings.PlrDied and Settings.FarmAllBosses and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) then
-                                    if Tween then Tween:Cancel() Tween = nil end
-                                    TeleportTween(v2)
-                                end
-                                if v:FindFirstChild("HumanoidRootPart") and v.Humanoid and v.Humanoid.Health > 0 and not Settings.PlrDied and Settings.FarmAllBosses and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) and Settings.AllBossesType == "List" then
-                                    if Tween then Tween:Cancel() Tween = nil end
-                                    TeleportTween(v.HumanoidRootPart.CFrame)
-                                    if not Plr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
-                                        NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
-                                        NoFall.Velocity = Vector3.new(0, 0, 0)
-                                    end
-                                    if not Noclip then
-                                        Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
-                                    end
-                                    Settings.KillAura.Enabled = true
-                                    local FarmingPos = v.HumanoidRootPart.CFrame
-                                    while task.wait() and Settings.FarmAllBosses and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied and Settings.AllBossesType == "List"  do
-                                        pcall(function()
-                                            if Settings.FarmAllBosses and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
-                                                if Settings.BringMob then
-                                                    v.HumanoidRootPart.CFrame = FarmingPos
-                                                end
-                                                if not Hitting and Settings.FarmAllBosses and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) then
-                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
-                                                elseif Hitting and Settings.FarmAllBosses and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) then
-                                                    Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
-                                                end
-                                            elseif not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied then
+                    if Settings.FarmAllBosses and not Settings.SelectedBossFarm then
+                        if v:IsA("Humanoid") then
+                            v = v.Parent
+                            for i2,v2 in pairs(Bosses) do
+                                if Settings.FarmAllBosses and not Settings.SelectedBossFarm then
+                                    if string.find(i2, v.Name) then
+                                        if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and not Settings.PlrDied and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
+                                            if Tween then Tween:Cancel() Tween = nil end
+                                            TeleportTween(v2)
+                                        end
+                                        if v:FindFirstChild("HumanoidRootPart") and v.Humanoid and v.Humanoid.Health > 0 and not Settings.PlrDied and Settings.FarmAllBosses and not Settings.SelectedBossFarm and Settings.AllBossesType == "List" then
+                                            if Tween then Tween:Cancel() Tween = nil end
+                                            TeleportTween(v.HumanoidRootPart.CFrame)
+                                            if not Plr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
+                                                NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
+                                                NoFall.Velocity = Vector3.new(0, 0, 0)
+                                            end
+                                            if not Noclip then
+                                                Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
+                                            end
+                                            Settings.KillAura.Enabled = true
+                                            local FarmingPos = v.HumanoidRootPart.CFrame
+                                            while task.wait() and Settings.FarmAllBosses and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied and Settings.AllBossesType == "List"  do
+                                                pcall(function()
+                                                    if Settings.FarmAllBosses and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
+                                                        if Settings.BringMob then
+                                                            v.HumanoidRootPart.CFrame = FarmingPos
+                                                        end
+                                                        if not Hitting and Settings.FarmAllBosses then
+                                                            Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
+                                                        elseif Hitting and Settings.FarmAllBosses then
+                                                            Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
+                                                        end
+                                                    elseif not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied then
+                                                        Settings.KillAura.Enabled = false
+                                                        FarmingPos = nil
+                                                        if Settings.AutoLootChest then
+                                                            wait(1)
+                                                        end
+                                                    end
+                                                end)
+                                            end
+                                            if not Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.PlrDied or Settings.AllBossesType == "Closest" then
                                                 Settings.KillAura.Enabled = false
                                                 FarmingPos = nil
-                                                if Settings.AutoLootChest then
-                                                    wait(1)
-                                                end
+                                                Noclip:Disconnect()
+                                                Noclip = nil
+                                                NoFall:Destroy()
+                                                NoFall = nil
                                             end
-                                        end)
+                                        end
                                     end
-                                    if not Settings.FarmAllBosses or Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm or Settings.PlrDied or Settings.AllBossesType == "Closest" then
-                                        Settings.KillAura.Enabled = false
-                                        FarmingPos = nil
-                                        Noclip:Disconnect()
-                                        Noclip = nil
-                                        NoFall:Destroy()
-                                        NoFall = nil
-                                    end
+                                else
+                                    break
                                 end
                             end
                         end
+                    else
+                        break
                     end
                 end
-            elseif Settings.FarmAllBosses and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) and Settings.AllBossesType == "Closest" then
+            elseif Settings.FarmAllBosses and not Settings.SelectedBossFarm and Settings.AllBossesType == "Closest" then
                 local Enemy, Pos = ClosestBoss()
-                if not Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and not Settings.PlrDied and Settings.FarmAllBosses and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) then
+                if not Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and not Settings.PlrDied and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
                     if Tween then Tween:Cancel() Tween = nil end
                     TeleportTween(Pos)
                 end
-                if Enemy:FindFirstChild("HumanoidRootPart") and Enemy.Humanoid and Enemy.Humanoid.Health > 0 and not Settings.PlrDied and Settings.FarmAllBosses and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) and Settings.AllBossesType == "Closest" then
+                if Enemy:FindFirstChild("HumanoidRootPart") and Enemy.Humanoid and Enemy.Humanoid.Health > 0 and not Settings.PlrDied and Settings.FarmAllBosses and not Settings.SelectedBossFarm and Settings.AllBossesType == "Closest" then
                     if Tween then Tween:Cancel() Tween = nil end
                     TeleportTween(Enemy.HumanoidRootPart.CFrame)
                     if not Plr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
@@ -659,15 +652,15 @@ coroutine.wrap(function()
                     end
                     Settings.KillAura.Enabled = true
                     local FarmingPos = Enemy.HumanoidRootPart.CFrame
-                    while task.wait() and Settings.FarmAllBosses and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied and Settings.AllBossesType == "Closest" do
+                    while task.wait() and Settings.FarmAllBosses and not Settings.SelectedBossFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied and Settings.AllBossesType == "Closest" do
                         pcall(function()
-                            if Settings.FarmAllBosses and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
+                            if Settings.FarmAllBosses and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
                                 if Settings.BringMob then
                                     Enemy.HumanoidRootPart.CFrame = FarmingPos
                                 end
-                                if not Hitting and Settings.FarmAllBosses and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) then
+                                if not Hitting and Settings.FarmAllBosses then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
-                                elseif Hitting and Settings.FarmAllBosses and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) then
+                                elseif Hitting and Settings.FarmAllBosses then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                 end
                             elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
@@ -679,7 +672,7 @@ coroutine.wrap(function()
                             end
                         end)
                     end
-                    if not Settings.FarmAllBosses or Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm or Settings.PlrDied or Settings.AllBossesType == "List" then
+                    if not Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.PlrDied or Settings.AllBossesType == "List" then
                         Settings.KillAura.Enabled = false
                         FarmingPos = nil
                         Noclip:Disconnect()
@@ -693,23 +686,19 @@ coroutine.wrap(function()
     end
 end)()
 --Demons
-local DemonsFarm = "Waiting..."
 coroutine.wrap(function()
     local NoFall
     local Noclip = nil
     while task.wait() do
         pcall(function()
-            if Settings.DemonsFarm and (Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) then
-                DemonsFarm = "Error"
-            elseif Settings.DemonsFarm and not (Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) then
-                DemonsFarm = "Correct"
+            if Settings.DemonsFarm then
                 local Enemy = ClosestDemon()
-                if Settings.DemonsFarm and not (Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) then
-                    if not Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and Settings.DemonsFarm and not (Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) then
+                if Settings.DemonsFarm then
+                    if not Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and Settings.DemonsFarm then
                         if Tween then Tween:Cancel() Tween = nil end
                         TeleportTween(CFrame.new(Enemy.Humanoid.WalkToPoint))
                     end
-                    if Enemy.HumanoidRootPart and Enemy.Humanoid and not Settings.PlrDied and Enemy.Humanoid.Health > 0 and Settings.DemonsFarm and not (Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) then
+                    if Enemy.HumanoidRootPart and Enemy.Humanoid and not Settings.PlrDied and Enemy.Humanoid.Health > 0 and Settings.DemonsFarm then
                         if Tween then Tween:Cancel() Tween = nil end
                         TeleportTween(Enemy.HumanoidRootPart.CFrame)
                         if not Plr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
@@ -721,14 +710,14 @@ coroutine.wrap(function()
                         end
                         Settings.KillAura.Enabled = true
                         local FarmingPos = Enemy.HumanoidRootPart.CFrame
-                        while task.wait() and Settings.DemonsFarm and not (Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied do
-                            if Settings.DemonsFarm and not (Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
+                        while task.wait() and Settings.DemonsFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied do
+                            if Settings.DemonsFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
                                 if Settings.BringMob then
                                     Enemy.HumanoidRootPart.CFrame = FarmingPos
                                 end
-                                if not Hitting and Settings.DemonsFarm and not (Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) then
+                                if not Hitting and Settings.DemonsFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
-                                elseif Hitting and Settings.DemonsFarm and not (Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) then
+                                elseif Hitting and Settings.DemonsFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                 end
                             elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
@@ -736,7 +725,7 @@ coroutine.wrap(function()
                                 FarmingPos = nil
                             end
                         end
-                        if not Settings.DemonsFarm and not (Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.CivilianFarm) or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
+                        if not Settings.DemonsFarm or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                             Settings.KillAura.Enabled = false
                             FarmingPos = nil
                             Noclip:Disconnect()
@@ -750,23 +739,19 @@ coroutine.wrap(function()
         end)
     end
 end)()
-local CivilianFarm = "Waiting..."
 coroutine.wrap(function()
     local NoFall
     local Noclip = nil
     while task.wait() do
         pcall(function()
-            if Settings.CivilianFarm and (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) then
-                CivilianFarm = "Error"
-            elseif Settings.CivilianFarm and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) then
-                CivilianFarm = "Correct"
+            if Settings.CivilianFarm then
                 local Enemy = ClosestCivilian()
-                if Settings.CivilianFarm and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) then
-                    if not Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and Settings.CivilianFarm and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) then
+                if Settings.CivilianFarm then
+                    if not Enemy:FindFirstChild("HumanoidRootPart") and Enemy:FindFirstChild("Humanoid") and Enemy.Humanoid.Health > 0 and Settings.CivilianFarm then
                         if Tween then Tween:Cancel() Tween = nil end
                         TeleportTween(CFrame.new(Enemy.Humanoid.WalkToPoint))
                     end
-                    if Enemy.HumanoidRootPart and Enemy.Humanoid and not Settings.PlrDied and Enemy.Humanoid.Health > 0 and Settings.CivilianFarm and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) then
+                    if Enemy.HumanoidRootPart and Enemy.Humanoid and not Settings.PlrDied and Enemy.Humanoid.Health > 0 and Settings.CivilianFarm then
                         if Tween then Tween:Cancel() Tween = nil end
                         TeleportTween(Enemy.HumanoidRootPart.CFrame)
                         if not Plr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity") then
@@ -778,14 +763,14 @@ coroutine.wrap(function()
                         end
                         Settings.KillAura.Enabled = true
                         local FarmingPos = Enemy.HumanoidRootPart.CFrame
-                        while task.wait() and Settings.CivilianFarm and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied do
-                            if Settings.CivilianFarm and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
+                        while task.wait() and Settings.CivilianFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied do
+                            if Settings.CivilianFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
                                 if Settings.BringMob then
                                     Enemy.HumanoidRootPart.CFrame = FarmingPos
                                 end
-                                if not Hitting and Settings.CivilianFarm and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) then
+                                if not Hitting and Settings.CivilianFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
-                                elseif Hitting and Settings.CivilianFarm and not (Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses) then
+                                elseif Hitting and Settings.CivilianFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame* CFrame.new(0, 0, -0.5)
                                 end
                             elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
@@ -796,7 +781,7 @@ coroutine.wrap(function()
                                 end
                             end
                         end
-                        if not Settings.CivilianFarm or Settings.DemonsFarm or Settings.SelectedBossFarm or Settings.NearestEnemyFarm or Settings.FarmAllBosses or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
+                        if not Settings.CivilianFarm or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                             Settings.KillAura.Enabled = false
                             FarmingPos = nil
                             Noclip:Disconnect()
