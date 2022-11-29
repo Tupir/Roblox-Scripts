@@ -40,5 +40,6 @@ if SupportedGame then
 	print("[2/2] Game found: "..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
     Load(SupportedGame.Script)
 else
+	Notify(NS.Title,NS.Icon,"No game found!",10)
 	print("[2/2] No game found!")
 end
