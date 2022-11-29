@@ -1306,9 +1306,10 @@ if Error then
         local ExecutorUsing = is_sirhurt_closure and "Sirhurt" or pebc_execute and "ProtoSmasher" or syn and "Synapse X" or secure_load and "Sentinel" or KRNL_LOADED and "Krnl" or SONA_LOADED and "Sona" or "WTF?"
         local HttpService = game:GetService("HttpService")
         local Data = {
+            ["username"] = "SSHub - Support",
             ["embeds"] = {
                 {
-                    ["title"] = "SSHub - Support",
+                    ["title"] = "Support",
                     ["color"] = 16731726,
                     ["fields"] = {
                         {
@@ -1330,7 +1331,7 @@ if Error then
                             ["name"] = "Error",
                             ["value"] = "```" ..Error .. "```",
                             ["inline"] = false
-                        },
+                        }
                     }
                 }
             }
