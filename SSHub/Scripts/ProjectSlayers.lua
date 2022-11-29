@@ -841,29 +841,22 @@ MainCo:AddToggle('SelectedBossFarm', {Text = 'Farm Boss (Selected)',Default = Se
 Toggles.SelectedBossFarm:OnChanged(function()
     Settings.SelectedBossFarm = Toggles.SelectedBossFarm.Value
 end)
-local SelectedBossFarmLabel = MainCo:AddLabel("Status: Loading...")
-
 MainCo:AddToggle('FarmAllBosses', {Text = 'Farm All Bosses ',Default = Settings.FarmAllBosses,Tooltip = 'Farm all bosses'})
 Toggles.FarmAllBosses:OnChanged(function()
     Settings.FarmAllBosses = Toggles.FarmAllBosses.Value
 end)
-local FarmAllBossesLabel = MainCo:AddLabel("Status: Loading...")
-
 MainC1:AddToggle('DemonsFarm', {Text = 'Farm All Demons',Default = Settings.DemonsFarm,Tooltip = 'Farm All Demons'})
 Toggles.DemonsFarm:OnChanged(function()
     Settings.DemonsFarm = Toggles.DemonsFarm.Value
 end)
-local DemonsFarmLabel = MainC1:AddLabel("Status: Loading...")
 MainC1:AddToggle('CivilianFarm', {Text = 'Farm All Civilian',Default = Settings.CivilianFarm,Tooltip = 'Farm All Civilian'})
 Toggles.CivilianFarm:OnChanged(function()
     Settings.CivilianFarm = Toggles.CivilianFarm.Value
 end)
-local CivilianFarmLabel = MainC1:AddLabel("Status: Loading...")
 MainC1:AddToggle('NearestEnemyFarm', {Text = 'Farms Nearest Enemy',Default = Settings.NearestEnemyFarm,Tooltip = 'Farm All Nearest Enemy'})
 Toggles.NearestEnemyFarm:OnChanged(function()
     Settings.NearestEnemyFarm = Toggles.NearestEnemyFarm.Value
 end)
-local NearestEnemyFarmLabel = MainC1:AddLabel("Status: Loading...")
 MainC1:AddLabel("(Better for Mugen Train)")
 MainCo:AddDivider()
 MainCo:AddButton("Fix Can't Move", function()
@@ -921,11 +914,6 @@ coroutine.wrap(function()
             local Demon = game:GetService("ReplicatedStorage")["Player_Data"][Plr.Name].DemonProgress
             BreathCheck:SetText("Breathing Progress: " .. Breath["1"].Value .. " / " .. Breath["2"].Value)
             DemonCheck:SetText("Demon Progress: " .. Demon["1"].Value .. " / " .. Demon["2"].Value)
-            SelectedBossFarmLabel:SetText("Status: "..SelectedBossFarm)
-            FarmAllBossesLabel:SetText("Status: "..FarmAllBosses)
-            DemonsFarmLabel:SetText("Status: "..DemonsFarm)
-            CivilianFarmLabel:SetText("Status: "..CivilianFarm)
-            NearestEnemyFarmLabel:SetText("Status: "..NearestEnemyFarm)
             if Settings.AliveBossesList then
                 for i,v in pairs(BossCheck) do
                     if World == 2 then
