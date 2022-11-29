@@ -1,3 +1,4 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Testing.lua", true))()
 local Name = "SSHub"
 --#region Notify
 local NS = {
