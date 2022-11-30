@@ -96,7 +96,7 @@ local Success, Error = pcall(function()
     local Plr = Players.LocalPlayer
     local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
     --#endregion
-
+    local Noclip = false
     local function TableRemove(Table, Item)
         local Index = nil
         for i, v in ipairs (Table) do 
@@ -105,15 +105,6 @@ local Success, Error = pcall(function()
             end
         end
     table.remove(Table, Index)
-    end
-
-    local function NoclipF()
-        for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-            if v:IsA("BasePart") and v.CanCollide == true then
-                v.CanCollide = false
-                Plr.Character.HumanoidRootPart.Velocity = Vector3.new(0, 0, 0)
-            end
-        end
     end
 
     local Tween
@@ -136,16 +127,14 @@ local Success, Error = pcall(function()
             NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
             NoFall.Velocity = Vector3.new(0, 0, 0)
         end
-        local Noclip = nil
-        Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
+        Noclip = true
         Tween:Play()
         Tween.Completed:wait()
         pcall(function()
             Tween = nil
             NoFall:Destroy()
             NoFall = nil
-            Noclip:Disconnect()
-            Noclip = nil
+            Noclip = false
         end)
     end
 
@@ -305,72 +294,78 @@ game:GetService("Players").LocalPlayer.Idled:Connect(function()
     wait(1)
     vu:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame)
 end)
-
 coroutine.wrap(function()
     while task.wait() do
         pcall(function()
-                for _,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
-                    if v:IsA("Humanoid") then
-                        v = v.Parent
-                        for i2,v2 in pairs(BossCheck) do
-                            if string.match(v.Name,i2) then
-                                if v.Humanoid.Health > 1 then
-                                    BossCheck[v.Name].MaxHealth = v.Humanoid.MaxHealth
-                                    BossCheck[v.Name].Health = math.round(v.Humanoid.Health)
-                                end
-                                if v.Humanoid.Health > 0 then
-                                    BossCheck[v.Name].Alive = true
-                                else
-                                    BossCheck[v.Name].Alive = false
-                                end
+            for _,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
+                if v:IsA("Humanoid") then
+                    v = v.Parent
+                    for i2,v2 in pairs(BossCheck) do
+                        if string.match(v.Name,i2) then
+                            if v.Humanoid.Health > 1 then
+                                BossCheck[v.Name].MaxHealth = v.Humanoid.MaxHealth
+                                BossCheck[v.Name].Health = math.round(v.Humanoid.Health)
+                            end
+                            if v.Humanoid.Health > 0 then
+                                BossCheck[v.Name].Alive = true
+                            else
+                                BossCheck[v.Name].Alive = false
                             end
                         end
                     end
                 end
-                if Settings.AutoEatSoul then
-                    local Debree = game:GetService("Workspace").Debree
-                    for _,v in next, Debree:GetChildren() do
-                        if string.match(v.Name, "Soul") then
-                            local mag = (Plr.Character.HumanoidRootPart.Position - v.Handle.Position).Magnitude
-                            if mag < 200 then
-                                local remote = v.Handle:WaitForChild("Eatthedamnsoul")
-                                remote:FireServer()
-                            end
+            end
+            if Settings.AutoEatSoul then
+                local Debree = game:GetService("Workspace").Debree
+                for _,v in next, Debree:GetChildren() do
+                    if string.match(v.Name, "Soul") then
+                        local mag = (Plr.Character.HumanoidRootPart.Position - v.Handle.Position).Magnitude
+                        if mag < 200 then
+                            local remote = v.Handle:WaitForChild("Eatthedamnsoul")
+                            remote:FireServer()
                         end
                     end
                 end
-                if Settings.AutoLootChest then
-                    local Debree = game:GetService("Workspace").Debree
-                    for _,v in next, Debree:GetChildren() do
-                        if string.match(v.Name, "Loot_Chest") then
-                            local mag = (Plr.Character.HumanoidRootPart.Position - v.Root.Position).Magnitude
-                            if mag < 500 then
-                                if v and #v:WaitForChild("Drops"):GetChildren() > 0 then
-                                    local Remote = v:WaitForChild("Add_To_Inventory")
-                                    for _,v2 in next, v:WaitForChild("Drops"):GetChildren() do
-                                        if string.find(v2.Name, "Ore") or string.find(v2.Name, "Elixir") then
-                                            if Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm then
-                                                Plr.Character.HumanoidRootPart.CFrame = v:WaitForChild("Root").CFrame*CFrame.new(0,2,0)
-                                            end
-                                            Remote:InvokeServer(v2.Name)
-                                        elseif not game:GetService("ReplicatedStorage")["Player_Data"][Plr.Name].Inventory:FindFirstChild(v2.Name, true) then
-                                            if Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm then
-                                                Plr.Character.HumanoidRootPart.CFrame = v:WaitForChild("Root").CFrame*CFrame.new(0,2,0)
-                                            end
-                                            Remote:InvokeServer(v2.Name)
+            end
+            if Settings.AutoLootChest then
+                local Debree = game:GetService("Workspace").Debree
+                for _,v in next, Debree:GetChildren() do
+                    if string.match(v.Name, "Loot_Chest") then
+                        local mag = (Plr.Character.HumanoidRootPart.Position - v.Root.Position).Magnitude
+                        if mag < 500 then
+                            if v and #v:WaitForChild("Drops"):GetChildren() > 0 then
+                                local Remote = v:WaitForChild("Add_To_Inventory")
+                                for _,v2 in next, v:WaitForChild("Drops"):GetChildren() do
+                                    if string.find(v2.Name, "Ore") or string.find(v2.Name, "Elixir") then
+                                        if Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm then
+                                            Plr.Character.HumanoidRootPart.CFrame = v:WaitForChild("Root").CFrame*CFrame.new(0,2,0)
                                         end
+                                        Remote:InvokeServer(v2.Name)
+                                    elseif not game:GetService("ReplicatedStorage")["Player_Data"][Plr.Name].Inventory:FindFirstChild(v2.Name, true) then
+                                        if Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm then
+                                            Plr.Character.HumanoidRootPart.CFrame = v:WaitForChild("Root").CFrame*CFrame.new(0,2,0)
+                                        end
+                                        Remote:InvokeServer(v2.Name)
                                     end
                                 end
                             end
                         end
                     end
                 end
-                if Settings.InfStamina then
-                    getrenv()._G:Stamina(-9e9)
+            end
+            if Settings.InfStamina then
+                getrenv()._G:Stamina(-9e9)
+            end
+            if Settings.InfBreath then
+                getrenv()._G:Breath(-9e9)
+            end
+            while task.wait() and Noclip == true do
+                for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                    if v:IsA("BasePart") and v.CanCollide == true then
+                        v.CanCollide = false
+                    end
                 end
-                if Settings.InfBreath then
-                    getrenv()._G:Breath(-9e9)
-                end
+            end
         end)
     end
 end)()
@@ -435,8 +430,7 @@ local function ClosestBoss()
     return Target, Bosses[Target.Name]
 end
 coroutine.wrap(function()
-    local NoFall
-    local Noclip = nil
+    local NoFalll
     while task.wait() do
         pcall(function()
             if Settings.NearestEnemyFarm then
@@ -452,9 +446,7 @@ coroutine.wrap(function()
                         NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
                         NoFall.Velocity = Vector3.new(0, 0, 0)
                     end
-                    if not Noclip then
-                        Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
-                    end
+                    Noclip = true
                     Settings.KillAura.Enabled = true
                     local FarmingPos = Enemy.HumanoidRootPart.CFrame
                     while task.wait() and Settings.NearestEnemyFarm and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied do
@@ -480,8 +472,7 @@ coroutine.wrap(function()
                     if not Settings.NearestEnemyFarm or Settings.PlrDied then
                         Settings.KillAura.Enabled = false
                         FarmingPos = nil
-                        Noclip:Disconnect()
-                        Noclip = nil
+                        Noclip = false
                         NoFall:Destroy()
                         NoFall = nil
                     end
@@ -493,7 +484,6 @@ end)()
 --Selected Boss
 coroutine.wrap(function()
     local NoFall
-    local Noclip = nil
     while task.wait() do
         pcall(function() 
             if Settings.SelectedBossFarm and not Settings.FarmAllBosses then
@@ -516,9 +506,7 @@ coroutine.wrap(function()
                                                     NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
                                                     NoFall.Velocity = Vector3.new(0, 0, 0)
                                                 end
-                                                if not Noclip then
-                                                    Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
-                                                end
+                                                Noclip = true
                                                 Settings.KillAura.Enabled = true
                                                 local FarmingPos = v.HumanoidRootPart.CFrame
                                                 while task.wait() and Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied and string.match(v.Name, Settings.SelectedBoss) do
@@ -544,8 +532,7 @@ coroutine.wrap(function()
                                                 if not Settings.SelectedBossFarm or Settings.FarmAllBosses or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied or not string.match(v.Name, Settings.SelectedBoss) then
                                                     Settings.KillAura.Enabled = false
                                                     FarmingPos = nil
-                                                    Noclip:Disconnect()
-                                                    Noclip = nil
+                                                    Noclip = false
                                                     NoFall:Destroy()
                                                     NoFall = nil
                                                 end
@@ -568,7 +555,6 @@ end)()
 --All Bosses
 coroutine.wrap(function()
     local NoFall
-    local Noclip = nil
     while task.wait() do
         pcall(function()
             if Settings.FarmAllBosses and not Settings.SelectedBossFarm and Settings.AllBossesType == "List" then
@@ -590,9 +576,7 @@ coroutine.wrap(function()
                                                 NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
                                                 NoFall.Velocity = Vector3.new(0, 0, 0)
                                             end
-                                            if not Noclip then
-                                                Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
-                                            end
+                                            Noclip = true
                                             Settings.KillAura.Enabled = true
                                             local FarmingPos = v.HumanoidRootPart.CFrame
                                             while task.wait() and Settings.FarmAllBosses and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied and Settings.AllBossesType == "List"  do
@@ -609,6 +593,7 @@ coroutine.wrap(function()
                                                     elseif not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied then
                                                         Settings.KillAura.Enabled = false
                                                         FarmingPos = nil
+                                                        wait(1)
                                                         if Settings.AutoLootChest then
                                                             wait(1)
                                                         end
@@ -618,8 +603,7 @@ coroutine.wrap(function()
                                             if not Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.PlrDied or Settings.AllBossesType == "Closest" then
                                                 Settings.KillAura.Enabled = false
                                                 FarmingPos = nil
-                                                Noclip:Disconnect()
-                                                Noclip = nil
+                                                Noclip = false
                                                 NoFall:Destroy()
                                                 NoFall = nil
                                             end
@@ -647,9 +631,7 @@ coroutine.wrap(function()
                         NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
                         NoFall.Velocity = Vector3.new(0, 0, 0)
                     end
-                    if not Noclip then
-                        Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
-                    end
+                    Noclip = true
                     Settings.KillAura.Enabled = true
                     local FarmingPos = Enemy.HumanoidRootPart.CFrame
                     while task.wait() and Settings.FarmAllBosses and not Settings.SelectedBossFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied and Settings.AllBossesType == "Closest" do
@@ -666,6 +648,7 @@ coroutine.wrap(function()
                             elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                 Settings.KillAura.Enabled = false
                                 FarmingPos = nil
+                                wait(1)
                                 if Settings.AutoLootChest == true then
                                     wait(1)
                                 end
@@ -675,8 +658,7 @@ coroutine.wrap(function()
                     if not Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.PlrDied or Settings.AllBossesType == "List" then
                         Settings.KillAura.Enabled = false
                         FarmingPos = nil
-                        Noclip:Disconnect()
-                        Noclip = nil
+                        Noclip = false
                         NoFall:Destroy()
                         NoFall = nil
                     end
@@ -688,7 +670,6 @@ end)()
 --Demons
 coroutine.wrap(function()
     local NoFall
-    local Noclip = nil
     while task.wait() do
         pcall(function()
             if Settings.DemonsFarm then
@@ -705,9 +686,7 @@ coroutine.wrap(function()
                             NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
                             NoFall.Velocity = Vector3.new(0, 0, 0)
                         end
-                        if not Noclip then
-                            Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
-                        end
+                        Noclip = true
                         Settings.KillAura.Enabled = true
                         local FarmingPos = Enemy.HumanoidRootPart.CFrame
                         while task.wait() and Settings.DemonsFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied do
@@ -728,8 +707,7 @@ coroutine.wrap(function()
                         if not Settings.DemonsFarm or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                             Settings.KillAura.Enabled = false
                             FarmingPos = nil
-                            Noclip:Disconnect()
-                            Noclip = nil
+                            Noclip = false
                             NoFall:Destroy()
                             NoFall = nil
                         end
@@ -741,7 +719,6 @@ coroutine.wrap(function()
 end)()
 coroutine.wrap(function()
     local NoFall
-    local Noclip = nil
     while task.wait() do
         pcall(function()
             if Settings.CivilianFarm then
@@ -758,9 +735,7 @@ coroutine.wrap(function()
                             NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
                             NoFall.Velocity = Vector3.new(0, 0, 0)
                         end
-                        if not Noclip then
-                            Noclip = game:GetService("RunService").Stepped:Connect(NoclipF) 
-                        end
+                        Noclip = true
                         Settings.KillAura.Enabled = true
                         local FarmingPos = Enemy.HumanoidRootPart.CFrame
                         while task.wait() and Settings.CivilianFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied do
@@ -784,8 +759,7 @@ coroutine.wrap(function()
                         if not Settings.CivilianFarm or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                             Settings.KillAura.Enabled = false
                             FarmingPos = nil
-                            Noclip:Disconnect()
-                            Noclip = nil
+                            Noclip = false
                             NoFall:Destroy()
                             NoFall = nil
                         end
