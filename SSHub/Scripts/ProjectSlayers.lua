@@ -13,12 +13,10 @@ local NS = {
 local function Notify(Title, Icon, Text, Duration)
 	game.StarterGui:SetCore("SendNotification", {Title = Title or ""; Text = Text or ""; Icon = Icon or ""; Duration = tonumber(Duration) or 3 })
 end
-loadstring(game:HttpGet("https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Testing.lua", true))()
 print("Stage [2/2] Loader")
 print("[1/2] Loading...")
 Notify(NS.Title,NS.Icon,"Loading...",3)
 --#endregion
-local WeebHook = "https://discord.com/api/webhooks/1046955945621737502/HsniRn_0kRUhfXqIb5eI6csZqYwQwWOFm-d1ZJKwk4eoFvvELEnxsD8u_ow-koBGqNzB"
 local Settings = {
     SelectedLocation = "",
     SelectedBreathLocation = "",
@@ -112,11 +110,11 @@ local Success, Error = pcall(function()
         Distance = (To.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
         if Distance < 200 then
             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = To
-            Speed = 350
+            Speed = 300
         elseif Distance < 1000 then
-            Speed = 350
+            Speed = 300
         elseif Distance >= 1000 then
-            Speed = 250
+            Speed = 200
         end
         Tween = game:GetService("TweenService"):Create(
             game.Players.LocalPlayer.Character.HumanoidRootPart,
