@@ -428,7 +428,7 @@ local function ClosestBoss()
     return Target, Bosses[Target.Name]
 end
 coroutine.wrap(function()
-    local NoFalll
+    local NoFall
     while task.wait() do
         pcall(function()
             if Settings.NearestEnemyFarm then
