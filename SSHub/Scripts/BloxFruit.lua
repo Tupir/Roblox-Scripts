@@ -17,9 +17,9 @@ end
 --#endregion
 --#region Settings
 --Variables Settings
-getgenv().Settings = {
+local Settings = {
    ChestAutoFarm = false,
-};
+}
 
 local ESPSettings = {
 	PlayerESP = {
@@ -75,102 +75,39 @@ local Success, Error = pcall(function()
     --#endregion
 
     --#region Functions
-local Character = Player.Character
-local function UpdateChar()
-    Character = Player.Character
-end
-
-local function TableRemove(Table, Item)
-    local Index = nil
-    for i, v in ipairs (Table) do 
-        if (v == Item) then
-            Index = i 
-        end
-    end
-table.remove(Table, Index)
-end
-
-local function CheckChar(Character, Health)
-    local hp = Health or 1; local rt = false
-    if Character and Character:FindFirstChild("HumanoidRootPart") then
-        if Character:FindFirstChildOfClass("Humanoid") then
-            if not Character.Humanoid.Health < hp then
-                rt = true
-            end
-        end
-    end
-    return rt
-end
-
-local function CheckIfCharacterValid(Character)
-    if Character ~= nil and Character:FindFirstChild("Humanoid") and Character:FindFirstChild("Humanoid").Health > 0 then
-        return true
-    else
-        return false
-    end
-end
-
-local function CheckIfUserHasFF(Character)
-    if Character:FindFirstChildWhichIsA("ForceField") then
-        return true 
-    else 
-        return false 
-    end 
-end  
-
-
-local function CheckIfUserIsFriendly(TargetClient)
-    if TargetClient:IsFriendsWith(Player.UserId) then
-        return true 
-    else 
-        return false
-    end 
-end
-
-local function ClosestPlayer()
-	Target = nil; magn = math.huge
-    for i, CPlayer in pairs(Players:GetChildren()) do
-        if CPlayer ~= nil then
-                mag = (Character.HumanoidRootPart.Position - CPlayer.Character.HumanoidRootPart.Position).Magnitude
-                if mag < magn then 
-                    magn = mag 
-                    Target = CPlayer
-                end
-            end
-        end
-    return Target
-end 
-
 local function ClosestChest()
-	Target = nil; magn = math.huge
-    for i, CChest in pairs(Workspace:GetDescendants()) do
-      if string.find(CChest.Name, "Chest") then
-        if CChest:IsA("Part") then
-            if CChest ~= nil then
-                    mag = (Character.HumanoidRootPart.Position - CChest.Position).Magnitude
-                    if mag < magn then 
-                        magn = mag 
-                        Target = CChest
+	local Target = nil; local magn = math.huge
+    for i, v in pairs(Workspace:GetDescendants()) do
+        if string.find(v.Name, "Chest") and v:IsA("Part") then
+            local mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Position).Magnitude
+            if mag < magn then 
+                magn = mag 
+                Target = v
+            end
+        end
+    end
+    return Target
+end
+--#endregion
+local Noclip = false
+task.spawn(function()
+    while task.wait() do
+        pcall(function()
+            if Noclip == true then
+                for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                    if v:IsA("BasePart") and v.CanCollide == true then
+                        v.CanCollide = false
                     end
                 end
             end
-        end
+        end)
     end
-    return Target, magn
-end 
+end)
 
---#endregion
-function zeroGrav(part)
-    if part:FindFirstChild("BodyForce") then return end
-    local temp = Instance.new("BodyForce")
-    temp.Force = part:GetMass() * Vector3.new(0,workspace.Gravity,0)
-    temp.Parent = part
- end
+local Tween
 local function TeleportTween(To)
     Distance = (To.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
-    if Distance < 10 then
-        Speed = 1000
-    elseif Distance < 170 then
+    if Distance < 200 then
         game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = To
         Speed = 350
     elseif Distance < 1000 then
@@ -178,27 +115,40 @@ local function TeleportTween(To)
     elseif Distance >= 1000 then
         Speed = 250
     end
-    game:GetService("TweenService"):Create(
+    Tween = game:GetService("TweenService"):Create(
         game.Players.LocalPlayer.Character.HumanoidRootPart,
         TweenInfo.new(Distance/Speed, Enum.EasingStyle.Linear),
-        {CFrame = To}
-    ):Play()
+        {CFrame = To})
+    local NoFall
+    if not game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("BodyVelocity") then
+        NoFall = Instance.new("BodyVelocity", game.Players.LocalPlayer.Character.HumanoidRootPart)
+        NoFall.Velocity = Vector3.new(0, 0, 0)
+    end
+    Noclip = true
+    Tween:Play()
+    Tween.Completed:wait()
+    pcall(function()
+        Tween = nil
+        NoFall:Destroy()
+        NoFall = nil
+        Noclip = false
+    end)
 end
-spawn(function()
-    while wait() do
+
+task.spawn(function()
+    while task.wait() do
         pcall(function()
-            if getgenv().Settings.ChestAutoFarm then
-                local Cofre, Distancia = ClosestChest()
-                if Cofre then
-                    zeroGrav(game.Players.LocalPlayer.Character.HumanoidRootPart)
-                    TeleportTween(Cofre.CFrame)
+            if Settings.ChestAutoFarm then
+                local Chest = ClosestChest()
+                if Chest then
+                    if Tween then Tween:Cancel() Tween = nil end
+                    TeleportTween(Chest.CFrame)
                 end
             end
         end)
     end
 end)
 RunService.RenderStepped:Connect(function()
-      UpdateChar()
       LibraryESP.Colors.BoxColor = ESPSettings.PlayerESP.Colors.BoxColor
       LibraryESP.Colors.NameColor = ESPSettings.PlayerESP.Colors.NameColor
       LibraryESP.Colors.DistanceColor = ESPSettings.PlayerESP.Colors.DistanceColor
@@ -227,27 +177,13 @@ MainT:AddButton("Rejoin", function()
    local p = game:GetService("Players").LocalPlayer
    ts:Teleport(game.PlaceId, p)
 end)
-MainA:AddToggle("Chest Auto Farm", getgenv().Settings.ChestAutoFarm, function(V)
+MainA:AddToggle("Chest Auto Farm", Settings.ChestAutoFarm, function(V)
     TeleportTween(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
-   getgenv().Settings.ChestAutoFarm = V
+    Settings.ChestAutoFarm = V
 end, "ChestAutoFarm")
-MainA:AddLabel("Lag ⚠️")
 MainA:AddButton("Stop Tween", function()
-	TeleportTween(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
+    if Tween then Tween:Cancel() Tween = nil end
 end)
-MainA:AddToggle("Noclip", false, function(V)
-   if V == true then
-      _G.conn = game:GetService("RunService").Stepped:Connect(function()
-         for _, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
-            if v:IsA("BasePart") then
-               v.CanCollide = false    
-            end
-         end
-       end)
-      else
-       _G.conn:Disconnect()
-      end
-end, "NoClip")
 
 
 --Player Visuals
