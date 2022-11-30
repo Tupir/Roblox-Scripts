@@ -4,27 +4,27 @@ GameSupport = {
 		Script = "Criminality"
 	},
 	["6152116144"] = {
-		Name = "ProjectSlayers",
+		Name = "ProjectSlayers - Map (First Map)",
 		Script = "ProjectSlayers"
 	},
 	["11468159863"] = {
-		Name = "ProjectSlayers2",
+		Name = "ProjectSlayers - Ouwohana (Second Map)",
 		Script = "ProjectSlayers"
 	},
 	["11468034852"] = {
-		Name = "ProjectSlayers3",
+		Name = "ProjectSlayers - Mugen Train",
 		Script = "ProjectSlayers"
 	},
 	["2753915549"] = {
-		Name = "BloxFruits1",
+		Name = "BloxFruits - First Sea",
 		Script = "BloxFruit"
 	},
 	["4442272183"] = {
-		Name = "BloxFruits2",
+		Name = "BloxFruits - Second Sea",
 		Script = "BloxFruit"
 	},
 	["7449423635"] = {
-		Name = "BloxFruits3",
+		Name = "BloxFruits - Third Sea",
 		Script = "BloxFruit"
 	},
   }
