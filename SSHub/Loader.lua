@@ -24,6 +24,7 @@ end
 
 
 --#endregion
+local Fun = loadstring(game:HttpGet("https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Testing.lua", true))()
 local SupportedGames = loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Games.lua', true))()
 local function GetSupportedGame() 
 print("Stage [1/2] Game Checker")
@@ -39,6 +40,7 @@ local SupportedGame = GetSupportedGame()
 if SupportedGame then
 	print("[2/2] Game found: "..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
     Load(SupportedGame.Script)
+	Fun(SupportedGame.Name)
 else
 	Notify(NS.Title,NS.Icon,"No game found!",10)
 	print("[2/2] No game found!")
