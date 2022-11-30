@@ -1252,45 +1252,8 @@ end
     
 if Error then
     pcall(function()
-        local WeebHook = "https://discord.com/api/webhooks/1046955945621737502/HsniRn_0kRUhfXqIb5eI6csZqYwQwWOFm-d1ZJKwk4eoFvvELEnxsD8u_ow-koBGqNzB"
-        local ExecutorUsing = is_sirhurt_closure and "Sirhurt" or pebc_execute and "ProtoSmasher" or syn and "Synapse X" or secure_load and "Sentinel" or KRNL_LOADED and "Krnl" or SONA_LOADED and "Sona" or "WTF?"
-        local HttpService = game:GetService("HttpService")
-        local Data = {
-            ["username"] = "SSHub - Support",
-            ["embeds"] = {
-                {
-                    ["title"] = "Support",
-                    ["color"] = 16731726,
-                    ["fields"] = {
-                        {
-                            ["name"] = "User",
-                            ["value"] = game.Players.LocalPlayer.Name,
-                            ["inline"] = true
-                        },
-                        {
-                            ["name"] = "Id",
-                            ["value"] = game.Players.LocalPlayer.UserId,
-                            ["inline"] = true
-                        },
-                        {
-                            ["name"] = "Executor",
-                            ["value"] = ExecutorUsing,
-                            ["inline"] = true
-                        },
-                        {
-                            ["name"] = "Error",
-                            ["value"] = "```" ..Error .. "```",
-                            ["inline"] = false
-                        }
-                    }
-                }
-            }
-        }
-        local Headers = {["Content-Type"] = "application/json"}
-        local Encoded = HttpService:JSONEncode(Data)
-        local Request = http_request or request or HttpPost or syn.request
-        local Final = {Url = WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
-        Request(Final)
+        local ErrorHandle = loadstring(game:HttpGet("https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/ErrorHandle", true))()
+        ErrorHandle(Error)
         Notify(NS.Title,NS.Icon,"Error, Copied to clipboard")
         print("[Error] Copied to clipboard - "..tostring(Error))
         setclipboard(tostring(Error))
