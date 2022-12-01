@@ -295,7 +295,7 @@ game:GetService("Players").LocalPlayer.Idled:Connect(function()
 end)
 coroutine.wrap(function()
     while task.wait() do
-        pcall(function()
+
             for _,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
                 if v:IsA("Humanoid") then
                     v = v.Parent
@@ -318,21 +318,23 @@ coroutine.wrap(function()
                 local Debree = game:GetService("Workspace").Debree
                 for _,v in next, Debree:GetChildren() do
                     if string.match(v.Name, "Soul") then
-                        local mag = (Plr.Character.HumanoidRootPart.Position - v.Handle.Position).Magnitude
-                        if mag < 200 then
-                            local remote = v.Handle:WaitForChild("Eatthedamnsoul")
-                            remote:FireServer()
+                        if v:FindFirstChild("Handle") then
+                            local mag = (Plr.Character.HumanoidRootPart.Position - v:FindFirstChild("Handle").Position).Magnitude
+                            if mag < 200 then
+                                local remote = v.Handle:WaitForChild("Eatthedamnsoul")
+                                remote:FireServer()
+                            end
                         end
                     end
                 end
             end
             if Settings.AutoLootChest then
                 local Debree = game:GetService("Workspace").Debree
-                pcall(function()
-                    for _,v in next, Debree:GetChildren() do
-                        if string.match(v.Name, "Loot_Chest") then
-                            local mag = (Plr.Character.HumanoidRootPart.Position - v.Root.Position).Magnitude
-                            if mag < 130 then
+                for _,v in next, Debree:GetChildren() do
+                    if string.match(v.Name, "Loot_Chest") then
+                        if v:FindFirstChild("Root") then
+                            local mag = (Plr.Character.HumanoidRootPart.Position - v:FindFirstChild("Root").Position).Magnitude
+                            if mag < 150 then
                                 if v and #v:WaitForChild("Drops"):GetChildren() > 0 then
                                     local Remote = v:WaitForChild("Add_To_Inventory")
                                     for _,v2 in next, v:WaitForChild("Drops"):GetChildren() do
@@ -352,7 +354,7 @@ coroutine.wrap(function()
                             end
                         end
                     end
-                end)
+                end
             end
             if Settings.InfStamina then
                 getrenv()._G:Stamina(-9e9)
@@ -367,7 +369,6 @@ coroutine.wrap(function()
                     end
                 end
             end
-        end)
     end
 end)()
 local function ClosestCivilian()
