@@ -5,7 +5,12 @@ local NS = {
 local function Notify(Title, Icon, Text, Duration)
 	game.StarterGui:SetCore("SendNotification", {Title = Title or ""; Text = Text or ""; Icon = Icon or ""; Duration = tonumber(Duration) or 3 })
 end
-
+local Time = .0
+task.spawn(function()
+    while task.wait(.1) do
+        Time = Time + .1
+    end
+end)
 --#region Loader
 local function Load(Script)
     local Success, Error = pcall(function()
@@ -39,7 +44,13 @@ end
 local SupportedGame = GetSupportedGame()
 if SupportedGame then
 	print("[2/2] Game found: "..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
+	print("Stage [2/2] Loader")
+	print("[1/2] Loading...")
+	Notify(NS.Title,NS.Icon,"Loading...",3)
     Load(SupportedGame.Script)
+	print("[2/2] Load Success")
+    print(Time)
+    Notify(NS.Title,NS.Icon,"Successfully Loaded\nIn: "..math.round(Time).." Seconds.",3)
 	Fun()
 else
 	Notify(NS.Title,NS.Icon,"No game found!",10)
