@@ -35,13 +35,14 @@ local Settings = {
     SelectedDemons = "",
     DemonsFarm = false,
     BringMob = false,
-    FarmAltitude = 90,
+    FarmAltitude = 20,
     InfStamina = false,
     InfBreath = false,
     NearestEnemyFarm = false,
     ShowChatLogs = true,
     AliveBossesList = false,
-    CivilianFarm = false
+    CivilianFarm = false,
+    ZDirection = 20
 };
 
 local ESPSettings = {
@@ -108,13 +109,13 @@ local Success, Error = pcall(function()
     local Tween
     local function TeleportTween(To)
         Distance = (To.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
-        if Distance < 200 then
+        if Distance < 150 then
             game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = To
-            Speed = 300
+            Speed = 350
         elseif Distance < 1000 then
-            Speed = 300
+            Speed = 350
         elseif Distance >= 1000 then
-            Speed = 200
+            Speed = 250
         end
         Tween = game:GetService("TweenService"):Create(
             game.Players.LocalPlayer.Character.HumanoidRootPart,
@@ -454,7 +455,7 @@ coroutine.wrap(function()
                                     Enemy.HumanoidRootPart.CFrame = FarmingPos
                                 end
                                 if not Hitting and Settings.NearestEnemyFarm then
-                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
+                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,Settings.ZDirection)
                                 elseif Hitting and Settings.NearestEnemyFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                 end
@@ -514,7 +515,7 @@ coroutine.wrap(function()
                                                                 v.HumanoidRootPart.CFrame = FarmingPos
                                                             end
                                                             if not Hitting and Settings.SelectedBossFarm then
-                                                                Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
+                                                                Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,Settings.ZDirection)
                                                             elseif Hitting and Settings.SelectedBossFarm then
                                                                 Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                                             end
@@ -584,7 +585,7 @@ coroutine.wrap(function()
                                                             v.HumanoidRootPart.CFrame = FarmingPos
                                                         end
                                                         if not Hitting and Settings.FarmAllBosses then
-                                                            Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
+                                                            Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,Settings.ZDirection)
                                                         elseif Hitting and Settings.FarmAllBosses then
                                                             Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                                         end
@@ -639,7 +640,7 @@ coroutine.wrap(function()
                                     Enemy.HumanoidRootPart.CFrame = FarmingPos
                                 end
                                 if not Hitting and Settings.FarmAllBosses then
-                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
+                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,Settings.ZDirection)
                                 elseif Hitting and Settings.FarmAllBosses then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                 end
@@ -693,7 +694,7 @@ coroutine.wrap(function()
                                     Enemy.HumanoidRootPart.CFrame = FarmingPos
                                 end
                                 if not Hitting and Settings.DemonsFarm then
-                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
+                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,Settings.ZDirection)
                                 elseif Hitting and Settings.DemonsFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                 end
@@ -742,7 +743,7 @@ coroutine.wrap(function()
                                     Enemy.HumanoidRootPart.CFrame = FarmingPos
                                 end
                                 if not Hitting and Settings.CivilianFarm then
-                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,0)
+                                    Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0,Settings.FarmAltitude,Settings.ZDirection)
                                 elseif Hitting and Settings.CivilianFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame* CFrame.new(0, 0, -0.5)
                                 end
@@ -975,9 +976,13 @@ MainC3:AddDropdown('AllBossesType', {Values = {"List","Closest"}, Default = 1, M
 Options.AllBossesType:OnChanged(function()
     Settings.AllBossesType = Options.AllBossesType.Value
 end)
-MainC3:AddSlider('FarmAltitude', {Text = 'Farm Altitude (Recommended Default)',Default = Settings.FarmAltitude,Min = -30,Max = 150,Rounding = 0,Compact = false})
+MainC3:AddSlider('FarmAltitude', {Text = 'Farm Altitude (Recommended Default)',Default = Settings.FarmAltitude,Min = -150,Max = 150,Rounding = 0,Compact = false})
 Options.FarmAltitude:OnChanged(function()
     Settings.FarmAltitude = Options.FarmAltitude.Value
+end)
+MainC3:AddSlider('ZDirection', {Text = 'Farm Axis or Far (Recommended Default)',Default = Settings.ZDirection,Min = -150,Max = 150,Rounding = 0,Compact = false})
+Options.ZDirection:OnChanged(function()
+    Settings.ZDirection = Options.ZDirection.Value
 end)
 MainC3:AddToggle('BringMob', {Text = 'Bring Mob',Default = Settings.BringMob,Tooltip = 'Always bring the mob when farming'})
 Toggles.BringMob:OnChanged(function()
