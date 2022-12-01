@@ -179,7 +179,7 @@ local Hitting = false
                     elseif Settings.KillAura.TypeSelected == "Sword" then
                         Hitting=true
                         wait(.1)
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"Sword_Combat_Slash", 7)))
                         for i = 1, 7 do
                             game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"Sword_Combat_Slash", 7)))
                             game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"Sword_Combat_Slash", 919)))
@@ -190,7 +190,7 @@ local Hitting = false
                     elseif Settings.KillAura.TypeSelected == "Scythe" then
                         Hitting=true
                         wait(.1)
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"Scythe_Combat_Slash", 7)))
                         for i = 1, 7 do
                             game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"Scythe_Combat_Slash", 7)))
                             game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"Scythe_Combat_Slash", 919)))
@@ -201,7 +201,7 @@ local Hitting = false
                     elseif Settings.KillAura.TypeSelected == "Claws" then
                         Hitting=true
                         wait(.1)
-                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"fist_combat", 7)))
+                        game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S_:InvokeServer(unpack(args(1,"claw_Combat_Slash", 7)))
                         for i = 1, 7 do
                             game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(1,"claw_Combat_Slash", 7)))
                             game:GetService("ReplicatedStorage").Remotes.To_Server.Handle_Initiate_S:FireServer(unpack(args(2,"claw_Combat_Slash", 919)))
