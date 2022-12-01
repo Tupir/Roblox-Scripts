@@ -141,9 +141,9 @@ task.spawn(function()
             if Settings.ChestAutoFarm then
                 local Chest = ClosestChest()
                 while task.wait() and Chest:IsDescendantOf(workspace) and Settings.ChestAutoFarm do
-                    Player.Character.HumanoidRootPart.CFrame = Chest.CFrame
+                    Player.Character.HumanoidRootPart.CFrame = Chest.CFrame*CFrame.new(0,0,-2)
                 end
-                wait(1)
+                wait(.5)
             end
         end)
     end
