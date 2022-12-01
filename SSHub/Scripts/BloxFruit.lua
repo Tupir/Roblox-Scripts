@@ -140,10 +140,10 @@ task.spawn(function()
         pcall(function()
             if Settings.ChestAutoFarm then
                 local Chest = ClosestChest()
-                if Chest then
-                    if Tween then Tween:Cancel() Tween = nil end
-                    TeleportTween(Chest.CFrame)
+                while task.wait() and Chest:IsDescendantOf(workspace) and Settings.ChestAutoFarm do
+                    Player.Character.HumanoidRootPart.CFrame = Chest.CFrame
                 end
+                wait(1)
             end
         end)
     end
