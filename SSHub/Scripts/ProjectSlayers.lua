@@ -514,7 +514,7 @@ coroutine.wrap(function()
                                                 local FarmingPos = v.HumanoidRootPart.CFrame
                                                 while task.wait() and Settings.SelectedBossFarm and not Settings.FarmAllBosses and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied and string.match(v.Name, Settings.SelectedBoss) do
                                                     pcall(function()
-                                                        if Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
+                                                        if v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
                                                             if Settings.BringMob then
                                                                 v.HumanoidRootPart.CFrame = FarmingPos
                                                             end
@@ -523,11 +523,11 @@ coroutine.wrap(function()
                                                             elseif Hitting and Settings.SelectedBossFarm then
                                                                 Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                                             end
-                                                        elseif not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied then
+                                                        elseif not v.Humanoid or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied then
                                                             Settings.KillAura.Enabled = false
                                                             FarmingPos = nil
                                                             if Settings.AutoLootChest == true then
-                                                                wait(1)
+                                                                wait(2)
                                                             end
                                                         end
                                                     end)
@@ -584,7 +584,7 @@ coroutine.wrap(function()
                                             local FarmingPos = v.HumanoidRootPart.CFrame
                                             while task.wait() and Settings.FarmAllBosses and not Settings.SelectedBossFarm and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied and Settings.AllBossesType == "List"  do
                                                 pcall(function()
-                                                    if Settings.FarmAllBosses and v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
+                                                    if v.Humanoid and v.Humanoid:IsDescendantOf(workspace) and v.Humanoid.Health > 0 and not Settings.PlrDied then
                                                         if Settings.BringMob then
                                                             v.HumanoidRootPart.CFrame = FarmingPos
                                                         end
@@ -593,10 +593,9 @@ coroutine.wrap(function()
                                                         elseif Hitting and Settings.FarmAllBosses then
                                                             Plr.Character.HumanoidRootPart.CFrame = v.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                                         end
-                                                    elseif not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied then
+                                                    elseif not v.Humanoid or not v.Humanoid:IsDescendantOf(workspace) or v.Humanoid.Health <= 0 or Settings.PlrDied then
                                                         Settings.KillAura.Enabled = false
                                                         FarmingPos = nil
-                                                        wait(1)
                                                         if Settings.AutoLootChest then
                                                             wait(1)
                                                         end
@@ -639,7 +638,7 @@ coroutine.wrap(function()
                     local FarmingPos = Enemy.HumanoidRootPart.CFrame
                     while task.wait() and Settings.FarmAllBosses and not Settings.SelectedBossFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied and Settings.AllBossesType == "Closest" do
                         pcall(function()
-                            if Settings.FarmAllBosses and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
+                            if Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
                                 if Settings.BringMob then
                                     Enemy.HumanoidRootPart.CFrame = FarmingPos
                                 end
@@ -648,10 +647,9 @@ coroutine.wrap(function()
                                 elseif Hitting and Settings.FarmAllBosses then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                 end
-                            elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
+                            elseif not Enemy.Humanoid or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                 Settings.KillAura.Enabled = false
                                 FarmingPos = nil
-                                wait(1)
                                 if Settings.AutoLootChest == true then
                                     wait(1)
                                 end
@@ -693,7 +691,7 @@ coroutine.wrap(function()
                         Settings.KillAura.Enabled = true
                         local FarmingPos = Enemy.HumanoidRootPart.CFrame
                         while task.wait() and Settings.DemonsFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied do
-                            if Settings.DemonsFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
+                            if Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
                                 if Settings.BringMob then
                                     Enemy.HumanoidRootPart.CFrame = FarmingPos
                                 end
@@ -702,7 +700,7 @@ coroutine.wrap(function()
                                 elseif Hitting and Settings.DemonsFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame*CFrame.new(0, 7, 0)*CFrame.Angles(math.rad(-90), 0, 0)
                                 end
-                            elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
+                            elseif not Enemy.Humanoid or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                 Settings.KillAura.Enabled = false
                                 FarmingPos = nil
                             end
@@ -742,7 +740,7 @@ coroutine.wrap(function()
                         Settings.KillAura.Enabled = true
                         local FarmingPos = Enemy.HumanoidRootPart.CFrame
                         while task.wait() and Settings.CivilianFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied do
-                            if Settings.CivilianFarm and Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
+                            if Enemy.Humanoid and Enemy.Humanoid:IsDescendantOf(workspace) and Enemy.Humanoid.Health > 0 and not Settings.PlrDied then
                                 if Settings.BringMob then
                                     Enemy.HumanoidRootPart.CFrame = FarmingPos
                                 end
@@ -751,7 +749,7 @@ coroutine.wrap(function()
                                 elseif Hitting and Settings.CivilianFarm then
                                     Plr.Character.HumanoidRootPart.CFrame = Enemy.HumanoidRootPart.CFrame* CFrame.new(0, 0, -0.5)
                                 end
-                            elseif not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
+                            elseif not Enemy.Humanoid or not Enemy.Humanoid:IsDescendantOf(workspace) or Enemy.Humanoid.Health <= 0 or Settings.PlrDied then
                                 Settings.KillAura.Enabled = false
                                 FarmingPos = nil
                                 if Settings.AutoEatSoul then
