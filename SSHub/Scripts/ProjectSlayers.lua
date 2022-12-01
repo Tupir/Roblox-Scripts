@@ -410,7 +410,7 @@ local function ClosestEnemy()
         if v:IsA("Humanoid") then
             v = v.Parent
             local mag = (Plr.Character.HumanoidRootPart.Position - v.Humanoid.WalkToPoint).Magnitude
-            if mag < magn then 
+            if mag < magn then
                 magn = mag 
                 Target = v
             end
@@ -467,7 +467,7 @@ coroutine.wrap(function()
                                 Settings.KillAura.Enabled = false
                                 FarmingPos = nil
                                 if Settings.AutoLootChest == true or Settings.AutoEatSoul == true then
-                                    wait(1)
+                                    wait(2)
                                 end
                             end
                         end)
@@ -567,7 +567,7 @@ coroutine.wrap(function()
                             v = v.Parent
                             for i2,v2 in pairs(Bosses) do
                                 if Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                    if string.find(i2, v.Name) then
+                                    if string.match(i2, v.Name) then
                                         if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and not Settings.PlrDied and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
                                             if Tween then Tween:Cancel() Tween = nil end
                                             TeleportTween(v2)
@@ -597,7 +597,7 @@ coroutine.wrap(function()
                                                         Settings.KillAura.Enabled = false
                                                         FarmingPos = nil
                                                         if Settings.AutoLootChest then
-                                                            wait(1)
+                                                            wait(2)
                                                         end
                                                     end
                                                 end)
@@ -651,7 +651,7 @@ coroutine.wrap(function()
                                 Settings.KillAura.Enabled = false
                                 FarmingPos = nil
                                 if Settings.AutoLootChest == true then
-                                    wait(1)
+                                    wait(2)
                                 end
                             end
                         end)
@@ -753,7 +753,7 @@ coroutine.wrap(function()
                                 Settings.KillAura.Enabled = false
                                 FarmingPos = nil
                                 if Settings.AutoEatSoul then
-                                    wait(1)
+                                    wait(2)
                                 end
                             end
                         end
