@@ -567,7 +567,7 @@ coroutine.wrap(function()
                             v = v.Parent
                             for i2,v2 in pairs(Bosses) do
                                 if Settings.FarmAllBosses and not Settings.SelectedBossFarm then
-                                    if string.match(i2, v.Name) then
+                                    if string.match(v.Name, i2) then
                                         if not v:FindFirstChild("HumanoidRootPart") and v:FindFirstChild("Humanoid") and v.Humanoid.Health > 0 and not Settings.PlrDied and Settings.FarmAllBosses and not Settings.SelectedBossFarm then
                                             if Tween then Tween:Cancel() Tween = nil end
                                             TeleportTween(v2)
