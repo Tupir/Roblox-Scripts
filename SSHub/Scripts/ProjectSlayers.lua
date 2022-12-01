@@ -328,29 +328,31 @@ coroutine.wrap(function()
             end
             if Settings.AutoLootChest then
                 local Debree = game:GetService("Workspace").Debree
-                for _,v in next, Debree:GetChildren() do
-                    if string.match(v.Name, "Loot_Chest") then
-                        local mag = (Plr.Character.HumanoidRootPart.Position - v.Root.Position).Magnitude
-                        if mag < 500 then
-                            if v and #v:WaitForChild("Drops"):GetChildren() > 0 then
-                                local Remote = v:WaitForChild("Add_To_Inventory")
-                                for _,v2 in next, v:WaitForChild("Drops"):GetChildren() do
-                                    if string.find(v2.Name, "Ore") or string.find(v2.Name, "Elixir") then
-                                        if Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm then
-                                            Plr.Character.HumanoidRootPart.CFrame = v:WaitForChild("Root").CFrame*CFrame.new(0,2,0)
+                pcall(function()
+                    for _,v in next, Debree:GetChildren() do
+                        if string.match(v.Name, "Loot_Chest") then
+                            local mag = (Plr.Character.HumanoidRootPart.Position - v.Root.Position).Magnitude
+                            if mag < 130 then
+                                if v and #v:WaitForChild("Drops"):GetChildren() > 0 then
+                                    local Remote = v:WaitForChild("Add_To_Inventory")
+                                    for _,v2 in next, v:WaitForChild("Drops"):GetChildren() do
+                                        if string.find(v2.Name, "Ore") or string.find(v2.Name, "Elixir") then
+                                            if Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm then
+                                                Plr.Character.HumanoidRootPart.CFrame = v:WaitForChild("Root").CFrame*CFrame.new(0,2,0)
+                                            end
+                                            Remote:InvokeServer(v2.Name)
+                                        elseif not game:GetService("ReplicatedStorage")["Player_Data"][Plr.Name].Inventory:FindFirstChild(v2.Name, true) then
+                                            if Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm then
+                                                Plr.Character.HumanoidRootPart.CFrame = v:WaitForChild("Root").CFrame*CFrame.new(0,2,0)
+                                            end
+                                            Remote:InvokeServer(v2.Name)
                                         end
-                                        Remote:InvokeServer(v2.Name)
-                                    elseif not game:GetService("ReplicatedStorage")["Player_Data"][Plr.Name].Inventory:FindFirstChild(v2.Name, true) then
-                                        if Settings.FarmAllBosses or Settings.SelectedBossFarm or Settings.NearestEnemyFarm then
-                                            Plr.Character.HumanoidRootPart.CFrame = v:WaitForChild("Root").CFrame*CFrame.new(0,2,0)
-                                        end
-                                        Remote:InvokeServer(v2.Name)
                                     end
                                 end
                             end
                         end
                     end
-                end
+                end)
             end
             if Settings.InfStamina then
                 getrenv()._G:Stamina(-9e9)
