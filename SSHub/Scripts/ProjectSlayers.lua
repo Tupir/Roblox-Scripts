@@ -296,24 +296,6 @@ end)
 coroutine.wrap(function()
     while task.wait() do
         pcall(function()
-            for _,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
-                if v:IsA("Humanoid") then
-                    v = v.Parent
-                    for i2,v2 in pairs(BossCheck) do
-                        if string.match(v.Name,i2) then
-                            if v.Humanoid.Health > 1 then
-                                BossCheck[v.Name].MaxHealth = v.Humanoid.MaxHealth
-                                BossCheck[v.Name].Health = math.round(v.Humanoid.Health)
-                            end
-                            if v.Humanoid.Health > 0 then
-                                BossCheck[v.Name].Alive = true
-                            else
-                                BossCheck[v.Name].Alive = false
-                            end
-                        end
-                    end
-                end
-            end
             if Settings.AutoEatSoul then
                 local Debree = game:GetService("Workspace").Debree
                 for _,v in next, Debree:GetChildren() do
@@ -360,7 +342,7 @@ coroutine.wrap(function()
             if Settings.InfBreath then
                 getrenv()._G:Breath(-9e9)
             end
-            while task.wait() and Noclip == true do
+            if Noclip == true then
                 for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
                     if v:IsA("BasePart") and v.CanCollide == true then
                         v.CanCollide = false
