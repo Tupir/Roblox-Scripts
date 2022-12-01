@@ -295,7 +295,7 @@ game:GetService("Players").LocalPlayer.Idled:Connect(function()
 end)
 coroutine.wrap(function()
     while task.wait() do
-
+        pcall(function()
             for _,v in pairs(game:GetService("Workspace").Mobs.Bosses:GetDescendants()) do
                 if v:IsA("Humanoid") then
                     v = v.Parent
@@ -369,6 +369,7 @@ coroutine.wrap(function()
                     end
                 end
             end
+        end)
     end
 end)()
 local function ClosestCivilian()
