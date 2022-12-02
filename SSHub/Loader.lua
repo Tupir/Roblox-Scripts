@@ -26,3 +26,33 @@ local function Load(Script)
     elseif Success and not Error then
     end
 end
+
+
+--#endregion
+local Fun = loadstring(game:HttpGet("https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Testing.lua", true))()
+local SupportedGames = loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Games.lua', true))()
+local function GetSupportedGame() 
+print("Stage [1/2] Game Checker")
+print("[1/2] Checking...")
+	local Game
+    for Id, Info in pairs(SupportedGames) do
+        if tostring(game.PlaceId) == Id then
+            Game = Info break
+        end
+    end return Game
+end
+local SupportedGame = GetSupportedGame()
+if SupportedGame then
+	print("[2/2] Game found: "..game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name)
+	print("Stage [2/2] Loader")
+	print("[1/2] Loading...")
+	Notify(NS.Title,NS.Icon,"Loading...",3)
+    Load(SupportedGame.Script)
+	print("[2/2] Load Success")
+    print(Time)
+    Notify(NS.Title,NS.Icon,"Successfully Loaded\nIn: "..math.round(Time).." Seconds.",3)
+	Fun()
+else
+	Notify(NS.Title,NS.Icon,"No game found!",10)
+	print("[2/2] No game found!")
+end
