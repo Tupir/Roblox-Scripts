@@ -1,3 +1,13 @@
+repeat wait() until game:IsLoaded()
+if game.Players.LocalPlayer.Team == nil then
+    local Button = game.Players.LocalPlayer.PlayerGui.Main.ChooseTeam.Container.Pirates.Frame.ViewportFrame.TextButton
+    local Events = {"MouseButton1Click", "MouseButton1Down", "Activated"}
+    for i,v in pairs(Events) do
+        for i,v in pairs(getconnections(Button[v])) do
+            v.Function()
+        end
+    end
+end
 local Name = "SSHub"
 _G.LibraryConfg = {
 	AccentColors = {
@@ -12,7 +22,7 @@ local NS = {
 	Icon = "rbxassetid://8426126371"
 }
 local function Notify(Title, Icon, Text, Duration)
-	game.StarterGui:SetCore("SendNotification", {Title = Title or ""; Text = Text or ""; Icon = Icon or ""; Duration = tonumber(Duration) or 3 })
+	game.StarterGui:SetCore("SendNotification", {Title = Title or nil; Text = Text or nil; Icon = Icon or nil; Duration = tonumber(Duration) or 3 })
 end
 --#endregion
 --#region Settings
@@ -45,8 +55,6 @@ local ESPSettings = {
 };
 
 local Success, Error = pcall(function()
-    print("Stage [2/2] Loader")
-    print("[1/2] Loading...")
 
     --#region Libs
     local LibraryHttps = "https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Lib/LibrarySSHub.lua"
@@ -69,8 +77,8 @@ local Success, Error = pcall(function()
     local VirtualUser = GetService(game, "VirtualUser")
     local Uis = GetService(game, "UserInputService")
     local Cam = Workspace.CurrentCamera
-    local Player = Players.LocalPlayer
-    local Mouse = Player:GetMouse()
+    local Plr = Players.LocalPlayer
+    local Mouse = Plr:GetMouse()
     local GameName = game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name
     --#endregion
 
@@ -79,7 +87,7 @@ local function ClosestChest()
 	local Target = nil; local magn = math.huge
     for i, v in pairs(Workspace:GetDescendants()) do
         if string.find(v.Name, "Chest") and v:IsA("Part") then
-            local mag = (game.Players.LocalPlayer.Character.HumanoidRootPart.Position - v.Position).Magnitude
+            local mag = (Plr.Character.HumanoidRootPart.Position - v.Position).Magnitude
             if mag < magn then 
                 magn = mag 
                 Target = v
@@ -94,7 +102,7 @@ task.spawn(function()
     while task.wait() do
         pcall(function()
             if Noclip == true then
-                for i, v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                for i, v in pairs(Plr.Character:GetDescendants()) do
                     if v:IsA("BasePart") and v.CanCollide == true then
                         v.CanCollide = false
                     end
@@ -106,22 +114,20 @@ end)
 
 local Tween
 local function TeleportTween(To)
-    Distance = (To.Position - game.Players.LocalPlayer.Character.HumanoidRootPart.Position).Magnitude
-    if Distance < 200 then
-        game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = To
+    local Speed
+    local Distance = (To.Position - Plr.Character.HumanoidRootPart.Position).Magnitude
+    if Distance < 500 then
+        Plr.Character.HumanoidRootPart.CFrame = To
         Speed = 350
-    elseif Distance < 1000 then
+    elseif Distance < 1200 then
         Speed = 350
-    elseif Distance >= 1000 then
-        Speed = 250
+    elseif Distance >= 1200 then
+        Speed = 300
     end
-    Tween = game:GetService("TweenService"):Create(
-        game.Players.LocalPlayer.Character.HumanoidRootPart,
-        TweenInfo.new(Distance/Speed, Enum.EasingStyle.Linear),
-        {CFrame = To})
+    Tween = game:GetService("TweenService"):Create(Plr.Character.HumanoidRootPart,TweenInfo.new(Distance/Speed, Enum.EasingStyle.Linear),{CFrame = To})
     local NoFall
-    if not game.Players.LocalPlayer.Character.HumanoidRootPart:FindFirstChild("BodyVelocity") then
-        NoFall = Instance.new("BodyVelocity", game.Players.LocalPlayer.Character.HumanoidRootPart)
+    if not Plr.Character.HumanoidRootPart:FindFirstChild("BodyVelocity") then
+        NoFall = Instance.new("BodyVelocity", Plr.Character.HumanoidRootPart)
         NoFall.Velocity = Vector3.new(0, 0, 0)
     end
     Noclip = true
@@ -140,14 +146,14 @@ task.spawn(function()
         pcall(function()
             if Settings.ChestAutoFarm then
                 local Chest = ClosestChest()
-                while task.wait() and Chest:IsDescendantOf(workspace) and Settings.ChestAutoFarm do
-                    Player.Character.HumanoidRootPart.CFrame = Chest.CFrame*CFrame.new(0,0,-2)
+                while task.wait() and Chest:IsDescendantOf(workspace) do
+                    TeleportTween(Chest.CFrame)
                 end
-                wait(.5)
             end
         end)
     end
 end)
+
 RunService.RenderStepped:Connect(function()
       LibraryESP.Colors.BoxColor = ESPSettings.PlayerESP.Colors.BoxColor
       LibraryESP.Colors.NameColor = ESPSettings.PlayerESP.Colors.NameColor
@@ -178,7 +184,7 @@ MainT:AddButton("Rejoin", function()
    ts:Teleport(game.PlaceId, p)
 end)
 MainA:AddToggle("Chest Auto Farm", Settings.ChestAutoFarm, function(V)
-    TeleportTween(game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame)
+    TeleportTween(Plr.Character.HumanoidRootPart.CFrame)
     Settings.ChestAutoFarm = V
 end, "ChestAutoFarm")
 MainA:AddButton("Stop Tween", function()
@@ -291,12 +297,10 @@ SShub:UpdateTheme()
 end,"TEXT1")
 end)
 
-if Success then
-print("[2/2] Load Success")
-end
-
-if Error then
-	Notify(NS.Title,NS.Icon,"Error, Copied to clipboard")
-	print("[Error] Copied to clipboard")
-	setclipboard(tostring(Error))
+if Error and not Success then
+    local ErrorHandle = loadstring(game:HttpGet("https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/ErrorHandle.lua", true))()
+    ErrorHandle(Error)
+    Notify(NS.Title,NS.Icon,"Error, Copied to clipboard")
+    print("[Error] Copied to clipboard - "..tostring(Error))
+    setclipboard(tostring(Error))
 end
