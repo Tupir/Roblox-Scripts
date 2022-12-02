@@ -972,13 +972,21 @@ elseif World == 3 then
         Settings.MugenTrain = Toggles.MugenTrain.Value
     end)
 end
-
-MainCo:AddDivider()
-MainCo:AddButton("Fix Can't Move", function()
-    pcall(function()
-        Plr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity"):Destroy()
+if World == 1 or World == 2 then
+    MainCo:AddDivider()
+    MainCo:AddButton("Fix Can't Move", function()
+        pcall(function()
+            Plr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity"):Destroy()
+        end)
     end)
-end)
+elseif World == 3 then
+    MainCo1:AddDivider()
+    MainCo1:AddButton("Fix Can't Move", function()
+        pcall(function()
+            Plr.Character.HumanoidRootPart:FindFirstChildOfClass("BodyVelocity"):Destroy()
+        end)
+    end)
+end
 MainInfo:AddDivider()
 MainInfo:AddLabel("This script is very unstable by the speed it farm, So u need to be careful with what u do, A miss click can bring u to a kick or ban (Probaly not ban cuz anti cheat just kick u)",true)
 MainInfo:AddDivider()
