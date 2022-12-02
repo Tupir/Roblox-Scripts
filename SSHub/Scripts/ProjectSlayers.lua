@@ -1420,7 +1420,7 @@ end)
 
 if Error and not Success then
     pcall(function()
-        local ErrorHandle = loadstring(game:HttpGet("https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/ErrorHandle", true))()
+        local ErrorHandle = loadstring(game:HttpGet("https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/ErrorHandle.lua", true))()
         ErrorHandle(Error)
         Notify(NS.Title,NS.Icon,"Error, Copied to clipboard")
         print("[Error] Copied to clipboard - "..tostring(Error))
