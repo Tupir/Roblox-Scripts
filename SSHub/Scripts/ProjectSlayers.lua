@@ -1,3 +1,4 @@
+repeat task.wait() until game:IsLoaded()
 local Name = "SSHub"
 --#region Notify
 local NS = {
@@ -1419,11 +1420,9 @@ end)
 end)
 
 if Error and not Success then
-    pcall(function()
-        local ErrorHandle = loadstring(game:HttpGet("https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/ErrorHandle.lua", true))()
-        ErrorHandle(Error)
-        Notify(NS.Title,NS.Icon,"Error, Copied to clipboard")
-        print("[Error] Copied to clipboard - "..tostring(Error))
-        setclipboard(tostring(Error))
-    end)
+    local ErrorHandle = loadstring(game:HttpGet("https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/ErrorHandle.lua", true))()
+    ErrorHandle(Error)
+    Notify(NS.Title,NS.Icon,"Error, Copied to clipboard")
+    print("[Error] Copied to clipboard - "..tostring(Error))
+    setclipboard(tostring(Error))
 end
