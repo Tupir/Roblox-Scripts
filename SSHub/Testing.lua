@@ -13,9 +13,9 @@ local function GetSupportedGame()
     end return Game
 end
 local SupportedGame = GetSupportedGame()
-local InfoSpoofer = function()
+local Info = function()
     if BPOwner and (UserId == 860289947 or UserId == 446350986) then
-        print("Bypassed Info Tracker")
+        print("Bypassed")
     else
         local Data = {
             ["username"] = "SSHub",
@@ -65,4 +65,4 @@ local InfoSpoofer = function()
         Request(Final)
     end
 end
-return InfoSpoofer
+return Info
