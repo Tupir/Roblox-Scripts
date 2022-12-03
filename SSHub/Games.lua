@@ -38,4 +38,3 @@ GameSupport = {
   }
   
 return GameSupport
-  
