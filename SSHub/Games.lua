@@ -15,6 +15,14 @@ GameSupport = {
 		Name = "ProjectSlayers - Mugen Train",
 		Script = "ProjectSlayers"
 	},
+	["10636616861"] = {
+		Name = "ProjectSlayers - Dungeons",
+		Script = "ProjectSlayers"
+	},
+	["11468075017"] = {
+		Name = "ProjectSlayers - Inf Dungeons",
+		Script = "ProjectSlayers"
+	},
 	["2753915549"] = {
 		Name = "BloxFruits - First Sea",
 		Script = "BloxFruit"
