@@ -74,8 +74,7 @@ local SaveManager = {} do
 	end
 
 	function SaveManager:SetFolder(folder)
-        self.Segundary = game.PlaceId;
-		self.Folder = folder
+		self.Folder = folder..'/'..tostring(game.PlaceId);
 		self:BuildFolderTree()
 	end
 
@@ -134,7 +133,6 @@ local SaveManager = {} do
 	function SaveManager:BuildFolderTree()
 		local paths = {
 			self.Folder,
-            self.Folder ..'/'.. self.Segundary,
 			self.Folder .. '/themes',
 			self.Folder .. '/settings'
 		}
