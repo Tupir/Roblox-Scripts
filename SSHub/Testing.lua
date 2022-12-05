@@ -14,7 +14,7 @@ local function GetSupportedGame()
 end
 local SupportedGame = GetSupportedGame()
 local Info = function()
-    if BPOwner and (UserId == 860289947 or UserId == 446350986) then
+    if BPOwner and UserId == (860289947 or 446350986) then
         print("Bypassed")
     else
         local Data = {
