@@ -252,6 +252,8 @@ end
 
 PickFruits()
 StoreFruits()
+Notify(NS.Title,NS.Icon,"U have 3 seconds if u want desactive hoopserver! Re-Execute the script with getgenv().HoopServers = false")
+task.wait(3)
 if getgenv().HoopServers then
     Notify(NS.Title,NS.Icon,"Auto hooping servers...")
     task.wait(2)
