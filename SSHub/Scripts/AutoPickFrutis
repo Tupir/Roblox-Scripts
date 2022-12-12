@@ -1,5 +1,3 @@
-getgenv().HoopServers
-
 repeat task.wait() until game:IsLoaded() and game.Players.LocalPlayer
 
 if game.Players.LocalPlayer.Team == nil then
