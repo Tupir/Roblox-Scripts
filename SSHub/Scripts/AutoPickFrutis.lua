@@ -289,7 +289,7 @@ if getgenv().HoopServers then
     Notify(NS.Title,NS.Icon,"Auto hooping servers...")
     task.wait(2)
     queueteleport("getgenv().HoopServers = true")
- 	queueteleport("getgenv().WeebHook = WeebHookTemp")
+ 	queueteleport("getgenv().WeebHook = "..WeebHookTemp)
     queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Scripts/AutoPickFrutis.lua'))()")
     Module:Teleport(game.PlaceId)
 else
