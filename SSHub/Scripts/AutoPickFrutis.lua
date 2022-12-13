@@ -280,7 +280,7 @@ if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
     end
 end
 StoreFruits()
-
+local WeebHookTemp = getgenv().WeebHook
 if getgenv().HoopServers then
     Notify(NS.Title,NS.Icon,"U have 3 seconds if u want desactive hoopserver! Re-Execute the script with getgenv().HoopServers = false")
     task.wait(3)
@@ -289,6 +289,7 @@ if getgenv().HoopServers then
     Notify(NS.Title,NS.Icon,"Auto hooping servers...")
     task.wait(2)
     queueteleport("getgenv().HoopServers = true")
+ 	queueteleport("getgenv().WeebHook = WeebHookTemp")
     queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Scripts/AutoPickFrutis.lua'))()")
     Module:Teleport(game.PlaceId)
 else
