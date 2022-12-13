@@ -139,14 +139,11 @@ local Noclip = false
                 Plr.Character.PrimaryPart.CFrame = Plataform.CFrame
             until not Tween or not Plataform or Distance < 10
         end)()
-        Tween.Completed:Connect(function()
-            pcall(function()
-                Plataform:Destroy()
-                NoFall:Destroy()
-                Tween = nil
-                Noclip = false
-            end)
-        end)
+        Tween.Completed:wait()
+        Plataform:Destroy()
+        NoFall:Destroy()
+        Tween = nil
+        Noclip = false
     end
 
 for _, Object in next, Backpack:GetChildren() do
@@ -253,6 +250,7 @@ end
 PickFruits()
 if getgenv().WeebHook then
     if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
+        Plr.Character.Humanoid:UnequipTools()
         local HttpService = game:GetService("HttpService")
         for _,v in pairs(CheckBackpack()) do
             if Backpack:FindFirstChild(v.." Fruit") then
@@ -282,7 +280,6 @@ if getgenv().WeebHook then
     end
 end
 StoreFruits()
-local WeebHookTemp = getgenv().WeebHook
 if getgenv().HoopServers then
     Notify(NS.Title,NS.Icon,"U have 3 seconds if u want desactive hoopserver! Re-Execute the script with getgenv().HoopServers = false")
     task.wait(3)
@@ -291,7 +288,9 @@ if getgenv().HoopServers then
     Notify(NS.Title,NS.Icon,"Auto hooping servers...")
     task.wait(2)
     queueteleport("getgenv().HoopServers = true")
- 	queueteleport("getgenv().WeebHook = "..WeebHookTemp)
+    if getgenv().WeebHook then
+ 	    queueteleport("getgenv().WeebHook = "..'"'..getgenv().WeebHook..'"')
+    end
     queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Scripts/AutoPickFrutis.lua'))()")
     Module:Teleport(game.PlaceId)
 else
