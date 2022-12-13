@@ -251,31 +251,33 @@ local function StoreFruits()
 end
 
 PickFruits()
-if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
-    local HttpService = game:GetService("HttpService")
-    for _,v in pairs(CheckBackpack()) do
-        if Backpack:FindFirstChild(v.." Fruit") then
-            local Data = {
-                ["username"] = "SSHub",
-                ["embeds"] = {
-                    {
-                        ["title"] = "Fruit Finded!",
-                        ["color"] = 9893552,
-                        ["fields"] = {
-                            {
-                                ["name"] = "Fruit",
-                                ["value"] = v.." Fruit",
-                                ["inline"] = true
-                            },
+if getgenv().WeebHook then
+    if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
+        local HttpService = game:GetService("HttpService")
+        for _,v in pairs(CheckBackpack()) do
+            if Backpack:FindFirstChild(v.." Fruit") then
+                local Data = {
+                    ["username"] = "SSHub",
+                    ["embeds"] = {
+                        {
+                            ["title"] = "Fruit Finded!",
+                            ["color"] = 9893552,
+                            ["fields"] = {
+                                {
+                                    ["name"] = "Fruit",
+                                    ["value"] = v.." Fruit",
+                                    ["inline"] = true
+                                },
+                            }
                         }
                     }
                 }
-            }
-            local Headers = {["Content-Type"] = "application/json"}
-            local Encoded = HttpService:JSONEncode(Data)
-            local Request = http_request or request or HttpPost or syn.request
-            local Final = {Url = getgenv().WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
-            Request(Final)
+                local Headers = {["Content-Type"] = "application/json"}
+                local Encoded = HttpService:JSONEncode(Data)
+                local Request = http_request or request or HttpPost or syn.request
+                local Final = {Url = getgenv().WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
+                Request(Final)
+            end
         end
     end
 end
