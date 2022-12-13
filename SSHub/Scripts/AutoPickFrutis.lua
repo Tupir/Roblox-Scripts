@@ -148,21 +148,21 @@ local Noclip = false
 
 for _, Object in next, Backpack:GetChildren() do
 	for i,v in pairs(ListFruits) do
-		if string.find(Object.Name, v) and not string.find(Object.Name, "Talon") then
+		if string.find(Object.Name, v.." Fruit") then
 		    table.insert(FruitsInBackPack, tostring(Object))
 		end
 	end
 end 
 Backpack.ChildAdded:Connect(function(Object)
 	for i,v in pairs(ListFruits) do
-		if string.find(Object.Name, v) and not string.find(Object.Name, "Talon") then
+		if string.find(Object.Name, v.." Fruit") then
 		    table.insert(FruitsInBackPack, tostring(Object))
 		end
 	end
 end)
 Backpack.ChildRemoved:Connect(function(Object)
 	for i,v in pairs(ListFruits) do
-		if string.find(Object.Name, v) and not string.find(Object.Name, "Talon") then
+		if string.find(Object.Name, v.." Fruit") then
             TableRemove(FruitsInBackPack, tostring(Object))
         end
     end
@@ -183,10 +183,8 @@ local function PickFruits()
 				firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
 				Plr.Character.HumanoidRootPart.CFrame = v:FindFirstChild("Handle").CFrame*CFrame.new(0,0,.5)
             end
-            wait(2)
             if Time1 >= 3 and v.Parent == Workspace then
                 Notify(NS.Title,NS.Icon,"Tweening")
-                task.wait(5)
                 TeleportTween(v:FindFirstChild("Handle").CFrame)
                 local Time = 0
                 task.spawn(function()
@@ -238,13 +236,11 @@ end
 
 local function StoreFruits()
     Plr.Character.Humanoid:UnequipTools()
-    pcall(function()
-		for _,v in pairs(CheckBackpack()) do
-            if Backpack:FindFirstChild(v.." Fruit") then
-			    ReplicatedStorage.Remotes.CommF_:InvokeServer("StoreFruit", v.."-"..v, Backpack[v.." Fruit"])
-			end
-		end
-	end)
+    for _,v in pairs(CheckBackpack()) do
+        if Backpack:FindFirstChild(v.." Fruit") then
+            ReplicatedStorage.Remotes.CommF_:InvokeServer("StoreFruit", v.."-"..v, Backpack[v.." Fruit"])
+        end
+    end
 end
 
 PickFruits()
@@ -279,6 +275,7 @@ if getgenv().WeebHook then
         end
     end
 end
+wait(1)
 StoreFruits()
 if getgenv().HoopServers then
     Notify(NS.Title,NS.Icon,"U have 3 seconds if u want desactive hoopserver! Re-Execute the script with getgenv().HoopServers = false")
@@ -289,7 +286,7 @@ if getgenv().HoopServers then
     task.wait(2)
     queueteleport("getgenv().HoopServers = true")
     if getgenv().WeebHook then
- 	    queueteleport("getgenv().WeebHook = "..'"'..getgenv().WeebHook..'"')
+ 	    queueteleport("getgenv().WeebHook = "..getgenv().WeebHook)
     end
     queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Scripts/AutoPickFrutis.lua'))()")
     Module:Teleport(game.PlaceId)
