@@ -178,15 +178,16 @@ local function PickFruits()
             task.spawn(function()
                 repeat task.wait(1)
                     Time1 = Time1 + 1
-                until Time1 == 5 or not v.Parent == Workspace
+                until Time1 == 3 or not v.Parent == Workspace
             end)
-            while task.wait() and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace and Time1 < 5 do
+            while task.wait() and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace and Time1 < 3 do
 				Plr.Character.HumanoidRootPart.CFrame = v:FindFirstChild("Handle").CFrame
 				firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
 				firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
 				Plr.Character.HumanoidRootPart.CFrame = v:FindFirstChild("Handle").CFrame*CFrame.new(0,0,.5)
             end
-            if Time1 >= 5 and v.Parent == Workspace then
+            wait(2)
+            if Time1 >= 3 and v.Parent == Workspace then
                 Notify(NS.Title,NS.Icon,"Tweening")
                 task.wait(5)
                 TeleportTween(v:FindFirstChild("Handle").CFrame)
@@ -194,15 +195,15 @@ local function PickFruits()
                 task.spawn(function()
                     repeat task.wait(1)
                         Time = Time + 1
-                    until Time == 5 or not v.Parent == Workspace
+                    until Time == 3 or not v.Parent == Workspace
                 end)
-                while task.wait() and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace and Time < 5 do
+                while task.wait() and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace and Time < 3 do
                     Plr.Character.HumanoidRootPart.CFrame = v:FindFirstChild("Handle").CFrame
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
                     Plr.Character.HumanoidRootPart.CFrame = v:FindFirstChild("Handle").CFrame*CFrame.new(0,0,.5)
                 end
-                if Time >= 5 then
+                if Time >= 3 then
                     task.wait(3)
                     Notify(NS.Title,NS.Icon,"Can't get the fruit.")
                 end
@@ -227,7 +228,6 @@ end
 
 local function CheckBackpack()
     local TempTable = {}
-    
     for _,i in pairs(CheckInventory()) do
         for _,v in pairs(FruitsInBackPack) do
             if not string.match(v, i) then
@@ -251,9 +251,40 @@ local function StoreFruits()
 end
 
 PickFruits()
+if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
+    local HttpService = game:GetService("HttpService")
+    for _,v in pairs(CheckBackpack()) do
+        if Backpack:FindFirstChild(v.." Fruit") then
+            local Data = {
+                ["username"] = "SSHub",
+                ["embeds"] = {
+                    {
+                        ["title"] = "Fruit Finded!",
+                        ["color"] = 9893552,
+                        ["fields"] = {
+                            {
+                                ["name"] = "Fruit",
+                                ["value"] = v.." Fruit",
+                                ["inline"] = true
+                            },
+                        }
+                    }
+                }
+            }
+            local Headers = {["Content-Type"] = "application/json"}
+            local Encoded = HttpService:JSONEncode(Data)
+            local Request = http_request or request or HttpPost or syn.request
+            local Final = {Url = getgenv().WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
+            Request(Final)
+        end
+    end
+end
 StoreFruits()
-Notify(NS.Title,NS.Icon,"U have 3 seconds if u want desactive hoopserver! Re-Execute the script with getgenv().HoopServers = false")
-task.wait(3)
+
+if getgenv().HoopServers then
+    Notify(NS.Title,NS.Icon,"U have 3 seconds if u want desactive hoopserver! Re-Execute the script with getgenv().HoopServers = false")
+    task.wait(3)
+end
 if getgenv().HoopServers then
     Notify(NS.Title,NS.Icon,"Auto hooping servers...")
     task.wait(2)
