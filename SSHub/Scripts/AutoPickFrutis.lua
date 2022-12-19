@@ -242,7 +242,6 @@ local function StoreFruits()
         end
     end
 end
-
 PickFruits()
 if getgenv().WeebHook then
     if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
@@ -277,6 +276,46 @@ if getgenv().WeebHook then
 end
 wait(1)
 StoreFruits()
+if getgenv().WhenSpawn then
+    Workspace.ChildAdded:Connect(function(v)
+        if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
+            PickFruits()
+            if getgenv().WeebHook then
+                if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
+                    Plr.Character.Humanoid:UnequipTools()
+                    local HttpService = game:GetService("HttpService")
+                    for _,v in pairs(CheckBackpack()) do
+                        if Backpack:FindFirstChild(v.." Fruit") then
+                            local Data = {
+                                ["username"] = "SSHub",
+                                ["embeds"] = {
+                                    {
+                                        ["title"] = "Fruit Finded!",
+                                        ["color"] = 9893552,
+                                        ["fields"] = {
+                                            {
+                                                ["name"] = "Fruit",
+                                                ["value"] = v.." Fruit",
+                                                ["inline"] = true
+                                            },
+                                        }
+                                    }
+                                }
+                            }
+                            local Headers = {["Content-Type"] = "application/json"}
+                            local Encoded = HttpService:JSONEncode(Data)
+                            local Request = http_request or request or HttpPost or syn.request
+                            local Final = {Url = getgenv().WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
+                            Request(Final)
+                        end
+                    end
+                end
+            end
+            wait(1)
+            StoreFruits()
+        end
+    end)
+end
 if getgenv().HoopServers then
     Notify(NS.Title,NS.Icon,"U have 3 seconds if u want desactive hoopserver! Re-Execute the script with getgenv().HoopServers = false")
     task.wait(3)
