@@ -178,10 +178,8 @@ local function PickFruits()
                 until Time1 == 3 or not v.Parent == Workspace
             end)
             while task.wait() and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace and Time1 < 3 do
-				Plr.Character.HumanoidRootPart.CFrame = v:FindFirstChild("Handle").CFrame
 				firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
 				firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
-				Plr.Character.HumanoidRootPart.CFrame = v:FindFirstChild("Handle").CFrame*CFrame.new(0,0,.5)
             end
             if Time1 >= 3 and v.Parent == Workspace then
                 Notify(NS.Title,NS.Icon,"Tweening")
@@ -193,10 +191,8 @@ local function PickFruits()
                     until Time == 3 or not v.Parent == Workspace
                 end)
                 while task.wait() and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace and Time < 3 do
-                    Plr.Character.HumanoidRootPart.CFrame = v:FindFirstChild("Handle").CFrame
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
-                    Plr.Character.HumanoidRootPart.CFrame = v:FindFirstChild("Handle").CFrame*CFrame.new(0,0,.5)
                 end
                 if Time >= 3 then
                     task.wait(3)
