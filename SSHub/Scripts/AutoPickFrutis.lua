@@ -171,32 +171,25 @@ local Error
 local function PickFruits()
     for _,v in pairs(Workspace:GetChildren()) do
         if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
-            local Time1 = 0
-            task.spawn(function()
-                repeat task.wait(1)
-                    Time1 = Time1 + 1
-                until Time1 == 3 or not v.Parent == Workspace
-            end)
-            while task.wait() and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace and Time1 < 3 do
-				firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
-				firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
-            end
-            if Time1 >= 3 and v.Parent == Workspace then
-                Notify(NS.Title,NS.Icon,"Tweening")
-                TeleportTween(v:FindFirstChild("Handle").CFrame)
-                local Time = 0
-                task.spawn(function()
-                    repeat task.wait(1)
-                        Time = Time + 1
-                    until Time == 3 or not v.Parent == Workspace
-                end)
-                while task.wait() and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace and Time < 3 do
+            if task.wait() and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
+                for i = 1, 10 do
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
                 end
-                if Time >= 3 then
-                    task.wait(3)
-                    Notify(NS.Title,NS.Icon,"Can't get the fruit.")
+                task.wait(3)
+                if v.Parent == Workspace then
+                    Notify(NS.Title,NS.Icon,"Tweening")
+                    TeleportTween(v:FindFirstChild("Handle").CFrame)
+                    if task.wait() and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
+                        for i = 1, 10 do
+                            firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
+                            firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
+                        end
+                        task.wait(3)
+                        if v.Parent == Workspace then
+                            Notify(NS.Title,NS.Icon,"Can't get the fruit.")
+                        end
+                    end
                 end
             end
 		end
