@@ -171,16 +171,15 @@ local Error
 local function PickFruits()
     for _,v in pairs(Workspace:GetChildren()) do
         if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
-            if task.wait() and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
+            if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
                 for i = 1, 10 do
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
                 end
                 task.wait(3)
                 if v.Parent == Workspace then
-                    Notify(NS.Title,NS.Icon,"Tweening")
-                    TeleportTween(v:FindFirstChild("Handle").CFrame)
-                    if task.wait() and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
+                    Notify(NS.Title,NS.Icon,"Re-Trying")
+                    if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
                         for i = 1, 10 do
                             firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
                             firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
@@ -267,7 +266,7 @@ wait(1)
 StoreFruits()
 if getgenv().WhenSpawn then
     Workspace.ChildAdded:Connect(function(v)
-        if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
+        if getgenv().WhenSpawn and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
             PickFruits()
             if getgenv().WeebHook then
                 if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
@@ -305,6 +304,7 @@ if getgenv().WhenSpawn then
         end
     end)
 end
+
 if getgenv().HoopServers then
     Notify(NS.Title,NS.Icon,"U have 3 seconds if u want desactive hoopserver! Re-Execute the script with getgenv().HoopServers = false")
     task.wait(3)
