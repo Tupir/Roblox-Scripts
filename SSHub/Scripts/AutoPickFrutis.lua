@@ -173,6 +173,7 @@ local function PickFruits()
         if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
             if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
                 for i = 1, 10 do
+                    task.wait(.1)
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
                 end
@@ -181,6 +182,7 @@ local function PickFruits()
                     Notify(NS.Title,NS.Icon,"Re-Trying")
                     if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
                         for i = 1, 10 do
+                            task.wait(.1)
                             firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
                             firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
                         end
