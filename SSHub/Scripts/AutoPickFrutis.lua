@@ -212,46 +212,73 @@ local function PickFruits()
         if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
             if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
                 if string.match(v.Name, "Fruit ") then
-                    for _,v2 in pairs(ListFruitsSpawned) do
-                        if string.find(v2, v:FindFirstChildOfClass("MeshPart").Name) then
-                            Notify(NS.Title,NS.Icon, v2.." Fruit (In Ground)")
+                    for _m,v2 in pairs(v:GetChildren()) do
+                        if v2:IsA("MeshPart") then
+                            if string.find(v2.Name, "Meshes/") then
+                                Notify(NS.Title,NS.Icon, v2.Name.." (In Ground)")
+                                if getgenv().WeebHook then
+                                    pcall(function()
+                                        if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
+                                            Plr.Character.Humanoid:UnequipTools()
+                                            local HttpService = game:GetService("HttpService")
+                                            local Data = {
+                                                ["username"] = "SSHub",
+                                                ["embeds"] = {
+                                                    {
+                                                        ["title"] = "Fruit Finded!",
+                                                        ["color"] = 9893552,
+                                                        ["fields"] = {
+                                                            {
+                                                                ["name"] = "Fruit",
+                                                                ["value"] = v2.Name.." (In Ground)",
+                                                                ["inline"] = true
+                                                            },
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            local Headers = {["Content-Type"] = "application/json"}
+                                            local Encoded = HttpService:JSONEncode(Data)
+                                            local Request = http_request or request or HttpPost or syn.request
+                                            local Final = {Url = getgenv().WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
+                                            Request(Final)
+                                        end
+                                    end)
+                                end
+                            end
                         end
                     end
                 else
                     Notify(NS.Title,NS.Icon, v.Name.." (In Ground)")
-                end
-                if getgenv().WeebHook then
-                    pcall(function()
-                        if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
-                            Plr.Character.Humanoid:UnequipTools()
-                            local HttpService = game:GetService("HttpService")
-                            for _,v2 in pairs(ListFruitsSpawned) do
-                                if string.find(v2, v:FindFirstChildOfClass("MeshPart").Name) then
-                                    local Data = {
-                                        ["username"] = "SSHub",
-                                        ["embeds"] = {
-                                            {
-                                                ["title"] = "Fruit Finded!",
-                                                ["color"] = 9893552,
-                                                ["fields"] = {
-                                                    {
-                                                        ["name"] = "Fruit",
-                                                        ["value"] = v2.." Fruit (In Ground)",
-                                                        ["inline"] = true
-                                                    },
-                                                }
+                    if getgenv().WeebHook then
+                        pcall(function()
+                            if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
+                                Plr.Character.Humanoid:UnequipTools()
+                                local HttpService = game:GetService("HttpService")
+                                local Data = {
+                                    ["username"] = "SSHub",
+                                    ["embeds"] = {
+                                        {
+                                            ["title"] = "Fruit Finded!",
+                                            ["color"] = 9893552,
+                                            ["fields"] = {
+                                                {
+                                                    ["name"] = "Fruit",
+                                                    ["value"] = v.Name.." (In Ground)",
+                                                    ["inline"] = true
+                                                },
                                             }
                                         }
                                     }
-                                    local Headers = {["Content-Type"] = "application/json"}
-                                    local Encoded = HttpService:JSONEncode(Data)
-                                    local Request = http_request or request or HttpPost or syn.request
-                                    local Final = {Url = getgenv().WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
-                                    Request(Final)
-                                end
+                                }
+                                local Headers = {["Content-Type"] = "application/json"}
+                                local Encoded = HttpService:JSONEncode(Data)
+                                local Request = http_request or request or HttpPost or syn.request
+                                local Final = {Url = getgenv().WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
+                                Request(Final)
                             end
-                        end
-                    end)
+                        end)
+                    end
                 end
                 for i = 1, 10 do
                     task.wait(.1)
@@ -271,7 +298,7 @@ local function PickFruits()
                         end
                         task.wait(3)
                         if v.Parent == Workspace then
-                            Notify(NS.Title,NS.Icon,"Can't get the fruit.")
+                            Notify(NS.Title,NS.Icon,"Can't get the fruit: "..v.Name)
                         end
                     end
                 end
@@ -312,33 +339,6 @@ local function StoreFruits()
         Plr.Character.Humanoid:UnequipTools()
         for _,v in pairs(CheckBackpack()) do
             if Backpack:FindFirstChild(v.." Fruit") then
-                if getgenv().WeebHook then
-                    if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
-                        Plr.Character.Humanoid:UnequipTools()
-                        local HttpService = game:GetService("HttpService")
-                        local Data = {
-                            ["username"] = "SSHub",
-                            ["embeds"] = {
-                                {
-                                    ["title"] = "Fruit Finded!",
-                                    ["color"] = 9893552,
-                                    ["fields"] = {
-                                        {
-                                            ["name"] = "Fruit",
-                                            ["value"] = v.." Fruit",
-                                            ["inline"] = true
-                                        },
-                                    }
-                                }
-                            }
-                        }
-                        local Headers = {["Content-Type"] = "application/json"}
-                        local Encoded = HttpService:JSONEncode(Data)
-                        local Request = http_request or request or HttpPost or syn.request
-                        local Final = {Url = getgenv().WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
-                        Request(Final)
-                    end
-                end
                 ReplicatedStorage.Remotes.CommF_:InvokeServer("StoreFruit", v.."-"..v, Backpack[v.." Fruit"])
             end
         end
