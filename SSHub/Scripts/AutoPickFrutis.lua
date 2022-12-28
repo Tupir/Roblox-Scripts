@@ -219,7 +219,6 @@ local function PickFruits()
                                 if getgenv().WeebHook then
                                     pcall(function()
                                         if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
-                                            Plr.Character.Humanoid:UnequipTools()
                                             local HttpService = game:GetService("HttpService")
                                             local Data = {
                                                 ["username"] = "SSHub",
@@ -253,7 +252,6 @@ local function PickFruits()
                     if getgenv().WeebHook then
                         pcall(function()
                             if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
-                                Plr.Character.Humanoid:UnequipTools()
                                 local HttpService = game:GetService("HttpService")
                                 local Data = {
                                     ["username"] = "SSHub",
@@ -281,20 +279,24 @@ local function PickFruits()
                     end
                 end
                 for i = 1, 10 do
+                    task.wait(.1)
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
                 end
-                task.wait(3)
+                Plr.Character.Humanoid:UnequipTools()
+                task.wait(1)
                 if v.Parent == Workspace then
                     Notify(NS.Title,NS.Icon,"Re-Trying")
                     Plr.Character.HumanoidRootPart.CFrame = CFrame.new(-4966.533203125, 314.5412902832031, -3023.95849609375)
                     TeleportTween(v:FindFirstChild("Handle").CFrame)
                     if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
                         for i = 1, 10 do
+                            task.wait(.1)
                             firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
                             firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
                         end
-                        task.wait(3)
+                        Plr.Character.Humanoid:UnequipTools()
+                        task.wait(1)
                         if v.Parent == Workspace then
                             Notify(NS.Title,NS.Icon,"Can't get the fruit: "..v.Name)
                         end
