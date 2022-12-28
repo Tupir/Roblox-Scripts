@@ -71,9 +71,9 @@ local ListFruits = {
     "Magma",
     "Portal",
     "Quake",
-    "Human-Human: Buddha",
+    "Buddha",
     "String",
-    "Bird-Bird: Phoenix",
+    "Phoenix",
     "Rumble",
     "Paw",
     "Blizzard",
@@ -340,7 +340,13 @@ local function StoreFruits()
         Plr.Character.Humanoid:UnequipTools()
         for _,v in pairs(CheckBackpack()) do
             if Backpack:FindFirstChild(v.." Fruit") then
-                ReplicatedStorage.Remotes.CommF_:InvokeServer("StoreFruit", v.."-"..v, Backpack[v.." Fruit"])
+                if string.find(v, "Bird-Bird: ") then
+                    ReplicatedStorage.Remotes.CommF_:InvokeServer("StoreFruit", v.."-"..v, Backpack["Bird-Bird: "..v.." Fruit"])
+                elseif string.find(v, "Human-Human: ") then
+                    ReplicatedStorage.Remotes.CommF_:InvokeServer("StoreFruit", v.."-"..v, Backpack["Human-Human: "..v.." Fruit"])
+                else
+                    ReplicatedStorage.Remotes.CommF_:InvokeServer("StoreFruit", v.."-"..v, Backpack[v.." Fruit"])
+                end
             end
         end
     end)
@@ -352,10 +358,13 @@ if getgenv().WhenSpawn then
     local a
     a = Workspace.ChildAdded:Connect(function(v)
         if getgenv().WhenSpawn and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
+            wait(.5)
             PickFruits()
-            wait(1)
+            wait(1) 
             StoreFruits()
-            a:Disconnect()
+            if not getgenv().WhenSpawn then
+                a:Disconnect()
+            end
         end
     end)
 end
