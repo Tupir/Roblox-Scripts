@@ -261,8 +261,8 @@ local function PickFruits()
                 task.wait(3)
                 if v.Parent == Workspace then
                     Notify(NS.Title,NS.Icon,"Re-Trying")
-                    Plr.Character.HumanoidRootPart.Humanoid:ChangeState(15)
-                    repeat task.wait() until Plr.Character:FindFirstChild("HumanoidRootPart") and Plr.Character:FindFirstChild("Humanoid").Health > 1
+                    Plr.Character.HumanoidRootPart.CFrame = CFrame.new(-4966.533203125, 314.5412902832031, -3023.95849609375)
+                    TeleportTween(v:FindFirstChild("Handle").CFrame)
                     if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
                         for i = 1, 10 do
                             task.wait(.1)
