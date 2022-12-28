@@ -19,6 +19,7 @@ local NS = {
 local function Notify(Title, Icon, Text, Duration)
 	game.StarterGui:SetCore("SendNotification", {Title = Title or ""; Text = Text or ""; Icon = Icon or ""; Duration = tonumber(Duration) or 3 })
 end
+Notify(NS.Title,NS.Icon, "AutoPickFruits Running")
 -- #region Services
 local game = game;
 local GetService = game.GetService;
