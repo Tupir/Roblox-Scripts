@@ -68,21 +68,60 @@ local ListFruits = {
     "Rubber",
     "Barrier",
     "Magma",
-    "Door",
+    "Portal",
     "Quake",
     "Human-Human: Buddha",
     "String",
     "Bird-Bird: Phoenix",
     "Rumble",
     "Paw",
+    "Blizzard",
     "Gravity",
     "Dough",
     "Venom",
     "Control",
+    "Spirit",
     "Dragon",
     "Leopard"
 }
 local FruitsInBackPack = {}
+
+
+local ListFruitsSpawned = {
+    "bomb",
+    "spike",
+    "chop",
+    "spring",
+    "kilo",
+    "smoke",
+    "spin",
+    "flame",
+    "falcon",
+    "ice",
+    "sand",
+    "dark",
+    "diamond",
+    "light",
+    "love",
+    "rubber",
+    "barrier",
+    "magma",
+    "portal",
+    "quake",
+    "buddha",
+    "string",
+    "phoenix",
+    "rumble",
+    "paw",
+    "blizzard",
+    "gravity",
+    "dough",
+    "venom",
+    "control",
+    "spirit",
+    "dragon",
+    "leopard"
+}
 
 local Noclip = false
     coroutine.wrap(function()
@@ -173,8 +212,8 @@ local function PickFruits()
         if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
             if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
                 if string.match(v.Name, "Fruit ") then
-                    for _,v2 in pairs(ListFruits) do
-                        if string.find(v2, v:FindFirstChildOfClass("Mesh").Name) then
+                    for _,v2 in pairs(ListFruitsSpawned) do
+                        if string.find(v2, v:FindFirstChildOfClass("MeshPart").Name) then
                             Notify(NS.Title,NS.Icon, v2.." Fruit (In Ground)")
                         end
                     end
@@ -186,8 +225,8 @@ local function PickFruits()
                         if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
                             Plr.Character.Humanoid:UnequipTools()
                             local HttpService = game:GetService("HttpService")
-                            for _,v2 in pairs(ListFruits) do
-                                if string.find(v2, v:FindFirstChildOfClass("Mesh").Name) then
+                            for _,v2 in pairs(ListFruitsSpawned) do
+                                if string.find(v2, v:FindFirstChildOfClass("MeshPart").Name) then
                                     local Data = {
                                         ["username"] = "SSHub",
                                         ["embeds"] = {
