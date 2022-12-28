@@ -281,7 +281,6 @@ local function PickFruits()
                     end
                 end
                 for i = 1, 10 do
-                    task.wait(.1)
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
                 end
@@ -292,7 +291,6 @@ local function PickFruits()
                     TeleportTween(v:FindFirstChild("Handle").CFrame)
                     if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
                         for i = 1, 10 do
-                            task.wait(.1)
                             firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
                             firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
                         end
