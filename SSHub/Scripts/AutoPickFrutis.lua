@@ -280,7 +280,6 @@ local function PickFruits()
                     end
                 end
                 for i = 1, 10 do
-                    task.wait(.1)
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
                 end
@@ -288,11 +287,10 @@ local function PickFruits()
                 task.wait(.2)
                 if v.Parent == Workspace then
                     Notify(NS.Title,NS.Icon,"Re-Trying")
-                    Plr.Character.HumanoidRootPart.CFrame = CFrame.new(-4966.533203125, 314.5412902832031, -3023.95849609375)
-                    TeleportTween(v:FindFirstChild("Handle").CFrame)
+                    --Castle on Sea > Plr.Character.HumanoidRootPart.CFrame = CFrame.new(-4966.533203125, 314.5412902832031, -3023.95849609375)
+                    --TeleportTween(v:FindFirstChild("Handle").CFrame)
                     if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
                         for i = 1, 10 do
-                            task.wait(.1)
                             firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
                             firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
                         end
