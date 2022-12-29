@@ -285,7 +285,7 @@ local function PickFruits()
                     firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
                 end
                 Plr.Character.Humanoid:UnequipTools()
-                task.wait(1)
+                task.wait(.2)
                 if v.Parent == Workspace then
                     Notify(NS.Title,NS.Icon,"Re-Trying")
                     Plr.Character.HumanoidRootPart.CFrame = CFrame.new(-4966.533203125, 314.5412902832031, -3023.95849609375)
@@ -297,7 +297,7 @@ local function PickFruits()
                             firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
                         end
                         Plr.Character.Humanoid:UnequipTools()
-                        task.wait(1)
+                        task.wait(.2)
                         if v.Parent == Workspace then
                             Notify(NS.Title,NS.Icon,"Can't get the fruit: "..v.Name)
                         end
@@ -358,7 +358,7 @@ if getgenv().WhenSpawn then
     local a
     a = Workspace.ChildAdded:Connect(function(v)
         if getgenv().WhenSpawn and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
-            wait(.1)
+            wait(.2)
             PickFruits()
             wait(1) 
             StoreFruits()
