@@ -378,7 +378,9 @@ if getgenv().HoopServers then
  	    queueteleport("getgenv().WeebHook = "..getgenv().WeebHook)
     end
     queueteleport("loadstring(game:HttpGet('https://raw.githubusercontent.com/miguel831/Roblox-Scripts/main/SSHub/Scripts/AutoPickFrutis.lua'))()")
-    Module:Teleport(game.PlaceId)
+    while task.wait(5) do
+        Module:Teleport(game.PlaceId)
+    end
 else
     Notify(NS.Title,NS.Icon,"Auto hoop servers off!\nActivate it on settings.")
 end
