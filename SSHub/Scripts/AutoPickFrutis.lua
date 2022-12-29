@@ -358,7 +358,7 @@ if getgenv().WhenSpawn then
     local a
     a = Workspace.ChildAdded:Connect(function(v)
         if getgenv().WhenSpawn and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
-            wait(.5)
+            wait(.1)
             PickFruits()
             wait(1) 
             StoreFruits()
