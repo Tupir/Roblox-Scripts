@@ -285,15 +285,17 @@ local function PickFruit(Fruit)
         task.wait(.5)
         if Fruit.Parent == Workspace then
             Notify(NS.Title,NS.Icon,"Re-Trying")
-            --Castle on Sea > Plr.Character.HumanoidRootPart.CFrame = CFrame.new(-4966.533203125, 314.5412902832031, -3023.95849609375)
-            TeleportTween(Fruit:FindFirstChild("Handle").CFrame)
+            if game.PlaceId == 7449423635 then
+                Plr.Character.HumanoidRootPart.CFrame = CFrame.new(-4966.533203125, 314.5412902832031, -3023.95849609375)
+                TeleportTween(Fruit:FindFirstChild("Handle").CFrame)
+            end
             if string.find(tostring(Fruit), "Fruit" or "Fruit ") and Fruit.Parent == Workspace then
                 for i = 1, 10 do
                     firetouchinterest(Plr.Character.HumanoidRootPart, Fruit:FindFirstChild("Handle"), 0)
                     firetouchinterest(Plr.Character.HumanoidRootPart, Fruit:FindFirstChild("Handle"), 1)
                 end
                 Plr.Character.Humanoid:UnequipTools()
-                task.wait(.2)
+                task.wait(.5)
                 if Fruit.Parent == Workspace then
                     Notify(NS.Title,NS.Icon,"Can't get the fruit: "..Fruit.Name)
                 end
@@ -358,7 +360,7 @@ if getgenv().WhenSpawn then
     local a
     a = Workspace.ChildAdded:Connect(function(v)
         if getgenv().WhenSpawn and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
-            wait(.2)
+            wait(.5)
             PickFruit(v)
             wait(1) 
             StoreFruits()
