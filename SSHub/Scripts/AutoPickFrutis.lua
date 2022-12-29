@@ -287,8 +287,8 @@ local function PickFruit(Fruit)
             Notify(NS.Title,NS.Icon,"Re-Trying")
             if game.PlaceId == 7449423635 then
                 ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(-5050.13330078125, 314.5412902832031, -3001.708740234375))
-                TeleportTween(Fruit:FindFirstChild("Handle").CFrame)
             end
+            TeleportTween(Fruit:FindFirstChild("Handle").CFrame)
             if string.find(tostring(Fruit), "Fruit" or "Fruit ") and Fruit.Parent == Workspace then
                 for i = 1, 10 do
                     firetouchinterest(Plr.Character.HumanoidRootPart, Fruit:FindFirstChild("Handle"), 0)
