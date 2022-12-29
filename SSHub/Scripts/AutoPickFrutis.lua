@@ -320,14 +320,9 @@ end
 
 local function CheckBackpack()
     local TempTable = {}
-    for _,i in pairs(CheckInventory()) do
-        for _,v in pairs(FruitsInBackPack) do
-            if not string.match(v, i) then
-                table.insert(TempTable, v:sub(0,#v - #" Fruit"))
-                print(v:sub(0,#v - #" Fruit"))
-            end
-        end
-        break
+    for _,v in pairs(FruitsInBackPack) do
+        table.insert(TempTable, v:sub(0,#v - #" Fruit"))
+        print(v:sub(0,#v - #" Fruit"))
     end
     return TempTable
 end
@@ -356,16 +351,16 @@ for _,v in pairs(Workspace:GetChildren()) do
 end
 wait(1)
 StoreFruits()
-if getgenv().WhenSpawn then
-    local a
-    a = Workspace.ChildAdded:Connect(function(v)
+
+if getgenv().WhenSpawn == true then
+    getgenv().a = Workspace.ChildAdded:Connect(function(v)
         if getgenv().WhenSpawn and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
             wait(.5)
             PickFruit(v)
             wait(1) 
             StoreFruits()
-            if not getgenv().WhenSpawn then
-                a:Disconnect()
+            if getgenv().WhenSpawn == false then
+                getgenv().a:Disconnect()
             end
         end
     end)
