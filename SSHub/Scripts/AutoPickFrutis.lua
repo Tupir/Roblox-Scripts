@@ -286,7 +286,7 @@ local function PickFruit(Fruit)
         if Fruit.Parent == Workspace then
             Notify(NS.Title,NS.Icon,"Re-Trying")
             if game.PlaceId == 7449423635 then
-                game:GetService("ReplicatedStorage").Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(-4966.533203125, 314.5412902832031, -3023.95849609375))
+                ReplicatedStorage.Remotes.CommF_:InvokeServer("requestEntrance", Vector3.new(-5050.13330078125, 314.5412902832031, -3001.708740234375))
                 TeleportTween(Fruit:FindFirstChild("Handle").CFrame)
             end
             if string.find(tostring(Fruit), "Fruit" or "Fruit ") and Fruit.Parent == Workspace then
