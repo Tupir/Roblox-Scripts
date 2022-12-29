@@ -208,101 +208,97 @@ Backpack.ChildRemoved:Connect(function(Object)
     end
 end)
 local Error
-local function PickFruits()
-    for _,v in pairs(Workspace:GetChildren()) do
-        if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
-            if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
-                if string.match(v.Name, "Fruit ") then
-                    for _m,v2 in pairs(v:GetChildren()) do
-                        if v2:IsA("MeshPart") then
-                            if string.find(v2.Name, "Meshes/") then
-                                Notify(NS.Title,NS.Icon, v2.Name.." (In Ground)")
-                                if getgenv().WeebHook then
-                                    pcall(function()
-                                        if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
-                                            local HttpService = game:GetService("HttpService")
-                                            local Data = {
-                                                ["username"] = "SSHub",
-                                                ["embeds"] = {
+local function PickFruit(Fruit)
+    if string.find(tostring(Fruit), "Fruit" or "Fruit ") and Fruit.Parent == Workspace then
+        if string.match(Fruit.Name, "Fruit ") then
+            for _m,v2 in pairs(Fruit:GetChildren()) do
+                if v2:IsA("MeshPart") then
+                    if string.find(v2.Name, "Meshes/") then
+                        Notify(NS.Title,NS.Icon, v2.Name.." (In Ground)")
+                        if getgenv().WeebHook then
+                            pcall(function()
+                                if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
+                                    local HttpService = game:GetService("HttpService")
+                                    local Data = {
+                                        ["username"] = "SSHub",
+                                        ["embeds"] = {
+                                            {
+                                                ["title"] = "Fruit Finded!",
+                                                ["color"] = 9893552,
+                                                ["fields"] = {
                                                     {
-                                                        ["title"] = "Fruit Finded!",
-                                                        ["color"] = 9893552,
-                                                        ["fields"] = {
-                                                            {
-                                                                ["name"] = "Fruit",
-                                                                ["value"] = v2.Name.." (In Ground)",
-                                                                ["inline"] = true
-                                                            },
-                                                        }
-                                                    }
+                                                        ["name"] = "Fruit",
+                                                        ["value"] = v2.Name.." (In Ground)",
+                                                        ["inline"] = true
+                                                    },
                                                 }
-                                            }
-                                            local Headers = {["Content-Type"] = "application/json"}
-                                            local Encoded = HttpService:JSONEncode(Data)
-                                            local Request = http_request or request or HttpPost or syn.request
-                                            local Final = {Url = getgenv().WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
-                                            Request(Final)
-                                        end
-                                    end)
-                                end
-                            end
-                        end
-                    end
-                else
-                    Notify(NS.Title,NS.Icon, v.Name.." (In Ground)")
-                    if getgenv().WeebHook then
-                        pcall(function()
-                            if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
-                                local HttpService = game:GetService("HttpService")
-                                local Data = {
-                                    ["username"] = "SSHub",
-                                    ["embeds"] = {
-                                        {
-                                            ["title"] = "Fruit Finded!",
-                                            ["color"] = 9893552,
-                                            ["fields"] = {
-                                                {
-                                                    ["name"] = "Fruit",
-                                                    ["value"] = v.Name.." (In Ground)",
-                                                    ["inline"] = true
-                                                },
                                             }
                                         }
                                     }
-                                }
-                                local Headers = {["Content-Type"] = "application/json"}
-                                local Encoded = HttpService:JSONEncode(Data)
-                                local Request = http_request or request or HttpPost or syn.request
-                                local Final = {Url = getgenv().WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
-                                Request(Final)
-                            end
-                        end)
-                    end
-                end
-                for i = 1, 10 do
-                    firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
-                    firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
-                end
-                Plr.Character.Humanoid:UnequipTools()
-                task.wait(.2)
-                if v.Parent == Workspace then
-                    Notify(NS.Title,NS.Icon,"Re-Trying")
-                    --Castle on Sea > Plr.Character.HumanoidRootPart.CFrame = CFrame.new(-4966.533203125, 314.5412902832031, -3023.95849609375)
-                    --TeleportTween(v:FindFirstChild("Handle").CFrame)
-                    if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
-                        for i = 1, 10 do
-                            firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 0)
-                            firetouchinterest(Plr.Character.HumanoidRootPart, v:FindFirstChild("Handle"), 1)
-                        end
-                        Plr.Character.Humanoid:UnequipTools()
-                        task.wait(.2)
-                        if v.Parent == Workspace then
-                            Notify(NS.Title,NS.Icon,"Can't get the fruit: "..v.Name)
+                                    local Headers = {["Content-Type"] = "application/json"}
+                                    local Encoded = HttpService:JSONEncode(Data)
+                                    local Request = http_request or request or HttpPost or syn.request
+                                    local Final = {Url = getgenv().WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
+                                    Request(Final)
+                                end
+                            end)
                         end
                     end
                 end
             end
-		end
+        else
+            Notify(NS.Title,NS.Icon, Fruit.Name.." (In Ground)")
+            if getgenv().WeebHook then
+                pcall(function()
+                    if string.find(getgenv().WeebHook,"https://discord.com/api/webhooks/") then
+                        local HttpService = game:GetService("HttpService")
+                        local Data = {
+                            ["username"] = "SSHub",
+                            ["embeds"] = {
+                                {
+                                    ["title"] = "Fruit Finded!",
+                                    ["color"] = 9893552,
+                                    ["fields"] = {
+                                        {
+                                            ["name"] = "Fruit",
+                                            ["value"] = Fruit.Name.." (In Ground)",
+                                            ["inline"] = true
+                                        },
+                                    }
+                                }
+                            }
+                        }
+                        local Headers = {["Content-Type"] = "application/json"}
+                        local Encoded = HttpService:JSONEncode(Data)
+                        local Request = http_request or request or HttpPost or syn.request
+                        local Final = {Url = getgenv().WeebHook, Body = Encoded, Method = "POST", Headers = Headers}
+                        Request(Final)
+                    end
+                end)
+            end
+        end
+        for i = 1, 10 do
+            firetouchinterest(Plr.Character.HumanoidRootPart, Fruit:FindFirstChild("Handle"), 0)
+            firetouchinterest(Plr.Character.HumanoidRootPart, Fruit:FindFirstChild("Handle"), 1)
+        end
+        Plr.Character.Humanoid:UnequipTools()
+        task.wait(.5)
+        if Fruit.Parent == Workspace then
+            Notify(NS.Title,NS.Icon,"Re-Trying")
+            --Castle on Sea > Plr.Character.HumanoidRootPart.CFrame = CFrame.new(-4966.533203125, 314.5412902832031, -3023.95849609375)
+            TeleportTween(Fruit:FindFirstChild("Handle").CFrame)
+            if string.find(tostring(Fruit), "Fruit" or "Fruit ") and Fruit.Parent == Workspace then
+                for i = 1, 10 do
+                    firetouchinterest(Plr.Character.HumanoidRootPart, Fruit:FindFirstChild("Handle"), 0)
+                    firetouchinterest(Plr.Character.HumanoidRootPart, Fruit:FindFirstChild("Handle"), 1)
+                end
+                Plr.Character.Humanoid:UnequipTools()
+                task.wait(.2)
+                if Fruit.Parent == Workspace then
+                    Notify(NS.Title,NS.Icon,"Can't get the fruit: "..Fruit.Name)
+                end
+            end
+        end
     end
 end
 
@@ -326,6 +322,7 @@ local function CheckBackpack()
         for _,v in pairs(FruitsInBackPack) do
             if not string.match(v, i) then
                 table.insert(TempTable, v:sub(0,#v - #" Fruit"))
+                print(v:sub(0,#v - #" Fruit"))
             end
         end
         break
@@ -336,8 +333,8 @@ end
 local function StoreFruits()
     pcall(function()
         Plr.Character.Humanoid:UnequipTools()
-        for _,v in pairs(CheckBackpack()) do
-            if Backpack:FindFirstChild(v.." Fruit") then
+        if FruitsInBackPack then
+            for _,v in pairs(CheckBackpack()) do
                 if string.find(v, "Bird-Bird: ") then
                     ReplicatedStorage.Remotes.CommF_:InvokeServer("StoreFruit", v.."-"..v, Backpack["Bird-Bird: "..v.." Fruit"])
                 elseif string.find(v, "Human-Human: ") then
@@ -349,7 +346,12 @@ local function StoreFruits()
         end
     end)
 end
-PickFruits()
+
+for _,v in pairs(Workspace:GetChildren()) do
+    if string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
+        PickFruit(v)
+    end
+end
 wait(1)
 StoreFruits()
 if getgenv().WhenSpawn then
@@ -357,7 +359,7 @@ if getgenv().WhenSpawn then
     a = Workspace.ChildAdded:Connect(function(v)
         if getgenv().WhenSpawn and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
             wait(.2)
-            PickFruits()
+            PickFruit(v)
             wait(1) 
             StoreFruits()
             if not getgenv().WhenSpawn then
