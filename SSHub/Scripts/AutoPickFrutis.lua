@@ -349,16 +349,25 @@ for _,v in pairs(Workspace:GetChildren()) do
         PickFruit(v)
     end
 end
-wait(1)
 StoreFruits()
 
 if getgenv().WhenSpawn == true then
     getgenv().a = Workspace.ChildAdded:Connect(function(v)
         if getgenv().WhenSpawn and string.find(tostring(v), "Fruit" or "Fruit ") and v.Parent == Workspace then
-            wait(2)
-            PickFruit(v)
-            wait(1) 
-            StoreFruits()
+            if string.match(v.Name, "Fruit ") then
+                for _m,v2 in pairs(v:GetChildren()) do
+                    if v2:IsA("MeshPart") then
+                        if string.find(v2.Name, "Meshes/") then
+                            wait(8)
+                            PickFruit(v)
+                            StoreFruits()
+                        end
+                    end
+                end
+            else
+                PickFruit(v)
+                StoreFruits()
+            end
             if getgenv().WhenSpawn == false then
                 getgenv().a:Disconnect()
             end
