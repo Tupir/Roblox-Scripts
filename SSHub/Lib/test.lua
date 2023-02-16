@@ -1768,7 +1768,9 @@ do
         setmetatable(Toggle, BaseAddons);
 
         Toggles[Idx] = Toggle;
-
+        if Toggle.Changed then
+            Toggle.Changed(Toggle.Value)
+        end;
         return Toggle;
     end;
 
