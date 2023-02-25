@@ -11,91 +11,95 @@ function SShubEsp:CreateEsp(Item, Rarity)
     local Esp = {
         Rarity = {}
     }
-    if Rarity ~= nil then 
-        Esp.Rarity = Rarity
-        SShubEsp.Toggles[tostring(Item)] = false
-    end
-    local ItemName = Drawing.new("Text")
-    ItemName.Visible = false
-    ItemName.Center = true
-    ItemName.Outline = true
-    ItemName.Font = 2
-    ItemName.Size = 13
-    ItemName.Color = Color3.new(1, 2.5, 2.5)
-    ItemName.Text = Item.Name
+    if Item:IsA("MeshPart" or "UnionOperation" or "Part") then
+        if Rarity ~= nil then 
+            Esp.Rarity = Rarity
+            SShubEsp.Toggles[tostring(Item)] = false
+        end
+        local ItemName = Drawing.new("Text")
+        ItemName.Visible = false
+        ItemName.Center = true
+        ItemName.Outline = true
+        ItemName.Font = 2
+        ItemName.Size = 13
+        ItemName.Color = Color3.new(1, 2.5, 2.5)
+        ItemName.Text = Item.Name
 
-    local SubText = Drawing.new("Text")
-    SubText.Visible = false
-    SubText.Center = true
-    SubText.Outline = true
-    SubText.Font = 2
-    SubText.Size = 13
-    SubText.Color = Color3.new(1, 2.5, 2.5)
-    SubText.Text = "N/A"
+        local SubText = Drawing.new("Text")
+        SubText.Visible = false
+        SubText.Center = true
+        SubText.Outline = true
+        SubText.Font = 2
+        SubText.Size = 13
+        SubText.Color = Color3.new(1, 2.5, 2.5)
+        SubText.Text = "N/A"
 
-    local DistanceText = Drawing.new("Text")
-    DistanceText.Visible = false
-    DistanceText.Center = true
-    DistanceText.Outline = true
-    DistanceText.Font = 2
-    DistanceText.Size = 13
-    DistanceText.Color = Color3.new(1, 2.5, 2.5)
-    DistanceText.Text = "Distance"
+        local DistanceText = Drawing.new("Text")
+        DistanceText.Visible = false
+        DistanceText.Center = true
+        DistanceText.Outline = true
+        DistanceText.Font = 2
+        DistanceText.Size = 13
+        DistanceText.Color = Color3.new(1, 2.5, 2.5)
+        DistanceText.Text = "Distance"
 
-    local function InfoUpdate()
-        local Iu
-        Iu = RunService.RenderStepped:Connect(function()
-            if not workspace:IsAncestorOf(Item) then
-                ItemName.Visible = false
-                SubText.Visible = false
-                DistanceText.Visible = false
-                Iu:Disconnect()
-            else
-                local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
-                if OnScreen then
-                    ItemName.Position = Vector2.new(Vector.X, Vector.Y - 30)
-                    SubText.Position = Vector2.new(Vector.X, Vector.Y - 20)
-                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
+        local function InfoUpdate()
+            local Iu
+            Iu = RunService.RenderStepped:Connect(function()
+                if not workspace:IsAncestorOf(Item) then
                     ItemName.Visible = false
                     SubText.Visible = false
                     DistanceText.Visible = false
-                    local ItemDistance = math.ceil((Item.MeshPart.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
-                    if SShubEsp.Enabled == true then
-                        if ItemDistance < SShubEsp.MaxDistance then
-                            if Rarity ~= nil and Esp.Rarity ~= nil and #Esp.Rarity > 0 then
-                                SubText.Text = Esp.Rarity.Rarity
-                                SubText.Color = Esp.Rarity.Color
-                                if SShubEsp.Toggles[Esp.Rarity.Rarity] == true then
-                                    ItemName.Visible = true
-                                    SubText.Visible = true
-                                    DistanceText.Visible = true
-                                else
-                                    ItemName.Visible = false
-                                    SubText.Visible = false
-                                    DistanceText.Visible = false
+                    Iu:Disconnect()
+                else
+                    local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
+                    if OnScreen then
+                        ItemName.Position = Vector2.new(Vector.X, Vector.Y - 30)
+                        SubText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+                        DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
+                        ItemName.Visible = false
+                        SubText.Visible = false
+                        DistanceText.Visible = false
+                        local ItemDistance = math.ceil((Item.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
+                        if SShubEsp.Enabled == true then
+                            if ItemDistance < SShubEsp.MaxDistance then
+                                if Rarity ~= nil and Esp.Rarity ~= nil and #Esp.Rarity > 0 then
+                                    SubText.Text = Esp.Rarity.Rarity
+                                    SubText.Color = Esp.Rarity.Color
+                                    if SShubEsp.Toggles[Esp.Rarity.Rarity] == true then
+                                        ItemName.Visible = true
+                                        SubText.Visible = true
+                                        DistanceText.Visible = true
+                                    else
+                                        ItemName.Visible = false
+                                        SubText.Visible = false
+                                        DistanceText.Visible = false
+                                    end
                                 end
+                                DistanceText.Text = "["..tostring(ItemDistance).."]"
+                            else
+                                ItemName.Visible = false
+                                SubText.Visible = false
+                                DistanceText.Visible = false
                             end
-                            DistanceText.Text = "["..tostring(ItemDistance).."]"
                         else
                             ItemName.Visible = false
                             SubText.Visible = false
                             DistanceText.Visible = false
+                            Iu:Disconnect()
                         end
                     else
                         ItemName.Visible = false
                         SubText.Visible = false
                         DistanceText.Visible = false
-                        Iu:Disconnect()
                     end
-                else
-                    ItemName.Visible = false
-                    SubText.Visible = false
-                    DistanceText.Visible = false
                 end
-            end
-        end)
+            end)
+        end
+        coroutine.wrap(InfoUpdate)()
+    else
+        error("Invalid Instace, Valid Instances for ESP: MeshPart, UnionOperation, Part")
     end
-    coroutine.wrap(InfoUpdate)()
     return Esp
 end
 return SShubEsp
