@@ -7,11 +7,16 @@ local SShubEsp = {
     MaxDistance = 2000,
     Toggles = {}
 }
+local Class = {
+    "MeshPart",
+    "UnionOperation",
+    "Part"
+}
 function SShubEsp:CreateEsp(Item, Rarity)
     local Esp = {
         Rarity = {}
     }
-    if Item:IsA("MeshPart", "UnionOperation", "Part") then
+    if table.find(Class, Item.ClassName) then
         if Rarity ~= nil then 
             Esp.Rarity = Rarity
             SShubEsp.Toggles[tostring(Item)] = false
@@ -98,7 +103,7 @@ function SShubEsp:CreateEsp(Item, Rarity)
         end
         coroutine.wrap(InfoUpdate)()
     else
-        error("Invalid Instace: "..Item.Name.."-"..Item.ClassName.."\nValid Instances for ESP: MeshPart, UnionOperation, Part")
+        error("Invalid Instace: "..Item.Name.."-"..Item.ClassName.."\nValid Instances for ESP: "..table.concat(Class, ", "))
     end
     return Esp
 end
