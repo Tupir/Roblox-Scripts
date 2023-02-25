@@ -7,15 +7,13 @@ local SShubEsp = {
     MaxDistance = 2000,
     Toggles = {}
 }
-function SShubEsp:CreateEsp(Item, Raritys)
+function SShubEsp:CreateEsp(Item, Rarity)
     local Esp = {
-        Raritys = {}
+        Rarity = {}
     }
-    if Raritys ~= nil then 
-        for Name, Table in pairs(Raritys) do
-            Esp.Raritys[tostring(Name)] = Table
-            SShubEsp.Toggles[tostring(Name)] = false
-        end
+    if Rarity ~= nil then 
+        Esp.Rarity = Rarity
+        SShubEsp.Toggles[tostring(Item)] = false
     end
     local ItemName = Drawing.new("Text")
     ItemName.Visible = false
@@ -24,7 +22,7 @@ function SShubEsp:CreateEsp(Item, Raritys)
     ItemName.Font = 2
     ItemName.Size = 13
     ItemName.Color = Color3.new(1, 2.5, 2.5)
-    ItemName.Text = Item
+    ItemName.Text = Item.Name
 
     local SubText = Drawing.new("Text")
     SubText.Visible = false
@@ -64,21 +62,17 @@ function SShubEsp:CreateEsp(Item, Raritys)
                     local ItemDistance = math.ceil((Item.MeshPart.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
                     if SShubEsp.Enabled == true then
                         if ItemDistance < SShubEsp.MaxDistance then
-                            if Raritys ~= nil and Esp.Raritys ~= nil and #Esp.Raritys > 0 then
-                                for Name, Info in pairs(Esp.Raritys) do
-                                    if string.match(Name, Item.Name) then
-                                        SubText.Text = Info.Rarity
-                                        SubText.Color = Info.Color
-                                        if SShubEsp.Toggles[Name] == true then
-                                            ItemName.Visible = true
-                                            SubText.Visible = true
-                                            DistanceText.Visible = true
-                                        else
-                                            ItemName.Visible = false
-                                            SubText.Visible = false
-                                            DistanceText.Visible = false
-                                        end
-                                    end
+                            if Rarity ~= nil and Esp.Rarity ~= nil and #Esp.Rarity > 0 then
+                                SubText.Text = Esp.Rarity.Rarity
+                                SubText.Color = Esp.Rarity.Color
+                                if SShubEsp.Toggles[Esp.Rarity.Rarity] == true then
+                                    ItemName.Visible = true
+                                    SubText.Visible = true
+                                    DistanceText.Visible = true
+                                else
+                                    ItemName.Visible = false
+                                    SubText.Visible = false
+                                    DistanceText.Visible = false
                                 end
                             end
                             DistanceText.Text = "["..tostring(ItemDistance).."]"
