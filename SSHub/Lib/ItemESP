@@ -3,7 +3,7 @@ local RunService = game:GetService("RunService")
 local Cam = workspace.CurrentCamera;
 --#endregion
 local SShubEsp = {
-    Enabled = false,
+    Enabled = true,
     MaxDistance = 2000,
     Toggles = {}
 }
@@ -63,7 +63,7 @@ function SShubEsp:CreateEsp(Item, Rarity)
                         local ItemDistance = math.ceil((Item.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
                         if SShubEsp.Enabled == true then
                             if ItemDistance < SShubEsp.MaxDistance then
-                                if Rarity ~= nil and Esp.Rarity ~= nil and #Esp.Rarity > 0 then
+                                if Esp.Rarity ~= nil and #Esp.Rarity > 0 then
                                     SubText.Text = Esp.Rarity.Rarity
                                     SubText.Color = Esp.Rarity.Color
                                     if SShubEsp.Toggles[Esp.Rarity.Rarity] == true then
@@ -98,7 +98,7 @@ function SShubEsp:CreateEsp(Item, Rarity)
         end
         coroutine.wrap(InfoUpdate)()
     else
-        error("Invalid Instace, Valid Instances for ESP: MeshPart, UnionOperation, Part")
+        error("Invalid Instace: Item, "..Item.ClassName.."\nValid Instances for ESP: MeshPart, UnionOperation, Part")
     end
     return Esp
 end
