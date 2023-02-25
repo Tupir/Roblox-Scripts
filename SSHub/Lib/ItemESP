@@ -11,7 +11,7 @@ function SShubEsp:CreateEsp(Item, Rarity)
     local Esp = {
         Rarity = {}
     }
-    if Item:IsA("MeshPart" or "UnionOperation" or "Part") then
+    if Item:IsA("MeshPart", "UnionOperation", "Part") then
         if Rarity ~= nil then 
             Esp.Rarity = Rarity
             SShubEsp.Toggles[tostring(Item)] = false
@@ -98,7 +98,7 @@ function SShubEsp:CreateEsp(Item, Rarity)
         end
         coroutine.wrap(InfoUpdate)()
     else
-        error("Invalid Instace: Item, "..Item.ClassName.."\nValid Instances for ESP: MeshPart, UnionOperation, Part")
+        error("Invalid Instace: "..Item.Name.."-"..Item.ClassName.."\nValid Instances for ESP: MeshPart, UnionOperation, Part")
     end
     return Esp
 end
