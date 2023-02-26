@@ -17,6 +17,15 @@ function SShubEsp:CreateEsp(Item, Rarity, ItemFolder)
     local Esp = {
         Info = nil
     }
+    local function CheckItemFolder(ItemCheck)
+        if ItemFolder ~= nil then
+            if ItemFolder:IsAncestorOf(ItemCheck) then
+                return true
+            else
+                return false
+            end
+        end
+    end
     if table.find(Class, Item.ClassName) then
         if Rarity ~= nil and Rarity.Rarity ~= nil then
             Esp.Info = Rarity
@@ -54,7 +63,7 @@ function SShubEsp:CreateEsp(Item, Rarity, ItemFolder)
         local function InfoUpdate()
             local Iu
             Iu = RunService.RenderStepped:Connect(function()
-                if not workspace:IsAncestorOf(Item) or not ItemFolder:IsAncestorOf(Item) or Item.Transparency == 1 then
+                if not workspace:IsAncestorOf(Item) or Item.Transparency == 1 or not CheckItemFolder(Item) then
                     Iu:Disconnect()
                     ItemName:Remove()
                     SubText:Remove()
