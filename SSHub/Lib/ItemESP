@@ -13,7 +13,7 @@ local Class = {
     "UnionOperation",
     "Part"
 }
-function SShubEsp:CreateEsp(Item, ItemFolder,Rarity)
+function SShubEsp:CreateEsp(Item, Rarity, ItemFolder)
     local Esp = {
         Info = nil
     }
@@ -54,11 +54,11 @@ function SShubEsp:CreateEsp(Item, ItemFolder,Rarity)
         local function InfoUpdate()
             local Iu
             Iu = RunService.RenderStepped:Connect(function()
-                if not ItemFolder:IsAncestorOf(Item) then
-                    ItemName.Visible = false
-                    SubText.Visible = false
-                    DistanceText.Visible = false
+                if not workspace:IsAncestorOf(Item) or not ItemFolder:IsAncestorOf(Item) or Item.Transparency == 1 then
                     Iu:Disconnect()
+                    ItemName:Remove()
+                    SubText:Remove()
+                    DistanceText:Remove()
                 else
                     local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
                     if OnScreen then
@@ -96,10 +96,10 @@ function SShubEsp:CreateEsp(Item, ItemFolder,Rarity)
                                 DistanceText.Visible = false
                             end
                         else
-                            ItemName.Visible = false
-                            SubText.Visible = false
-                            DistanceText.Visible = false
                             Iu:Disconnect()
+                            ItemName:Remove()
+                            SubText:Remove()
+                            DistanceText:Remove()
                         end
                     else
                         ItemName.Visible = false
