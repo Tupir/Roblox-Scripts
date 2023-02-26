@@ -30,6 +30,10 @@ function SShubEsp:NewEsp(Item, Font, Rarity, ItemFolder, IgnoreTransparency)
     local function Transparent(v)
         if IgnoreTransparency then
             if v.Transparency == 1 then
+                return false
+            end
+        elseif not IgnoreTransparency then
+            if v.Transparency == 1 then
                 return true
             else
                 return false
