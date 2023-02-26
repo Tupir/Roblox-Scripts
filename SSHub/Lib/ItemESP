@@ -68,9 +68,10 @@ function SShubEsp:CreateEsp(Item, Rarity)
                         local ItemDistance = math.ceil((Item.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
                         if SShubEsp.Enabled then
                             if ItemDistance < SShubEsp.MaxDistance then
-                                if Esp.Info ~= nil and Esp.Info[1] then
-                                    SubText.Text = Esp.Info.Rarity
-                                    SubText.Color = Esp.Info.Color
+                                if Esp.Info ~= nil then
+                                    SubText.Text = Esp.Info.Rarity or "N/A"
+                                    SubText.Color = Esp.Info.Color or Color3.new(1, 2.5, 2.5)
+                                    ItemName.Color = Esp.Info.Color or Color3.new(1, 2.5, 2.5)
                                     if SShubEsp.Toggles[Esp.Info.Rarity] == true then
                                         ItemName.Visible = true
                                         SubText.Visible = true
