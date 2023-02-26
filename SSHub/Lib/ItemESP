@@ -106,10 +106,10 @@ function SShubEsp:NewEsp(Item, Font, Rarity, ItemFolder)
                                             DistanceText.Visible = false
                                         end
                                     else
+                                        ItemName.Visible = false
+                                        SubText.Visible = false
+                                        DistanceText.Visible = false
                                         Iu:Disconnect()
-                                        ItemName:Remove()
-                                        SubText:Remove()
-                                        DistanceText:Remove()
                                     end
                                 else
                                     ItemName.Visible = false
