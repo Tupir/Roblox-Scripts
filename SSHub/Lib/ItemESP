@@ -14,7 +14,11 @@ local Class = {
     "Part"
 }
 function SShubEsp:NewToggle(Toggle, Value)
-    SShubEsp.Toggles[Toggle] = Value
+    if SShubEsp.Toggles[Toggle] == nil then
+        SShubEsp.Toggles[Toggle] = Value
+    else
+        error("Theres are alredy a toggle called: "..Toggle.."!")
+    end
 end
 function SShubEsp:NewEsp(Item, Font, Rarity, ItemFolder)
     local Esp = {
