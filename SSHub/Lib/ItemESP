@@ -4,7 +4,7 @@ local Cam = workspace.CurrentCamera;
 --#endregion
 local SShubEsp = {
     Enabled = true,
-    MaxDistance = 2000,
+    MaxDistance = 9e9,
     Toggles = {}
 }
 local Class = {
@@ -66,7 +66,7 @@ function SShubEsp:CreateEsp(Item, Rarity)
                         SubText.Visible = false
                         DistanceText.Visible = false
                         local ItemDistance = math.ceil((Item.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
-                        if SShubEsp.Enabled == true then
+                        if SShubEsp.Enabled then
                             if ItemDistance < SShubEsp.MaxDistance then
                                 if Esp.Rarity ~= nil and #Esp.Rarity > 0 then
                                     SubText.Text = Esp.Rarity.Rarity
@@ -80,6 +80,10 @@ function SShubEsp:CreateEsp(Item, Rarity)
                                         SubText.Visible = false
                                         DistanceText.Visible = false
                                     end
+                                else
+                                    ItemName.Visible = true
+                                    SubText.Visible = true
+                                    DistanceText.Visible = true
                                 end
                                 DistanceText.Text = "["..tostring(ItemDistance).."]"
                             else
@@ -103,7 +107,7 @@ function SShubEsp:CreateEsp(Item, Rarity)
         end
         coroutine.wrap(InfoUpdate)()
     else
-        error("Invalid Instace: "..Item.Name.."-"..Item.ClassName.."\nValid Instances for ESP: "..table.concat(Class, ", "))
+        error("Invalid Instace: "..Item.Name.." - "..Item.ClassName.."\nValid Instances for ESP: "..table.concat(Class, ", "))
     end
     return Esp
 end
