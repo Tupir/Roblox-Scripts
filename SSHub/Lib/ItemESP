@@ -19,7 +19,8 @@ function SShubEsp:CreateEsp(Item, Font, Rarity, ItemFolder)
     }
     if table.find(Class, Item.ClassName) then
         if ItemFolder ~= nil then
-            if table.find(Drawing.Fonts, Font) then
+            local Fonts = Drawing.Fonts
+            if table.find(Fonts, Font) then
                 if Rarity ~= nil and Rarity.Rarity ~= nil then
                     Esp.Info = Rarity
                     if SShubEsp.Toggles[Rarity.Rarity] == nil then
