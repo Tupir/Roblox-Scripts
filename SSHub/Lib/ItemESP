@@ -17,9 +17,11 @@ function SShubEsp:CreateEsp(Item, Rarity)
         Info = nil
     }
     if table.find(Class, Item.ClassName) then
-        if Rarity ~= nil then 
+        if Rarity ~= nil and Rarity.Rarity ~= nil then
             Esp.Info = Rarity
-            SShubEsp.Toggles[Rarity.Rarity] = true
+            if SShubEsp.Toggles[Rarity.Rarity] == nil then
+                SShubEsp.Toggles[Rarity.Rarity] = true
+            end
         end
         local ItemName = Drawing.new("Text")
         ItemName.Visible = false
