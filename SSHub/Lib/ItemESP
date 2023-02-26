@@ -69,6 +69,7 @@ function SShubEsp:CreateEsp(Item, Rarity)
                         if SShubEsp.Enabled then
                             if ItemDistance < SShubEsp.MaxDistance then
                                 if Esp.Rarity ~= nil and #Esp.Rarity > 0 then
+                                    print("omg")
                                     SubText.Text = Esp.Rarity.Rarity
                                     SubText.Color = Esp.Rarity.Color
                                     if SShubEsp.Toggles[Esp.Rarity.Rarity] == true then
