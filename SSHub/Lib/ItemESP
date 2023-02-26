@@ -20,7 +20,7 @@ function SShubEsp:CreateEsp(Item, Font, Rarity, ItemFolder)
     if table.find(Class, Item.ClassName) then
         if ItemFolder ~= nil then
             if Font ~= nil then
-                if Font == (0 or 1 or 2 or 3) then
+                if table.find({0,1,2,3}, Font) then
                     if Rarity ~= nil and Rarity.Rarity ~= nil then
                         Esp.Info = Rarity
                         if SShubEsp.Toggles[Rarity.Rarity] == nil then
