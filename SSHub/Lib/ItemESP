@@ -20,10 +20,24 @@ function SShubEsp:NewToggle(Toggle, Value)
         error("Theres are alredy a toggle called: "..Toggle.."!")
     end
 end
-function SShubEsp:NewEsp(Item, Font, Rarity, ItemFolder)
+function SShubEsp:NewEsp(Item, Font, Rarity, ItemFolder, IgnoreTransparency)
     local Esp = {
         Info = nil
     }
+    if IgnoreTransparency == nil then
+        IgnoreTransparency = false
+    end
+    local function Transparent(v)
+        if IgnoreTransparency then
+            if v.Transparency == 1 then
+                return true
+            else
+                return false
+            end
+        else
+            return false
+        end
+    end
     if table.find(Class, Item.ClassName) then
         if ItemFolder ~= nil then
             if Font ~= nil then
@@ -64,7 +78,7 @@ function SShubEsp:NewEsp(Item, Font, Rarity, ItemFolder)
                     local function InfoUpdate()
                         local Iu
                         Iu = RunService.RenderStepped:Connect(function()
-                            if not workspace:IsAncestorOf(Item) or Item.Transparency == 1 or not ItemFolder:IsAncestorOf(Item) then
+                            if not workspace:IsAncestorOf(Item) or Transparent(Item) or not ItemFolder:IsAncestorOf(Item) then
                                 Iu:Disconnect()
                                 ItemName:Remove()
                                 SubText:Remove()
