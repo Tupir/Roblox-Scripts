@@ -19,7 +19,7 @@ function SShubEsp:CreateEsp(Item, Rarity)
     if table.find(Class, Item.ClassName) then
         if Rarity ~= nil then 
             Esp.Info = Rarity
-            SShubEsp.Toggles[tostring(Item)] = true
+            SShubEsp.Toggles[Rarity.Rarity] = true
         end
         local ItemName = Drawing.new("Text")
         ItemName.Visible = false
@@ -68,8 +68,8 @@ function SShubEsp:CreateEsp(Item, Rarity)
                         local ItemDistance = math.ceil((Item.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
                         if SShubEsp.Enabled then
                             if ItemDistance < SShubEsp.MaxDistance then
-                                if Esp.Info ~= nil then
-                                    SubText.Text = Esp.Info.Rarity or "N/A"
+                                if Esp.Info ~= nil and Esp.Info.Rarity ~= nil then
+                                    SubText.Text = Esp.Info.Rarity
                                     SubText.Color = Esp.Info.Color or Color3.new(1, 2.5, 2.5)
                                     ItemName.Color = Esp.Info.Color or Color3.new(1, 2.5, 2.5)
                                     if SShubEsp.Toggles[Esp.Info.Rarity] == true then
