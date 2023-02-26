@@ -13,7 +13,10 @@ local Class = {
     "UnionOperation",
     "Part"
 }
-function SShubEsp:CreateEsp(Item, Font, Rarity, ItemFolder)
+function SShubEsp:NewToggle(Toggle, Value)
+    SShubEsp.Toggles[Toggle] = Value
+end
+function SShubEsp:NewEsp(Item, Font, Rarity, ItemFolder)
     local Esp = {
         Info = nil
     }
