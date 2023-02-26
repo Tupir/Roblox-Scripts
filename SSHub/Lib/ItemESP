@@ -20,7 +20,7 @@ function SShubEsp:NewToggle(Toggle, Value)
         error("Theres are alredy a toggle called: "..Toggle.."!")
     end
 end
-function SShubEsp:NewEsp(Item, Font, Rarity, ItemFolder, IgnoreTransparency)
+function SShubEsp:NewEsp(Item, Name, Font, Rarity, ItemFolder, IgnoreTransparency)
     local Esp = {
         Info = nil
     }
@@ -59,7 +59,7 @@ function SShubEsp:NewEsp(Item, Font, Rarity, ItemFolder, IgnoreTransparency)
                     ItemName.Font = Font
                     ItemName.Size = 13
                     ItemName.Color = Color3.new(1, 2.5, 2.5)
-                    ItemName.Text = Item.Name
+                    ItemName.Text = Name
 
                     local SubText = Drawing.new("Text")
                     SubText.Visible = false
@@ -148,7 +148,7 @@ function SShubEsp:NewEsp(Item, Font, Rarity, ItemFolder, IgnoreTransparency)
             error("Please enter the folder/instance were the items are located")
         end
     else
-        error("Invalid Instace: "..Item.Name.." - "..Item.ClassName.."\nValid Instances for ESP: "..table.concat(Class, ", "))
+        error("Invalid Instace: "..Item.Name.."/"..Name.." - "..Item.ClassName.."\nValid Instances for ESP: "..table.concat(Class, ", "))
     end
     return Esp
 end
