@@ -15,7 +15,7 @@ local Class = {
 }
 function SShubEsp:NewToggle(Toggle, Value)
     if SShubEsp.Info[Toggle] == nil then
-        SShubEsp.Info[Toggle].Enabled = Value
+        SShubEsp.Info[Toggle].Enabled = Value or true
     else
         error("Theres are alredy a toggle called: "..Toggle.."!")
     end
@@ -129,7 +129,7 @@ function SShubEsp:NewEsp(Item, Extra)
                             local ItemDistance = math.ceil((Item.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
                             if SShubEsp.Enabled then
                                 if ItemDistance < SShubEsp.MaxDistance then
-                                    if Esp.Rarity ~= "N/A" then
+                                    if Esp.Rarity ~= "N/A" and Esp.SubText then
                                         SubText.Text = Esp.Rarity
                                         SubText.Color = Esp.Color
                                         ItemName.Color = Esp.Color
