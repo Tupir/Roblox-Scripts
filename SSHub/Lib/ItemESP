@@ -32,9 +32,12 @@ function SShubEsp:NewEsp(Item, Extra)
         Font = Extra.Font or 2,
         Index = Extra.Index or nil,
         SubText = Extra.SubText or false,
-        DistanceText = Extra.Distance or false
+        DistanceText = Extra.Distance or false,
+        RemoveBoolean = false
     }
-    
+    function Esp:Remove()
+        Esp.RemoveBoolean = true
+    end
     local function Transparent(v)
         if not Esp.Transparency then
             if v.Transparency == 1 then
@@ -66,8 +69,7 @@ function SShubEsp:NewEsp(Item, Extra)
 
     if table.find(Class, Item.ClassName) then
         if Esp.Folder ~= nil then
-            local SubText
-            local DistanceText
+
             local ItemName = Drawing.new("Text")
             ItemName.Visible = false
             ItemName.Center = true
@@ -76,67 +78,62 @@ function SShubEsp:NewEsp(Item, Extra)
             ItemName.Size = 13
             ItemName.Color = Color3.new(1, 2.5, 2.5)
             ItemName.Text = Esp.Name
-            if Esp.SubText then
-                SubText = Drawing.new("Text")
-                SubText.Visible = false
-                SubText.Center = true
-                SubText.Outline = true
-                SubText.Font = Esp.Font
-                SubText.Size = 13
-                SubText.Color = Color3.new(1, 2.5, 2.5)
-                SubText.Text = Esp.Rarity
-            end
-            if Esp.DistanceText then
-                DistanceText = Drawing.new("Text")
-                DistanceText.Visible = false
-                DistanceText.Center = true
-                DistanceText.Outline = true
-                DistanceText.Font = Esp.Font
-                DistanceText.Size = 13
-                DistanceText.Color = Color3.new(1, 2.5, 2.5)
-                DistanceText.Text = "Distance"
-            end
+
+            local SubText = Drawing.new("Text")
+            SubText.Visible = false
+            SubText.Center = true
+            SubText.Outline = true
+            SubText.Font = Esp.Font
+            SubText.Size = 13
+            SubText.Color = Color3.new(1, 2.5, 2.5)
+            SubText.Text = Esp.Rarity
+            
+            local DistanceText = Drawing.new("Text")
+            DistanceText.Visible = false
+            DistanceText.Center = true
+            DistanceText.Outline = true
+            DistanceText.Font = Esp.Font
+            DistanceText.Size = 13
+            DistanceText.Color = Color3.new(1, 2.5, 2.5)
+            DistanceText.Text = "Distance"
 
             local function InfoUpdate()
                 local Iu
                 Iu = RunService.RenderStepped:Connect(function()
-                    if SShubEsp.Info[Esp.Index].SubText == true then
-                        Esp.SubText = true
-                    elseif SShubEsp.Info[Esp.Index].SubText == false then
-                        Esp.SubText = false
-                    end
-                    if SShubEsp.Info[Esp.Index].Distance == true then
-                        Esp.DistanceText = true
-                    elseif SShubEsp.Info[Esp.Index].Distance == false then
-                        Esp.DistanceText = false
-                    end
 
+                    if Esp.RemoveBoolean then
+                        Iu:Disconnect()
+                        ItemName:Remove()
+                        SubText:Remove()
+                        DistanceText:Remove()
+                    end
+                    
                     if not Esp.Folder:IsAncestorOf(Item) or Transparent(Item) then
                         Iu:Disconnect()
                         ItemName:Remove()
-                        if Esp.SubText then
-                            SubText:Remove()
-                        end
-                        if Esp.DistanceText then
-                            DistanceText:Remove()
-                        end
+                        SubText:Remove()
+                        DistanceText:Remove()
                     else
+                        if SShubEsp.Info[Esp.Index].SubText == true then
+                            Esp.SubText = true
+                        elseif SShubEsp.Info[Esp.Index].SubText == false then
+                            Esp.SubText = false
+                        end
+                        if SShubEsp.Info[Esp.Index].Distance == true then
+                            Esp.DistanceText = true
+                        elseif SShubEsp.Info[Esp.Index].Distance == false then
+                            Esp.DistanceText = false
+                        end
+
                         local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
                         if OnScreen then
+
                             ItemName.Position = Vector2.new(Vector.X, Vector.Y - 40)
                             if Esp.SubText then
                                 SubText.Position = Vector2.new(Vector.X, Vector.Y - 30)
                             end
                             if Esp.DistanceText then
                                 DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 20)
-                            end
-
-                            ItemName.Visible = false
-                            if not Esp.SubText then
-                                SubText.Visible = false
-                            end
-                            if not Esp.Distance then
-                                DistanceText.Visible = false
                             end
 
                             local ItemDistance = math.ceil((Item.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
@@ -158,12 +155,8 @@ function SShubEsp:NewEsp(Item, Extra)
                                             end
                                         else
                                             ItemName.Visible = false
-                                            if not Esp.SubText then
-                                                SubText.Visible = false
-                                            end
-                                            if not Esp.Distance then
-                                                DistanceText.Visible = false
-                                            end
+                                            SubText.Visible = false
+                                            DistanceText.Visible = false
                                         end
                                     else
                                         ItemName.Visible = true
@@ -177,31 +170,18 @@ function SShubEsp:NewEsp(Item, Extra)
                                     DistanceText.Text = "["..tostring(ItemDistance).."]"
                                 else
                                     ItemName.Visible = false
-                                    if not Esp.SubText then
-                                        SubText.Visible = false
-                                    end
-                                    if not Esp.Distance then
-                                        DistanceText.Visible = false
-                                    end
+                                    SubText.Visible = false
+                                    DistanceText.Visible = false
                                 end
                             else
                                 ItemName.Visible = false
-                                if not Esp.SubText then
-                                    SubText.Visible = false
-                                end
-                                if not Esp.Distance then
-                                    DistanceText.Visible = false
-                                end
-                                Iu:Disconnect()
+                                SubText.Visible = false
+                                DistanceText.Visible = false
                             end
                         else
                             ItemName.Visible = false
-                            if not Esp.SubText then
-                                SubText.Visible = false
-                            end
-                            if not Esp.Distance then
-                                DistanceText.Visible = false
-                            end
+                            SubText.Visible = false
+                            DistanceText.Visible = false
                         end
                     end
                 end)
