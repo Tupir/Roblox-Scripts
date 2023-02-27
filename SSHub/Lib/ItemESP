@@ -60,10 +60,10 @@ function SShubEsp:NewEsp(Item, Extra)
                 Enabled = true
             }
             if Extra.SubText ~= nil then
-                SShubEsp.Info[Esp.Index].SubText = Extra.SubText
+                SShubEsp.Info[Esp.Index]["SubText"] = Extra.SubText
             end
             if Extra.Distance ~= nil then
-                SShubEsp.Info[Esp.Index].Distance = Extra.Distance
+                SShubEsp.Info[Esp.Index]["Distance"] = Extra.Distance
             end
         end
     end
@@ -115,14 +115,14 @@ function SShubEsp:NewEsp(Item, Extra)
                         SubText:Remove()
                         DistanceText:Remove()
                     else
-                        if SShubEsp.Info[Esp.Index].SubText ~= nil and SShubEsp.Info[Esp.Index].SubText == true then
+                        if SShubEsp.Info[Esp.Index]["SubText"] ~= nil and SShubEsp.Info[Esp.Index]["SubText"] == true then
                             Esp.SubText = true
-                        elseif SShubEsp.Info[Esp.Index].SubText ~= nil and SShubEsp.Info[Esp.Index].SubText == false then
+                        elseif SShubEsp.Info[Esp.Index]["SubText"] ~= nil and SShubEsp.Info[Esp.Index]["SubText"] == false then
                             Esp.SubText = false
                         end
-                        if SShubEsp.Info[Esp.Index].Distance ~= nil and SShubEsp.Info[Esp.Index].Distance == true then
+                        if SShubEsp.Info[Esp.Index]["Distance"] ~= nil and SShubEsp.Info[Esp.Index]["Distance"] == true then
                             Esp.DistanceText = true
-                        elseif SShubEsp.Info[Esp.Index].Distance ~= nil and SShubEsp.Info[Esp.Index].Distance == false then
+                        elseif SShubEsp.Info[Esp.Index]["Distance"] ~= nil and SShubEsp.Info[Esp.Index]["Distance"] == false then
                             Esp.DistanceText = false
                         end
 
