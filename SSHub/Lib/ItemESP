@@ -37,52 +37,52 @@ function SShubEsp:NewEsp(Item, Extra)
         Index = Extra.Index or nil,
         SubText = Extra.SubText or false,
         DistanceText = Extra.Distance or false,
-        RemoveBoolean = false
     }
+    local RemoveBoolean = false
     function Esp:Remove()
-        Esp.RemoveBoolean = true
-    end
-    local function Transparent(v)
-        if not Esp.Transparency then
-            if v.Transparency == 1 then
-                return false
-            end
-        elseif Esp.Transparency then
-            if v.Transparency == 1 then
-                return true
-            else
-                return false
-            end
-        else
-            return false
-        end
-    end
-    
-    if Esp.Index ~= nil then
-        if SShubEsp.Info[Esp.Index] == nil then
-            SShubEsp.Info[Esp.Index] = {
-                Enabled = true,
-                SubText = nil,
-                Distance = nil
-            }
-            if Extra.SubText ~= nil then
-                SShubEsp.Info[Esp.Index].SubText = Extra.SubText
-            end
-            if Extra.Distance ~= nil then
-                SShubEsp.Info[Esp.Index].Distance = Extra.Distance
-            end
-        elseif SShubEsp.Info[Esp.Index] ~= nil then
-            if Extra.SubText ~= nil then
-                SShubEsp.Info[Esp.Index].SubText = Extra.SubText
-            end
-            if Extra.Distance ~= nil then
-                SShubEsp.Info[Esp.Index].Distance = Extra.Distance
-            end
-        end
+        RemoveBoolean = true
     end
 
     if table.find(Class, Item.ClassName) then
         if Esp.Folder ~= nil then
+            local function Transparent(v)
+                if not Esp.Transparency then
+                    if v.Transparency == 1 then
+                        return false
+                    end
+                elseif Esp.Transparency then
+                    if v.Transparency == 1 then
+                        return true
+                    else
+                        return false
+                    end
+                else
+                    return false
+                end
+            end
+
+            if Esp.Index ~= nil then
+                if SShubEsp.Info[Esp.Index] == nil then
+                    SShubEsp.Info[Esp.Index] = {
+                        Enabled = true,
+                        SubText = nil,
+                        Distance = nil
+                    }
+                    if Extra.SubText ~= nil then
+                        SShubEsp.Info[Esp.Index].SubText = Extra.SubText
+                    end
+                    if Extra.Distance ~= nil then
+                        SShubEsp.Info[Esp.Index].Distance = Extra.Distance
+                    end
+                elseif SShubEsp.Info[Esp.Index] ~= nil then
+                    if Extra.SubText ~= nil then
+                        SShubEsp.Info[Esp.Index].SubText = Extra.SubText
+                    end
+                    if Extra.Distance ~= nil then
+                        SShubEsp.Info[Esp.Index].Distance = Extra.Distance
+                    end
+                end
+            end
 
             local ItemName = Drawing.new("Text")
             ItemName.Visible = false
@@ -115,7 +115,7 @@ function SShubEsp:NewEsp(Item, Extra)
                 local Iu
                 Iu = RunService.RenderStepped:Connect(function()
 
-                    if Esp.RemoveBoolean then
+                    if RemoveBoolean then
                         Iu:Disconnect()
                         ItemName:Remove()
                         SubText:Remove()
