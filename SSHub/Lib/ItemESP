@@ -20,19 +20,26 @@ function SShubEsp:NewToggle(Toggle, Value)
         error("Theres are alredy a toggle called: "..Toggle.."!")
     end
 end
-function SShubEsp:NewEsp(Item, Name, Font, Rarity, ItemFolder, IgnoreTransparency)
+function SShubEsp:NewEsp(Item, Extra)
     local Esp = {
-        Info = nil
+        Transparency = Extra.Transparency or false,
+        Rarity = Extra.Rarity or "N/A",
+        Color = Extra.Color or Color3.new(1, 2.5, 2.5),
+        Folder = Extra.Folder or workspace,
+        Name = Extra.Name or tostring(Item),
+        Font = Extra.Font or 2,
+        Index = Extra.Index or nil
     }
-    if IgnoreTransparency == nil then
-        IgnoreTransparency = false
+
+    if Esp.Transparency == nil then
+        Esp.Transparency = false
     end
     local function Transparent(v)
-        if IgnoreTransparency then
+        if not Esp.Transparency then
             if v.Transparency == 1 then
                 return false
             end
-        elseif not IgnoreTransparency then
+        elseif Esp.Transparency then
             if v.Transparency == 1 then
                 return true
             else
@@ -42,113 +49,109 @@ function SShubEsp:NewEsp(Item, Name, Font, Rarity, ItemFolder, IgnoreTransparenc
             return false
         end
     end
+    if Esp.Index ~= nil then
+        if SShubEsp.Toggles[Esp.Index] == nil then
+            SShubEsp.Toggles[Esp.Index] = true
+        end
+    end
+
     if table.find(Class, Item.ClassName) then
-        if ItemFolder ~= nil then
-            if Font ~= nil then
-                if table.find({0,1,2,3}, Font) then
-                    if Rarity ~= nil and Rarity.Rarity ~= nil then
-                        Esp.Info = Rarity
-                        if SShubEsp.Toggles[Rarity.Rarity] == nil then
-                            SShubEsp.Toggles[Rarity.Rarity] = true
-                        end
-                    end
-                    local ItemName = Drawing.new("Text")
-                    ItemName.Visible = false
-                    ItemName.Center = true
-                    ItemName.Outline = true
-                    ItemName.Font = Font
-                    ItemName.Size = 13
-                    ItemName.Color = Color3.new(1, 2.5, 2.5)
-                    ItemName.Text = Name
+        if Esp.Folder ~= nil then
+            local ItemName = Drawing.new("Text")
+            ItemName.Visible = false
+            ItemName.Center = true
+            ItemName.Outline = true
+            ItemName.Font = Esp.Font
+            ItemName.Size = 13
+            ItemName.Color = Color3.new(1, 2.5, 2.5)
+            ItemName.Text = Esp.Name
 
-                    local SubText = Drawing.new("Text")
-                    SubText.Visible = false
-                    SubText.Center = true
-                    SubText.Outline = true
-                    SubText.Font = Font
-                    SubText.Size = 13
-                    SubText.Color = Color3.new(1, 2.5, 2.5)
-                    SubText.Text = "N/A"
+            local SubText = Drawing.new("Text")
+            SubText.Visible = false
+            SubText.Center = true
+            SubText.Outline = true
+            SubText.Font = Esp.Font
+            SubText.Size = 13
+            SubText.Color = Color3.new(1, 2.5, 2.5)
+            SubText.Text = Esp.Rarity
 
-                    local DistanceText = Drawing.new("Text")
-                    DistanceText.Visible = false
-                    DistanceText.Center = true
-                    DistanceText.Outline = true
-                    DistanceText.Font = Font
-                    DistanceText.Size = 13
-                    DistanceText.Color = Color3.new(1, 2.5, 2.5)
-                    DistanceText.Text = "Distance"
+            local DistanceText = Drawing.new("Text")
+            DistanceText.Visible = false
+            DistanceText.Center = true
+            DistanceText.Outline = true
+            DistanceText.Font = Esp.Font
+            DistanceText.Size = 13
+            DistanceText.Color = Color3.new(1, 2.5, 2.5)
+            DistanceText.Text = "Distance"
 
-                    local function InfoUpdate()
-                        local Iu
-                        Iu = RunService.RenderStepped:Connect(function()
-                            if not workspace:IsAncestorOf(Item) or Transparent(Item) or not ItemFolder:IsAncestorOf(Item) then
-                                Iu:Disconnect()
-                                ItemName:Remove()
-                                SubText:Remove()
-                                DistanceText:Remove()
-                            else
-                                local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
-                                if OnScreen then
-                                    ItemName.Position = Vector2.new(Vector.X, Vector.Y - 30)
-                                    SubText.Position = Vector2.new(Vector.X, Vector.Y - 20)
-                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
-                                    ItemName.Visible = false
-                                    SubText.Visible = false
-                                    DistanceText.Visible = false
-                                    local ItemDistance = math.ceil((Item.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
-                                    if SShubEsp.Enabled then
-                                        if ItemDistance < SShubEsp.MaxDistance then
-                                            if Esp.Info ~= nil and Esp.Info.Rarity ~= nil then
-                                                SubText.Text = Esp.Info.Rarity
-                                                SubText.Color = Esp.Info.Color or Color3.new(1, 2.5, 2.5)
-                                                ItemName.Color = Esp.Info.Color or Color3.new(1, 2.5, 2.5)
-                                                if SShubEsp.Toggles[Esp.Info.Rarity] == true then
-                                                    ItemName.Visible = true
-                                                    SubText.Visible = true
-                                                    DistanceText.Visible = true
-                                                else
-                                                    ItemName.Visible = false
-                                                    SubText.Visible = false
-                                                    DistanceText.Visible = false
-                                                end
-                                            else
-                                                ItemName.Visible = true
-                                                SubText.Visible = true
-                                                DistanceText.Visible = true
-                                            end
-                                            DistanceText.Text = "["..tostring(ItemDistance).."]"
+            local function InfoUpdate()
+                local Iu
+                Iu = RunService.RenderStepped:Connect(function()
+                    if not Esp.Folder:IsAncestorOf(Item) or Transparent(Item) then
+                        Iu:Disconnect()
+                        ItemName:Remove()
+                        SubText:Remove()
+                        DistanceText:Remove()
+                    else
+                        local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
+                        if OnScreen then
+                            ItemName.Position = Vector2.new(Vector.X, Vector.Y - 40)
+                            SubText.Position = Vector2.new(Vector.X, Vector.Y - 30)
+                            DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+
+                            ItemName.Visible = false
+                            SubText.Visible = false
+                            DistanceText.Visible = false
+
+                            local ItemDistance = math.ceil((Item.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
+                            if SShubEsp.Enabled then
+                                if ItemDistance < SShubEsp.MaxDistance then
+                                    if Esp.Index ~= nil then
+                                        if Esp.Rarity ~= "N/A" then
+                                            SubText.Text = Esp.Rarity
+                                            SubText.Color = Esp.Color
+                                            ItemName.Color = Esp.Color
+                                        end
+                                        if SShubEsp.Toggles[Esp.Index] == true then
+                                            ItemName.Visible = true
+                                            SubText.Visible = true
+                                            DistanceText.Visible = true
                                         else
                                             ItemName.Visible = false
                                             SubText.Visible = false
                                             DistanceText.Visible = false
                                         end
                                     else
-                                        ItemName.Visible = false
-                                        SubText.Visible = false
-                                        DistanceText.Visible = false
-                                        Iu:Disconnect()
+                                        ItemName.Visible = true
+                                        SubText.Visible = true
+                                        DistanceText.Visible = true
                                     end
+                                    DistanceText.Text = "["..tostring(ItemDistance).."]"
                                 else
                                     ItemName.Visible = false
                                     SubText.Visible = false
                                     DistanceText.Visible = false
                                 end
+                            else
+                                ItemName.Visible = false
+                                SubText.Visible = false
+                                DistanceText.Visible = false
+                                Iu:Disconnect()
                             end
-                        end)
+                        else
+                            ItemName.Visible = false
+                            SubText.Visible = false
+                            DistanceText.Visible = false
+                        end
                     end
-                    coroutine.wrap(InfoUpdate)()
-                else
-                    error("Invalid font provied")
-                end
-            else
-                error("Please enter a font")
+                end)
             end
+            coroutine.wrap(InfoUpdate)()
         else
             error("Please enter the folder/instance were the items are located")
         end
     else
-        error("Invalid Instace: "..Item.Name.."/"..Name.." - "..Item.ClassName.."\nValid Instances for ESP: "..table.concat(Class, ", "))
+        error("Invalid Instace: "..Item.Name.."/"..Esp.Name.." - "..Item.ClassName.."\nValid Instances for ESP: "..table.concat(Class, ", "))
     end
     return Esp
 end
