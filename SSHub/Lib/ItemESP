@@ -15,7 +15,9 @@ local Class = {
 }
 function SShubEsp:NewToggle(Toggle, Value)
     if SShubEsp.Info[Toggle] == nil then
-        SShubEsp.Info[Toggle].Enabled = Value or true
+        SShubEsp.Info[Toggle] = {
+            Enabled = Value or true
+        }
     else
         error("Theres are alredy a toggle called: "..Toggle.."!")
     end
@@ -51,7 +53,14 @@ function SShubEsp:NewEsp(Item, Extra)
     
     if Esp.Index ~= nil then
         if SShubEsp.Info[Esp.Index] == nil then
-            SShubEsp.Info[Esp.Index].Enabled = true
+            SShubEsp.Info[Esp.Index] = {
+                Enabled = true,
+                SubText = Esp.SubText,
+                Distance = Esp.Distance
+            }
+        elseif SShubEsp.Info[Esp.Index] ~= nil then
+            SShubEsp.Info[Esp.Index].SubText = Esp.SubText
+            SShubEsp.Info[Esp.Index].Distance = Esp.Distance
         end
     end
 
