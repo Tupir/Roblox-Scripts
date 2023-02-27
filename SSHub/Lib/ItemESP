@@ -14,14 +14,16 @@ local Class = {
     "Part"
 }
 function SShubEsp:NewToggle(Toggle, Value)
-    if SShubEsp.Info[Toggle] == nil then
-        SShubEsp.Info[Toggle] = {
-            Enabled = Value or true,
-            SubText = nil,
-            Distance = nil
-        }
-    else
-        error("Theres are alredy a toggle called: "..Toggle.."!")
+    if Toggle ~= nil then
+        if SShubEsp.Info[Toggle] == nil then
+            SShubEsp.Info[Toggle] = {
+                Enabled = Value or true,
+                SubText = nil,
+                Distance = nil
+            }
+        else
+            error("Theres are alredy a toggle called: "..Toggle.."!")
+        end
     end
 end
 function SShubEsp:NewEsp(Item, Extra)
