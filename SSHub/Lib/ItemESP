@@ -30,10 +30,7 @@ function SShubEsp:NewEsp(Item, Extra)
         Font = Extra.Font or 2,
         Index = Extra.Index or nil
     }
-
-    if Esp.Transparency == nil then
-        Esp.Transparency = false
-    end
+    
     local function Transparent(v)
         if not Esp.Transparency then
             if v.Transparency == 1 then
@@ -106,12 +103,12 @@ function SShubEsp:NewEsp(Item, Extra)
                             local ItemDistance = math.ceil((Item.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
                             if SShubEsp.Enabled then
                                 if ItemDistance < SShubEsp.MaxDistance then
+                                    if Esp.Rarity ~= "N/A" then
+                                        SubText.Text = Esp.Rarity
+                                        SubText.Color = Esp.Color
+                                        ItemName.Color = Esp.Color
+                                    end
                                     if Esp.Index ~= nil then
-                                        if Esp.Rarity ~= "N/A" then
-                                            SubText.Text = Esp.Rarity
-                                            SubText.Color = Esp.Color
-                                            ItemName.Color = Esp.Color
-                                        end
                                         if SShubEsp.Toggles[Esp.Index] == true then
                                             ItemName.Visible = true
                                             SubText.Visible = true
