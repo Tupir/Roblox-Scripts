@@ -31,7 +31,7 @@ function SShubEsp:NewToggle(Toggle, Value)
                 Enabled = Value or true,
                 SubText = false,
                 Distance = false,
-                Extra = false,
+                ExtraText = false,
                 Remove = false
             }
         else
