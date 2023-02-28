@@ -137,9 +137,9 @@ function SShubEsp:NewEsp(Item, Extra)
                     else
                         if SShubEsp.Info[Esp.Index].SubText ~= nil and SShubEsp.Info[Esp.Index].SubText == true then
                             Esp.SubText = true
-                            print(Esp.SubText.." TO True")
+                            print(tostring(Esp.SubText).." TO True")
                         elseif SShubEsp.Info[Esp.Index].SubText ~= nil and SShubEsp.Info[Esp.Index].SubText == false then
-                            print(Esp.SubText.." TO False")
+                            print(tostring(Esp.SubText).." TO False")
                             Esp.SubText = false
                         end
                         if SShubEsp.Info[Esp.Index].Distance ~= nil and SShubEsp.Info[Esp.Index].Distance == true then
