@@ -90,13 +90,10 @@ function SShubEsp:NewEsp(Item, Extra)
                 if SShubEsp.Info[Esp.Index] == nil then
                     SShubEsp.Info[Esp.Index] = {
                         Enabled = true,
-                        SubText = Extra.SubText,
-                        Distance = Extra.Distance,
+                        SubText = Esp.SubText,
+                        Distance = Esp.DistanceText,
                         Remove = false
                     }
-                elseif SShubEsp.Info[Esp.Index] ~= nil then
-                    SShubEsp.Info[Esp.Index].SubText = Extra.SubText
-                    SShubEsp.Info[Esp.Index].Distance = Extra.Distance
                 end
             end
 
