@@ -79,21 +79,6 @@ function SShubEsp:NewEsp(Item, Extra)
         ExtraTextToggle = Extra.ExtraTextToggle or false
     }
     local RemoveBoolean = false
-    if typeof(Extra.SubText) == "table" and Extra.SubText[1] ~= nil and Extra.SubText[2] ~= nil and typeof(Extra.SubText[1]) == "Instance" and typeof(Extra.SubText[2]) == "string" then
-        Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]]) or "N/A"
-    elseif typeof(Extra.SubText) == "string" then
-        Esp.SubText = Extra.SubText or "N/A"
-    else
-        error("Missing or invalid value in SubText")
-    end
-    
-    if typeof(Extra.ExtraText) == "table" and Extra.ExtraText[1] ~= nil and Extra.ExtraText[2] ~= nil and typeof(Extra.ExtraText[1]) == "Instance" and typeof(Extra.ExtraText[2]) == "string" then
-        Esp.ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]]) or "N/A"
-    elseif typeof(Extra.ExtraText) == "string" then
-        Esp.ExtraText = Extra.ExtraText or "N/A"
-    else
-        error("Missing or invalid value in ExtraText")
-    end
 
     function Esp:SetValue(ValueSet, Value)
         if Extra[ValueSet] ~= nil then
