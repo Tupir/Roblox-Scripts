@@ -38,6 +38,17 @@ function SShubEsp:NewToggle(Toggle, Value)
         end
     end
 end
+function SShubEsp:RemoveToggle(Esp)
+    local Remove = {}
+    
+    if SShubEsp.Info[Esp] ~= nil then
+        TableRemove(SShubEsp.Info, Esp)
+    else
+        error("Error Cant find a valid Toggle: ".. tostring(Esp))
+    end
+
+    return Remove
+end
 
 function SShubEsp:RemoveEsp(Esp)
 local Remove = {}
@@ -133,7 +144,6 @@ function SShubEsp:NewEsp(Item, Extra)
                         ItemName:Remove()
                         SubText:Remove()
                         DistanceText:Remove()
-                        TableRemove(SShubEsp.Info, Esp.Index)
                     else
                         local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
                         if OnScreen then
