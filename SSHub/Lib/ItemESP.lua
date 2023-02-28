@@ -86,18 +86,16 @@ function SShubEsp:NewEsp(Item, Extra)
                 end
             end
 
-            if Esp.Index ~= "Global" then
-                if SShubEsp.Info[Esp.Index] == nil then
-                    SShubEsp.Info[Esp.Index] = {
-                        Enabled = true,
-                        SubText = Esp.SubText,
-                        Distance = Esp.DistanceText,
-                        Remove = false
-                    }
-                elseif SShubEsp.Info[Esp.Index] ~= nil then
-                    SShubEsp.Info[Esp.Index].SubText = Extra.SubText
-                    SShubEsp.Info[Esp.Index].Distance = Extra.Distance
-                end
+            if SShubEsp.Info[Esp.Index] == nil then
+                SShubEsp.Info[Esp.Index] = {
+                    Enabled = true,
+                    SubText = Esp.SubText,
+                    Distance = Esp.DistanceText,
+                    Remove = false
+                }
+            elseif SShubEsp.Info[Esp.Index] ~= nil then
+                SShubEsp.Info[Esp.Index].SubText = Extra.SubText
+                SShubEsp.Info[Esp.Index].Distance = Extra.Distance
             end
 
             local ItemName = Drawing.new("Text")
@@ -139,7 +137,6 @@ function SShubEsp:NewEsp(Item, Extra)
                     else
                         local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
                         if OnScreen then
-                            print(SShubEsp.Info[Esp.Index].SubText)
                             ItemName.Position = Vector2.new(Vector.X, Vector.Y - 50)
                             if SShubEsp.Info[Esp.Index].SubText then
                                 SubText.Position = Vector2.new(Vector.X, Vector.Y - 40)
