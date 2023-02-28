@@ -3,6 +3,17 @@ local RunService = game:GetService("RunService")
 local Cam = workspace.CurrentCamera;
 local Player = game:GetService("Players").LocalPlayer
 --#endregion
+
+local function TableRemove(Table, Item)
+    local Index = nil
+    for i, v in ipairs (Table) do 
+        if (v == Item) then
+            Index = i 
+        end
+    end
+table.remove(Table, Index)
+end
+
 local SShubEsp = {
     Enabled = true,
     MaxDistance = 9e9,
@@ -124,7 +135,7 @@ function SShubEsp:NewEsp(Item, Extra)
                         ItemName:Remove()
                         SubText:Remove()
                         DistanceText:Remove()
-                        table.remove(SShubEsp.Info, Esp.Index)
+                        TableRemove(SShubEsp.Info, Esp.Index)
                     else
                         local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
                         if OnScreen then
