@@ -107,12 +107,12 @@ function SShubEsp:NewEsp(Item, Extra)
                     Enabled = true,
                     SubText = Esp.SubText,
                     Distance = Esp.DistanceText,
-                    Extra = Esp.Extra,
+                    ExtraText = Esp.Extra,
                     Remove = false
                 }
             elseif SShubEsp.Info[Esp.Index] ~= nil then
                 SShubEsp.Info[Esp.Index].SubText = Esp.SubText
-                SShubEsp.Info[Esp.Index].Extra = Esp.Extra
+                SShubEsp.Info[Esp.Index].ExtraText = Esp.Extra
                 SShubEsp.Info[Esp.Index].Distance = Esp.Distance
             end
 
@@ -197,7 +197,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                             else
                                                 DistanceText.Visible = false
                                             end
-                                            if SShubEsp.Info[Esp.Index].Extra then
+                                            if SShubEsp.Info[Esp.Index].ExtraText then
                                                 ExtraText.Text = Esp.ExtraText
                                                 ExtraText.Visible = true
                                             else
@@ -226,7 +226,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                         else
                                             DistanceText.Visible = false
                                         end
-                                        if SShubEsp.Info[Esp.Index].Extra then
+                                        if SShubEsp.Info[Esp.Index].ExtraText then
                                             ExtraText.Text = Esp.ExtraText
                                             ExtraText.Visible = true
                                         else
