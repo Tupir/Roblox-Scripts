@@ -137,6 +137,25 @@ function SShubEsp:NewEsp(Item, Extra)
                 SShubEsp.Info[Esp.Index].Distance = Esp.DistanceText
             end
 
+            if Extra.SubText ~= "N/A" then
+                if type(Extra.SubText) == "table" and Extra.SubText[1] ~= nil or Extra.SubText[2] ~= nil then
+                    Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]])
+                elseif type(Extra.SubText) == "string" then
+                    Esp.SubText = Extra.SubText
+                else
+                    error("Missing or Invalid value: Subtext")
+                end
+            end
+            if Extra.ExtraText ~= "N/A" then
+                if type(Extra.ExtraText) == "table" and Extra.ExtraText[1] ~= nil or Extra.ExtraText[2] ~= nil then
+                    Esp.ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
+                elseif type(Extra.ExtraText) == "string" then
+                    Esp.ExtraText = Extra.ExtraText
+                else
+                    error("Missing or Invalid value: ExtraText")
+                end
+            end
+
             --Drawing
             local ItemName = Drawing.new("Text")
             ItemName.Visible = false
@@ -185,14 +204,14 @@ function SShubEsp:NewEsp(Item, Extra)
                         DistanceText:Remove()
                     else
                         if Extra.SubText ~= "N/A" then
-                            if type(Extra.SubText) == "table" and Extra.SubText[1] ~= nil and Extra.SubText[2] ~= nil and type(Extra.SubText[1]) == "Instance" and type(Extra.SubText[2]) == "string" then
+                            if type(Extra.SubText) == "table" and Extra.SubText[1] ~= nil or Extra.SubText[2] ~= nil then
                                 Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]])
                             elseif type(Extra.SubText) == "string" then
                                 Esp.SubText = Extra.SubText
                             end
                         end
                         if Extra.ExtraText ~= "N/A" then
-                            if type(Extra.ExtraText) == "table" and Extra.ExtraText[1] ~= nil and Extra.ExtraText[2] ~= nil and type(Extra.ExtraText[1]) == "Instance" and type(Extra.ExtraText[2]) == "string" then
+                            if type(Extra.ExtraText) == "table" and Extra.ExtraText[1] ~= nil or Extra.ExtraText[2] ~= nil then
                                 Esp.ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
                             elseif type(Extra.ExtraText) == "string" then
                                 Esp.ExtraText = Extra.ExtraText
