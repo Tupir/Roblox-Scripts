@@ -18,8 +18,8 @@ function SShubEsp:NewToggle(Toggle, Value)
         if SShubEsp.Info[Toggle] == nil then
             SShubEsp.Info[Toggle] = {
                 Enabled = Value or true,
-                SubText = nil,
-                Distance = nil,
+                SubText = false,
+                Distance = false,
                 Remove = false
             }
         else
@@ -48,7 +48,7 @@ function SShubEsp:NewEsp(Item, Extra)
         Folder = Extra.Folder or workspace,
         Name = Extra.Name or tostring(Item),
         Font = Extra.Font or 2,
-        Index = Extra.Index or nil,
+        Index = Extra.Index or "Global",
         SubText = Extra.SubText or false,
         DistanceText = Extra.Distance or false,
     }
@@ -75,12 +75,12 @@ function SShubEsp:NewEsp(Item, Extra)
                 end
             end
 
-            if Esp.Index ~= nil then
+            if Esp.Index ~= "Global" then
                 if SShubEsp.Info[Esp.Index] == nil then
                     SShubEsp.Info[Esp.Index] = {
                         Enabled = true,
-                        SubText = nil,
-                        Distance = nil,
+                        SubText = false,
+                        Distance = false,
                         Remove = false
                     }
                     if Extra.SubText ~= nil then
@@ -135,45 +135,32 @@ function SShubEsp:NewEsp(Item, Extra)
                         SubText:Remove()
                         DistanceText:Remove()
                     else
-                        if SShubEsp.Info[Esp.Index].SubText ~= nil and SShubEsp.Info[Esp.Index].SubText == true then
-                            Esp.SubText = true
-                            print(tostring(Esp.SubText).." TO True")
-                        elseif SShubEsp.Info[Esp.Index].SubText ~= nil and SShubEsp.Info[Esp.Index].SubText == false then
-                            print(tostring(Esp.SubText).." TO False")
-                            Esp.SubText = false
-                        end
-                        if SShubEsp.Info[Esp.Index].Distance ~= nil and SShubEsp.Info[Esp.Index].Distance == true then
-                            Esp.DistanceText = true
-                        elseif SShubEsp.Info[Esp.Index].Distance ~= nil and SShubEsp.Info[Esp.Index].Distance == false then
-                            Esp.DistanceText = false
-                        end
-
                         local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
                         if OnScreen then
 
                             ItemName.Position = Vector2.new(Vector.X, Vector.Y - 40)
-                            if Esp.SubText then
+                            if SShubEsp.Info[Esp.Index].SubText then
                                 SubText.Position = Vector2.new(Vector.X, Vector.Y - 30)
                             end
-                            if Esp.DistanceText then
+                            if SShubEsp.Info[Esp.Index].Distance then
                                 DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 20)
                             end
 
                             local ItemDistance = math.ceil((Item.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
                             if SShubEsp.Enabled then
                                 if ItemDistance < SShubEsp.MaxDistance then
-                                    if Esp.Rarity ~= "N/A" and Esp.SubText then
+                                    if Esp.Rarity ~= "N/A" and SShubEsp.Info[Esp.Index].SubText then
                                         SubText.Text = Esp.Rarity
                                         SubText.Color = Esp.Color
                                         ItemName.Color = Esp.Color
                                     end
-                                    if Esp.Index ~= nil then
+                                    if Esp.Index ~= "Global" then
                                         if SShubEsp.Info[Esp.Index].Enabled == true then
                                             ItemName.Visible = true
-                                            if Esp.SubText then
+                                            if SShubEsp.Info[Esp.Index].SubText then
                                                 SubText.Visible = true
                                             end
-                                            if Esp.Distance then
+                                            if SShubEsp.Info[Esp.Index].Distance then
                                                 DistanceText.Visible = true
                                             end
                                         else
@@ -183,10 +170,10 @@ function SShubEsp:NewEsp(Item, Extra)
                                         end
                                     else
                                         ItemName.Visible = true
-                                        if Esp.SubText then
+                                        if SShubEsp.Info[Esp.Index].SubText then
                                             SubText.Visible = true
                                         end
-                                        if Esp.Distance then
+                                        if SShubEsp.Info[Esp.Index].Distance then
                                             DistanceText.Visible = true
                                         end
                                     end
