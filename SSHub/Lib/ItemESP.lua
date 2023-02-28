@@ -135,10 +135,11 @@ function SShubEsp:NewEsp(Item, Extra)
                         SubText:Remove()
                         DistanceText:Remove()
                     else
-                        print(Esp.SubText)
                         if SShubEsp.Info[Esp.Index].SubText ~= nil and SShubEsp.Info[Esp.Index].SubText == true then
                             Esp.SubText = true
+                            print(Esp.SubText.." TO True")
                         elseif SShubEsp.Info[Esp.Index].SubText ~= nil and SShubEsp.Info[Esp.Index].SubText == false then
+                            print(Esp.SubText.." TO False")
                             Esp.SubText = false
                         end
                         if SShubEsp.Info[Esp.Index].Distance ~= nil and SShubEsp.Info[Esp.Index].Distance == true then
