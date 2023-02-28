@@ -31,8 +31,8 @@ end
 function SShubEsp:RemoveEsp(Esp)
 local Remove = {}
 
-if Esp ~= nil then
-    Esp.Remove = true
+if SShubEsp.Info[Esp] ~= nil then
+    SShubEsp.Info[Esp].Remove = true
 else
     error("Error Cant find a valid Esp: ".. tostring(Esp))
 end
