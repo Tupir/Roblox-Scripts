@@ -129,7 +129,7 @@ function SShubEsp:NewEsp(Item, Extra)
             local function InfoUpdate()
                 local Iu
                 Iu = RunService.RenderStepped:Connect(function()
-                    if not Esp.Folder:IsAncestorOf(Item) or Transparent(Item) or RemoveBoolean or SShubEsp.Info[Esp].Remove  then
+                    if not Esp.Folder:IsAncestorOf(Item) or Transparent(Item) or RemoveBoolean == true or SShubEsp.Info[Esp].Remove == true then
                         Iu:Disconnect()
                         ItemName:Remove()
                         SubText:Remove()
