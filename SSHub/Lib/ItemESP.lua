@@ -43,6 +43,7 @@ function SShubEsp:RemoveToggle(Esp)
     local Remove = {}
     
     if SShubEsp.Info[Esp] ~= nil then
+        SShubEsp.Info[Esp].Remove = true
         TableRemove(SShubEsp.Info, Esp)
     else
         error("Error Cant find a valid Toggle: ".. tostring(Esp))
