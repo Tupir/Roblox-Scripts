@@ -67,7 +67,7 @@ function SShubEsp:NewEsp(Item, Extra)
     local Esp = {
         Transparency = Extra.Transparency or false,
         Rarity = tostring(Extra.Rarity) or "N/A",
-        ExtraText = tostring(Extra.ExtraText) or "...",
+        ExtraText = tostring(Extra.ExtraText) or "N/A",
         Color = Extra.Color or Color3.new(1, 2.5, 2.5),
         Folder = Extra.Folder or workspace,
         Name = tostring(Extra.Name)or Item.Name,
