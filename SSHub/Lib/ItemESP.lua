@@ -19,13 +19,27 @@ function SShubEsp:NewToggle(Toggle, Value)
             SShubEsp.Info[Toggle] = {
                 Enabled = Value or true,
                 SubText = nil,
-                Distance = nil
+                Distance = nil,
+                Remove = false
             }
         else
             error("Theres are alredy a toggle called: "..Toggle.."!")
         end
     end
 end
+
+function SShubEsp:RemoveEsp(Esp)
+local Remove = {}
+
+if Esp ~= nil then
+    Esp.Remove = true
+else
+    error("Error Cant find a valid Esp: ".. tostring(Esp))
+end
+
+return Remove
+end
+
 function SShubEsp:NewEsp(Item, Extra)
     local Esp = {
         Transparency = Extra.Transparency or false,
@@ -66,7 +80,8 @@ function SShubEsp:NewEsp(Item, Extra)
                     SShubEsp.Info[Esp.Index] = {
                         Enabled = true,
                         SubText = nil,
-                        Distance = nil
+                        Distance = nil,
+                        Remove = false
                     }
                     if Extra.SubText ~= nil then
                         SShubEsp.Info[Esp.Index].SubText = Extra.SubText
@@ -114,15 +129,7 @@ function SShubEsp:NewEsp(Item, Extra)
             local function InfoUpdate()
                 local Iu
                 Iu = RunService.RenderStepped:Connect(function()
-
-                    if RemoveBoolean then
-                        Iu:Disconnect()
-                        ItemName:Remove()
-                        SubText:Remove()
-                        DistanceText:Remove()
-                    end
-
-                    if not Esp.Folder:IsAncestorOf(Item) or Transparent(Item) then
+                    if not Esp.Folder:IsAncestorOf(Item) or Transparent(Item) or RemoveBoolean or SShubEsp.Info[Esp].Remove  then
                         Iu:Disconnect()
                         ItemName:Remove()
                         SubText:Remove()
