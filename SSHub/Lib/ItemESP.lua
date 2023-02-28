@@ -67,7 +67,7 @@ function SShubEsp:NewEsp(Item, Extra)
     local Esp = {
         Transparency = Extra.Transparency or false,
         SubText = tostring(Extra.SubText[1][Extra.SubText[2]]) or "N/A",
-        ExtraTextText = tostring(Extra.ExtraTextText[1][Extra.ExtraTextText[2]]) or "N/A",
+        ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]]) or "N/A",
         Color = Extra.Color or Color3.new(1, 2.5, 2.5),
         Folder = Extra.Folder or workspace,
         Name = tostring(Extra.Name)or Item.Name,
@@ -133,7 +133,7 @@ function SShubEsp:NewEsp(Item, Extra)
             SubText.Font = Esp.Font
             SubText.Size = 13
             SubText.Color = Color3.new(1, 2.5, 2.5)
-            SubText.Text = Esp.SubText
+            SubText.Text = tostring(Extra.SubText[1][Extra.SubText[2]])
             
             local ExtraText = Drawing.new("Text")
             ExtraText.Visible = false
@@ -142,7 +142,7 @@ function SShubEsp:NewEsp(Item, Extra)
             ExtraText.Font = Esp.Font
             ExtraText.Size = 13
             ExtraText.Color = Color3.new(1, 2.5, 2.5)
-            ExtraText.Text = tostring(Extra.ExtraTextText[1][Extra.ExtraTextText[2]])
+            ExtraText.Text = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
 
             local DistanceText = Drawing.new("Text")
             DistanceText.Visible = false
@@ -184,7 +184,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                             ItemName.Text = Esp.Name
                                             ItemName.Visible = true
                                             if SShubEsp.Info[Esp.Index].SubText and Esp.SubText ~= "N/A" then
-                                                SubText.Text = Esp.SubText
+                                                SubText.Text = tostring(Extra.SubText[1][Extra.SubText[2]])
                                                 SubText.Color = Esp.Color
                                                 ItemName.Color = Esp.Color
                                                 SubText.Visible = true
@@ -198,7 +198,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                                 DistanceText.Visible = false
                                             end
                                             if SShubEsp.Info[Esp.Index].ExtraText and Esp.ExtraText ~= "N/A" then
-                                                ExtraText.Text = tostring(Extra.ExtraTextText[1][Extra.ExtraTextText[2]])
+                                                ExtraText.Text = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
                                                 ExtraText.Visible = true
                                             else
                                                 ExtraText.Visible = false
@@ -213,7 +213,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                         ItemName.Text = Esp.Name
                                         ItemName.Visible = true
                                         if SShubEsp.Info[Esp.Index].SubText and Esp.SubText ~= "N/A" then
-                                            SubText.Text = Esp.SubText
+                                            SubText.Text = tostring(Extra.SubText[1][Extra.SubText[2]])
                                             SubText.Color = Esp.Color
                                             ItemName.Color = Esp.Color
                                             SubText.Visible = true
@@ -227,7 +227,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                             DistanceText.Visible = false
                                         end
                                         if SShubEsp.Info[Esp.Index].ExtraText and Esp.ExtraText ~= "N/A" then
-                                            ExtraText.Text = tostring(Extra.ExtraTextText[1][Extra.ExtraTextText[2]])
+                                            ExtraText.Text = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
                                             ExtraText.Visible = true
                                         else
                                             ExtraText.Visible = false
