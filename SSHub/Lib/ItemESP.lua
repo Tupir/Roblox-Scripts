@@ -67,7 +67,7 @@ function SShubEsp:NewEsp(Item, Extra)
     local Esp = {
         Transparency = Extra.Transparency or false,
         Rarity = tostring(Extra.Rarity) or "N/A",
-        ExtraText = tostring(Extra.ExtraText) or "N/A",
+        ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]]) or "N/A",
         Color = Extra.Color or Color3.new(1, 2.5, 2.5),
         Folder = Extra.Folder or workspace,
         Name = tostring(Extra.Name)or Item.Name,
@@ -142,7 +142,7 @@ function SShubEsp:NewEsp(Item, Extra)
             ExtraText.Font = Esp.Font
             ExtraText.Size = 13
             ExtraText.Color = Color3.new(1, 2.5, 2.5)
-            ExtraText.Text = tostring(Extra.ExtraText)
+            ExtraText.Text = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
 
             local DistanceText = Drawing.new("Text")
             DistanceText.Visible = false
@@ -197,8 +197,8 @@ function SShubEsp:NewEsp(Item, Extra)
                                             else
                                                 DistanceText.Visible = false
                                             end
-                                            if SShubEsp.Info[Esp.Index].ExtraText then
-                                                ExtraText.Text = tostring(Extra.ExtraText)
+                                            if SShubEsp.Info[Esp.Index].ExtraText and Esp.ExtraText ~= "N/A" then
+                                                ExtraText.Text = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
                                                 ExtraText.Visible = true
                                             else
                                                 ExtraText.Visible = false
@@ -226,8 +226,8 @@ function SShubEsp:NewEsp(Item, Extra)
                                         else
                                             DistanceText.Visible = false
                                         end
-                                        if SShubEsp.Info[Esp.Index].ExtraText then
-                                            ExtraText.Text = tostring(Extra.ExtraText)
+                                        if SShubEsp.Info[Esp.Index].ExtraText and Esp.ExtraText ~= "N/A" then
+                                            ExtraText.Text = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
                                             ExtraText.Visible = true
                                         else
                                             ExtraText.Visible = false
