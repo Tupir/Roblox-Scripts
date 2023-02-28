@@ -94,6 +94,9 @@ function SShubEsp:NewEsp(Item, Extra)
                         Distance = Esp.DistanceText,
                         Remove = false
                     }
+                elseif SShubEsp.Info[Esp.Index] ~= nil then
+                    SShubEsp.Info[Esp.Index].SubText = Extra.SubText
+                    SShubEsp.Info[Esp.Index].Distance = Extra.Distance
                 end
             end
 
@@ -158,9 +161,13 @@ function SShubEsp:NewEsp(Item, Extra)
                                             ItemName.Visible = true
                                             if SShubEsp.Info[Esp.Index].SubText then
                                                 SubText.Visible = true
+                                            else
+                                                SubText.Visible = false
                                             end
                                             if SShubEsp.Info[Esp.Index].Distance then
                                                 DistanceText.Visible = true
+                                            else
+                                                DistanceText.Visible = false
                                             end
                                         else
                                             ItemName.Visible = false
@@ -171,9 +178,13 @@ function SShubEsp:NewEsp(Item, Extra)
                                         ItemName.Visible = true
                                         if SShubEsp.Info[Esp.Index].SubText then
                                             SubText.Visible = true
+                                        else
+                                            SubText.Visible = false
                                         end
                                         if SShubEsp.Info[Esp.Index].Distance then
                                             DistanceText.Visible = true
+                                        else
+                                            DistanceText.Visible = false
                                         end
                                     end
                                     DistanceText.Text = "["..tostring(ItemDistance).."]"
