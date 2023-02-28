@@ -82,8 +82,8 @@ function SShubEsp:NewEsp(Item, Extra)
 
     function Esp:SetValue(ValueSet, Value)
         if Extra[ValueSet] ~= nil then
-            local Type = typeof(Extra[ValueSet])
-            if typeof(Value) == Type then
+            local Type = type(Extra[ValueSet])
+            if type(Value) == Type then
                 Extra[ValueSet] = Value
             end
         else
@@ -184,17 +184,21 @@ function SShubEsp:NewEsp(Item, Extra)
                         SubText:Remove()
                         DistanceText:Remove()
                     else
-                        if typeof(Extra.SubText) == "table" and Extra.SubText[1] ~= nil and Extra.SubText[2] ~= nil and typeof(Extra.SubText[1]) == "Instance" and typeof(Extra.SubText[2]) == "string" then
-                            Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]]) or "N/A"
-                        elseif typeof(Extra.SubText) == "string" then
-                            Esp.SubText = Extra.SubText or "N/A"
+                        if Extra.SubText ~= "N/A" then
+                            if type(Extra.SubText) == "table" and Extra.SubText[1] ~= nil and Extra.SubText[2] ~= nil and type(Extra.SubText[1]) == "Instance" and type(Extra.SubText[2]) == "string" then
+                                Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]])
+                            elseif type(Extra.SubText) == "string" then
+                                Esp.SubText = Extra.SubText
+                            end
                         end
-                        
-                        if typeof(Extra.ExtraText) == "table" and Extra.ExtraText[1] ~= nil and Extra.ExtraText[2] ~= nil and typeof(Extra.ExtraText[1]) == "Instance" and typeof(Extra.ExtraText[2]) == "string" then
-                            Esp.ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]]) or "N/A"
-                        elseif typeof(Extra.ExtraText) == "string" then
-                            Esp.ExtraText = Extra.ExtraText or "N/A"
+                        if Extra.ExtraText ~= "N/A" then
+                            if type(Extra.ExtraText) == "table" and Extra.ExtraText[1] ~= nil and Extra.ExtraText[2] ~= nil and type(Extra.ExtraText[1]) == "Instance" and type(Extra.ExtraText[2]) == "string" then
+                                Esp.ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
+                            elseif type(Extra.ExtraText) == "string" then
+                                Esp.ExtraText = Extra.ExtraText
+                            end
                         end
+
                         local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
                         if OnScreen then
                             ItemName.Position = Vector2.new(Vector.X, Vector.Y - 50)
