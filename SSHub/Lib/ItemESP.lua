@@ -198,8 +198,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                                 DistanceText.Visible = false
                                             end
                                             if SShubEsp.Info[Esp.Index].ExtraText then
-                                                print(Extra.ExtraText.Health)
-                                                ExtraText.Text = tostring(Extra.ExtraText)
+                                                ExtraText.Text = tostring(Extra.ExtraText["Health"])
                                                 ExtraText.Visible = true
                                             else
                                                 ExtraText.Visible = false
@@ -228,7 +227,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                             DistanceText.Visible = false
                                         end
                                         if SShubEsp.Info[Esp.Index].ExtraText then
-                                            ExtraText.Text = tostring(Extra.ExtraText)
+                                            ExtraText.Text = tostring(Extra.ExtraText["Health"])
                                             ExtraText.Visible = true
                                         else
                                             ExtraText.Visible = false
