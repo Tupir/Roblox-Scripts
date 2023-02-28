@@ -66,16 +66,16 @@ end
 function SShubEsp:NewEsp(Item, Extra)
     local Esp = {
         Transparency = Extra.Transparency or false,
-        Rarity = tostring(Extra.Rarity) or "N/A",
-        ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]]) or "N/A",
+        SubText = tostring(Extra.SubText[1][Extra.SubText[2]]) or "N/A",
+        ExtraTextText = tostring(Extra.ExtraTextText[1][Extra.ExtraTextText[2]]) or "N/A",
         Color = Extra.Color or Color3.new(1, 2.5, 2.5),
         Folder = Extra.Folder or workspace,
         Name = tostring(Extra.Name)or Item.Name,
         Font = Extra.Font or 2,
         Index = tostring(Extra.Index) or "Global",
-        SubText = Extra.SubText or false,
+        SubTextToggle = Extra.SubTextToggle or false,
         DistanceText = Extra.Distance or false,
-        Extra = Extra.Extra or false
+        ExtraTextToggle = Extra.ExtraTextToggle or false
     }
     local RemoveBoolean = false
     function Esp:Remove()
@@ -105,15 +105,15 @@ function SShubEsp:NewEsp(Item, Extra)
             if SShubEsp.Info[Esp.Index] == nil then
                 SShubEsp.Info[Esp.Index] = {
                     Enabled = true,
-                    SubText = Esp.SubText or true,
+                    SubText = Esp.SubTextToggle or true,
                     Distance = Esp.DistanceText,
-                    ExtraText = Esp.Extra or true,
+                    ExtraText = Esp.ExtraTextToggle or true,
                     Remove = false
                 }
             elseif SShubEsp.Info[Esp.Index] ~= nil then
-                SShubEsp.Info[Esp.Index].SubText = Esp.SubText
-                SShubEsp.Info[Esp.Index].ExtraText = Esp.Extra
-                SShubEsp.Info[Esp.Index].Distance = Esp.Distance
+                SShubEsp.Info[Esp.Index].SubText = Esp.SubTextToggle
+                SShubEsp.Info[Esp.Index].ExtraText = Esp.ExtraTextToggle
+                SShubEsp.Info[Esp.Index].Distance = Esp.DistanceText
             end
 
             --Drawing
@@ -133,7 +133,7 @@ function SShubEsp:NewEsp(Item, Extra)
             SubText.Font = Esp.Font
             SubText.Size = 13
             SubText.Color = Color3.new(1, 2.5, 2.5)
-            SubText.Text = Esp.Rarity
+            SubText.Text = Esp.SubText
             
             local ExtraText = Drawing.new("Text")
             ExtraText.Visible = false
@@ -142,7 +142,7 @@ function SShubEsp:NewEsp(Item, Extra)
             ExtraText.Font = Esp.Font
             ExtraText.Size = 13
             ExtraText.Color = Color3.new(1, 2.5, 2.5)
-            ExtraText.Text = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
+            ExtraText.Text = tostring(Extra.ExtraTextText[1][Extra.ExtraTextText[2]])
 
             local DistanceText = Drawing.new("Text")
             DistanceText.Visible = false
@@ -183,8 +183,8 @@ function SShubEsp:NewEsp(Item, Extra)
                                         if SShubEsp.Info[Esp.Index].Enabled == true then
                                             ItemName.Text = Esp.Name
                                             ItemName.Visible = true
-                                            if SShubEsp.Info[Esp.Index].SubText and Esp.Rarity ~= "N/A" then
-                                                SubText.Text = Esp.Rarity
+                                            if SShubEsp.Info[Esp.Index].SubText and Esp.SubText ~= "N/A" then
+                                                SubText.Text = Esp.SubText
                                                 SubText.Color = Esp.Color
                                                 ItemName.Color = Esp.Color
                                                 SubText.Visible = true
@@ -198,7 +198,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                                 DistanceText.Visible = false
                                             end
                                             if SShubEsp.Info[Esp.Index].ExtraText and Esp.ExtraText ~= "N/A" then
-                                                ExtraText.Text = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
+                                                ExtraText.Text = tostring(Extra.ExtraTextText[1][Extra.ExtraTextText[2]])
                                                 ExtraText.Visible = true
                                             else
                                                 ExtraText.Visible = false
@@ -212,8 +212,8 @@ function SShubEsp:NewEsp(Item, Extra)
                                     else
                                         ItemName.Text = Esp.Name
                                         ItemName.Visible = true
-                                        if SShubEsp.Info[Esp.Index].SubText and Esp.Rarity ~= "N/A" then
-                                            SubText.Text = Esp.Rarity
+                                        if SShubEsp.Info[Esp.Index].SubText and Esp.SubText ~= "N/A" then
+                                            SubText.Text = Esp.SubText
                                             SubText.Color = Esp.Color
                                             ItemName.Color = Esp.Color
                                             SubText.Visible = true
@@ -227,7 +227,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                             DistanceText.Visible = false
                                         end
                                         if SShubEsp.Info[Esp.Index].ExtraText and Esp.ExtraText ~= "N/A" then
-                                            ExtraText.Text = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
+                                            ExtraText.Text = tostring(Extra.ExtraTextText[1][Extra.ExtraTextText[2]])
                                             ExtraText.Visible = true
                                         else
                                             ExtraText.Visible = false
