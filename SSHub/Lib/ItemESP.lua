@@ -139,7 +139,7 @@ function SShubEsp:NewEsp(Item, Extra)
                     else
                         local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
                         if OnScreen then
-
+                            print(SShubEsp.Info[Esp.Index].SubText)
                             ItemName.Position = Vector2.new(Vector.X, Vector.Y - 50)
                             if SShubEsp.Info[Esp.Index].SubText then
                                 SubText.Position = Vector2.new(Vector.X, Vector.Y - 40)
