@@ -142,7 +142,7 @@ function SShubEsp:NewEsp(Item, Extra)
             ExtraText.Font = Esp.Font
             ExtraText.Size = 13
             ExtraText.Color = Color3.new(1, 2.5, 2.5)
-            ExtraText.Text = Extra.ExtraText.Health
+            ExtraText.Text = tostring(Extra.ExtraText.Health)
 
             local DistanceText = Drawing.new("Text")
             DistanceText.Visible = false
@@ -198,7 +198,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                                 DistanceText.Visible = false
                                             end
                                             if SShubEsp.Info[Esp.Index].ExtraText then
-                                                ExtraText.Text = Extra.ExtraText.Health
+                                                ExtraText.Text = tostring(Extra.ExtraText.Health)
                                                 ExtraText.Visible = true
                                             else
                                                 ExtraText.Visible = false
@@ -227,7 +227,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                             DistanceText.Visible = false
                                         end
                                         if SShubEsp.Info[Esp.Index].ExtraText then
-                                            ExtraText.Text = Extra.ExtraText.Health
+                                            ExtraText.Text = tostring(Extra.ExtraText.Health)
                                             ExtraText.Visible = true
                                         else
                                             ExtraText.Visible = false
