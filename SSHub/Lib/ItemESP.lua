@@ -29,9 +29,9 @@ function SShubEsp:NewToggle(Toggle, Value)
         if SShubEsp.Info[Toggle] == nil then
             SShubEsp.Info[Toggle] = {
                 Enabled = Value or true,
-                SubText = true,
+                SubText = false,
                 Distance = false,
-                ExtraText = true,
+                ExtraText = false,
                 Remove = false
             }
         else
@@ -127,9 +127,9 @@ function SShubEsp:NewEsp(Item, Extra)
             if SShubEsp.Info[Esp.Index] == nil then
                 SShubEsp.Info[Esp.Index] = {
                     Enabled = true,
-                    SubText = Esp.SubTextToggle or true,
+                    SubText = Esp.SubTextToggle,
                     Distance = Esp.DistanceText,
-                    ExtraText = Esp.ExtraTextToggle or true,
+                    ExtraText = Esp.ExtraTextToggle,
                     Remove = false
                 }
             elseif SShubEsp.Info[Esp.Index] ~= nil then
