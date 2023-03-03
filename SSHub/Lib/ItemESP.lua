@@ -268,6 +268,13 @@ function SShubEsp:NewEsp(Item, Extra)
                                             SubText.Visible = false
                                             ExtraText.Visible = false
                                             DistanceText.Visible = false
+                                            if Esp.RemoveOnToggle then
+                                                Iu:Disconnect()
+                                                ItemName:Remove()
+                                                ExtraText:Remove()
+                                                SubText:Remove()
+                                                DistanceText:Remove()
+                                            end
                                         end
                                     else
                                         ItemName.Text = Esp.Name
