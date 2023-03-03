@@ -238,10 +238,14 @@ function SShubEsp:NewEsp(Item, Extra)
                                         if SShubEsp.Info[Esp.Index].Enabled == true then
                                             ItemName.Text = Esp.Name
                                             ItemName.Visible = true
-                                            if SShubEsp.Info[Esp.Index].SubText and Esp.SubText ~= "N/A" then
-                                                SubText.Text = Esp.SubText
+                                            if ItemName.Color ~= Esp.Color then
+                                                ExtraText.Color = Esp.Color
+                                                DistanceText.Color = Esp.Color
                                                 SubText.Color = Esp.Color
                                                 ItemName.Color = Esp.Color
+                                            end
+                                            if SShubEsp.Info[Esp.Index].SubText and Esp.SubText ~= "N/A" then
+                                                SubText.Text = Esp.SubText
                                                 SubText.Visible = true
                                             else
                                                 SubText.Visible = false
