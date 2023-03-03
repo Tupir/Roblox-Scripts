@@ -137,7 +137,7 @@ function SShubEsp:NewEsp(Item, Extra)
                 SShubEsp.Info[Esp.Index].Distance = Esp.DistanceText
             end
 
-            if Extra.SubText ~= "N/A" then
+            if Esp.SubText ~= "N/A" then
                 if type(Extra.SubText) == "table" and Extra.SubText[1] ~= nil or Extra.SubText[2] ~= nil then
                     Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]])
                 elseif type(Extra.SubText) == "string" then
@@ -146,7 +146,7 @@ function SShubEsp:NewEsp(Item, Extra)
                     error("Missing or Invalid value: Subtext")
                 end
             end
-            if Extra.ExtraText ~= "N/A" then
+            if Esp.ExtraText ~= "N/A" then
                 if type(Extra.ExtraText) == "table" and Extra.ExtraText[1] ~= nil or Extra.ExtraText[2] ~= nil then
                     Esp.ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
                 elseif type(Extra.ExtraText) == "string" then
@@ -203,14 +203,14 @@ function SShubEsp:NewEsp(Item, Extra)
                         SubText:Remove()
                         DistanceText:Remove()
                     else
-                        if Extra.SubText ~= "N/A" then
+                        if Esp.SubText ~= "N/A" then
                             if type(Extra.SubText) == "table" and Extra.SubText[1] ~= nil or Extra.SubText[2] ~= nil then
                                 Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]])
                             elseif type(Extra.SubText) == "string" then
                                 Esp.SubText = Extra.SubText
                             end
                         end
-                        if Extra.ExtraText ~= "N/A" then
+                        if Esp.ExtraText ~= "N/A" then
                             if type(Extra.ExtraText) == "table" and Extra.ExtraText[1] ~= nil or Extra.ExtraText[2] ~= nil then
                                 Esp.ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
                             elseif type(Extra.ExtraText) == "string" then
