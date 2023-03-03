@@ -142,7 +142,7 @@ function SShubEsp:NewEsp(Item, Extra)
                 if type(Extra.SubText) == "table" and #Extra.SubText == 2 and Extra.SubText[1] ~= nil and Extra.SubText[2] ~= nil then
                     Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]])
                 elseif type(Extra.SubText) == "table" and #Extra.SubText == 3 and Extra.SubText[1] ~= nil and Extra.SubText[2] ~= nil and Extra.SubText[3] ~= nil then
-                    Esp.SubText = Extra.SubText[1]..tostring(Extra.SubText[2][Extra.SubText[2]])
+                    Esp.SubText = Extra.SubText[1]..tostring(Extra.SubText[2][Extra.SubText[3]])
                 elseif type(Extra.SubText) == "string" then
                     Esp.SubText = Extra.SubText
                 else
@@ -153,7 +153,7 @@ function SShubEsp:NewEsp(Item, Extra)
                 if type(Extra.ExtraText) == "table" and #Extra.ExtraText == 2 and Extra.ExtraText[1] ~= nil and Extra.ExtraText[2] ~= nil then
                     Esp.ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
                 elseif type(Extra.ExtraText) == "table" and #Extra.ExtraText == 3 and Extra.ExtraText[1] ~= nil and Extra.ExtraText[2] ~= nil and Extra.ExtraText[3] ~= nil then
-                    Esp.ExtraText = Extra.ExtraText[1]..tostring(Extra.ExtraText[2][Extra.ExtraText[2]])    
+                    Esp.ExtraText = Extra.ExtraText[1]..tostring(Extra.ExtraText[2][Extra.ExtraText[3]])    
                 elseif type(Extra.ExtraText) == "string" then
                     Esp.ExtraText = Extra.ExtraText
                 else
@@ -212,7 +212,7 @@ function SShubEsp:NewEsp(Item, Extra)
                             if type(Extra.SubText) == "table" and #Extra.SubText == 2 and Extra.SubText[1] ~= nil and Extra.SubText[2] ~= nil then
                                 Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]])
                             elseif type(Extra.SubText) == "table" and #Extra.SubText == 3 and Extra.SubText[1] ~= nil and Extra.SubText[2] ~= nil and Extra.SubText[3] ~= nil then
-                                Esp.SubText = Extra.SubText[1]..tostring(Extra.SubText[2][Extra.SubText[2]])
+                                Esp.SubText = Extra.SubText[1]..tostring(Extra.SubText[2][Extra.SubText[3]])
                             elseif type(Extra.SubText) == "string" then
                                 Esp.SubText = Extra.SubText
                             end
@@ -221,7 +221,7 @@ function SShubEsp:NewEsp(Item, Extra)
                             if type(Extra.ExtraText) == "table" and #Extra.ExtraText == 2 and Extra.ExtraText[1] ~= nil and Extra.ExtraText[2] ~= nil then
                                 Esp.ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
                             elseif type(Extra.ExtraText) == "table" and #Extra.ExtraText == 3 and Extra.ExtraText[1] ~= nil and Extra.ExtraText[2] ~= nil and Extra.ExtraText[3] ~= nil then
-                                Esp.ExtraText = Extra.ExtraText[1]..tostring(Extra.ExtraText[2][Extra.ExtraText[2]])
+                                Esp.ExtraText = Extra.ExtraText[1]..tostring(Extra.ExtraText[2][Extra.ExtraText[3]])
                             elseif type(Extra.ExtraText) == "string" then
                                 Esp.ExtraText = Extra.ExtraText
                             end
