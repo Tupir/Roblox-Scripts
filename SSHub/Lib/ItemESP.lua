@@ -76,7 +76,8 @@ function SShubEsp:NewEsp(Item, Extra)
         Index = tostring(Extra.Index) or "Global",
         SubTextToggle = Extra.SubTextToggle or false,
         DistanceText = Extra.Distance or false,
-        ExtraTextToggle = Extra.ExtraTextToggle or false
+        ExtraTextToggle = Extra.ExtraTextToggle or false,
+        RemoveOnToggle = Extra.RemoveOnToggle or false
     }
     local RemoveBoolean = false
 
@@ -303,6 +304,13 @@ function SShubEsp:NewEsp(Item, Extra)
                                 SubText.Visible = false
                                 ExtraText.Visible = false
                                 DistanceText.Visible = false
+                                if Esp.RemoveOnToggle then
+                                    Iu:Disconnect()
+                                    ItemName:Remove()
+                                    ExtraText:Remove()
+                                    SubText:Remove()
+                                    DistanceText:Remove()
+                                end
                             end
                         else
                             ItemName.Visible = false
