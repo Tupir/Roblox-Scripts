@@ -229,15 +229,27 @@ function SShubEsp:NewEsp(Item, Extra)
 
                         local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
                         if OnScreen then
-                            ItemName.Position = Vector2.new(Vector.X, Vector.Y - 50)
+                            ItemName.Position = Vector2.new(Vector.X, Vector.Y - 40)
                             if SShubEsp.Info[Esp.Index].SubText then
-                                SubText.Position = Vector2.new(Vector.X, Vector.Y - 40)
+                                SubText.Position = Vector2.new(Vector.X, Vector.Y - 30)
                             end
                             if SShubEsp.Info[Esp.Index].ExtraText then
-                                ExtraText.Position = Vector2.new(Vector.X, Vector.Y - 30)
+                                if not SShubEsp.Info[Esp.Index].SubText then
+                                    ExtraText.Position = Vector2.new(Vector.X, Vector.Y - 30)
+                                else
+                                    ExtraText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+                                end
                             end
                             if SShubEsp.Info[Esp.Index].Distance then
-                                DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+                                if not SShubEsp.Info[Esp.Index].SubText and not SShubEsp.Info[Esp.Index].ExtraText then
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 30)
+                                elseif not SShubEsp.Info[Esp.Index].SubText and SShubEsp.Info[Esp.Index].ExtraText then
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+                                elseif SShubEsp.Info[Esp.Index].SubText and not SShubEsp.Info[Esp.Index].ExtraText then
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+                                elseif SShubEsp.Info[Esp.Index].SubText and SShubEsp.Info[Esp.Index].ExtraText then
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
+                                end
                             end
 
                             local ItemDistance = math.ceil((Item.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
