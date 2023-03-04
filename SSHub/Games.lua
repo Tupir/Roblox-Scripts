@@ -35,6 +35,10 @@ GameSupport = {
 		Name = "BloxFruits - Third Sea",
 		Script = "BloxFruit"
 	},
+	["6606578096"] = {
+		Name = "TRFR April Fools 2021",
+		Script = "TRFR"
+	},
   }
   
 return GameSupport
