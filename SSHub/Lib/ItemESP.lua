@@ -251,8 +251,8 @@ function SShubEsp:NewEsp(Item, Extra)
                                     DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
                                 end
                             end
-                            local ItemDistance = 1
-                            if Plr:FindFirstChild("Character") and Plr.Character:FindFirstChild("HumanoidRootPart") then
+                            local ItemDistance = 0
+                            if Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
                                 ItemDistance = math.ceil((Item.Position - Plr.Character:FindFirstChild("HumanoidRootPart").Position).magnitude)
                             end
                             if SShubEsp.Enabled then
