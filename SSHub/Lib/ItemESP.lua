@@ -1,7 +1,7 @@
 -- #region Services
 local RunService = game:GetService("RunService")
 local Cam = workspace.CurrentCamera;
-local Player = game:GetService("Players").LocalPlayer
+local Plr = game:GetService("Players").LocalPlayer
 --#endregion
 
 local function TableRemove(Table, Item)
@@ -251,8 +251,10 @@ function SShubEsp:NewEsp(Item, Extra)
                                     DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
                                 end
                             end
-
-                            local ItemDistance = math.ceil((Item.Position - game.Players.LocalPlayer.Character:WaitForChild("HumanoidRootPart").Position).magnitude)
+                            local ItemDistance
+                            if Plr:FindFirstChild("Character") and Plr.Character:FindFirstChild("HumanoidRootPart") then
+                                ItemDistance = math.ceil((Item.Position - Plr.Character:FindFirstChild("HumanoidRootPart").Position).magnitude)
+                            end
                             if SShubEsp.Enabled then
                                 if ItemDistance < SShubEsp.MaxDistance then
                                     if Esp.Index ~= "Global" then
@@ -273,7 +275,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                             end
                                             if SShubEsp.Info[Esp.Index].Distance then
                                                 DistanceText.Visible = true
-                                                DistanceText.Text = "["..tostring(ItemDistance).."]"
+                                                DistanceText.Text = "["..tostring(ItemDistance).."m]"
                                             else
                                                 DistanceText.Visible = false
                                             end
