@@ -36,6 +36,7 @@ end
 function SShubEsp:RemoveEsp(Esp)
     if SShubEsp.Info[Esp] ~= nil then
         SShubEsp.Info[Esp].Remove = true
+        SShubEsp.Info[Esp].Remove = false
     else
         error("Error Cant find a valid Esp: ".. tostring(Esp))
     end
@@ -44,7 +45,6 @@ end
 function SShubEsp:RemoveToggle(Esp)
     if SShubEsp.Info[Esp] ~= nil then
         SShubEsp.Info[Esp].Remove = true
-        task.wait(1)
         SShubEsp.Info[Esp] = nil
     else
         error("Error Cant find a valid Toggle: ".. tostring(Esp))
@@ -113,7 +113,7 @@ function SShubEsp:NewEsp(Item, Extra)
             if SShubEsp.Info[Esp.Index] == nil and Esp.Index ~= nil or Esp.Index ~= "nil" then
                 SShubEsp.Info[Esp.Index] = {
                     Enabled = true,
-                    Color = Color3.new(1, 2.5, 2.5),
+                    Color = Esp.Color or Color3.new(1, 2.5, 2.5),
                     SubText = Esp.SubTextToggle,
                     Distance = Esp.DistanceText,
                     ExtraText = Esp.ExtraTextToggle,
@@ -209,8 +209,7 @@ function SShubEsp:NewEsp(Item, Extra)
                         DistanceText:Remove()
                         if Highlight ~= nil then
                             Highlight:Remove()
-                        end 
-                        SShubEsp.Info[Esp.Index].Remove = false
+                        end
                     else
                         Esp.Color = SShubEsp.Info[Esp.Index].Color
                         if Extra.SubText ~= nil then
