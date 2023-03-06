@@ -209,7 +209,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                             if type(v) == "table" then
                                                 if v.Enabled then
                                                     TextCounts=TextCounts+1
-                                                    print("Posisioning "..v.Text.Position)
+                                                    print("Positioning "..v.Text.Text, tostring(v.Text.Position))
                                                     v.Text.Position = Vector2.new(Vector.X, Vector.Y + (tonumber(TextCounts..0)))
                                                 end
                                             end
