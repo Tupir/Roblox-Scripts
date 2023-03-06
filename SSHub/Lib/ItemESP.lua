@@ -210,6 +210,9 @@ function SShubEsp:NewEsp(Item, Extra)
                         if Highlight ~= nil then
                             Highlight:Remove()
                         end
+                        if SShubEsp.Info[Esp.Index].Remove then
+                            SShubEsp.Info[Esp.Index] = nil
+                        end
                     else
                         Esp.Color = SShubEsp.Info[Esp.Index].Color
                         if Extra.SubText ~= nil then
