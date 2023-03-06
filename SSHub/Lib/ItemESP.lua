@@ -70,6 +70,7 @@ function SShubEsp:NewEsp(Item, Extra)
     local Esp = {
         Transparency = Extra.Transparency or false,
         Highlight = Extra.Highlight or false,
+        HighlightFolder = Extra.HighlightFolder or Item,
         Color = Extra.Color or Color3.new(1, 2.5, 2.5),
         SubText = "N/A",
         ExtraText = "N/A",
@@ -168,7 +169,7 @@ function SShubEsp:NewEsp(Item, Extra)
                 end
             end
             --Drawing
-            local Highlight = Instance.new("Highlight", Item)
+            local Highlight = Instance.new("Highlight", Esp.HighlightFolder)
             Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
             Highlight.Enabled = false
             Highlight.FillColor = Esp.Color
