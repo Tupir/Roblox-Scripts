@@ -243,9 +243,9 @@ function SShubEsp:NewEsp(Item, Extra)
                         local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
 
                         if OnScreen then
-                            ItemName.Position = Vector2.new(Vector.X, Vector.Y + 40)
+                            ItemName.Position = Vector2.new(Vector.X, Vector.Y + 10) --40
                             if SShubEsp.Info[Esp.Index].SubText then
-                                SubText.Position = Vector2.new(Vector.X, Vector.Y + 30)
+                                SubText.Position = Vector2.new(Vector.X, Vector.Y + 20)
                             end
                             if SShubEsp.Info[Esp.Index].ExtraText then
                                 if not SShubEsp.Info[Esp.Index].SubText then
@@ -256,13 +256,13 @@ function SShubEsp:NewEsp(Item, Extra)
                             end
                             if SShubEsp.Info[Esp.Index].Distance then
                                 if not SShubEsp.Info[Esp.Index].SubText and not SShubEsp.Info[Esp.Index].ExtraText then
-                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 30)
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 20)
                                 elseif not SShubEsp.Info[Esp.Index].SubText and SShubEsp.Info[Esp.Index].ExtraText then
-                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 20)
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 30)
                                 elseif SShubEsp.Info[Esp.Index].SubText and not SShubEsp.Info[Esp.Index].ExtraText then
-                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 20)
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 30) 
                                 elseif SShubEsp.Info[Esp.Index].SubText and SShubEsp.Info[Esp.Index].ExtraText then
-                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 10)
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 40) --10
                                 end
                             end
                             local ItemDistance = 0
