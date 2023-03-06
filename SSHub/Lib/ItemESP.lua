@@ -32,31 +32,61 @@ function SShubEsp:NewToggle(Toggle, Value)
     end
 end
 
-function SShubEsp:RemoveToggle(Esp)
-    local Remove = {}
-    
+
+function SShubEsp:RemoveEsp(Esp)
+local Remove = {}
+
     if SShubEsp.Info[Esp] ~= nil then
         SShubEsp.Info[Esp].Remove = true
+        task.wait(0.1)
+        SShubEsp.Info[Esp].Remove = false
+    else
+        error("Error Cant find a valid Esp: ".. tostring(Esp))
+    end
+
+return Remove
+end
+
+function SShubEsp:RemoveToggle(Esp)
+local Remove = {}
+    
+    if SShubEsp.Info[Esp] ~= nil then
+        SShubEsp:RemoveEsp(Esp)
         SShubEsp.Info[Esp] = nil
     else
         error("Error Cant find a valid Toggle: ".. tostring(Esp))
     end
 
-    return Remove
-end
-
-function SShubEsp:RemoveEsp(Esp)
-local Remove = {}
-
-if SShubEsp.Info[Esp] ~= nil then
-    SShubEsp.Info[Esp].Remove = true
-    task.wait(0.1)
-    SShubEsp.Info[Esp].Remove = false
-else
-    error("Error Cant find a valid Esp: ".. tostring(Esp))
-end
-
 return Remove
+end
+
+function SShubEsp:SetValue(Esp, ValueSet, Value)
+    local SetValue = {}
+    if SShubEsp.Info[Esp] ~= nil then
+        local Type = type(SShubEsp.Info[Esp][ValueSet])
+        if type(Value) == Type then
+            SShubEsp.Info[Esp][ValueSet] = Value
+        else
+            error("Invalid index SetValue: ".. ValueSet)
+        end
+    else
+        error("Attempt to call a nil value in SetValue"..Esp)
+    end
+    return SetValue
+end
+
+function SShubEsp:GetValue(Index, Value)
+    local GetValue = {}
+    if SShubEsp.Info[Index] ~= nil then
+        if SShubEsp.Info[Index][Value] ~= nil then
+            return SShubEsp.Info[Index][Value]
+        else
+            error("Attempt to index nil value in GetValue"..Value)
+        end
+    else
+        error("Attempt to index nil in GetValue"..Index)
+    end
+    return GetValue
 end
 
 function SShubEsp:NewEsp(Item, Extra)
@@ -77,31 +107,6 @@ function SShubEsp:NewEsp(Item, Extra)
         RemoveOnToggle = Extra.RemoveOnToggle or false
     }
     local RemoveBoolean = false
-
-    function Esp:SetValue(ValueSet, Value)
-        if Extra[ValueSet] ~= nil then
-            local Type = type(Extra[ValueSet])
-            if type(Value) == Type then
-                Extra[ValueSet] = Value
-            end
-        else
-            error("Invalid index SetValue: "..ValueSet)
-        end
-    end
-
-    function Esp:GetValue(Value)
-        if Esp[Value] ~= nil then
-            return Esp[Value]
-        else
-            error("Invalid index GetValue: "..Value)
-        end
-    end
-
-    function Esp:Remove()
-        RemoveBoolean = true
-        task.wait(0.1)
-        RemoveBoolean = false
-    end
 
     if Item ~= nil then
         if table.find(Class, Item.ClassName) then
@@ -206,7 +211,7 @@ function SShubEsp:NewEsp(Item, Extra)
             DistanceText.Text = "Distance"
 
             local ItemDistance = 0
-            
+
             local function InfoUpdate()
                 local Iu
                 Iu = RunService.RenderStepped:Connect(function()
