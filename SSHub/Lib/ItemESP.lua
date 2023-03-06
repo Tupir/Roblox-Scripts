@@ -44,6 +44,8 @@ end
 function SShubEsp:RemoveToggle(Esp)
     if SShubEsp.Info[Esp] ~= nil then
         SShubEsp.Info[Esp].Remove = true
+        task.wait(0.5)
+        SShubEsp.Info[Esp] = nil
     else
         error("Error Cant find a valid Toggle: ".. tostring(Esp))
     end
@@ -210,7 +212,7 @@ function SShubEsp:NewEsp(Item, Extra)
                         end 
                         SShubEsp.Info[Esp.Index].Remove = false
                     else
-                        --Esp.Color = SShubEsp.Info[Esp.Index].Color
+                        Esp.Color = SShubEsp.Info[Esp.Index].Color
                         if Extra.SubText ~= nil then
                             if type(Extra.SubText) == "table" and #Extra.SubText == 2 and Extra.SubText[1] ~= nil and Extra.SubText[2] ~= nil then
                                 Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]])
