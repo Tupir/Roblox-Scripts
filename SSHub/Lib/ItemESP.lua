@@ -107,8 +107,8 @@ function SShubEsp:NewEsp(Item, Extra)
         RemoveBoolean = true
     end
 
-    if table.find(Class, Item.ClassName) then
-        if Esp.Folder ~= nil then
+    if Item ~= nil then
+        if table.find(Class, Item.ClassName) then
             --Functions
             local function Transparent(v)
                 if Esp.Transparency then
@@ -383,10 +383,10 @@ function SShubEsp:NewEsp(Item, Extra)
             end
             coroutine.wrap(InfoUpdate)()
         else
-            error("Please enter the folder/instance were the items are located")
+            error("Invalid Instace: "..Item.Name.."/"..Esp.Name.." - "..Item.ClassName.."\nValid Instances for ESP: "..table.concat(Class, ", "))
         end
     else
-        error("Invalid Instace: "..Item.Name.."/"..Esp.Name.." - "..Item.ClassName.."\nValid Instances for ESP: "..table.concat(Class, ", "))
+        error("nil Instance")
     end
     return Esp
 end
