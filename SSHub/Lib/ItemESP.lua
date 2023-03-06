@@ -205,6 +205,8 @@ function SShubEsp:NewEsp(Item, Extra)
             DistanceText.Color = Esp.Color
             DistanceText.Text = "Distance"
 
+            local ItemDistance = 0
+            
             local function InfoUpdate()
                 local Iu
                 Iu = RunService.RenderStepped:Connect(function()
@@ -239,86 +241,42 @@ function SShubEsp:NewEsp(Item, Extra)
                         local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
 
                         if OnScreen then
-                            ItemName.Position = Vector2.new(Vector.X, Vector.Y + 10) --40
+                            ItemName.Position = Vector2.new(Vector.X, Vector.Y + 30)
                             if SShubEsp.Info[Esp.Index].SubText then
-                                SubText.Position = Vector2.new(Vector.X, Vector.Y + 20)
+                                SubText.Position = Vector2.new(Vector.X, Vector.Y + 40)
                             end
                             if SShubEsp.Info[Esp.Index].ExtraText then
                                 if not SShubEsp.Info[Esp.Index].SubText then
-                                    ExtraText.Position = Vector2.new(Vector.X, Vector.Y + 30)
+                                    ExtraText.Position = Vector2.new(Vector.X, Vector.Y + 40)
                                 else
-                                    ExtraText.Position = Vector2.new(Vector.X, Vector.Y + 20)
+                                    ExtraText.Position = Vector2.new(Vector.X, Vector.Y + 50)
                                 end
                             end
                             if SShubEsp.Info[Esp.Index].Distance then
                                 if not SShubEsp.Info[Esp.Index].SubText and not SShubEsp.Info[Esp.Index].ExtraText then
-                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 20)
-                                elseif not SShubEsp.Info[Esp.Index].SubText and SShubEsp.Info[Esp.Index].ExtraText then
-                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 30)
-                                elseif SShubEsp.Info[Esp.Index].SubText and not SShubEsp.Info[Esp.Index].ExtraText then
-                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 30) 
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 40)
+                                elseif SShubEsp.Info[Esp.Index].SubText or SShubEsp.Info[Esp.Index].ExtraText then
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 50)
                                 elseif SShubEsp.Info[Esp.Index].SubText and SShubEsp.Info[Esp.Index].ExtraText then
-                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 40) --10
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 60)
                                 end
                             end
-                            local ItemDistance = 0
-                            if Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
-                                ItemDistance = math.ceil((Item.Position - Plr.Character:FindFirstChild("HumanoidRootPart").Position).magnitude)
-                            end
                             if SShubEsp.Enabled then
-                                if ItemDistance < SShubEsp.MaxDistance then
-                                    if Esp.Index ~= "Global" then
-                                        if SShubEsp.Info[Esp.Index].Enabled == true then
-                                            ItemName.Text = Esp.Name
-                                            ItemName.Visible = true
-                                            if ItemName.Color ~= Esp.Color then
-                                                ExtraText.Color = Esp.Color
-                                                DistanceText.Color = Esp.Color
-                                                SubText.Color = Esp.Color
-                                                Highlight.FillColor = Esp.Color
-                                                ItemName.Color = Esp.Color
-                                            end
-                                            if SShubEsp.Info[Esp.Index].Highlight then
-                                                Highlight.Enabled = true
-                                            else
-                                                Highlight.Enabled = false
-                                            end
-                                            if SShubEsp.Info[Esp.Index].SubText and Esp.SubText ~= "N/A" then
-                                                SubText.Text = Esp.SubText
-                                                SubText.Visible = true
-                                            else
-                                                SubText.Visible = false
-                                            end
-                                            if SShubEsp.Info[Esp.Index].Distance then
-                                                DistanceText.Visible = true
-                                                DistanceText.Text = "["..tostring(ItemDistance).."m]"
-                                            else
-                                                DistanceText.Visible = false
-                                            end
-                                            if SShubEsp.Info[Esp.Index].ExtraText and Esp.ExtraText ~= "N/A" then
-                                                ExtraText.Text = Esp.ExtraText
-                                                ExtraText.Visible = true
-                                            else
-                                                ExtraText.Visible = false
-                                            end
-                                        else
-                                            ItemName.Visible = false
-                                            SubText.Visible = false
-                                            ExtraText.Visible = false
-                                            DistanceText.Visible = false
-                                            Highlight.Enabled = false
-                                            if Esp.RemoveOnToggle then
-                                                Iu:Disconnect()
-                                                ItemName:Remove()
-                                                ExtraText:Remove()
-                                                SubText:Remove()
-                                                Highlight:Remove()
-                                                DistanceText:Remove()
-                                            end
-                                        end
-                                    else
+                                if SShubEsp.Info[Esp.Index].Enabled == true then
+                                    if Plr.Character and Plr.Character:FindFirstChild("HumanoidRootPart") then
+                                        ItemDistance = math.ceil((Item.Position - Plr.Character:FindFirstChild("HumanoidRootPart").Position).magnitude)
+                                    end
+                                    if ItemDistance < SShubEsp.MaxDistance then
                                         ItemName.Text = Esp.Name
                                         ItemName.Visible = true
+
+                                        if ItemName.Color ~= Esp.Color then
+                                            ExtraText.Color = Esp.Color
+                                            DistanceText.Color = Esp.Color
+                                            SubText.Color = Esp.Color
+                                            Highlight.FillColor = Esp.Color
+                                            ItemName.Color = Esp.Color
+                                        end
                                         if SShubEsp.Info[Esp.Index].Highlight then
                                             Highlight.Enabled = true
                                         else
@@ -326,15 +284,13 @@ function SShubEsp:NewEsp(Item, Extra)
                                         end
                                         if SShubEsp.Info[Esp.Index].SubText and Esp.SubText ~= "N/A" then
                                             SubText.Text = Esp.SubText
-                                            SubText.Color = Esp.Color
-                                            ItemName.Color = Esp.Color
                                             SubText.Visible = true
                                         else
                                             SubText.Visible = false
                                         end
                                         if SShubEsp.Info[Esp.Index].Distance then
                                             DistanceText.Visible = true
-                                            DistanceText.Text = "["..tostring(ItemDistance).."]"
+                                            DistanceText.Text = "["..tostring(ItemDistance).."m]"
                                         else
                                             DistanceText.Visible = false
                                         end
@@ -344,13 +300,27 @@ function SShubEsp:NewEsp(Item, Extra)
                                         else
                                             ExtraText.Visible = false
                                         end
+                                    else
+                                        ItemName.Visible = false
+                                        SubText.Visible = false
+                                        ExtraText.Visible = false
+                                        DistanceText.Visible = false
+                                        Highlight.Enabled = false
                                     end
                                 else
                                     ItemName.Visible = false
                                     SubText.Visible = false
                                     ExtraText.Visible = false
-                                    Highlight.Enabled = false
                                     DistanceText.Visible = false
+                                    Highlight.Enabled = false
+                                    if Esp.RemoveOnToggle then
+                                        Iu:Disconnect()
+                                        ItemName:Remove()
+                                        ExtraText:Remove()
+                                        SubText:Remove()
+                                        Highlight:Remove()
+                                        DistanceText:Remove()
+                                    end
                                 end
                             else
                                 ItemName.Visible = false
