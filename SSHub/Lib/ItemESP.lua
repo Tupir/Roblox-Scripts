@@ -21,7 +21,6 @@ local SShubEsp = {
 local Class = {
     "MeshPart",
     "UnionOperation",
-    "Model",
     "Part"
 }
 function SShubEsp:NewToggle(Toggle, Value)
