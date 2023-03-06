@@ -34,34 +34,23 @@ end
 
 
 function SShubEsp:RemoveEsp(Esp)
-local Remove = {}
-
     if SShubEsp.Info[Esp] ~= nil then
         SShubEsp.Info[Esp].Remove = true
-        task.wait(0.1)
-        SShubEsp.Info[Esp].Remove = false
     else
         error("Error Cant find a valid Esp: ".. tostring(Esp))
     end
-
-return Remove
 end
 
 function SShubEsp:RemoveToggle(Esp)
-local Remove = {}
-    
     if SShubEsp.Info[Esp] ~= nil then
-        SShubEsp:RemoveEsp(Esp)
+        SShubEsp.Info[Esp].Remove = true
         SShubEsp.Info[Esp] = nil
     else
         error("Error Cant find a valid Toggle: ".. tostring(Esp))
     end
-
-return Remove
 end
 
 function SShubEsp:SetValue(Esp, ValueSet, Value)
-    local SetValue = {}
     if SShubEsp.Info[Esp] ~= nil then
         local Type = type(SShubEsp.Info[Esp][ValueSet])
         if type(Value) == Type then
@@ -72,11 +61,9 @@ function SShubEsp:SetValue(Esp, ValueSet, Value)
     else
         error("Attempt to call a nil value in SetValue"..Esp)
     end
-    return SetValue
 end
 
 function SShubEsp:GetValue(Index, Value)
-    local GetValue = {}
     if SShubEsp.Info[Index] ~= nil then
         if SShubEsp.Info[Index][Value] ~= nil then
             return SShubEsp.Info[Index][Value]
@@ -86,7 +73,6 @@ function SShubEsp:GetValue(Index, Value)
     else
         error("Attempt to index nil in GetValue"..Index)
     end
-    return GetValue
 end
 
 function SShubEsp:NewEsp(Item, Extra)
@@ -106,7 +92,6 @@ function SShubEsp:NewEsp(Item, Extra)
         ExtraTextToggle = Extra.ExtraTextToggle or false,
         RemoveOnToggle = Extra.RemoveOnToggle or false
     }
-    local RemoveBoolean = false
 
     if Item ~= nil then
         if table.find(Class, Item.ClassName) then
@@ -215,13 +200,14 @@ function SShubEsp:NewEsp(Item, Extra)
             local function InfoUpdate()
                 local Iu
                 Iu = RunService.RenderStepped:Connect(function()
-                    if not Esp.Folder:IsAncestorOf(Item) or Transparent(Item) or RemoveBoolean or SShubEsp.Info[Esp.Index].Remove then
+                    if not Esp.Folder:IsAncestorOf(Item) or Transparent(Item) or SShubEsp.Info[Esp.Index].Remove then
                         Iu:Disconnect()
                         ItemName:Remove()
                         ExtraText:Remove()
                         SubText:Remove()
                         Highlight:Remove()
                         DistanceText:Remove()
+                        SShubEsp.Info[Esp.Index].Remove = false
                     else
                         Esp.Color = SShubEsp.Info[Esp.Index].Color
                         if Extra.SubText ~= nil then
