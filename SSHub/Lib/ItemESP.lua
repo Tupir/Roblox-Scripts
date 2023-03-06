@@ -256,13 +256,13 @@ function SShubEsp:NewEsp(Item, Extra)
                             end
                             if SShubEsp.Info[Esp.Index].Distance then
                                 if not SShubEsp.Info[Esp.Index].SubText and not SShubEsp.Info[Esp.Index].ExtraText then
-                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 30)
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 30)
                                 elseif not SShubEsp.Info[Esp.Index].SubText and SShubEsp.Info[Esp.Index].ExtraText then
-                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 20)
                                 elseif SShubEsp.Info[Esp.Index].SubText and not SShubEsp.Info[Esp.Index].ExtraText then
-                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 20)
                                 elseif SShubEsp.Info[Esp.Index].SubText and SShubEsp.Info[Esp.Index].ExtraText then
-                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y - 10)
+                                    DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 10)
                                 end
                             end
                             local ItemDistance = 0
