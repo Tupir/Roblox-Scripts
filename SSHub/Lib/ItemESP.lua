@@ -16,7 +16,7 @@ local Class = {
 }
 function SShubEsp:NewToggle(Toggle, Value)
     if Toggle ~= nil then
-        if SShubEsp.Info[Toggle] == nil then
+        if SShubEsp.Info[Toggle] == nil and Toggle ~= nil or Toggle ~= "nil" then
             SShubEsp.Info[Toggle] = {
                 Enabled = Value or true,
                 SubText = false,
@@ -109,7 +109,7 @@ function SShubEsp:NewEsp(Item, Extra)
             end
 
             --Index Creation
-            if SShubEsp.Info[Esp.Index] == nil then
+            if SShubEsp.Info[Esp.Index] == nil and Esp.Index ~= nil or Esp.Index ~= "nil" then
                 SShubEsp.Info[Esp.Index] = {
                     Enabled = true,
                     Color = Color3.new(1, 2.5, 2.5),
@@ -119,7 +119,7 @@ function SShubEsp:NewEsp(Item, Extra)
                     Highlight = Esp.Highlight,
                     Remove = false
                 }
-            elseif SShubEsp.Info[Esp.Index] ~= nil then
+            elseif SShubEsp.Info[Esp.Index] ~= nil and Esp.Index ~= nil or Esp.Index ~= "nil" then
                 SShubEsp.Info[Esp.Index].SubText = Esp.SubTextToggle
                 SShubEsp.Info[Esp.Index].ExtraText = Esp.ExtraTextToggle
                 SShubEsp.Info[Esp.Index].Distance = Esp.DistanceText
