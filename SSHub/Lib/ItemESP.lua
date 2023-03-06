@@ -35,8 +35,7 @@ end
 
 function SShubEsp:RemoveEsp(Esp)
     if SShubEsp.Info[Esp] ~= nil then
-        SShubEsp.Info[Esp].Remove = true
-        SShubEsp.Info[Esp].Remove = false
+        SShubEsp.Info[Esp].RemoveEsp = true
     else
         error("Error Cant find a valid Esp: ".. tostring(Esp))
     end
@@ -44,8 +43,7 @@ end
 
 function SShubEsp:RemoveToggle(Esp)
     if SShubEsp.Info[Esp] ~= nil then
-        SShubEsp.Info[Esp].Remove = true
-        SShubEsp.Info[Esp] = nil
+        SShubEsp.Info[Esp].RemoveToggle = true
     else
         error("Error Cant find a valid Toggle: ".. tostring(Esp))
     end
@@ -201,15 +199,14 @@ function SShubEsp:NewEsp(Item, Extra)
             local function InfoUpdate()
                 local Iu
                 Iu = RunService.RenderStepped:Connect(function()
-                    if not Esp.Folder:IsAncestorOf(Item) or Transparent(Item) or SShubEsp.Info[Esp.Index].Remove then
+                    if not Esp.Folder:IsAncestorOf(Item) or Transparent(Item) or SShubEsp.Info[Esp.Index].RemoveEsp then
                         Iu:Disconnect()
                         ItemName:Remove()
                         ExtraText:Remove()
                         SubText:Remove()
                         DistanceText:Remove()
-                        if Highlight ~= nil then
-                            Highlight:Remove()
-                        end
+                        Highlight:Remove()
+                        SShubEsp.Info[Esp.Index].RemoveEsp = false
                     else
                         if SShubEsp.Info[Esp.Index] ~= nil then
                             Esp.Color = SShubEsp.Info[Esp.Index].Color
@@ -351,6 +348,15 @@ function SShubEsp:NewEsp(Item, Extra)
                             Highlight:Remove()
                             DistanceText:Remove()
                         end
+                    end
+                    if SShubEsp.Info[Esp.Index].RemoveToggle then
+                        Iu:Disconnect()
+                        ItemName:Remove()
+                        ExtraText:Remove()
+                        SubText:Remove()
+                        Highlight:Remove()
+                        DistanceText:Remove()
+                        SShubEsp.Info[Esp.Index] = nil
                     end
                 end)
             end
