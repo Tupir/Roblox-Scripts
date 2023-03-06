@@ -110,6 +110,7 @@ function SShubEsp:NewEsp(Item, Extra)
 
             --Index Creation
             if SShubEsp.Info[Esp.Index] == nil then
+                print("Generating Manual Toggle")
                 SShubEsp.Info[Esp.Index] = {
                     Enabled = true,
                     Color = Color3.new(1, 2.5, 2.5),
