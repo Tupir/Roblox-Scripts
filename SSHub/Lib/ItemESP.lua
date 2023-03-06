@@ -205,8 +205,10 @@ function SShubEsp:NewEsp(Item, Extra)
                         ItemName:Remove()
                         ExtraText:Remove()
                         SubText:Remove()
-                        Highlight:Remove()
                         DistanceText:Remove()
+                        if Highlight ~= nil then
+                            Highlight:Remove()
+                        end 
                         SShubEsp.Info[Esp.Index].Remove = false
                     else
                         Esp.Color = SShubEsp.Info[Esp.Index].Color
