@@ -45,7 +45,7 @@ end
 function SShubEsp:RemoveToggle(Esp)
     if SShubEsp.Info[Esp] ~= nil then
         SShubEsp.Info[Esp].Remove = true
-        SShubEsp.Info[Esp] = nil
+        --SShubEsp.Info[Esp] = nil
     else
         error("Error Cant find a valid Toggle: ".. tostring(Esp))
     end
