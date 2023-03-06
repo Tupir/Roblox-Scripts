@@ -101,7 +101,7 @@ function SShubEsp:NewEsp(Item, Extra)
         Text.Color = Color or Color3.new(255,255,255)
         Text.Text = String or "nil"
         SShubEsp.Info[Esp.Index].Texts[Index] = {
-            Enabled = false,
+            Enabled = true,
             Color = Color,
             String = String,
             Text = Text
@@ -176,9 +176,13 @@ function SShubEsp:NewEsp(Item, Extra)
                 Iu = RunService.RenderStepped:Connect(function()
                     if not Esp.Folder:IsAncestorOf(Item) or Transparent(Item) or RemoveBoolean or SShubEsp.Info[Esp.Index].Remove then
                         Iu:Disconnect()
+                        print("ItemName")
                         ItemName:Remove()
+                        print("Highlight")
                         Highlight:Remove()
+                        print("DistanceText")
                         DistanceText:Remove()
+                        print("Table")
                         for Index, Table in pairs(SShubEsp.Info[Esp.Index].Texts) do
                             if Table.Text ~= nil then
                                 Table.Text:Remove()
