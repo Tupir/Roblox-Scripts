@@ -180,8 +180,10 @@ function SShubEsp:NewEsp(Item, Extra)
                         Highlight:Remove()
                         DistanceText:Remove()
                         for Index, Table in pairs(SShubEsp.Info[Esp.Index].Texts) do
-                            Table.Text:Remove()
-                            SShubEsp.Info[Esp.Index].Texts[Index] = nil
+                            if Table.Text ~= nil then
+                                Table.Text:Remove()
+                                SShubEsp.Info[Esp.Index].Texts[Index] = nil
+                            end
                         end
                         if SShubEsp.Info[Esp.Index].Remove then
                             SShubEsp.Info[Esp.Index].Remove = false
@@ -257,8 +259,10 @@ function SShubEsp:NewEsp(Item, Extra)
                                             Iu:Disconnect()
                                             ItemName:Remove()
                                             for Index, Table in pairs(SShubEsp.Info[Esp.Index].Texts) do
-                                                Table.Text:Remove()
-                                                SShubEsp.Info[Esp.Index].Texts[Index] = nil
+                                                if Table.Text ~= nil then
+                                                    Table.Text:Remove()
+                                                    SShubEsp.Info[Esp.Index].Texts[Index] = nil
+                                                end
                                             end
                                             Highlight:Remove()
                                             DistanceText:Remove()
@@ -287,8 +291,10 @@ function SShubEsp:NewEsp(Item, Extra)
                                     Iu:Disconnect()
                                     ItemName:Remove()
                                     for Index, Table in pairs(SShubEsp.Info[Esp.Index].Texts) do
-                                        Table.Text:Remove()
-                                        SShubEsp.Info[Esp.Index].Texts[Index] = nil
+                                        if Table.Text ~= nil then
+                                            Table.Text:Remove()
+                                            SShubEsp.Info[Esp.Index].Texts[Index] = nil
+                                        end
                                     end
                                     Highlight:Remove()
                                     DistanceText:Remove()
