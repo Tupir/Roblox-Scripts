@@ -209,6 +209,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                             if type(v) == "table" then
                                                 if v.Enabled then
                                                     TextCounts=TextCounts+1
+                                                    print("Posisioning "..v.Text.Position)
                                                     v.Text.Position = Vector2.new(Vector.X, Vector.Y + (tonumber(TextCounts..0)))
                                                 end
                                             end
@@ -223,11 +224,12 @@ function SShubEsp:NewEsp(Item, Extra)
                                         for Index, v in pairs(SShubEsp.Info[Esp.Index].Texts) do
                                             if type(v) == "table" then
                                                 if v.Enabled then
+                                                    print(v.Text.Visible)
                                                     v.Text.Text = v.String
+                                                    v.Text.Visible = true
                                                     if v.Text.Color ~= v.Color then
                                                         v.Text.Color = v.Color
                                                     end
-                                                    v.Text.Visible = true
                                                 else
                                                     v.Text.Visible = false
                                                 end
