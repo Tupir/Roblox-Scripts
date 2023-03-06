@@ -243,15 +243,15 @@ function SShubEsp:NewEsp(Item, Extra)
                         local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
 
                         if OnScreen then
-                            ItemName.Position = Vector2.new(Vector.X, Vector.Y - 40)
+                            ItemName.Position = Vector2.new(Vector.X, Vector.Y + 40)
                             if SShubEsp.Info[Esp.Index].SubText then
-                                SubText.Position = Vector2.new(Vector.X, Vector.Y - 30)
+                                SubText.Position = Vector2.new(Vector.X, Vector.Y + 30)
                             end
                             if SShubEsp.Info[Esp.Index].ExtraText then
                                 if not SShubEsp.Info[Esp.Index].SubText then
-                                    ExtraText.Position = Vector2.new(Vector.X, Vector.Y - 30)
+                                    ExtraText.Position = Vector2.new(Vector.X, Vector.Y + 30)
                                 else
-                                    ExtraText.Position = Vector2.new(Vector.X, Vector.Y - 20)
+                                    ExtraText.Position = Vector2.new(Vector.X, Vector.Y + 20)
                                 end
                             end
                             if SShubEsp.Info[Esp.Index].Distance then
