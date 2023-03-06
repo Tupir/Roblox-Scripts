@@ -3,7 +3,6 @@ local RunService = game:GetService("RunService")
 local Cam = workspace.CurrentCamera;
 local Plr = game:GetService("Players").LocalPlayer
 --#endregion
-
 local function TableRemove(Table, Item)
     local Index = nil
     for i, v in ipairs (Table) do 
@@ -32,6 +31,8 @@ function SShubEsp:NewToggle(Toggle, Value)
                 SubText = false,
                 Distance = false,
                 ExtraText = false,
+                Highlight = false,
+                Color = Color3.new(1, 2.5, 2.5),
                 Remove = false
             }
         else
@@ -67,6 +68,7 @@ end
 function SShubEsp:NewEsp(Item, Extra)
     local Esp = {
         Transparency = Extra.Transparency or false,
+        Highlight = Extra.Highlight or false,
         Color = Extra.Color or Color3.new(1, 2.5, 2.5),
         SubText = "N/A",
         ExtraText = "N/A",
@@ -127,15 +129,19 @@ function SShubEsp:NewEsp(Item, Extra)
             if SShubEsp.Info[Esp.Index] == nil then
                 SShubEsp.Info[Esp.Index] = {
                     Enabled = true,
+                    Color = Color3.new(1, 2.5, 2.5),
                     SubText = Esp.SubTextToggle,
                     Distance = Esp.DistanceText,
                     ExtraText = Esp.ExtraTextToggle,
+                    Highlight = Esp.Highlight,
                     Remove = false
                 }
             elseif SShubEsp.Info[Esp.Index] ~= nil then
                 SShubEsp.Info[Esp.Index].SubText = Esp.SubTextToggle
                 SShubEsp.Info[Esp.Index].ExtraText = Esp.ExtraTextToggle
                 SShubEsp.Info[Esp.Index].Distance = Esp.DistanceText
+                SShubEsp.Info[Esp.Index].Highlight = Esp.Highlight
+                SShubEsp.Info[Esp.Index].Color = Esp.Color
             end
 
             if Extra.SubText ~= nil then
@@ -160,15 +166,23 @@ function SShubEsp:NewEsp(Item, Extra)
                     error("Missing or Invalid value: ExtraText")
                 end
             end
-
             --Drawing
+            local Highlight = Instance.new("Highlight", Item)
+            Highlight.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
+            Highlight.Enabled = false
+            Highlight.FillColor = Esp.Color
+            Highlight.FillTransparency = 0.5
+            Highlight.Name = "Highlight"
+            Highlight.OutlineColor = Color3.new(255,255,255)
+            Highlight.OutlineTransparency = 0
+
             local ItemName = Drawing.new("Text")
             ItemName.Visible = false
             ItemName.Center = true
             ItemName.Outline = true
             ItemName.Font = Esp.Font
             ItemName.Size = 13
-            ItemName.Color = Color3.new(1, 2.5, 2.5)
+            ItemName.Color = Esp.Color
             ItemName.Text = Esp.Name
 
             local SubText = Drawing.new("Text")
@@ -177,7 +191,7 @@ function SShubEsp:NewEsp(Item, Extra)
             SubText.Outline = true
             SubText.Font = Esp.Font
             SubText.Size = 13
-            SubText.Color = Color3.new(1, 2.5, 2.5)
+            SubText.Color = Esp.Color
             SubText.Text = Esp.SubText
             
             local ExtraText = Drawing.new("Text")
@@ -186,7 +200,7 @@ function SShubEsp:NewEsp(Item, Extra)
             ExtraText.Outline = true
             ExtraText.Font = Esp.Font
             ExtraText.Size = 13
-            ExtraText.Color = Color3.new(1, 2.5, 2.5)
+            ExtraText.Color = Esp.Color
             ExtraText.Text = Esp.ExtraText
 
             local DistanceText = Drawing.new("Text")
@@ -195,7 +209,7 @@ function SShubEsp:NewEsp(Item, Extra)
             DistanceText.Outline = true
             DistanceText.Font = Esp.Font
             DistanceText.Size = 13
-            DistanceText.Color = Color3.new(1, 2.5, 2.5)
+            DistanceText.Color = Esp.Color
             DistanceText.Text = "Distance"
 
             local function InfoUpdate()
@@ -206,8 +220,10 @@ function SShubEsp:NewEsp(Item, Extra)
                         ItemName:Remove()
                         ExtraText:Remove()
                         SubText:Remove()
+                        Highlight:Remove()
                         DistanceText:Remove()
                     else
+                        Esp.Color = SShubEsp.Info[Esp.Index].Color
                         if Extra.SubText ~= nil then
                             if type(Extra.SubText) == "table" and #Extra.SubText == 2 and Extra.SubText[1] ~= nil and Extra.SubText[2] ~= nil then
                                 Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]])
@@ -228,6 +244,7 @@ function SShubEsp:NewEsp(Item, Extra)
                         end
 
                         local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
+
                         if OnScreen then
                             ItemName.Position = Vector2.new(Vector.X, Vector.Y - 40)
                             if SShubEsp.Info[Esp.Index].SubText then
@@ -265,7 +282,13 @@ function SShubEsp:NewEsp(Item, Extra)
                                                 ExtraText.Color = Esp.Color
                                                 DistanceText.Color = Esp.Color
                                                 SubText.Color = Esp.Color
+                                                Highlight.FillColor = Esp.Color
                                                 ItemName.Color = Esp.Color
+                                            end
+                                            if SShubEsp.Info[Esp.Index].Highlight then
+                                                Highlight.Enabled = true
+                                            else
+                                                Highlight.Enabled = false
                                             end
                                             if SShubEsp.Info[Esp.Index].SubText and Esp.SubText ~= "N/A" then
                                                 SubText.Text = Esp.SubText
@@ -290,17 +313,24 @@ function SShubEsp:NewEsp(Item, Extra)
                                             SubText.Visible = false
                                             ExtraText.Visible = false
                                             DistanceText.Visible = false
+                                            Highlight.Enabled = false
                                             if Esp.RemoveOnToggle then
                                                 Iu:Disconnect()
                                                 ItemName:Remove()
                                                 ExtraText:Remove()
                                                 SubText:Remove()
+                                                Highlight:Remove()
                                                 DistanceText:Remove()
                                             end
                                         end
                                     else
                                         ItemName.Text = Esp.Name
                                         ItemName.Visible = true
+                                        if SShubEsp.Info[Esp.Index].Highlight then
+                                            Highlight.Enabled = true
+                                        else
+                                            Highlight.Enabled = false
+                                        end
                                         if SShubEsp.Info[Esp.Index].SubText and Esp.SubText ~= "N/A" then
                                             SubText.Text = Esp.SubText
                                             SubText.Color = Esp.Color
@@ -326,18 +356,21 @@ function SShubEsp:NewEsp(Item, Extra)
                                     ItemName.Visible = false
                                     SubText.Visible = false
                                     ExtraText.Visible = false
+                                    Highlight.Enabled = false
                                     DistanceText.Visible = false
                                 end
                             else
                                 ItemName.Visible = false
                                 SubText.Visible = false
                                 ExtraText.Visible = false
+                                Highlight.Enabled = false
                                 DistanceText.Visible = false
                                 if Esp.RemoveOnToggle then
                                     Iu:Disconnect()
                                     ItemName:Remove()
                                     ExtraText:Remove()
                                     SubText:Remove()
+                                    Highlight:Remove()
                                     DistanceText:Remove()
                                 end
                             end
@@ -345,6 +378,7 @@ function SShubEsp:NewEsp(Item, Extra)
                             ItemName.Visible = false
                             SubText.Visible = false
                             ExtraText.Visible = false
+                            Highlight.Enabled = false
                             DistanceText.Visible = false
                         end
                     end
