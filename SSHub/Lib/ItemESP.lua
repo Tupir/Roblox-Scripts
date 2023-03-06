@@ -98,8 +98,8 @@ function SShubEsp:NewEsp(Item, Extra)
         Text.Outline = true
         Text.Font = Esp.Font
         Text.Size = 13
-        Text.Color = Color
-        Text.Text = String
+        Text.Color = Color or Color3.new(255,255,255)
+        Text.Text = String or "nil"
         SShubEsp.Info[Esp.Index].Texts[Index] = {
             Enabled = false,
             Color = Color,
@@ -203,7 +203,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                         local TextCounts = 1
                                         for Index, v in pairs(SShubEsp.Info[Esp.Index].Texts) do
                                             if type(v) == "table" then
-                                                if v.Text.Enabled then
+                                                if v.Enabled then
                                                     TextCounts=TextCounts+1
                                                     v.Text.Position = Vector2.new(Vector.X, Vector.Y + (tonumber(TextCounts..0)))
                                                 end
@@ -218,7 +218,7 @@ function SShubEsp:NewEsp(Item, Extra)
 
                                         for Index, v in pairs(SShubEsp.Info[Esp.Index].Texts) do
                                             if type(v) == "table" then
-                                                if v.Text.Enabled then
+                                                if v.Enabled then
                                                     v.Text.Text = v.String
                                                     if v.Text.Color ~= v.Color then
                                                         v.Text.Color = v.Color
