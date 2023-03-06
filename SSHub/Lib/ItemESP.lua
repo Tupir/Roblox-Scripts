@@ -112,11 +112,7 @@ function SShubEsp:NewEsp(Item, Extra)
         if Esp.Folder ~= nil then
             --Functions
             local function Transparent(v)
-                if not Esp.Transparency then
-                    if v.Transparency == 1 then
-                        return false
-                    end
-                elseif Esp.Transparency then
+                if Esp.Transparency then
                     if v.Transparency == 1 then
                         return true
                     else
