@@ -35,17 +35,9 @@ end
 
 function SShubEsp:RemoveEsp(Esp)
     if SShubEsp.Info[Esp] ~= nil then
-        SShubEsp.Info[Esp].RemoveEsp = true
+        SShubEsp.Info[Esp].Remove = true
     else
         error("Error Cant find a valid Esp: ".. tostring(Esp))
-    end
-end
-
-function SShubEsp:RemoveToggle(Esp)
-    if SShubEsp.Info[Esp] ~= nil then
-        SShubEsp.Info[Esp].RemoveToggle = true
-    else
-        error("Error Cant find a valid Toggle: ".. tostring(Esp))
     end
 end
 
@@ -199,14 +191,16 @@ function SShubEsp:NewEsp(Item, Extra)
             local function InfoUpdate()
                 local Iu
                 Iu = RunService.RenderStepped:Connect(function()
-                    if not Esp.Folder:IsAncestorOf(Item) or Transparent(Item) or SShubEsp.Info[Esp.Index].RemoveEsp then
+                    if not Esp.Folder:IsAncestorOf(Item) or Transparent(Item) or SShubEsp.Info[Esp.Index].Remove then
                         Iu:Disconnect()
-                        ItemName:Remove()
+                        ItemName:Remove() 
                         ExtraText:Remove()
                         SubText:Remove()
                         DistanceText:Remove()
                         Highlight:Remove()
-                        SShubEsp.Info[Esp.Index].RemoveEsp = false
+                        if SShubEsp.Info[Esp.Index].Remove then
+                            SShubEsp.Info[Esp.Index].Remove = false
+                        end
                     else
                         if SShubEsp.Info[Esp.Index] ~= nil then
                             Esp.Color = SShubEsp.Info[Esp.Index].Color
@@ -232,24 +226,24 @@ function SShubEsp:NewEsp(Item, Extra)
                             local Vector, OnScreen = Cam:WorldToViewportPoint(Item.Position)
 
                             if OnScreen then
-                                ItemName.Position = Vector2.new(Vector.X, Vector.Y + 30)
+                                ItemName.Position = Vector2.new(Vector.X, Vector.Y + 20)
                                 if SShubEsp.Info[Esp.Index].SubText then
-                                    SubText.Position = Vector2.new(Vector.X, Vector.Y + 40)
+                                    SubText.Position = Vector2.new(Vector.X, Vector.Y + 30)
                                 end
                                 if SShubEsp.Info[Esp.Index].ExtraText then
                                     if not SShubEsp.Info[Esp.Index].SubText then
-                                        ExtraText.Position = Vector2.new(Vector.X, Vector.Y + 40)
+                                        ExtraText.Position = Vector2.new(Vector.X, Vector.Y + 30)
                                     else
-                                        ExtraText.Position = Vector2.new(Vector.X, Vector.Y + 50)
+                                        ExtraText.Position = Vector2.new(Vector.X, Vector.Y + 40)
                                     end
                                 end
                                 if SShubEsp.Info[Esp.Index].Distance then
                                     if not SShubEsp.Info[Esp.Index].SubText and not SShubEsp.Info[Esp.Index].ExtraText then
-                                        DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 40)
+                                        DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 30)
                                     elseif SShubEsp.Info[Esp.Index].SubText and SShubEsp.Info[Esp.Index].ExtraText then
-                                        DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 60)
-                                    elseif SShubEsp.Info[Esp.Index].SubText or SShubEsp.Info[Esp.Index].ExtraText then
                                         DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 50)
+                                    elseif SShubEsp.Info[Esp.Index].SubText or SShubEsp.Info[Esp.Index].ExtraText then
+                                        DistanceText.Position = Vector2.new(Vector.X, Vector.Y + 40)
                                     end
                                 end
                                 if SShubEsp.Enabled then
@@ -348,15 +342,6 @@ function SShubEsp:NewEsp(Item, Extra)
                             Highlight:Remove()
                             DistanceText:Remove()
                         end
-                    end
-                    if SShubEsp.Info[Esp.Index].RemoveToggle then
-                        Iu:Disconnect()
-                        ItemName:Remove()
-                        ExtraText:Remove()
-                        SubText:Remove()
-                        Highlight:Remove()
-                        DistanceText:Remove()
-                        SShubEsp.Info[Esp.Index] = nil
                     end
                 end)
             end
