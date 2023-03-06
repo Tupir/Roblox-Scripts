@@ -44,7 +44,7 @@ end
 function SShubEsp:RemoveToggle(Esp)
     if SShubEsp.Info[Esp] ~= nil then
         SShubEsp.Info[Esp].Remove = true
-        task.wait(0.5)
+        task.wait(1)
         SShubEsp.Info[Esp] = nil
     else
         error("Error Cant find a valid Toggle: ".. tostring(Esp))
