@@ -301,5 +301,6 @@ function SShubEsp:NewEsp(Item, Extra)
         error("Attempt to index for a nil instance")
     end
 
-    return SShubEsp
+    return Esp
 end
+return SShubEsp
