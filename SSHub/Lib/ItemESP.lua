@@ -134,15 +134,15 @@ function SShubEsp:NewEsp(Item, Extra)
             if Extra.SubText ~= nil then
                 if type(Extra.SubText) == "table" and #Extra.SubText == 2 and Extra.SubText[1] ~= nil and Extra.SubText[2] ~= nil then
                     if type(Extra.SubText[1][Extra.SubText[2]]) == "number" then
-                        Esp.SubText = tostring(math.ceil(Extra.SubText[1][Extra.SubText[2]]))
+                        Esp.SubText = tostring(math.ceil(Extra.SubText[1][Extra.SubText[2]])) or "N/A"
                     else
-                        Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]])
+                        Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]]) or "N/A"
                     end
                 elseif type(Extra.SubText) == "table" and #Extra.SubText == 3 and Extra.SubText[1] ~= nil and Extra.SubText[2] ~= nil and Extra.SubText[3] ~= nil then
                     if type(Extra.SubText[2][Extra.SubText[3]]) == "number" then
-                        Esp.SubText = Extra.SubText[1]..tostring(math.ceil(Extra.SubText[2][Extra.SubText[3]]))
+                        Esp.SubText = Extra.SubText[1]..tostring(math.ceil(Extra.SubText[2][Extra.SubText[3]])) or "N/A"
                     else
-                        Esp.SubText = Extra.SubText[1]..tostring(Extra.SubText[2][Extra.SubText[3]])
+                        Esp.SubText = Extra.SubText[1]..tostring(Extra.SubText[2][Extra.SubText[3]]) or "N/A"
                     end
                 elseif type(Extra.SubText) == "string" then
                     Esp.SubText = Extra.SubText
@@ -153,18 +153,18 @@ function SShubEsp:NewEsp(Item, Extra)
             if Extra.ExtraText ~= nil then
                 if type(Extra.ExtraText) == "table" and #Extra.ExtraText == 2 and Extra.ExtraText[1] ~= nil and Extra.ExtraText[2] ~= nil then
                     if type(Extra.ExtraText[1][Extra.ExtraText[2]]) == "number" then
-                        Esp.ExtraText = tostring(math.ceil(Extra.ExtraText[1][Extra.ExtraText[2]]))
+                        Esp.ExtraText = tostring(math.ceil(Extra.ExtraText[1][Extra.ExtraText[2]])) or "N/A"
                     else
-                        Esp.ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
+                        Esp.ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]]) or "N/A"
                     end
                 elseif type(Extra.ExtraText) == "table" and #Extra.ExtraText == 3 and Extra.ExtraText[1] ~= nil and Extra.ExtraText[2] ~= nil and Extra.ExtraText[3] ~= nil then
                     if type(Extra.ExtraText[2][Extra.ExtraText[3]]) == "number" then
-                        Esp.ExtraText = Extra.ExtraText[1]..tostring(math.ceil(Extra.ExtraText[2][Extra.ExtraText[3]]))
+                        Esp.ExtraText = Extra.ExtraText[1]..tostring(math.ceil(Extra.ExtraText[2][Extra.ExtraText[3]])) or "N/A"
                     else
-                        Esp.ExtraText = Extra.ExtraText[1]..tostring(Extra.ExtraText[2][Extra.ExtraText[3]])
+                        Esp.ExtraText = Extra.ExtraText[1]..tostring(Extra.ExtraText[2][Extra.ExtraText[3]]) or "N/A"
                     end
                 elseif type(Extra.ExtraText) == "string" then
-                    Esp.ExtraText = Extra.ExtraText
+                    Esp.ExtraText = Extra.ExtraText or "N/A"
                 else
                     error("Missing or Invalid value: ExtraText")
                 end
@@ -263,35 +263,35 @@ function SShubEsp:NewEsp(Item, Extra)
                                             if Extra.SubText ~= nil then
                                                 if type(Extra.SubText) == "table" and #Extra.SubText == 2 and Extra.SubText[1] ~= nil and Extra.SubText[2] ~= nil then
                                                     if type(Extra.SubText[1][Extra.SubText[2]]) == "number" then
-                                                        Esp.SubText = tostring(math.ceil(Extra.SubText[1][Extra.SubText[2]]))
+                                                        Esp.SubText = tostring(math.ceil(Extra.SubText[1][Extra.SubText[2]])) or "N/A"
                                                     else
-                                                        Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]])
+                                                        Esp.SubText = tostring(Extra.SubText[1][Extra.SubText[2]]) or "N/A"
                                                     end
                                                 elseif type(Extra.SubText) == "table" and #Extra.SubText == 3 and Extra.SubText[1] ~= nil and Extra.SubText[2] ~= nil and Extra.SubText[3] ~= nil then
                                                     if type(Extra.SubText[2][Extra.SubText[3]]) == "number" then
-                                                        Esp.SubText = Extra.SubText[1]..tostring(math.ceil(Extra.SubText[2][Extra.SubText[3]]))
+                                                        Esp.SubText = Extra.SubText[1]..tostring(math.ceil(Extra.SubText[2][Extra.SubText[3]])) or "N/A"
                                                     else
-                                                        Esp.SubText = Extra.SubText[1]..tostring(Extra.SubText[2][Extra.SubText[3]])
+                                                        Esp.SubText = Extra.SubText[1]..tostring(Extra.SubText[2][Extra.SubText[3]]) or "N/A"
                                                     end
                                                 elseif type(Extra.SubText) == "string" then
-                                                    Esp.SubText = Extra.SubText
+                                                    Esp.SubText = Extra.SubText or "N/A"
                                                 end
                                             end
                                             if Extra.ExtraText ~= nil then
                                                 if type(Extra.ExtraText) == "table" and #Extra.ExtraText == 2 and Extra.ExtraText[1] ~= nil and Extra.ExtraText[2] ~= nil then
                                                     if type(Extra.ExtraText[1][Extra.ExtraText[2]]) == "number" then
-                                                        Esp.ExtraText = tostring(math.ceil(Extra.ExtraText[1][Extra.ExtraText[2]]))
+                                                        Esp.ExtraText = tostring(math.ceil(Extra.ExtraText[1][Extra.ExtraText[2]])) or "N/A"
                                                     else
-                                                        Esp.ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]])
+                                                        Esp.ExtraText = tostring(Extra.ExtraText[1][Extra.ExtraText[2]]) or "N/A"
                                                     end
                                                 elseif type(Extra.ExtraText) == "table" and #Extra.ExtraText == 3 and Extra.ExtraText[1] ~= nil and Extra.ExtraText[2] ~= nil and Extra.ExtraText[3] ~= nil then
                                                     if type(Extra.ExtraText[2][Extra.ExtraText[3]]) == "number" then
-                                                        Esp.ExtraText = Extra.ExtraText[1]..tostring(math.ceil(Extra.ExtraText[2][Extra.ExtraText[3]]))
+                                                        Esp.ExtraText = Extra.ExtraText[1]..tostring(math.ceil(Extra.ExtraText[2][Extra.ExtraText[3]])) or "N/A"
                                                     else
-                                                        Esp.ExtraText = Extra.ExtraText[1]..tostring(Extra.ExtraText[2][Extra.ExtraText[3]])
+                                                        Esp.ExtraText = Extra.ExtraText[1]..tostring(Extra.ExtraText[2][Extra.ExtraText[3]]) or "N/A"
                                                     end
                                                 elseif type(Extra.ExtraText) == "string" then
-                                                    Esp.ExtraText = Extra.ExtraText
+                                                    Esp.ExtraText = Extra.ExtraText or "N/A"
                                                 end
                                             end
 
@@ -310,7 +310,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                             else
                                                 Highlight.Enabled = false
                                             end
-                                            if SShubEsp.Info[Esp.Index].SubText and Esp.SubText ~= "N/A" then
+                                            if SShubEsp.Info[Esp.Index].SubText then
                                                 SubText.Text = Esp.SubText
                                                 SubText.Visible = true
                                             else
@@ -322,7 +322,7 @@ function SShubEsp:NewEsp(Item, Extra)
                                             else
                                                 DistanceText.Visible = false
                                             end
-                                            if SShubEsp.Info[Esp.Index].ExtraText and Esp.ExtraText ~= "N/A" then
+                                            if SShubEsp.Info[Esp.Index].ExtraText then
                                                 ExtraText.Text = Esp.ExtraText
                                                 ExtraText.Visible = true
                                             else
