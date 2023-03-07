@@ -36,7 +36,7 @@ end
 function SShubEsp:RemoveEsp(Esp)
     if SShubEsp.Info[Esp] ~= nil then
         SShubEsp.Info[Esp].Remove = true
-        task.wait(2)
+        task.wait(0.5)
         SShubEsp.Info[Esp].Remove = false
     else
         error("Error Cant find a valid Esp: ".. tostring(Esp))
@@ -46,7 +46,7 @@ end
 function SShubEsp:RemoveToggle(Esp)
     if SShubEsp.Info[Esp] ~= nil then
         SShubEsp:RemoveEsp(Esp)
-        task.wait(1)
+        task.wait(0.5)
         SShubEsp.Info[Esp] = nil
     else
         error("Error Cant find a valid Esp: ".. tostring(Esp))
