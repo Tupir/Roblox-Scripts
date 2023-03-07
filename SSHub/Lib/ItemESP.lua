@@ -36,7 +36,8 @@ end
 function SShubEsp:RemoveEsp(Esp)
     if SShubEsp.Info[Esp] ~= nil then
         SShubEsp.Info[Esp].Remove = true
-        print(SShubEsp.Info[Esp].Remove)
+        task.wait(2)
+        SShubEsp.Info[Esp].Remove = false
     else
         error("Error Cant find a valid Esp: ".. tostring(Esp))
     end
@@ -199,7 +200,6 @@ function SShubEsp:NewEsp(Item, Extra)
                         SubText:Remove()
                         DistanceText:Remove()
                         Highlight:Remove()
-                        SShubEsp.Info[Esp.Index].Remove = false
                     else
                         if SShubEsp.Info[Esp.Index] ~= nil then
                             Esp.Color = SShubEsp.Info[Esp.Index].Color
