@@ -141,7 +141,7 @@ function SShubEsp:NewEsp(Item, Extra)
             SubText.Font = Esp.Font
             SubText.Size = 13
             SubText.Color = Esp.Color
-            SubText.Text = Esp.SubText
+            SubText.Text = ConvertText(Esp.SubText)
             
             local ExtraText = Drawing.new("Text")
             ExtraText.Visible = false
@@ -150,7 +150,7 @@ function SShubEsp:NewEsp(Item, Extra)
             ExtraText.Font = Esp.Font
             ExtraText.Size = 13
             ExtraText.Color = Esp.Color
-            ExtraText.Text = Esp.ExtraText
+            ExtraText.Text = ConvertText(Esp.ExtraText)
 
             local DistanceText = Drawing.new("Text")
             DistanceText.Visible = false
