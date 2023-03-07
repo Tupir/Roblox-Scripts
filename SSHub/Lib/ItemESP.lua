@@ -36,6 +36,7 @@ end
 function SShubEsp:RemoveEsp(Esp)
     if SShubEsp.Info[Esp] ~= nil then
         SShubEsp.Info[Esp].Remove = true
+        print(SShubEsp.Info[Esp].Remove)
     else
         error("Error Cant find a valid Esp: ".. tostring(Esp))
     end
