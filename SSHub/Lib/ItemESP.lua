@@ -91,7 +91,7 @@ function SShubEsp:NewEsp(Item, Extra)
         ExtraText = Extra.ExtraText or nil,
         Highlight = Extra.Highlight or false,
         HighlightFolder = Extra.HighlightFolder or Item,
-        GlobalColor = Extra.Color or Color3.new(1, 2.5, 2.5),
+        Color = Extra.Color or Color3.new(255,255,255),
         Transparency = Extra.Transparency or false,
         Font = Extra.Font or 2,
         SubTextToggle = Extra.SubTextToggle or false,
