@@ -43,6 +43,16 @@ function SShubEsp:RemoveEsp(Esp)
     end
 end
 
+function SShubEsp:RemoveToggle(Esp)
+    if SShubEsp.Info[Esp] ~= nil then
+        SShubEsp:RemoveEsp(Esp)
+        task.wait(1)
+        SShubEsp.Info[Esp] = nil
+    else
+        error("Error Cant find a valid Esp: ".. tostring(Esp))
+    end
+end
+
 function SShubEsp:SetValue(Esp, ValueSet, Value)
     if SShubEsp.Info[Esp] ~= nil then
         local Type = type(SShubEsp.Info[Esp][ValueSet])
