@@ -16,20 +16,18 @@ local Class = {
 }
 
 function SShubEsp:NewToggle(Toggle, Value)
-    if Toggle ~= nil then
-        if SShubEsp.Info[Toggle] == nil and Toggle ~= nil or Toggle ~= "nil" then
-            SShubEsp.Info[Toggle] = {
-                Enabled = Value or true,
-                SubText = false,
-                Distance = false,
-                ExtraText = false,
-                Highlight = false,
-                Color = Color3.new(255,255,255),
-                Remove = false
-            }
-        else
-            error("Theres are alredy a toggle called: "..Toggle.."!")
-        end
+    if SShubEsp.Info[(Toggle or "Global")] == nil then
+        SShubEsp.Info[(Toggle or "Global")] = {
+            Enabled = Value or true,
+            SubText = false,
+            Distance = false,
+            ExtraText = false,
+            Highlight = false,
+            Color = Color3.new(255,255,255),
+            Remove = false
+        }
+    else
+        error("Theres are alredy a toggle called: "..Toggle.."!")
     end
 end
 
