@@ -16,8 +16,8 @@ local Class = {
 }
 
 function SShubEsp:NewToggle(Toggle, Value)
-    if SShubEsp.Info[(Toggle or "Global")] == nil then
-        SShubEsp.Info[(Toggle or "Global")] = {
+    if SShubEsp.Info[Toggle] == nil then
+        SShubEsp.Info[Toggle] = {
             Enabled = Value or true,
             SubText = false,
             Distance = false,
