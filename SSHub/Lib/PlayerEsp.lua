@@ -49,7 +49,7 @@ local SShubEsp = {
         Draws = {}
     },
     Extra = {}
-} 
+}
 
 function SShubEsp:NewIndex(Index, Value)
     if Index ~= nil then
