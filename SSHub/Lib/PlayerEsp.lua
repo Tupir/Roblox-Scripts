@@ -363,17 +363,21 @@ local function GeneratePlayerEsp(Player)
 end
 function SShubEsp:CreatePlayerEsp()
     for i,v in pairs(Players:GetPlayers()) do
-        GeneratePlayerEsp(v)
-        v.CharacterAdded:Connect(function(c)
-            repeat task.wait() until c:FindFirstChild("Humanoid")
+        if v ~= Plr then
             GeneratePlayerEsp(v)
-        end)
+            v.CharacterAdded:Connect(function(c)
+                repeat task.wait() until c:FindFirstChild("Humanoid")
+                GeneratePlayerEsp(v)
+            end)
+        end
     end
     Players.PlayerAdded:Connect(function(player)
-        player.CharacterAdded:Connect(function(c)
-            repeat task.wait() until c:FindFirstChild("Humanoid")
-            GeneratePlayerEsp(player)
-        end)
+        if player ~= Plr then
+            player.CharacterAdded:Connect(function(c)
+                repeat task.wait() until c:FindFirstChild("Humanoid")
+                GeneratePlayerEsp(player)
+            end)
+        end
     end)
 end
 
