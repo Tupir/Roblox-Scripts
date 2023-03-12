@@ -33,15 +33,15 @@ local SShubEsp = {
     Enabled = true,
     Players = {
         Enabled = false,
-        Name = {false, Color3.new(255,255,255)},
-        Health = {false, Color3.new(255,255,255)},
-        Team = {false, Color3.new(255,255,255)},
-        Tool = {false, Color3.new(255,255,255)},
-        Backpack = {false, Color3.new(255,255,255)},
-        Tracers = {false, Color3.new(255,255,255)},
-        Distance = {false, Color3.new(255,255,255)},
-        Boxes = {false, Color3.new(255,255,255)},
-        TeamCheck = {false, Color3.new(255,0,0), Color3.new(0,255,0)},
+        Name = {false, Color3.fromRGB(255,255,255)},
+        Health = {false, Color3.fromRGB(255,255,255)},
+        Team = {false, Color3.fromRGB(255,255,255)},
+        Tool = {false, Color3.fromRGB(255,255,255)},
+        Backpack = {false, Color3.fromRGB(255,255,255)},
+        Tracers = {false, Color3.fromRGB(255,255,255)},
+        Distance = {false, Color3.fromRGB(255,255,255)},
+        Boxes = {false, Color3.fromRGB(255,255,255)},
+        TeamCheck = {false, Color3.fromRGB(255,0,0), Color3.fromRGB(0,255,0)},
         BoxShift = 1.5,
 	    BoxSize = 2500,
         BoxStretch = 0.75,
@@ -56,10 +56,10 @@ function SShubEsp:NewIndex(Index, Value)
         if SShubEsp.Extra[Index] == nil then
             SShubEsp.Extra[Index]={
                 Enabled = Value or true,
-                GoblalColor = {false, Color3.new(255,255,255)},
-                Title = {false, Color3.new(255,255,255)},
-                SubText = {false, Color3.new(255,255,255)},
-                ExtraText = {false, Color3.new(255,255,255)},
+                GoblalColor = {false, Color3.fromRGB(255,255,255)},
+                Title = {false, Color3.fromRGB(255,255,255)},
+                SubText = {false, Color3.fromRGB(255,255,255)},
+                ExtraText = {false, Color3.fromRGB(255,255,255)},
                 MaxDistance = 10000,
                 Draws = {}
             }
@@ -68,10 +68,10 @@ function SShubEsp:NewIndex(Index, Value)
         if SShubEsp.Extra["Global"] == nil then
             SShubEsp.Extra["Global"]={
                 Enabled = Value or true,
-                GoblalColor = {false, Color3.new(255,255,255)},
-                Title = {false, Color3.new(255,255,255)},
-                SubText = {false, Color3.new(255,255,255)},
-                ExtraText = {false, Color3.new(255,255,255)},
+                GoblalColor = {false, Color3.fromRGB(255,255,255)},
+                Title = {false, Color3.fromRGB(255,255,255)},
+                SubText = {false, Color3.fromRGB(255,255,255)},
+                ExtraText = {false, Color3.fromRGB(255,255,255)},
                 MaxDistance = 10000,
                 Draws = {}
             }
