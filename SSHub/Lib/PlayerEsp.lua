@@ -60,15 +60,13 @@ local SShubEsp = {
 }
 
 function SShubEsp:NewIndex(Index, Value, Extras)
-    print("?")
     if Index ~= nil then
-        print("A")
         if SShubEsp.Extra[Index] == nil then
             SShubEsp.Extra[Index]={
                 Enabled = Value or true,
                 Boxes = {Enabled = true, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
                 GoblalColor = {false, Color3.fromRGB(255,255,255)},
-                Title = {true, Color3.fromRGB(255,255,255), "Tittle"},
+                Title = {true, Color3.fromRGB(255,255,255), "Title"},
                 Distance = {true, Color3.fromRGB(255,255,255)},
                 Separation = 12,
                 MaxDistance = 10000,
@@ -78,7 +76,7 @@ function SShubEsp:NewIndex(Index, Value, Extras)
                 for i,v in pairs(Extras) do
                     if SShubEsp.Extra[Index][i] == nil then
                         SShubEsp.Extra[Index][i] = v
-                    end
+                    end 
                 end
             end
         end
@@ -88,7 +86,7 @@ function SShubEsp:NewIndex(Index, Value, Extras)
                 Enabled = Value or true,
                 Boxes = {Enabled = true, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
                 GoblalColor = {false, Color3.fromRGB(255,255,255)},
-                Title = {true, Color3.fromRGB(255,255,255), "Tittle"},
+                Title = {true, Color3.fromRGB(255,255,255), "Title"},
                 Distance = {true, Color3.fromRGB(255,255,255)},
                 Separation = 12,
                 MaxDistance = 10000,
@@ -96,8 +94,8 @@ function SShubEsp:NewIndex(Index, Value, Extras)
             }
             if Extras ~= nil and typeof(Extras) == "table" then
                 for i,v in pairs(Extras) do
-                    if SShubEsp.Extra[Index][i] == nil then
-                        SShubEsp.Extra[Index][i] = v
+                    if SShubEsp.Extra["Global"][i] == nil then
+                        SShubEsp.Extra["Global"][i] = v
                     end
                 end
             end
@@ -430,7 +428,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
     }
     if Instance ~= nil then
         if table.find(Class, Instance.ClassName) then
-            SShubEsp:NewEsp(Esp.Index, true, ExtraTexts)
+            SShubEsp:NewIndex(Esp.Index, true, ExtraTexts)
 
             SShubEsp.Extra[Esp.Index].Boxes.Enabled = Esp.Boxes.Enabled
             SShubEsp.Extra[Esp.Index].Boxes.Color = Esp.Boxes.Color
