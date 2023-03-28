@@ -419,6 +419,9 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
             SShubEsp.Extra[Esp.Index].Title[2] = Esp.Title.Color
             SShubEsp.Extra[Esp.Index].Title[3] = Esp.Title.Text
 
+            SShubEsp.Extra[Esp.Index].Distance[1] = Esp.Distance.Enabled
+            SShubEsp.Extra[Esp.Index].Distance[2] = Esp.Distance.Color
+
             local function InfoUpdate()
                 SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)] = {
                     Box = {},
