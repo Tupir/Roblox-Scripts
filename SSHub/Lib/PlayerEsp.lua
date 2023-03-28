@@ -538,7 +538,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                     if SShubEsp.Enabled then
                         if SShubEsp.Extra.Enabled then
                             local Distance = math.round((Cam.CFrame.Position-Instance.Position).magnitude)
-                            if Distance < SShubEsp.Players.MaxDistance then
+                            if Distance < SShubEsp.Extra[Esp.Index].MaxDistance then
                                 local RootVector, OnScreen = WorldToViewportPoint(Cam, Instance.Position)
                                 
                                 local Size = SShubEsp.Extra[Esp.Index].Boxes.Size/RootVector.Z
