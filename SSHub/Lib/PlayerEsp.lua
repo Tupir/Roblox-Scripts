@@ -565,7 +565,9 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                             if SShubEsp.Extra[Esp.Index][Index][1] then
                                                 v.Visible = true
                                                 if v.Visible then
-                                                    v.Text = SShubEsp.Extra[Esp.Index][Index][3]
+                                                    if Index ~= "Distance" then
+                                                        v.Text = SShubEsp.Extra[Esp.Index][Index][3]
+                                                    end
                                                     v.Position = TotalPos + Vector2.new(0,SShubEsp.Extra[Esp.Index].Separation)
                                                     v.Color = SShubEsp.Extra[Esp.Index][Index][2]
                                                     TotalPos = v.Position
