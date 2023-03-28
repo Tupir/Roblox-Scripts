@@ -60,7 +60,9 @@ local SShubEsp = {
 }
 
 function SShubEsp:NewIndex(Index, Value, Extras)
+    print("?")
     if Index ~= nil then
+        print("A")
         if SShubEsp.Extra[Index] == nil then
             SShubEsp.Extra[Index]={
                 Enabled = Value or true,
