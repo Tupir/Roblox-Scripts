@@ -64,10 +64,10 @@ function SShubEsp:NewIndex(Index, Value, Extras)
         if SShubEsp.Extra[Index] == nil then
             SShubEsp.Extra[Index]={
                 Enabled = Value or true,
-                Boxes = {Enabled = false, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
+                Boxes = {Enabled = true, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
                 GoblalColor = {false, Color3.fromRGB(255,255,255)},
-                Title = {false, Color3.fromRGB(255,255,255), "Tittle"},
-                Distance = {false, Color3.fromRGB(255,255,255)},
+                Title = {true, Color3.fromRGB(255,255,255), "Tittle"},
+                Distance = {true, Color3.fromRGB(255,255,255)},
                 Separation = 12,
                 MaxDistance = 10000,
                 Draws = {}
@@ -84,10 +84,10 @@ function SShubEsp:NewIndex(Index, Value, Extras)
         if SShubEsp.Extra["Global"] == nil then
             SShubEsp.Extra["Global"]={
                 Enabled = Value or true,
-                Boxes = {Enabled = false, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
+                Boxes = {Enabled = true, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
                 GoblalColor = {false, Color3.fromRGB(255,255,255)},
-                Title = {false, Color3.fromRGB(255,255,255), "Tittle"},
-                Distance = {false, Color3.fromRGB(255,255,255)},
+                Title = {true, Color3.fromRGB(255,255,255), "Tittle"},
+                Distance = {true, Color3.fromRGB(255,255,255)},
                 Separation = 12,
                 MaxDistance = 10000,
                 Draws = {}
