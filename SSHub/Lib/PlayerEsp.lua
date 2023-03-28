@@ -562,7 +562,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
 
                                         local TotalPos = TextsPos
                                         for Index,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]) do
-                                            if SShubEsp.Extra[Esp.Index][Index][1] then
+                                            if Index ~= "Box" and SShubEsp.Extra[Esp.Index][Index][1] then
                                                 v.Visible = true
                                                 if v.Visible then
                                                     if Index ~= "Distance" then
