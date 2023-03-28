@@ -48,33 +48,51 @@ local SShubEsp = {
         MaxDistance = 10000,
         Draws = {}
     },
-    Extra = {}
+    Extra = {
+        Enabled = true
+    }
 }
 
-function SShubEsp:NewIndex(Index, Value)
+function SShubEsp:NewIndex(Index, Value, Extras)
     if Index ~= nil then
         if SShubEsp.Extra[Index] == nil then
             SShubEsp.Extra[Index]={
                 Enabled = Value or true,
+                Boxes = {Enabled = false, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
                 GoblalColor = {false, Color3.fromRGB(255,255,255)},
-                Title = {false, Color3.fromRGB(255,255,255)},
-                SubText = {false, Color3.fromRGB(255,255,255)},
-                ExtraText = {false, Color3.fromRGB(255,255,255)},
+                Title = {false, Color3.fromRGB(255,255,255), "Tittle"},
+                Distance = {false, Color3.fromRGB(255,255,255)},
+                Separation = 12,
                 MaxDistance = 10000,
                 Draws = {}
             }
+            if Extras ~= nil and typeof(Extras) == "table" then
+                for i,v in pairs(Extras) do
+                    if SShubEsp.Extra[Index][i] == nil then
+                        SShubEsp.Extra[Index][i] = v
+                    end
+                end
+            end
         end
     else
         if SShubEsp.Extra["Global"] == nil then
             SShubEsp.Extra["Global"]={
                 Enabled = Value or true,
+                Boxes = {Enabled = false, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
                 GoblalColor = {false, Color3.fromRGB(255,255,255)},
-                Title = {false, Color3.fromRGB(255,255,255)},
-                SubText = {false, Color3.fromRGB(255,255,255)},
-                ExtraText = {false, Color3.fromRGB(255,255,255)},
+                Title = {false, Color3.fromRGB(255,255,255), "Tittle"},
+                Distance = {false, Color3.fromRGB(255,255,255)},
+                Separation = 12,
                 MaxDistance = 10000,
                 Draws = {}
             }
+            if Extras ~= nil and typeof(Extras) == "table" then
+                for i,v in pairs(Extras) do
+                    if SShubEsp.Extra[Index][i] == nil then
+                        SShubEsp.Extra[Index][i] = v
+                    end
+                end
+            end
         end
     end
 end
@@ -361,6 +379,7 @@ local function GeneratePlayerEsp(Player)
     end
     coroutine.wrap(InfoUpdate)()
 end
+
 function SShubEsp:CreatePlayerEsp()
     for i,v in pairs(Players:GetPlayers()) do
         if v ~= Plr then
@@ -381,4 +400,248 @@ function SShubEsp:CreatePlayerEsp()
     end)
 end
 
+function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
+    local Esp = {
+        Index = Add.Index or "Global",
+        Boxes = {
+            Enabled = Add.Boxes.Enabled or true,
+            Color = Add.Boxes.Color or Color3.fromRGB(255,255,255),
+            X = Add.Boxes.X or 0.75,
+            Y = Add.Boxes.Y or 1.5,
+            Size = Add.Boxes.Size or 2500
+        },
+        Title = {
+            Enabled = Add.Title.Enabled or true,
+            Color = Add.Title.Color or Color3.fromRGB(255,255,255),
+            Text = Add.Title.Text or tostring(Instance)
+        },
+        Distance = {
+            Enabled = Add.Title.Enabled or true,
+            Color = Add.Title.Color or Color3.fromRGB(255,255,255),
+        }
+    }
+        SShubEsp:NewEsp(Esp.Index, true, ExtraTexts)
+
+        SShubEsp.Extra[Esp.Index].Boxes.Enabled = Esp.Boxes.Enabled
+        SShubEsp.Extra[Esp.Index].Boxes.Color = Esp.Boxes.Color
+        SShubEsp.Extra[Esp.Index].Boxes.Size = Esp.Boxes.Size
+        SShubEsp.Extra[Esp.Index].Boxes.X = Esp.Boxes.X
+        SShubEsp.Extra[Esp.Index].Boxes.Y = Esp.Boxes.Y
+
+        SShubEsp.Extra[Esp.Index].Title[1] = Esp.Title.Enabled
+        SShubEsp.Extra[Esp.Index].Title[2] = Esp.Title.Color
+        SShubEsp.Extra[Esp.Index].Title[3] = Esp.Title.Text
+
+        local function InfoUpdate()
+            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)] = {
+                Box = {},
+                ["Title"] = Draw("Text", {
+                    Visible = false,
+                    Center = true,
+                    Outline = true,
+                    Color = SShubEsp.Extra[Esp.Index].Title[2],
+                    Font = 3,
+                    Size = 16,
+                    Text = SShubEsp.Extra[Esp.Index].Title[3]
+                }),
+                ["Distance"] = Draw("Text", {
+                    Visible = false,
+                    Center = true,
+                    Outline = true,
+                    Color = SShubEsp.Extra[Esp.Index].Distance[2],
+                    Font = 3,
+                    Size = 16,
+                    Text = "0"
+                })
+            }
+            
+            for i,v in pairs(ExtraTexts) do
+                if SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)][i] == nil then
+                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)][i] = Draw("Text", {
+                        Visible = false,
+                        Center = true,
+                        Outline = true,
+                        Color = SShubEsp.Extra[Esp.Index][i][2],
+                        Font = 3,
+                        Size = 16,
+                        Text = SShubEsp.Extra[Esp.Index][i][3]
+                    })
+                end
+            end
+
+            for i = 1, 8 do
+                table.insert(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box, Draw("Line", {
+                    Thickness = 1.5,
+                    Color = SShubEsp.Extra[Esp.Index].Boxes.Color,
+                    Transparency = 1,
+                    Visible = SShubEsp.Extra[Esp.Index].Boxes.Enabled
+                }))
+            end
+    
+            local function TextsVis(State)
+                pcall(function()
+                    for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]) do
+                        if v ~= nil and type(v) == "table" then
+                            v.Visible = State
+                        end
+                    end
+                end)
+            end
+    
+            local function RemoveEsp()
+                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]=nil
+            end
+    
+            local function RemoveTexts()
+                pcall(function()
+                    for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]) do
+                        if v ~= nil and type(v) == "table" then
+                            v:Remove()
+                        end
+                    end
+                end)
+            end
+    
+            local function BoxVis(State)
+                pcall(function()
+                    for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box) do
+                        if v ~= nil and type(v) == "table" then
+                            v.Visible = State
+                        end
+                    end
+                end)
+            end
+    
+            local function BoxColor(Color)
+                pcall(function()
+                    for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box) do
+                        if v ~= nil and type(v) == "table" then
+                            v.Color = Color
+                        end
+                    end
+                end)
+            end
+    
+            local function RemoveBox()
+                pcall(function()
+                    for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box) do
+                        if v ~= nil and type(v) == "table" then
+                            v:Remove()
+                        end
+                    end
+                end)
+            end
+    
+            local Iu
+            Iu = RunService.RenderStepped:Connect(function()
+                if workspace:IsAncestorOf(Instance) then
+                    if SShubEsp.Enabled then
+                        if SShubEsp.Extra.Enabled then
+                            local Distance = math.round((Cam.CFrame.Position-Instance.Position).magnitude)
+                            if Distance < SShubEsp.Players.MaxDistance then
+                                local RootVector, OnScreen = WorldToViewportPoint(Cam, Instance.Position)
+                                
+                                local Size = SShubEsp.Extra[Esp.Index].Boxes.Size/RootVector.Z
+                                local NewSizeX = Size --[[* SShubEsp.Extra[Esp.Index].Boxes.X]] / 2
+                                local NewSizeY = Size * SShubEsp.Extra[Esp.Index].Boxes.Y / 2
+
+                                local UpLeft = Vector2.new(RootVector.X-NewSizeX, RootVector.Y-NewSizeY)
+                                local UpRight = Vector2.new(RootVector.X+NewSizeX, RootVector.Y-NewSizeY)
+                                local LowLeft = Vector2.new(RootVector.X-NewSizeX, RootVector.Y+NewSizeY)
+                                local LowRight = Vector2.new(RootVector.X+NewSizeX, RootVector.Y+NewSizeY)
+
+                                local DirectionH = Vector2.new(Size/4, 0)
+                                local DirectionV = Vector2.new(0, Size/4)
+
+                                local TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY-10)
+                                local Center = Vector2.new(RootVector.X, RootVector.Y)
+                                
+                                if OnScreen then
+                                    if SShubEsp.Extra[Esp.Index].Title[1] then
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Title"].Text = SShubEsp.Extra[Esp.Index].Title[3]
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Title"].Position = TextsPos
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Title"].Visible = true
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Title"].Color = SShubEsp.Extra[Esp.Index].Title[2]
+                                    else
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Title"].Visible = false
+                                    end
+
+                                    if SShubEsp.Extra[Esp.Index].Distance[1] then
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Distance"].Visible = true
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Distance"].Text = "Distance: "..Distance.."m"
+                                    else
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Distance"].Visible = false
+                                    end
+
+                                    local TotalPos = TextsPos
+                                    for Index,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]) do
+                                        if SShubEsp.Extra[Esp.Index][Index][1] then
+                                            v.Visible = true
+                                            if v.Visible then
+                                                v.Text = SShubEsp.Extra[Esp.Index][Index][3]
+                                                v.Position = TotalPos + Vector2.new(0,SShubEsp.Extra[Esp.Index].Separation)
+                                                v.Color = SShubEsp.Extra[Esp.Index][Index][2]
+                                                TotalPos = v.Position
+                                            end
+                                        else
+                                            v.Visible = false
+                                        end
+                                    end
+
+                                    if SShubEsp.Extra[Esp.Index].Boxes.Enabled then
+                                        BoxVis(true)
+                                        BoxColor(SShubEsp.Players.Boxes[2])
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[1].From = UpRight
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[1].To = UpRight - DirectionH
+
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[2].From = UpRight
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[2].To = UpRight + DirectionV
+
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[3].From = UpLeft
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[3].To = UpLeft + DirectionH
+
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[4].From = UpLeft
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[4].To = UpLeft + DirectionV
+
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[5].From = LowRight
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[5].To = LowRight - DirectionH
+
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[6].From = LowRight
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[6].To = LowRight - DirectionV
+
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[7].From = LowLeft
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[7].To = LowLeft + DirectionH
+
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[8].From = LowLeft
+                                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[8].To = LowLeft - DirectionV
+                                    else
+                                        BoxVis(false)
+                                    end
+                                else
+                                    TextsVis(false)
+                                    BoxVis(false)
+                                end
+                            else
+                                TextsVis(false)
+                                BoxVis(false)
+                            end
+                        else
+                            TextsVis(false)
+                            BoxVis(false)
+                        end
+                    else
+                        TextsVis(false)
+                        BoxVis(false)
+                    end
+                else
+                    Iu:Disconnect()
+                    RemoveBox()
+                    RemoveTexts()
+                    RemoveEsp()
+                end
+            end)
+        end
+        coroutine.wrap(InfoUpdate)()
+    return Esp
+end
 return SShubEsp
