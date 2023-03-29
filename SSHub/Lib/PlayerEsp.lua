@@ -67,7 +67,7 @@ function SShubEsp:NewIndex(Index, Value, Extras)
             Boxes = {Enabled = true, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
             GoblalColor = {false, Color3.fromRGB(255,255,255)},
             Title = {true, Color3.fromRGB(255,255,255), "Title"},
-            Distance = {true, Color3.fromRGB(255,255,255)},
+            Distance = {true, Color3.fromRGB(255,255,255), "Distance"},
             Separation = 12,
             MaxDistance = 10000,
             Draws = {}
@@ -443,7 +443,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                         Color = SShubEsp.Extra[Esp.Index].Distance[2],
                         Font = 3,
                         Size = 16,
-                        Text = "0"
+                        Text = SShubEsp.Extra[Esp.Index].Distance[3]
                     })
                 }
                 
@@ -508,7 +508,11 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                     pcall(function()
                         for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box) do
                             if v ~= nil and type(v) == "table" then
-                                v.Color = Color
+                                if SShubEsp.Extra[Esp.Index].GoblalColor[1] then
+                                    v.Color = SShubEsp.Extra[Esp.Index].GoblalColor[2]
+                                else
+                                    v.Color = Color
+                                end
                             end
                         end
                     end)
@@ -531,10 +535,12 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                             if SShubEsp.Extra.Enabled then
                                 local Distance = math.round((Cam.CFrame.Position-Instance.Position).magnitude)
                                 if Distance < SShubEsp.Extra[Esp.Index].MaxDistance then
+                                    SShubEsp.Extra[Esp.Index].Distance[3] = "Distance: "..Distance.."m"
+
                                     local RootVector, OnScreen = WorldToViewportPoint(Cam, Instance.Position)
                                     
                                     local Size = SShubEsp.Extra[Esp.Index].Boxes.Size/RootVector.Z
-                                    local NewSizeX = Size --[[* SShubEsp.Extra[Esp.Index].Boxes.X]] / 2
+                                    local NewSizeX = Size * SShubEsp.Extra[Esp.Index].Boxes.X / 2
                                     local NewSizeY = Size * SShubEsp.Extra[Esp.Index].Boxes.Y / 2
 
                                     local UpLeft = Vector2.new(RootVector.X-NewSizeX, RootVector.Y-NewSizeY)
@@ -549,32 +555,32 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                     local Center = Vector2.new(RootVector.X, RootVector.Y)
                                     
                                     if OnScreen then
-                                        if SShubEsp.Extra[Esp.Index].Title[1] then
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Title"].Text = SShubEsp.Extra[Esp.Index].Title[3]
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Title"].Position = TextsPos
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Title"].Visible = true
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Title"].Color = SShubEsp.Extra[Esp.Index].Title[2]
-                                        else
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Title"].Visible = false
-                                        end
-
-                                        if SShubEsp.Extra[Esp.Index].Distance[1] then
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Distance"].Text = "Distance: "..Distance.."m"
-                                        end
-
                                         local TotalPos = TextsPos
                                         for Index,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]) do
                                             if Index ~= "Box" and SShubEsp.Extra[Esp.Index][Index][1] then
                                                 v.Visible = true
                                                 if v.Visible then
-                                                    if Index ~= "Distance" then
+                                                    --Texts
+                                                    if Index == "Distance" then
+                                                        v.Text = SShubEsp.Extra[Esp.Index][Index][3]
+                                                    else
                                                         if SShubEsp.Extra[Esp.Index][Index][3] ~= nil then
-                                                            v.Text = SShubEsp.Extra[Esp.Index][Index][3] or " "
+                                                            v.Text = SShubEsp.Extra[Esp.Index][Index][3] or "..."
+                                                        else
+                                                            v.Text = "..."
                                                         end
                                                     end
+
+                                                    --Position
                                                     v.Position = TotalPos + Vector2.new(0,SShubEsp.Extra[Esp.Index].Separation)
-                                                    v.Color = SShubEsp.Extra[Esp.Index][Index][2]
                                                     TotalPos = v.Position
+
+                                                    --Color
+                                                    if SShubEsp.Extra[Esp.Index].GoblalColor[1] then
+                                                        v.Color = SShubEsp.Extra[Esp.Index].GoblalColor[2]
+                                                    else
+                                                        v.Color = SShubEsp.Extra[Esp.Index][Index][2]
+                                                    end
                                                 end
                                             else
                                                 v.Visible = false
