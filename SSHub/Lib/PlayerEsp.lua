@@ -65,7 +65,7 @@ function SShubEsp:NewIndex(Index, Value, Extras)
         SShubEsp.Extra[Index]={
             Enabled = Value or true,
             Boxes = {Enabled = true, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
-            GoblalColor = {false, Color3.fromRGB(255,255,255)},
+            GlobalColor = {false, Color3.fromRGB(255,255,255)},
             Title = {true, Color3.fromRGB(255,255,255), "Title"},
             Distance = {true, Color3.fromRGB(255,255,255), "Distance"},
             Separation = 12,
@@ -405,26 +405,34 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
         Distance = {
             Enabled = Add.Title.Enabled or true,
             Color = Add.Title.Color or Color3.fromRGB(255,255,255),
+        },
+        GlobalColor = {
+            Enabled = Add.Title.Enabled or true,
+            Color = Add.Title.Color or Color3.fromRGB(255,255,255),
         }
     }
-    if Instance ~= nil then
-        if table.find(Class, Instance.ClassName) then
-            SShubEsp:NewIndex(Esp.Index, true, ExtraTexts)
+    
+    local function InfoUpdate()
+        if Instance ~= nil then
+            if table.find(Class, Instance.ClassName) then
+                SShubEsp:NewIndex(Esp.Index, true, ExtraTexts)
+    
+                SShubEsp.Extra[Esp.Index].Boxes.Enabled = Esp.Boxes.Enabled
+                SShubEsp.Extra[Esp.Index].Boxes.Color = Esp.Boxes.Color
+                SShubEsp.Extra[Esp.Index].Boxes.Size = Esp.Boxes.Size
+                SShubEsp.Extra[Esp.Index].Boxes.X = Esp.Boxes.X
+                SShubEsp.Extra[Esp.Index].Boxes.Y = Esp.Boxes.Y
+    
+                SShubEsp.Extra[Esp.Index].Title[1] = Esp.Title.Enabled
+                SShubEsp.Extra[Esp.Index].Title[2] = Esp.Title.Color
+                SShubEsp.Extra[Esp.Index].Title[3] = Esp.Title.Text
+    
+                SShubEsp.Extra[Esp.Index].Distance[1] = Esp.Distance.Enabled
+                SShubEsp.Extra[Esp.Index].Distance[2] = Esp.Distance.Color
+    
+                SShubEsp.Extra[Esp.Index].GlobalColor[1] = Esp.GlobalColor.Enabled
+                SShubEsp.Extra[Esp.Index].GlobalColor[2] = Esp.GlobalColor.Color
 
-            SShubEsp.Extra[Esp.Index].Boxes.Enabled = Esp.Boxes.Enabled
-            SShubEsp.Extra[Esp.Index].Boxes.Color = Esp.Boxes.Color
-            SShubEsp.Extra[Esp.Index].Boxes.Size = Esp.Boxes.Size
-            SShubEsp.Extra[Esp.Index].Boxes.X = Esp.Boxes.X
-            SShubEsp.Extra[Esp.Index].Boxes.Y = Esp.Boxes.Y
-
-            SShubEsp.Extra[Esp.Index].Title[1] = Esp.Title.Enabled
-            SShubEsp.Extra[Esp.Index].Title[2] = Esp.Title.Color
-            SShubEsp.Extra[Esp.Index].Title[3] = Esp.Title.Text
-
-            SShubEsp.Extra[Esp.Index].Distance[1] = Esp.Distance.Enabled
-            SShubEsp.Extra[Esp.Index].Distance[2] = Esp.Distance.Color
-
-            local function InfoUpdate()
                 SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)] = {
                     Box = {},
                     ["Title"] = Draw("Text", {
@@ -508,8 +516,8 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                     pcall(function()
                         for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box) do
                             if v ~= nil and type(v) == "table" then
-                                if SShubEsp.Extra[Esp.Index].GoblalColor[1] then
-                                    v.Color = SShubEsp.Extra[Esp.Index].GoblalColor[2]
+                                if SShubEsp.Extra[Esp.Index].GlobalColor[1] then
+                                    v.Color = SShubEsp.Extra[Esp.Index].GlobalColor[2]
                                 else
                                     v.Color = Color
                                 end
@@ -576,8 +584,8 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                                     TotalPos = v.Position
 
                                                     --Color
-                                                    if SShubEsp.Extra[Esp.Index].GoblalColor[1] then
-                                                        v.Color = SShubEsp.Extra[Esp.Index].GoblalColor[2]
+                                                    if SShubEsp.Extra[Esp.Index].GlobalColor[1] then
+                                                        v.Color = SShubEsp.Extra[Esp.Index].GlobalColor[2]
                                                     else
                                                         v.Color = SShubEsp.Extra[Esp.Index][Index][2]
                                                     end
@@ -640,9 +648,9 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                     end
                 end)
             end
-            coroutine.wrap(InfoUpdate)()
         end
     end
+    coroutine.wrap(InfoUpdate)()
     return Esp
 end
 return SShubEsp
