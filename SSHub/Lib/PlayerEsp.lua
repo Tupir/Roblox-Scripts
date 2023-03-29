@@ -61,8 +61,9 @@ local SShubEsp = {
 
 function SShubEsp:NewIndex(Index, Value, Extras)
     Index = Index or "Global"
+    Extras = Extras or {}
     if SShubEsp.Extra[Index] == nil then
-        SShubEsp.Extra[Index]={
+        SShubEsp.Extra[Index] = {
             Enabled = Value or true,
             Boxes = {Enabled = true, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
             GlobalColor = {false, Color3.fromRGB(255,255,255)},
@@ -411,7 +412,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
             Color = Add.Title.Color or Color3.fromRGB(255,255,255),
         }
     }
-    
+    ExtraTexts = ExtraTexts or {}
     local function InfoUpdate()
         if Instance ~= nil then
             if table.find(Class, Instance.ClassName) then
