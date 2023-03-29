@@ -408,8 +408,8 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
             Color = Add.Title.Color or Color3.fromRGB(255,255,255),
         },
         GlobalColor = {
-            Enabled = Add.Title.Enabled or true,
-            Color = Add.Title.Color or Color3.fromRGB(255,255,255),
+            Enabled = Add.GlobalColor.Enabled or true,
+            Color = Add.GlobalColor.Color or Color3.fromRGB(255,255,255),
         }
     }
     ExtraTexts = ExtraTexts or {}
