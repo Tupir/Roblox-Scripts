@@ -79,6 +79,8 @@ function SShubEsp:NewIndex(Index, Value, Extras)
                 end 
             end
         end
+    else
+        warn('"'..Index..'" Este Index Ya Existe.')
     end
 end
 
@@ -464,7 +466,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                         Thickness = 1.5,
                         Color = SShubEsp.Extra[Esp.Index].Boxes.Color,
                         Transparency = 1,
-                        Visible = SShubEsp.Extra[Esp.Index].Boxes.Enabled
+                        Visible = false
                     }))
                 end
         
@@ -557,10 +559,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                         end
 
                                         if SShubEsp.Extra[Esp.Index].Distance[1] then
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Distance"].Visible = true
                                             SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Distance"].Text = "Distance: "..Distance.."m"
-                                        else
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]["Distance"].Visible = false
                                         end
 
                                         local TotalPos = TextsPos
@@ -569,7 +568,9 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                                 v.Visible = true
                                                 if v.Visible then
                                                     if Index ~= "Distance" then
-                                                        v.Text = SShubEsp.Extra[Esp.Index][Index][3]
+                                                        if SShubEsp.Extra[Esp.Index][Index][3] ~= nil then
+                                                            v.Text = SShubEsp.Extra[Esp.Index][Index][3] or " "
+                                                        end
                                                     end
                                                     v.Position = TotalPos + Vector2.new(0,SShubEsp.Extra[Esp.Index].Separation)
                                                     v.Color = SShubEsp.Extra[Esp.Index][Index][2]
@@ -582,7 +583,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
 
                                         if SShubEsp.Extra[Esp.Index].Boxes.Enabled then
                                             BoxVis(true)
-                                            BoxColor(SShubEsp.Players.Boxes[2])
+                                            BoxColor(SShubEsp.Extra[Esp.Index].Boxes.Color)
                                             SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[1].From = UpRight
                                             SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[1].To = UpRight - DirectionH
 
