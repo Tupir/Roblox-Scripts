@@ -438,23 +438,26 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                         end
                     end
                 end
-                SShubEsp:NewIndex(Esp.Index, true, Extras)
-    
+
+                if SShubEsp.Extra[Esp.Index] == nil then
+                    SShubEsp:NewIndex(Esp.Index, true, Extras)
+                end
+
                 SShubEsp.Extra[Esp.Index].Boxes.Enabled = Esp.Boxes.Enabled
-                SShubEsp.Extra[Esp.Index].Boxes.Color = Esp.Boxes.Color
                 SShubEsp.Extra[Esp.Index].Boxes.Size = Esp.Boxes.Size
                 SShubEsp.Extra[Esp.Index].Boxes.X = Esp.Boxes.X
                 SShubEsp.Extra[Esp.Index].Boxes.Y = Esp.Boxes.Y
-    
+
                 SShubEsp.Extra[Esp.Index].Title[1] = Esp.Title.Enabled
-                SShubEsp.Extra[Esp.Index].Title[2] = Esp.Title.Color
                 SShubEsp.Extra[Esp.Index].Title[3] = Esp.Title.Text
-    
+
                 SShubEsp.Extra[Esp.Index].Distance[1] = Esp.Distance.Enabled
-                SShubEsp.Extra[Esp.Index].Distance[2] = Esp.Distance.Color
-    
                 SShubEsp.Extra[Esp.Index].GlobalColor[1] = Esp.GlobalColor.Enabled
+
                 SShubEsp.Extra[Esp.Index].GlobalColor[2] = Esp.GlobalColor.Color
+                SShubEsp.Extra[Esp.Index].Title[2] = Esp.Title.Color
+                SShubEsp.Extra[Esp.Index].Distance[2] = Esp.Distance.Color
+                SShubEsp.Extra[Esp.Index].Boxes.Color = Esp.Boxes.Color
 
                 SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)] = {
                     Box = {},
