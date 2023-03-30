@@ -439,9 +439,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                     end
                 end
 
-                if SShubEsp.Extra[Esp.Index] == nil then
-                    SShubEsp:NewIndex(Esp.Index, true, Extras)
-                end
+                SShubEsp:NewIndex(Esp.Index, true, Extras)
 
                 SShubEsp.Extra[Esp.Index].Boxes.Enabled = Esp.Boxes.Enabled
                 SShubEsp.Extra[Esp.Index].Boxes.Size = Esp.Boxes.Size
