@@ -62,6 +62,7 @@ local SShubEsp = {
 function SShubEsp:NewIndex(Index, Value, Extras)
     Index = Index or "Global"
     Extras = Extras or {}
+
     if SShubEsp.Extra[Index] == nil then
         SShubEsp.Extra[Index] = {
             Enabled = Value or true,
@@ -80,8 +81,15 @@ function SShubEsp:NewIndex(Index, Value, Extras)
                 end
             end
         end
-    else
-        warn('"'..Index..'" Este Index Ya Existe.')
+    end
+    if SShubEsp.Extra[Index] ~= nil then
+        if Extras ~= nil and typeof(Extras) == "table" then
+            for i,v in pairs(Extras) do
+                if SShubEsp.Extra[Index][i] == nil then
+                    SShubEsp.Extra[Index][i] = v
+                end
+            end
+        end
     end
 end
 
