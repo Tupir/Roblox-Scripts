@@ -391,6 +391,7 @@ end
 function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
     local Esp = {
         Index = Add.Index or "Global",
+        RemoveOnToggle = Add.RemoveOnToggle or false,
         Boxes = {
             Enabled = Add.Boxes.Enabled or true,
             Color = Add.Boxes.Color or Color3.fromRGB(255,255,255),
@@ -541,88 +542,93 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 Iu = RunService.RenderStepped:Connect(function()
                     if workspace:IsAncestorOf(Instance) then
                         if SShubEsp.Enabled then
-                            if SShubEsp.Extra.Enabled then
-                                local Distance = math.round((Cam.CFrame.Position-Instance.Position).magnitude)
-                                if Distance < SShubEsp.Extra[Esp.Index].MaxDistance then
-                                    SShubEsp.Extra[Esp.Index].Distance[3] = "Distance: "..Distance.."m"
+                            if SShubEsp.Extra[Esp.Index] ~= nil then
+                                if SShubEsp.Extra.Enabled then
+                                    local Distance = math.round((Cam.CFrame.Position-Instance.Position).magnitude)
+                                    if Distance < SShubEsp.Extra[Esp.Index].MaxDistance then
+                                        SShubEsp.Extra[Esp.Index].Distance[3] = "Distance: "..Distance.."m"
 
-                                    local RootVector, OnScreen = WorldToViewportPoint(Cam, Instance.Position)
-                                    
-                                    local Size = SShubEsp.Extra[Esp.Index].Boxes.Size/RootVector.Z
-                                    local NewSizeX = Size * SShubEsp.Extra[Esp.Index].Boxes.X / 2
-                                    local NewSizeY = Size * SShubEsp.Extra[Esp.Index].Boxes.Y / 2
+                                        local RootVector, OnScreen = WorldToViewportPoint(Cam, Instance.Position)
+                                        
+                                        local Size = SShubEsp.Extra[Esp.Index].Boxes.Size/RootVector.Z
+                                        local NewSizeX = Size * SShubEsp.Extra[Esp.Index].Boxes.X / 2
+                                        local NewSizeY = Size * SShubEsp.Extra[Esp.Index].Boxes.Y / 2
 
-                                    local UpLeft = Vector2.new(RootVector.X-NewSizeX, RootVector.Y-NewSizeY)
-                                    local UpRight = Vector2.new(RootVector.X+NewSizeX, RootVector.Y-NewSizeY)
-                                    local LowLeft = Vector2.new(RootVector.X-NewSizeX, RootVector.Y+NewSizeY)
-                                    local LowRight = Vector2.new(RootVector.X+NewSizeX, RootVector.Y+NewSizeY)
+                                        local UpLeft = Vector2.new(RootVector.X-NewSizeX, RootVector.Y-NewSizeY)
+                                        local UpRight = Vector2.new(RootVector.X+NewSizeX, RootVector.Y-NewSizeY)
+                                        local LowLeft = Vector2.new(RootVector.X-NewSizeX, RootVector.Y+NewSizeY)
+                                        local LowRight = Vector2.new(RootVector.X+NewSizeX, RootVector.Y+NewSizeY)
 
-                                    local DirectionH = Vector2.new(Size/4, 0)
-                                    local DirectionV = Vector2.new(0, Size/4)
+                                        local DirectionH = Vector2.new(Size/4, 0)
+                                        local DirectionV = Vector2.new(0, Size/4)
 
-                                    local TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY-10)
-                                    local Center = Vector2.new(RootVector.X, RootVector.Y)
-                                    
-                                    if OnScreen then
-                                        local TotalPos = TextsPos
-                                        for Index,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]) do
-                                            if Index ~= "Box" and SShubEsp.Extra[Esp.Index][Index][1] then
-                                                v.Visible = true
-                                                if v.Visible then
-                                                    --Texts
-                                                    if Index == "Distance" then
-                                                        v.Text = SShubEsp.Extra[Esp.Index][Index][3]
-                                                    else
-                                                        if SShubEsp.Extra[Esp.Index][Index][3] ~= nil then
-                                                            v.Text = SShubEsp.Extra[Esp.Index][Index][3] or "..."
+                                        local TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY-10)
+                                        local Center = Vector2.new(RootVector.X, RootVector.Y)
+                                        
+                                        if OnScreen then
+                                            local TotalPos = TextsPos
+                                            for Index,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]) do
+                                                if Index ~= "Box" and SShubEsp.Extra[Esp.Index][Index][1] then
+                                                    v.Visible = true
+                                                    if v.Visible then
+                                                        --Texts
+                                                        if Index == "Distance" then
+                                                            v.Text = SShubEsp.Extra[Esp.Index][Index][3]
                                                         else
-                                                            v.Text = "..."
+                                                            if SShubEsp.Extra[Esp.Index][Index][3] ~= nil then
+                                                                v.Text = SShubEsp.Extra[Esp.Index][Index][3] or "..."
+                                                            else
+                                                                v.Text = "..."
+                                                            end
+                                                        end
+
+                                                        --Position
+                                                        v.Position = TotalPos + Vector2.new(0,SShubEsp.Extra[Esp.Index].Separation)
+                                                        TotalPos = v.Position
+
+                                                        --Color
+                                                        if SShubEsp.Extra[Esp.Index].GlobalColor[1] then
+                                                            v.Color = SShubEsp.Extra[Esp.Index].GlobalColor[2]
+                                                        else
+                                                            v.Color = SShubEsp.Extra[Esp.Index][Index][2]
                                                         end
                                                     end
-
-                                                    --Position
-                                                    v.Position = TotalPos + Vector2.new(0,SShubEsp.Extra[Esp.Index].Separation)
-                                                    TotalPos = v.Position
-
-                                                    --Color
-                                                    if SShubEsp.Extra[Esp.Index].GlobalColor[1] then
-                                                        v.Color = SShubEsp.Extra[Esp.Index].GlobalColor[2]
-                                                    else
-                                                        v.Color = SShubEsp.Extra[Esp.Index][Index][2]
-                                                    end
+                                                else
+                                                    v.Visible = false
                                                 end
-                                            else
-                                                v.Visible = false
                                             end
-                                        end
 
-                                        if SShubEsp.Extra[Esp.Index].Boxes.Enabled then
-                                            BoxVis(true)
-                                            BoxColor(SShubEsp.Extra[Esp.Index].Boxes.Color)
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[1].From = UpRight
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[1].To = UpRight - DirectionH
+                                            if SShubEsp.Extra[Esp.Index].Boxes.Enabled then
+                                                BoxVis(true)
+                                                BoxColor(SShubEsp.Extra[Esp.Index].Boxes.Color)
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[1].From = UpRight
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[1].To = UpRight - DirectionH
 
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[2].From = UpRight
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[2].To = UpRight + DirectionV
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[2].From = UpRight
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[2].To = UpRight + DirectionV
 
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[3].From = UpLeft
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[3].To = UpLeft + DirectionH
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[3].From = UpLeft
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[3].To = UpLeft + DirectionH
 
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[4].From = UpLeft
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[4].To = UpLeft + DirectionV
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[4].From = UpLeft
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[4].To = UpLeft + DirectionV
 
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[5].From = LowRight
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[5].To = LowRight - DirectionH
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[5].From = LowRight
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[5].To = LowRight - DirectionH
 
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[6].From = LowRight
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[6].To = LowRight - DirectionV
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[6].From = LowRight
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[6].To = LowRight - DirectionV
 
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[7].From = LowLeft
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[7].To = LowLeft + DirectionH
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[7].From = LowLeft
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[7].To = LowLeft + DirectionH
 
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[8].From = LowLeft
-                                            SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[8].To = LowLeft - DirectionV
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[8].From = LowLeft
+                                                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[8].To = LowLeft - DirectionV
+                                            else
+                                                BoxVis(false)
+                                            end
                                         else
+                                            TextsVis(false)
                                             BoxVis(false)
                                         end
                                     else
@@ -632,14 +638,32 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                 else
                                     TextsVis(false)
                                     BoxVis(false)
+                                    if Esp.RemoveOnToggle then
+                                        Iu:Disconnect()
+                                        RemoveBox()
+                                        RemoveTexts()
+                                        RemoveEsp()
+                                    end
                                 end
                             else
                                 TextsVis(false)
                                 BoxVis(false)
+                                if Esp.RemoveOnToggle then
+                                    Iu:Disconnect()
+                                    RemoveBox()
+                                    RemoveTexts()
+                                    RemoveEsp()
+                                end
                             end
                         else
                             TextsVis(false)
                             BoxVis(false)
+                            if Esp.RemoveOnToggle then
+                                Iu:Disconnect()
+                                RemoveBox()
+                                RemoveTexts()
+                                RemoveEsp()
+                            end
                         end
                     else
                         Iu:Disconnect()
