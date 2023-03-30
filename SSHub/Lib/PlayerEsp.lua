@@ -77,7 +77,7 @@ function SShubEsp:NewIndex(Index, Value, Extras)
             for i,v in pairs(Extras) do
                 if SShubEsp.Extra[Index][i] == nil then
                     SShubEsp.Extra[Index][i] = v
-                end 
+                end
             end
         end
     else
@@ -413,11 +413,24 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
             Color = Add.GlobalColor.Color or Color3.fromRGB(255,255,255),
         }
     }
-    ExtraTexts = ExtraTexts or {}
     local function InfoUpdate()
         if Instance ~= nil then
             if table.find(Class, Instance.ClassName) then
-                SShubEsp:NewIndex(Esp.Index, true, ExtraTexts)
+                local Extras = {}
+                if ExtraTexts ~= nil and typeof(ExtraTexts) == "table" then
+                    for i,v in pairs(ExtraTexts) do
+                        if i and v ~= nil then
+                            if Extras[i]==nil then
+                                Extras[i] = {
+                                    v.Enabled or false,
+                                    v.Color or Color3.fromRGB(255,255,255),
+                                    v.Text or "..."
+                                }
+                            end
+                        end
+                    end
+                end
+                SShubEsp:NewIndex(Esp.Index, true, Extras)
     
                 SShubEsp.Extra[Esp.Index].Boxes.Enabled = Esp.Boxes.Enabled
                 SShubEsp.Extra[Esp.Index].Boxes.Color = Esp.Boxes.Color
@@ -457,7 +470,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                     })
                 }
                 
-                for i,v in pairs(ExtraTexts) do
+                for i,v in pairs(Extras) do
                     if SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)][i] == nil then
                         SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)][i] = Draw("Text", {
                             Visible = false,
