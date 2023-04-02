@@ -590,13 +590,13 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
 
                                             local Center = Vector2.new(RootVector.X, RootVector.Y)
                                             local TextsPos = Center
-
+                                            
                                             if SShubEsp.Extra[Esp.Index].Boxes.Enabled then
                                                 TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY-10)
                                             else
                                                 TextsPos = Center
                                             end
-                                            
+                                            print(TextsPos)
                                             if OnScreen then
                                                 local TotalPos = TextsPos
                                                 for Index,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex]) do
