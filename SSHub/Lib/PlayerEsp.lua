@@ -72,6 +72,7 @@ function SShubEsp:NewIndex(Index, Value, Extras)
             Distance = {true, Color3.fromRGB(255,255,255), "Distance"},
             Separation = 12,
             MaxDistance = 10000,
+            GeneratedEsps = 0,
             Draws = {}
         }
         if Extras ~= nil and typeof(Extras) == "table" then
@@ -456,8 +457,10 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 SShubEsp.Extra[Esp.Index].Title[2] = Esp.Title.Color
                 SShubEsp.Extra[Esp.Index].Distance[2] = Esp.Distance.Color
                 SShubEsp.Extra[Esp.Index].Boxes.Color = Esp.Boxes.Color
-
-                SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)] = {
+                local DrawIndex
+                DrawIndex = tostring(tostring(Instance)..SShubEsp.Extra[Esp.Index].GeneratedEsps)
+                SShubEsp.Extra[Esp.Index].GeneratedEsps = SShubEsp.Extra[Esp.Index].GeneratedEsps + 1
+                SShubEsp.Extra[Esp.Index].Draws[DrawIndex] = {
                     Box = {},
                     ["Title"] = Draw("Text", {
                         Visible = false,
@@ -480,8 +483,8 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 }
                 
                 for i,v in pairs(Extras) do
-                    if SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)][i] == nil then
-                        SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)][i] = Draw("Text", {
+                    if SShubEsp.Extra[Esp.Index].Draws[DrawIndex][i] == nil then
+                        SShubEsp.Extra[Esp.Index].Draws[DrawIndex][i] = Draw("Text", {
                             Visible = false,
                             Center = true,
                             Outline = true,
@@ -494,7 +497,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 end
 
                 for i = 1, 8 do
-                    table.insert(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box, Draw("Line", {
+                    table.insert(SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box, Draw("Line", {
                         Thickness = 1.5,
                         Color = SShubEsp.Extra[Esp.Index].Boxes.Color,
                         Transparency = 1,
@@ -504,7 +507,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
         
                 local function TextsVis(State)
                     pcall(function()
-                        for i,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]) do
+                        for i,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex]) do
                             if i ~= "Box" and v ~= nil and typeof(v) == "table" then
                                 v.Visible = State
                             end
@@ -514,7 +517,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
         
                 local function RemoveTexts()
                     pcall(function()
-                        for i,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]) do
+                        for i,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex]) do
                             if i ~= "Box" and v ~= nil and typeof(v) == "table" then
                                 v:Remove()
                             end
@@ -523,12 +526,12 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 end
 
                 local function RemoveEsp()
-                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]=nil
+                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex]=nil
                 end
 
                 local function BoxVis(State)
                     pcall(function()
-                        for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box) do
+                        for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box) do
                             if v ~= nil and typeof(v) == "table" then
                                 v.Visible = State
                             end
@@ -538,7 +541,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
         
                 local function BoxColor(Color)
                     pcall(function()
-                        for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box) do
+                        for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box) do
                             if v ~= nil and typeof(v) == "table" then
                                 if SShubEsp.Extra[Esp.Index].GlobalColor[1] then
                                     v.Color = SShubEsp.Extra[Esp.Index].GlobalColor[2]
@@ -552,7 +555,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
         
                 local function RemoveBox()
                     pcall(function()
-                        for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box) do
+                        for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box) do
                             if v ~= nil and typeof(v) == "table" then
                                 v:Remove()
                             end
@@ -590,7 +593,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                             
                                             if OnScreen then
                                                 local TotalPos = TextsPos
-                                                for Index,v in pairs(SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)]) do
+                                                for Index,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex]) do
                                                     if Index ~= "Box" and SShubEsp.Extra[Esp.Index][Index][1] then
                                                         v.Visible = true
                                                         if v.Visible then
@@ -624,29 +627,29 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                                 if SShubEsp.Extra[Esp.Index].Boxes.Enabled then
                                                     BoxVis(true)
                                                     BoxColor(SShubEsp.Extra[Esp.Index].Boxes.Color)
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[1].From = UpRight
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[1].To = UpRight - DirectionH
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[1].From = UpRight
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[1].To = UpRight - DirectionH
 
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[2].From = UpRight
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[2].To = UpRight + DirectionV
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[2].From = UpRight
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[2].To = UpRight + DirectionV
 
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[3].From = UpLeft
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[3].To = UpLeft + DirectionH
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[3].From = UpLeft
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[3].To = UpLeft + DirectionH
 
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[4].From = UpLeft
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[4].To = UpLeft + DirectionV
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[4].From = UpLeft
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[4].To = UpLeft + DirectionV
 
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[5].From = LowRight
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[5].To = LowRight - DirectionH
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[5].From = LowRight
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[5].To = LowRight - DirectionH
 
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[6].From = LowRight
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[6].To = LowRight - DirectionV
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[6].From = LowRight
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[6].To = LowRight - DirectionV
 
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[7].From = LowLeft
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[7].To = LowLeft + DirectionH
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[7].From = LowLeft
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[7].To = LowLeft + DirectionH
 
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[8].From = LowLeft
-                                                    SShubEsp.Extra[Esp.Index].Draws[tostring(Instance)].Box[8].To = LowLeft - DirectionV
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[8].From = LowLeft
+                                                    SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box[8].To = LowLeft - DirectionV
                                                 else
                                                     BoxVis(false)
                                                 end
