@@ -588,8 +588,14 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                             local DirectionH = Vector2.new(Size/4, 0)
                                             local DirectionV = Vector2.new(0, Size/4)
 
-                                            local TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY-10)
                                             local Center = Vector2.new(RootVector.X, RootVector.Y)
+                                            local TextsPos = Center
+
+                                            if SShubEsp.Extra[Esp.Index].Boxes.Enabled then
+                                                TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY-10)
+                                            else
+                                                TextsPos = Center
+                                            end
                                             
                                             if OnScreen then
                                                 local TotalPos = TextsPos
