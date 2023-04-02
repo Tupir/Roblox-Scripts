@@ -402,7 +402,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
         Index = Add.Index or "Global",
         RemoveOnToggle = Add.RemoveOnToggle or false,
         Boxes = {
-            Enabled = Add.Boxes.Enabled or true,
+            Enabled = Add.Boxes.Enabled or false,
             Color = Add.Boxes.Color or Color3.fromRGB(255,255,255),
             X = Add.Boxes.X or 0.75,
             Y = Add.Boxes.Y or 1.5,
@@ -414,11 +414,11 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
             Text = Add.Title.Text or tostring(Instance) or ""
         },
         Distance = {
-            Enabled = Add.Title.Enabled or true,
-            Color = Add.Title.Color or Color3.fromRGB(255,255,255),
+            Enabled = Add.Title.Enabled or false,
+            Color = Add.Title.Color or Color3.fromRGB(15, 3, 3),
         },
         GlobalColor = {
-            Enabled = Add.GlobalColor.Enabled or true,
+            Enabled = Add.GlobalColor.Enabled or false,
             Color = Add.GlobalColor.Color or Color3.fromRGB(255,255,255),
         }
     }
