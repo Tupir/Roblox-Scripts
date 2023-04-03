@@ -64,7 +64,7 @@ function SShubEsp:NewIndex(Index, Value, Extras)
     Extras = Extras or {}
 
     if SShubEsp.Extra[Index] == nil then
-        SShubEsp.Extra[Index] = {
+        SShubEsp.Extra[Index] = { --esp despues del Index otra deribado? [Index]["key1"]
             Enabled = Value or true,
             Boxes = {Enabled = true, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
             GlobalColor = {false, Color3.fromRGB(255,255,255)},
@@ -73,6 +73,7 @@ function SShubEsp:NewIndex(Index, Value, Extras)
             Separation = 12,
             MaxDistance = 10000,
             GeneratedEsps = 0,
+            PositioningType = 0,
             Draws = {}
         }
         if Extras ~= nil and typeof(Extras) == "table" then
@@ -401,6 +402,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
     local Esp = {
         Index = Add.Index or "Global",
         RemoveOnToggle = Add.RemoveOnToggle or false,
+        PositioningType = Add.PositioningType or 0,
         Boxes = {
             Enabled = Add.Boxes.Enabled or false,
             Color = Add.Boxes.Color or Color3.fromRGB(255,255,255),
@@ -457,6 +459,8 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 SShubEsp.Extra[Esp.Index].Title[2] = Esp.Title.Color
                 SShubEsp.Extra[Esp.Index].Distance[2] = Esp.Distance.Color
                 SShubEsp.Extra[Esp.Index].Boxes.Color = Esp.Boxes.Color
+                SShubEsp.Extra[Esp.Index].PositioningType = Esp.PositioningType
+
                 local DrawIndex
                 DrawIndex = tostring(tostring(Instance)..SShubEsp.Extra[Esp.Index].GeneratedEsps)
                 SShubEsp.Extra[Esp.Index].GeneratedEsps = SShubEsp.Extra[Esp.Index].GeneratedEsps + 1
@@ -589,12 +593,17 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                             local DirectionV = Vector2.new(0, Size/4)
 
                                             local Center = Vector2.new(RootVector.X, RootVector.Y)
-                                            local TextsPos = Center
+                                            local TextsPos = Vector2.new(RootVector.X, RootVector.Y)
 
                                             if SShubEsp.Extra[Esp.Index].Boxes.Enabled then
-                                                TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY-10)
+                                                TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY) -- 10
                                             else
-                                                TextsPos = Center
+                                                if SShubEsp.Extra[Esp.Index].PositioningType == 1 then
+                                                    print("CustomPositiong")
+                                                    TextsPos = Vector2.new(RootVector.X, RootVector.Y*Distance)
+                                                else
+                                                    TextsPos = Vector2.new(RootVector.X, RootVector.Y)
+                                                end
                                             end
 
                                             if OnScreen then
