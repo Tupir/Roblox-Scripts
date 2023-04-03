@@ -595,8 +595,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                             if SShubEsp.Extra[Esp.Index].Boxes.Enabled then
                                                 TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY) -- 10
                                             else
-                                                print("/2")
-                                                TextsPos = Vector2.new(RootVector.X, Size/2)
+                                                TextsPos = Vector2.new(RootVector.X, RootVector.Y)
                                             end
 
                                             if OnScreen then
