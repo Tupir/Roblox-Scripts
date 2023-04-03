@@ -596,7 +596,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                                 TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY) -- 10
                                             else
                                                 print("/2")
-                                                TextsPos = Vector2.new(RootVector.X, RootVector.Y/2)
+                                                TextsPos = Vector2.new(RootVector.X, Size/2)
                                             end
 
                                             if OnScreen then
