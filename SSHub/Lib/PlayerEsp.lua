@@ -64,12 +64,12 @@ function SShubEsp:NewIndex(Index, Value, Extras)
     Extras = Extras or {}
 
     if SShubEsp.Extra[Index] == nil then
-        SShubEsp.Extra[Index] = { --esp despues del Index otra deribado? [Index]["key1"]
-            Enabled = Value or true,
-            Boxes = {Enabled = true, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
+        SShubEsp.Extra[Index] = { --esp despues del Index otro deribado? [Index]["key1"]
+            Enabled = Value or false,
+            Boxes = {Enabled = false, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
             GlobalColor = {false, Color3.fromRGB(255,255,255)},
-            Title = {true, Color3.fromRGB(255,255,255), "Title"},
-            Distance = {true, Color3.fromRGB(255,255,255), "Distance"},
+            Title = {false, Color3.fromRGB(255,255,255), "Title"},
+            Distance = {false, Color3.fromRGB(255,255,255), "Distance"},
             Separation = 12,
             MaxDistance = 10000,
             GeneratedEsps = 0,
@@ -560,7 +560,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                             if v ~= nil and typeof(v) == "table" then
                                 v:Remove()
                             end
-                        end
+                        end 
                     end)
                 end
         
@@ -593,7 +593,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                             local TextsPos = Vector2.new(RootVector.X, RootVector.Y)
 
                                             if SShubEsp.Extra[Esp.Index].Boxes.Enabled then
-                                                TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY) -- 10
+                                                TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY - SShubEsp.Extra[Esp.Index].Separation)
                                             else
                                                 TextsPos = Vector2.new(RootVector.X, RootVector.Y)
                                             end
