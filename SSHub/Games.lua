@@ -39,6 +39,10 @@ GameSupport = {
 		Name = "TRFR April Fools 2021",
 		Script = "TRFR"
 	},
+	["6839171747"] = {
+		Name = "Doors - InGame",
+		Script = "Doors"
+	},
   }
   
 return GameSupport
