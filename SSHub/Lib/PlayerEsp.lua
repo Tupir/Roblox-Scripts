@@ -596,11 +596,11 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                             local TextsPos = Vector2.new(RootVector.X, RootVector.Y)
 
                                             if SShubEsp.Extra[Esp.Index].Boxes.Enabled then
-                                                TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY) -- 10
+                                                TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY) -- -10
                                             else
                                                 if SShubEsp.Extra[Esp.Index].PositioningType == 1 then
-                                                    print("Postioning -")
-                                                    TextsPos = Vector2.new(RootVector.X, RootVector.Y-Distance)
+                                                    print("Postioning default")
+                                                    TextsPos = Vector2.new(Instance.Position.X, Instance.Position.Y)
                                                 else
                                                     TextsPos = Vector2.new(RootVector.X, RootVector.Y)
                                                 end
