@@ -599,8 +599,8 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                                 TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY) -- 10
                                             else
                                                 if SShubEsp.Extra[Esp.Index].PositioningType == 1 then
-                                                    print("Postioning +")
-                                                    TextsPos = Vector2.new(RootVector.X, RootVector.Y+Distance)
+                                                    print("Postioning -")
+                                                    TextsPos = Vector2.new(RootVector.X, RootVector.Y-Distance)
                                                 else
                                                     TextsPos = Vector2.new(RootVector.X, RootVector.Y)
                                                 end
