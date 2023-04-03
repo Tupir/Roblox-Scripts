@@ -73,7 +73,6 @@ function SShubEsp:NewIndex(Index, Value, Extras)
             Separation = 12,
             MaxDistance = 10000,
             GeneratedEsps = 0,
-            PositioningType = 0,
             Draws = {}
         }
         if Extras ~= nil and typeof(Extras) == "table" then
@@ -402,7 +401,6 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
     local Esp = {
         Index = Add.Index or "Global",
         RemoveOnToggle = Add.RemoveOnToggle or false,
-        PositioningType = Add.PositioningType or 0,
         Boxes = {
             Enabled = Add.Boxes.Enabled or false,
             Color = Add.Boxes.Color or Color3.fromRGB(255,255,255),
@@ -459,7 +457,6 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 SShubEsp.Extra[Esp.Index].Title[2] = Esp.Title.Color
                 SShubEsp.Extra[Esp.Index].Distance[2] = Esp.Distance.Color
                 SShubEsp.Extra[Esp.Index].Boxes.Color = Esp.Boxes.Color
-                SShubEsp.Extra[Esp.Index].PositioningType = Esp.PositioningType
 
                 local DrawIndex
                 DrawIndex = tostring(tostring(Instance)..SShubEsp.Extra[Esp.Index].GeneratedEsps)
@@ -596,14 +593,9 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                             local TextsPos = Vector2.new(RootVector.X, RootVector.Y)
 
                                             if SShubEsp.Extra[Esp.Index].Boxes.Enabled then
-                                                TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY) -- -10
+                                                TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY) -- 10
                                             else
-                                                if SShubEsp.Extra[Esp.Index].PositioningType == 1 then
-                                                    print("Postioning default")
-                                                    TextsPos = Vector2.new(Instance.Position.X, Instance.Position.Y)
-                                                else
-                                                    TextsPos = Vector2.new(RootVector.X, RootVector.Y)
-                                                end
+                                                TextsPos = Vector2.new(RootVector.X, RootVector.Y)
                                             end
 
                                             if OnScreen then
