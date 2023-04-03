@@ -5,7 +5,6 @@ local Players = game:GetService("Players")
 local Plr = Players.LocalPlayer
 local WorldToViewportPoint = Cam.WorldToViewportPoint
 local WorldToScreen = Cam.WorldToScreenPoint
-local GetPartsObscuringTarget = Cam.GetPartsObscuringTarget
 --#endregion
 
 local Class = {
@@ -228,7 +227,7 @@ local function GeneratePlayerEsp(Player)
                             if Distance < SShubEsp.Players.MaxDistance then
                                 local RootPart = Player.Character:FindFirstChild("HumanoidRootPart")
                                 local Humanoid = Player.Character:FindFirstChild("Humanoid")
-                                local RootVector, OnScreen = WorldToViewportPoint(Cam, RootPart.Position)
+                                local RootVector, OnScreen = WorldToScreen(Cam, RootPart.Position) -- world to view point
                                 
                                 local Size = SShubEsp.Players.BoxSize/RootVector.Z
                                 local NewSizeX = Size --[[* SShubEsp.Players.BoxStretch]] / 2
@@ -575,7 +574,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                         if Distance < SShubEsp.Extra[Esp.Index].MaxDistance then
                                             SShubEsp.Extra[Esp.Index].Distance[3] = "Distance: "..Distance.."m"
 
-                                            local RootVector, OnScreen = WorldToViewportPoint(Cam, Instance.Position)
+                                            local RootVector, OnScreen = WorldToScreen(Cam, Instance.Position)
                                             
                                             local Size = SShubEsp.Extra[Esp.Index].Boxes.Size/RootVector.Z
                                             local NewSizeX = Size * SShubEsp.Extra[Esp.Index].Boxes.X / 2
