@@ -67,7 +67,7 @@ function SShubEsp:NewIndex(Index, Value, Extras)
             Enabled = Value or false,
             Boxes = {Enabled = false, Color = Color3.fromRGB(255,255,255), Y = 0, X = 0, Size = 0},
             GlobalColor = {false, Color3.fromRGB(255,255,255)},
-            Title = {false, Color3.fromRGB(255,255,255), "Title"},
+            Title = {false, Color3.fromRGB(255,255,255)},
             Distance = {false, Color3.fromRGB(255,255,255), "Distance"},
             Separation = 12,
             MaxDistance = 10000,
@@ -447,7 +447,6 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 SShubEsp.Extra[Esp.Index].Boxes.Y = Esp.Boxes.Y
 
                 SShubEsp.Extra[Esp.Index].Title[1] = Esp.Title.Enabled
-                SShubEsp.Extra[Esp.Index].Title[3] = Esp.Title.Text
 
                 SShubEsp.Extra[Esp.Index].Distance[1] = Esp.Distance.Enabled
                 SShubEsp.Extra[Esp.Index].GlobalColor[1] = Esp.GlobalColor.Enabled
@@ -469,7 +468,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                         Color = SShubEsp.Extra[Esp.Index].Title[2],
                         Font = 3,
                         Size = 16,
-                        Text = SShubEsp.Extra[Esp.Index].Title[3]
+                        Text = Esp.Title.Text
                     }),
                     ["Distance"] = Draw("Text", {
                         Visible = false,
