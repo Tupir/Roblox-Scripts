@@ -410,7 +410,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
         Title = {
             Enabled = Add.Title.Enabled or true,
             Color = Add.Title.Color or Color3.fromRGB(255,255,255),
-            Text = Add.Title.Text or tostring(Instance) or ""
+            Text = Add.Title.Text or tostring(Instance) or "..."
         },
         Distance = {
             Enabled = Add.Title.Enabled or false,
@@ -605,6 +605,8 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                                             --Texts
                                                             if Index == "Distance" then
                                                                 v.Text = SShubEsp.Extra[Esp.Index][Index][3]
+                                                            elseif Index == "Title" then
+                                                                v.Text = Esp.Title.Text
                                                             else
                                                                 if SShubEsp.Extra[Esp.Index][Index][3] ~= nil then
                                                                     v.Text = SShubEsp.Extra[Esp.Index][Index][3] or "..."
