@@ -18,20 +18,8 @@ local EndPoints = {
 	}
 }
 
-local function EncodeURI(str)
-    if (str) then
-        str = string.gsub(str, "\n", "\r\n")
-        str = string.gsub(str, "([^%w ])", function(c)
-            return string.format("%%%02X", string.byte(c))
-        end)
-        str = string.gsub(str, " ", "+")
-    end
-    return str
-end
-
 function MongoDB.Connect(EndPoint, ApiId, ApiKey)
-    local UriApiKey = EncodeURI(ApiKey)
-    local Uri = EncodeURI(string.format(EndPoint,ApiId))
+    local Uri = string.format(EndPoint,ApiId)
     return {
         Uri = Uri,
         Cluster = function(ClusterName)
@@ -48,7 +36,7 @@ function MongoDB.Connect(EndPoint, ApiId, ApiKey)
                                             Headers = {
                                                 ["Content-Type"] = "application/json",
                                                 ["Access-Control-Request-Headers"] = "*",
-                                                ["api-key"] = UriApiKey
+                                                ["api-key"] = ApiKey
                                             },
                                             Body = HttpService:JSONEncode({
                                                 ["dataSource"] = ClusterName,
@@ -71,7 +59,7 @@ function MongoDB.Connect(EndPoint, ApiId, ApiKey)
                                             Headers = {
                                                 ["Content-Type"] = "application/json",
                                                 ["Access-Control-Request-Headers"] = "*",
-                                                ["api-key"] = UriApiKey
+                                                ["api-key"] = ApiKey
                                             },
                                             Body = HttpService:JSONEncode({
                                                 ["dataSource"] = ClusterName,
@@ -94,7 +82,7 @@ function MongoDB.Connect(EndPoint, ApiId, ApiKey)
                                             Headers = {
                                                 ["Content-Type"] = "application/json",
                                                 ["Access-Control-Request-Headers"] = "*",
-                                                ["api-key"] = UriApiKey
+                                                ["api-key"] = ApiKey
                                             },
                                             Body = HttpService:JSONEncode({
                                                 ["dataSource"] = ClusterName,
@@ -117,7 +105,7 @@ function MongoDB.Connect(EndPoint, ApiId, ApiKey)
                                             Headers = {
                                                 ["Content-Type"] = "application/json",
                                                 ["Access-Control-Request-Headers"] = "*",
-                                                ["api-key"] = UriApiKey
+                                                ["api-key"] = ApiKey
                                             },
                                             Body = HttpService:JSONEncode({
                                                 ["dataSource"] = ClusterName,
@@ -143,7 +131,7 @@ function MongoDB.Connect(EndPoint, ApiId, ApiKey)
                                             Headers = {
                                                 ["Content-Type"] = "application/json",
                                                 ["Access-Control-Request-Headers"] = "*",
-                                                ["api-key"] = UriApiKey
+                                                ["api-key"] = ApiKey
                                             },
                                             Body = HttpService:JSONEncode({
                                                 ["dataSource"] = ClusterName,
@@ -167,7 +155,7 @@ function MongoDB.Connect(EndPoint, ApiId, ApiKey)
                                             Headers = {
                                                 ["Content-Type"] = "application/json",
                                                 ["Access-Control-Request-Headers"] = "*",
-                                                ["api-key"] = UriApiKey
+                                                ["api-key"] = ApiKey
                                             },
                                             Body = HttpService:JSONEncode({
                                                 ["dataSource"] = ClusterName,
@@ -191,7 +179,7 @@ function MongoDB.Connect(EndPoint, ApiId, ApiKey)
                                             Headers = {
                                                 ["Content-Type"] = "application/json",
                                                 ["Access-Control-Request-Headers"] = "*",
-                                                ["api-key"] = UriApiKey
+                                                ["api-key"] = ApiKey
                                             },
                                             Body = HttpService:JSONEncode({
                                                 ["dataSource"] = ClusterName,
@@ -215,7 +203,7 @@ function MongoDB.Connect(EndPoint, ApiId, ApiKey)
                                             Headers = {
                                                 ["Content-Type"] = "application/json",
                                                 ["Access-Control-Request-Headers"] = "*",
-                                                ["api-key"] = UriApiKey
+                                                ["api-key"] = ApiKey
                                             },
                                             Body = HttpService:JSONEncode({
                                                 ["dataSource"] = ClusterName,
@@ -238,7 +226,7 @@ function MongoDB.Connect(EndPoint, ApiId, ApiKey)
                                             Headers = {
                                                 ["Content-Type"] = "application/json",
                                                 ["Access-Control-Request-Headers"] = "*",
-                                                ["api-key"] = UriApiKey
+                                                ["api-key"] = ApiKey
                                             },
                                             Body = HttpService:JSONEncode({
                                                 ["dataSource"] = ClusterName,
