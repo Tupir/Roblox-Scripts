@@ -1,6 +1,22 @@
-local MongoDB = {}
+local MongoDB = {
+    LibName = "[MongoDB] "
+}
 
-local Request = http_request or request or HttpPost or syn.request
+local HttpService = game:GetService("HttpService")
+local Request = syn and syn.request or http_request or request or HttpService.Request
+local EndPoints = {
+	Post = {
+		["FindOne"] = "/action/findOne",
+		["FindMany"] = "/action/find",
+		["InsertOne"] = "/action/insertOne",
+		["InsertMany"] = "/action/insertMany",
+		["UpdateOne"] = "/action/updateOne",
+		["UpdateMany"] = "/action/updateMany",
+		["ReplaceOne"] = "/action/replaceOne",
+		["DeleteOne"] = "/action/deleteOne",
+		["DeleteMany"] = "/action/deleteMany",
+	}
+}
 
 local function EncodeURI(str)
     if (str) then
@@ -13,67 +29,236 @@ local function EncodeURI(str)
     return str
 end
 
-function MongoDB.Connect(uri, dbName, username, password)
-    local authStr = ""
-    if (username and password) then
-        authStr = username .. ":" .. password .. "@"
-    end
-
-    local url = "mongodb://" .. authStr .. uri .. "/" .. dbName
-
+function MongoDB.Connect(EndPoint, ApiId, ApiKey)
+    local UriApiKey = EncodeURI(ApiKey)
+    local Uri = EncodeURI(string.format(EndPoint,ApiId))
     return {
-        dbUrl = EncodeURI(url),
-
-        Collection = function(self, collectionName)
-            local collectionUrl = self.dbUrl .. "/collections/" .. collectionName
-
+        Uri = Uri,
+        Cluster = function(ClusterName)
             return {
-                InsertOne = function(self, document)
-                    local payload = game:GetService("HttpService"):JSONEncode(document)
-
-                    local response = Request({
-                        Url = collectionUrl .. "/insertOne",
-                        Method = "POST",
-                        Headers = {
-                            ["Content-Type"] = "application/json",
-                        },
-                        Body = payload,
-                    })
-
-                    return game:GetService("HttpService"):JSONDecode(response.Body)
-                end,
-
-                InsertMany = function(self, documents)
-                    local payload = game:GetService("HttpService"):JSONEncode(documents)
-
-                    local response = Request({
-                        Url = collectionUrl .. "/insertMany",
-                        Method = "POST",
-                        Headers = {
-                            ["Content-Type"] = "application/json",
-                        },
-                        Body = payload,
-                    })
-
-                    return game:GetService("HttpService"):JSONDecode(response.Body)
-                end,
-
-                Find = function(self, filter)
-                    local filterString = game:GetService("HttpService"):JSONEncode(filter)
-
-                    local response = Request({
-                        Url = collectionUrl .. "/find",
-                        Method = "POST",
-                        Headers = {
-                            ["Content-Type"] = "application/json",
-                        },
-                        Body = filterString,
-                    })
-
-                    return game:GetService("HttpService"):JSONDecode(response.Body)
-                end,
+                Database = function(DatabaseName)
+                    return {
+                        Collection = function(CollectionName)
+                            return {
+                                InsertOne = function(Document)
+                                    local Success, Response = pcall(function()
+                                        return Request({
+                                            Url = Uri..EndPoints.Post.InsertOne,
+                                            Method = "POST",
+                                            Headers = {
+                                                ["Content-Type"] = "application/json",
+                                                ["Access-Control-Request-Headers"] = "*",
+                                                ["api-key"] = UriApiKey
+                                            },
+                                            Body = HttpService:JSONEncode({
+                                                ["dataSource"] = ClusterName,
+                                                ["database"] = DatabaseName,
+                                                ["collection"] = CollectionName,
+                                                ["document"] = Document or nil,
+                                            }),
+                                        }).Body
+                                    end)
+                                    if not Success then return MongoDB.LibName.."Error: "..Response end
+                                    Response = HttpService:JSONDecode(Response)
+                                    if not Response["insertedId"] then return nil end
+                                    return Response["insertedId"]
+                                end,
+                                InsertMany = function(Documents)
+                                    local Success, Response = pcall(function()
+                                        return Request({
+                                            Url = Uri..EndPoints.Post.InsertMany,
+                                            Method = "POST",
+                                            Headers = {
+                                                ["Content-Type"] = "application/json",
+                                                ["Access-Control-Request-Headers"] = "*",
+                                                ["api-key"] = UriApiKey
+                                            },
+                                            Body = HttpService:JSONEncode({
+                                                ["dataSource"] = ClusterName,
+                                                ["database"] = DatabaseName,
+                                                ["collection"] = CollectionName,
+                                                ["documents"] = Documents or nil,
+                                            }),
+                                        }).Body
+                                    end)
+                                    if not Success then return MongoDB.LibName.."Error: "..Response end
+                                    Response = HttpService:JSONDecode(Response)
+                                    if not Response["insertedIds"] then return nil end
+                                    return Response["insertedIds"]
+                                end,
+                                FindOne = function(Filter)
+                                    local Success, Response = pcall(function()
+                                        return Request({
+                                            Url = Uri..EndPoints.Post.FindOne,
+                                            Method = "POST",
+                                            Headers = {
+                                                ["Content-Type"] = "application/json",
+                                                ["Access-Control-Request-Headers"] = "*",
+                                                ["api-key"] = UriApiKey
+                                            },
+                                            Body = HttpService:JSONEncode({
+                                                ["dataSource"] = ClusterName,
+                                                ["database"] = DatabaseName,
+                                                ["collection"] = CollectionName,
+                                                ["filter"] = Filter or nil,
+                                            }),
+                                        }).Body
+                                    end)
+                                    if not Success then return MongoDB.LibName.."Error: "..Response end
+                                    Response = HttpService:JSONDecode(Response)
+                                    if not Response["document"] then return nil end
+                                    return Response["document"]
+                                end,
+                                FindMany = function(Filter, Limit, Sort, Skip)
+                                    local Success, Response = pcall(function()
+                                        return Request({
+                                            Url = Uri..EndPoints.Post.FindMany,
+                                            Method = "POST",
+                                            Headers = {
+                                                ["Content-Type"] = "application/json",
+                                                ["Access-Control-Request-Headers"] = "*",
+                                                ["api-key"] = UriApiKey
+                                            },
+                                            Body = HttpService:JSONEncode({
+                                                ["dataSource"] = ClusterName,
+                                                ["database"] = DatabaseName,
+                                                ["collection"] = CollectionName,
+                                                ["filter"] = Filter or nil,
+                                                ["limit"] = Limit or nil,
+                                                ["sort"] = Sort or nil,
+                                                ["skip"] = Skip or nil,
+                                            }),
+                                        }).Body
+                                    end)
+                                    if not Success then return MongoDB.LibName.."Error: "..Response end
+                                    Response = HttpService:JSONDecode(Response)
+                                    if not Response["documents"] then return nil end
+                                    return Response["documents"]
+                                end,
+                                UpdateOne = function(Filter, Update, Upsert)
+                                    local Success, Response = pcall(function()
+                                        return Request({
+                                            Url = Uri..EndPoints.Post.UpdateOne,
+                                            Method = "POST",
+                                            Headers = {
+                                                ["Content-Type"] = "application/json",
+                                                ["Access-Control-Request-Headers"] = "*",
+                                                ["api-key"] = UriApiKey
+                                            },
+                                            Body = HttpService:JSONEncode({
+                                                ["dataSource"] = ClusterName,
+                                                ["database"] = DatabaseName,
+                                                ["collection"] =  CollectionName,
+                                                ["filter"] = Filter or nil,
+                                                ["update"] = Update or nil,
+                                                ["upsert"] = Upsert or nil,
+                                            }),
+                                        }).Body
+                                    end)
+                                    if not Success then return MongoDB.LibName.."Error: "..Response end
+                                    Response = HttpService:JSONDecode(Response)
+                                    return Response
+                                end,
+                                UpdateMany = function(Filter, Update, Upsert)
+                                    local Success, Response = pcall(function()
+                                        return Request({
+                                            Url = Uri..EndPoints.Post.UpdateMany,
+                                            Method = "POST",
+                                            Headers = {
+                                                ["Content-Type"] = "application/json",
+                                                ["Access-Control-Request-Headers"] = "*",
+                                                ["api-key"] = UriApiKey
+                                            },
+                                            Body = HttpService:JSONEncode({
+                                                ["dataSource"] = ClusterName,
+                                                ["database"] = DatabaseName,
+                                                ["collection"] = CollectionName,
+                                                ["filter"] = Filter or nil,
+                                                ["update"] = Update or nil,
+                                                ["upsert"] = Upsert or nil,
+                                            }),
+                                        }).Body
+                                    end)
+                                    if not Success then return MongoDB.LibName.."Error: "..Response end
+                                    Response = HttpService:JSONDecode(Response)
+                                    return Response
+                                end,
+                                ReplaceOne = function(Filter, Replacement, Upsert)
+                                    local Success, Response = pcall(function()
+                                        return Request({
+                                            Url = Uri..EndPoints.Post.ReplaceOne,
+                                            Method = "POST",
+                                            Headers = {
+                                                ["Content-Type"] = "application/json",
+                                                ["Access-Control-Request-Headers"] = "*",
+                                                ["api-key"] = UriApiKey
+                                            },
+                                            Body = HttpService:JSONEncode({
+                                                ["dataSource"] = ClusterName,
+                                                ["database"] = DatabaseName,
+                                                ["collection"] = CollectionName,
+                                                ["filter"] = Filter or nil,
+                                                ["replacement"] = Replacement or nil,
+                                                ["upsert"] = Upsert or nil,
+                                            }),
+                                        }).Body
+                                    end)
+                                    if not Success then return MongoDB.LibName.."Error: "..Response end
+                                    Response = HttpService:JSONDecode(Response)
+                                    return Response
+                                end,
+                                DeleteOne = function(Filter)
+                                    local Success, Response = pcall(function()
+                                        return Request({
+                                            Url = Uri..EndPoints.Post.DeleteOne,
+                                            Method = "POST",
+                                            Headers = {
+                                                ["Content-Type"] = "application/json",
+                                                ["Access-Control-Request-Headers"] = "*",
+                                                ["api-key"] = UriApiKey
+                                            },
+                                            Body = HttpService:JSONEncode({
+                                                ["dataSource"] = ClusterName,
+                                                ["database"] = DatabaseName,
+                                                ["collection"] = CollectionName,
+                                                ["filter"] = Filter or nil,
+                                            }),
+                                        }).Body
+                                    end)
+                                    if not Success then return MongoDB.LibName.."Error: "..Response end
+                                    Response = HttpService:JSONDecode(Response)
+                                    if not Response["deletedCount"] then return 0 end
+	                                return Response["deletedCount"]
+                                end,
+                                DeleteMany = function(Filter)
+                                    local Success, Response = pcall(function()
+                                        return Request({
+                                            Url = Uri..EndPoints.Post.DeleteMany,
+                                            Method = "POST",
+                                            Headers = {
+                                                ["Content-Type"] = "application/json",
+                                                ["Access-Control-Request-Headers"] = "*",
+                                                ["api-key"] = UriApiKey
+                                            },
+                                            Body = HttpService:JSONEncode({
+                                                ["dataSource"] = ClusterName,
+                                                ["database"] = DatabaseName,
+                                                ["collection"] = CollectionName,
+                                                ["filter"] = Filter or nil,
+                                            }),
+                                        }).Body
+                                    end)
+                                    if not Success then return MongoDB.LibName.."Error: "..Response end
+                                    Response = HttpService:JSONDecode(Response)
+                                    if not Response["deletedCount"] then return 0 end
+	                                return Response["deletedCount"]
+                                end,
+                            }
+                        end,
+                    }
+                end
             }
-        end,
+        end
     }
 end
 
