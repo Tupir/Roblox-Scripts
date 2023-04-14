@@ -1,0 +1,80 @@
+local MongoDB = {}
+
+local Request = http_request or request or HttpPost or syn.request
+
+local function EncodeURI(str)
+    if (str) then
+        str = string.gsub(str, "\n", "\r\n")
+        str = string.gsub(str, "([^%w ])", function(c)
+            return string.format("%%%02X", string.byte(c))
+        end)
+        str = string.gsub(str, " ", "+")
+    end
+    return str
+end
+
+function MongoDB.Connect(uri, dbName, username, password)
+    local authStr = ""
+    if (username and password) then
+        authStr = username .. ":" .. password .. "@"
+    end
+
+    local url = "mongodb://" .. authStr .. uri .. "/" .. dbName
+
+    return {
+        dbUrl = EncodeURI(url),
+
+        Collection = function(self, collectionName)
+            local collectionUrl = self.dbUrl .. "/collections/" .. collectionName
+
+            return {
+                InsertOne = function(self, document)
+                    local payload = game:GetService("HttpService"):JSONEncode(document)
+
+                    local response = Request({
+                        Url = collectionUrl .. "/insertOne",
+                        Method = "POST",
+                        Headers = {
+                            ["Content-Type"] = "application/json",
+                        },
+                        Body = payload,
+                    })
+
+                    return game:GetService("HttpService"):JSONDecode(response.Body)
+                end,
+
+                InsertMany = function(self, documents)
+                    local payload = game:GetService("HttpService"):JSONEncode(documents)
+
+                    local response = Request({
+                        Url = collectionUrl .. "/insertMany",
+                        Method = "POST",
+                        Headers = {
+                            ["Content-Type"] = "application/json",
+                        },
+                        Body = payload,
+                    })
+
+                    return game:GetService("HttpService"):JSONDecode(response.Body)
+                end,
+
+                Find = function(self, filter)
+                    local filterString = game:GetService("HttpService"):JSONEncode(filter)
+
+                    local response = Request({
+                        Url = collectionUrl .. "/find",
+                        Method = "POST",
+                        Headers = {
+                            ["Content-Type"] = "application/json",
+                        },
+                        Body = filterString,
+                    })
+
+                    return game:GetService("HttpService"):JSONDecode(response.Body)
+                end,
+            }
+        end,
+    }
+end
+
+return MongoDB
