@@ -1,7 +1,7 @@
 --[[
 
     ARREGLAR LOS COLORES Y PONERLOS IDEPENDIENTES POR INDEX
-    
+
 ]]
 
 
@@ -429,8 +429,9 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
             Text = Add.Title.Text or tostring(Instance) or "..."
         },
         Distance = {
-            Enabled = Add.Title.Enabled or false,
-            Color = Add.Title.Color or Color3.fromRGB(15, 3, 3),
+            Enabled = Add.Distance.Enabled or false,
+            Color = Add.Distance.Color or Color3.fromRGB(15, 3, 3),
+            MaxDistance = Add.Distance.MaxDistance or 10000
         },
         GlobalColor = {
             Enabled = Add.GlobalColor.Enabled or false,
@@ -465,6 +466,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 SShubEsp.Extra[Esp.Index].Title[1] = Esp.Title.Enabled
 
                 SShubEsp.Extra[Esp.Index].Distance[1] = Esp.Distance.Enabled
+                SShubEsp.Extra[Esp.Index].MaxDistance = Esp.Distance.MaxDistance
                 SShubEsp.Extra[Esp.Index].GlobalColor[1] = Esp.GlobalColor.Enabled
 
                 SShubEsp.Extra[Esp.Index].GlobalColor[2] = Esp.GlobalColor.Color
