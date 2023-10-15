@@ -30,7 +30,7 @@ local function Draw(obj, props)
 	for i,v in pairs(props) do
 		new[i] = v
 	end
-    
+
     return new
 end
 
@@ -228,7 +228,7 @@ local function GeneratePlayerEsp(Player)
                                 local RootPart = Player.Character:FindFirstChild("HumanoidRootPart")
                                 local Humanoid = Player.Character:FindFirstChild("Humanoid")
                                 local RootVector, OnScreen = WorldToScreen(Cam, RootPart.Position) -- world to view point
-                                
+
                                 local Size = SShubEsp.Players.BoxSize/RootVector.Z
                                 local NewSizeX = Size --[[* SShubEsp.Players.BoxStretch]] / 2
                                 local NewSizeY = Size * SShubEsp.Players.BoxShift / 2
@@ -243,7 +243,7 @@ local function GeneratePlayerEsp(Player)
 
                                 local TextsPos = Vector2.new(RootVector.X, RootVector.Y+NewSizeY-10)
                                 local Torso = Vector2.new(RootVector.X, RootVector.Y)
-                                
+
                                 if OnScreen then
                                     if SShubEsp.Players.Name[1] then
                                         SShubEsp.Players.Draws[Player.Name]["Name"].Text = Player.Name
@@ -262,7 +262,7 @@ local function GeneratePlayerEsp(Player)
                                             TotalPos = v.Position
                                         end
                                     end
-                                    
+
                                     if SShubEsp.Players.Distance[1] then
                                         SShubEsp.Players.Draws[Player.Name]["Distance"].Visible = true
                                         SShubEsp.Players.Draws[Player.Name]["Distance"].Text = "Distance: "..Distance.."m"
@@ -480,7 +480,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                         Text = SShubEsp.Extra[Esp.Index].Distance[3]
                     })
                 }
-                
+
                 for i,v in pairs(Extras) do
                     if SShubEsp.Extra[Esp.Index].Draws[DrawIndex][i] == nil then
                         SShubEsp.Extra[Esp.Index].Draws[DrawIndex][i] = Draw("Text", {
@@ -503,7 +503,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                         Visible = false
                     }))
                 end
-        
+
                 local function TextsVis(State)
                     pcall(function()
                         for i,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex]) do
@@ -513,7 +513,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                         end
                     end)
                 end
-        
+
                 local function RemoveTexts()
                     pcall(function()
                         for i,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex]) do
@@ -551,7 +551,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                         end
                     end)
                 end
-        
+
                 local function RemoveBox()
                     pcall(function()
                         for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box) do
@@ -561,7 +561,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                         end 
                     end)
                 end
-        
+
                 local Iu
                 Iu = RunService.RenderStepped:Connect(function()
                     if workspace:IsAncestorOf(Instance) then
@@ -574,7 +574,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                             SShubEsp.Extra[Esp.Index].Distance[3] = "Distance: "..Distance.."m"
 
                                             local RootVector, OnScreen = WorldToScreen(Cam, Instance.Position)
-                                            
+
                                             local Size = SShubEsp.Extra[Esp.Index].Boxes.Size/RootVector.Z
                                             local NewSizeX = Size * SShubEsp.Extra[Esp.Index].Boxes.X / 2
                                             local NewSizeY = Size * SShubEsp.Extra[Esp.Index].Boxes.Y / 2
