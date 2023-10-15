@@ -49,7 +49,7 @@ local SShubEsp = {
         TeamCheck = {false, Color3.fromRGB(255,0,0), Color3.fromRGB(0,255,0)},
         BoxShift = 1.5,
 	    BoxSize = 2500,
-        BoxStretch = 0.75,
+        BoxStretch = 0,
         MaxDistance = 10000,
         Draws = {}
     },
@@ -74,7 +74,7 @@ function SShubEsp:NewIndex(Index, Value, Extras)
             GeneratedEsps = 0,
             Draws = {}
         }
-        if Extras ~= nil and typeof(Extras) == "table" then
+        if Extras ~= nil and type(Extras) == "table" then
             for i,v in pairs(Extras) do
                 if SShubEsp.Extra[Index][i] == nil then
                     SShubEsp.Extra[Index][i] = v
@@ -83,7 +83,7 @@ function SShubEsp:NewIndex(Index, Value, Extras)
         end
     end
     if SShubEsp.Extra[Index] ~= nil then
-        if Extras ~= nil and typeof(Extras) == "table" then
+        if Extras ~= nil and type(Extras) == "table" then
             for i,v in pairs(Extras) do
                 if SShubEsp.Extra[Index][i] == nil then
                     SShubEsp.Extra[Index][i] = v
@@ -166,7 +166,7 @@ local function GeneratePlayerEsp(Player)
         local function TextsVis(State)
             pcall(function()
                 for i,v in pairs(SShubEsp.Players.Draws[Player.Name]) do
-                    if i ~= "Box" and v ~= nil then
+                    if i ~= "Box" and v ~= nil and type(v) == "table" then
                         v.Visible = State
                     end
                 end
@@ -190,7 +190,7 @@ local function GeneratePlayerEsp(Player)
         local function BoxVis(State)
             pcall(function()
                 for _,v in pairs(SShubEsp.Players.Draws[Player.Name].Box) do
-                    if v ~= nil then
+                    if v ~= nil and type(v) == "table" then
                         v.Visible = State
                     end
                 end
@@ -200,7 +200,7 @@ local function GeneratePlayerEsp(Player)
         local function BoxColor(Color)
             pcall(function()
                 for _,v in pairs(SShubEsp.Players.Draws[Player.Name].Box) do
-                    if v ~= nil then
+                    if v ~= nil and type(v) == "table" then
                         v.Color = Color
                     end
                 end
@@ -230,8 +230,8 @@ local function GeneratePlayerEsp(Player)
                                 local RootVector, OnScreen = WorldToScreen(Cam, RootPart.Position) -- world to view point
                                 
                                 local Size = SShubEsp.Players.BoxSize/RootVector.Z
-                                local NewSizeX = Size --[[* SShubEsp.Players.BoxStretch]] / 2
-                                local NewSizeY = Size * SShubEsp.Players.BoxShift / 2
+                                local NewSizeX = (Size * SShubEsp.Players.BoxStretch) / 2
+                                local NewSizeY = (Size * SShubEsp.Players.BoxShift) / 2
 
                                 local UpLeft = Vector2.new(RootVector.X-NewSizeX, RootVector.Y-NewSizeY)
                                 local UpRight = Vector2.new(RootVector.X+NewSizeX, RootVector.Y-NewSizeY)
@@ -425,7 +425,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
         if Instance ~= nil then
             if table.find(Class, Instance.ClassName) then
                 local Extras = {}
-                if ExtraTexts ~= nil and typeof(ExtraTexts) == "table" then
+                if ExtraTexts ~= nil and type(ExtraTexts) == "table" then
                     for i,v in pairs(ExtraTexts) do
                         if i and v ~= nil then
                             if Extras[i]==nil then
@@ -507,7 +507,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 local function TextsVis(State)
                     pcall(function()
                         for i,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex]) do
-                            if i ~= "Box" and v ~= nil and typeof(v) == "table" then
+                            if i ~= "Box" and v ~= nil and type(v) == "table" then
                                 v.Visible = State
                             end
                         end
@@ -517,7 +517,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 local function RemoveTexts()
                     pcall(function()
                         for i,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex]) do
-                            if i ~= "Box" and v ~= nil and typeof(v) == "table" then
+                            if i ~= "Box" and v ~= nil and type(v) == "table" then
                                 v:Remove()
                             end
                         end
@@ -531,7 +531,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 local function BoxVis(State)
                     pcall(function()
                         for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box) do
-                            if v ~= nil and typeof(v) == "table" then
+                            if v ~= nil and type(v) == "table" then
                                 v.Visible = State
                             end
                         end
@@ -541,7 +541,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 local function BoxColor(Color)
                     pcall(function()
                         for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box) do
-                            if v ~= nil and typeof(v) == "table" then
+                            if v ~= nil and type(v) == "table" then
                                 if SShubEsp.Extra[Esp.Index].GlobalColor[1] then
                                     v.Color = SShubEsp.Extra[Esp.Index].GlobalColor[2]
                                 else
@@ -555,7 +555,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 local function RemoveBox()
                     pcall(function()
                         for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box) do
-                            if v ~= nil and typeof(v) == "table" then
+                            if v ~= nil and type(v) == "table" then
                                 v:Remove()
                             end
                         end 
@@ -576,8 +576,8 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                             local RootVector, OnScreen = WorldToScreen(Cam, Instance.Position)
                                             
                                             local Size = SShubEsp.Extra[Esp.Index].Boxes.Size/RootVector.Z
-                                            local NewSizeX = Size * SShubEsp.Extra[Esp.Index].Boxes.X / 2
-                                            local NewSizeY = Size * SShubEsp.Extra[Esp.Index].Boxes.Y / 2
+                                            local NewSizeX = (Size * SShubEsp.Extra[Esp.Index].Boxes.X) / 2
+                                            local NewSizeY = (Size * SShubEsp.Extra[Esp.Index].Boxes.Y) / 2
 
                                             local UpLeft = Vector2.new(RootVector.X-NewSizeX, RootVector.Y-NewSizeY)
                                             local UpRight = Vector2.new(RootVector.X+NewSizeX, RootVector.Y-NewSizeY)
