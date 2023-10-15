@@ -166,7 +166,7 @@ local function GeneratePlayerEsp(Player)
         local function TextsVis(State)
             pcall(function()
                 for i,v in pairs(SShubEsp.Players.Draws[Player.Name]) do
-                    if i ~= "Box" and v ~= nil and type(v) == "table" then
+                    if i ~= "Box" and v ~= nil then
                         v.Visible = State
                     end
                 end
@@ -190,7 +190,7 @@ local function GeneratePlayerEsp(Player)
         local function BoxVis(State)
             pcall(function()
                 for _,v in pairs(SShubEsp.Players.Draws[Player.Name].Box) do
-                    if v ~= nil and type(v) == "table" then
+                    if v ~= nil then
                         v.Visible = State
                     end
                 end
@@ -200,7 +200,7 @@ local function GeneratePlayerEsp(Player)
         local function BoxColor(Color)
             pcall(function()
                 for _,v in pairs(SShubEsp.Players.Draws[Player.Name].Box) do
-                    if v ~= nil and type(v) == "table" then
+                    if v ~= nil then
                         v.Color = Color
                     end
                 end
@@ -507,7 +507,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 local function TextsVis(State)
                     pcall(function()
                         for i,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex]) do
-                            if i ~= "Box" and v ~= nil and type(v) == "table" then
+                            if i ~= "Box" and v ~= nil then
                                 v.Visible = State
                             end
                         end
@@ -517,7 +517,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 local function RemoveTexts()
                     pcall(function()
                         for i,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex]) do
-                            if i ~= "Box" and v ~= nil and type(v) == "table" then
+                            if i ~= "Box" and v ~= nil then
                                 v:Remove()
                             end
                         end
@@ -531,7 +531,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 local function BoxVis(State)
                     pcall(function()
                         for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box) do
-                            if v ~= nil and type(v) == "table" then
+                            if v ~= nil then
                                 v.Visible = State
                             end
                         end
@@ -541,7 +541,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 local function BoxColor(Color)
                     pcall(function()
                         for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box) do
-                            if v ~= nil and type(v) == "table" then
+                            if v ~= nil then
                                 if SShubEsp.Extra[Esp.Index].GlobalColor[1] then
                                     v.Color = SShubEsp.Extra[Esp.Index].GlobalColor[2]
                                 else
@@ -555,7 +555,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                 local function RemoveBox()
                     pcall(function()
                         for _,v in pairs(SShubEsp.Extra[Esp.Index].Draws[DrawIndex].Box) do
-                            if v ~= nil and type(v) == "table" then
+                            if v ~= nil then
                                 v:Remove()
                             end
                         end 
