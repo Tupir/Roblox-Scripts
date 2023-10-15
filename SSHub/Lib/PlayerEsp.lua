@@ -465,7 +465,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                         Visible = false,
                         Center = true,
                         Outline = true,
-                        Color = SShubEsp.Extra[Esp.Index].Title[2],
+                        Color = Esp.Title.Color, --SShubEsp.Extra[Esp.Index].Title[2],
                         Font = 3,
                         Size = 16,
                         Text = Esp.Title.Text
@@ -474,7 +474,7 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                         Visible = false,
                         Center = true,
                         Outline = true,
-                        Color = SShubEsp.Extra[Esp.Index].Distance[2],
+                        Color = Esp.Distance.Color, --SShubEsp.Extra[Esp.Index].Distance[2],
                         Font = 3,
                         Size = 16,
                         Text = SShubEsp.Extra[Esp.Index].Distance[3]
@@ -605,8 +605,10 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                                             --Texts
                                                             if Index == "Distance" then
                                                                 v.Text = SShubEsp.Extra[Esp.Index][Index][3]
+                                                                v.Color = Esp.Distance.Color
                                                             elseif Index == "Title" then
                                                                 v.Text = Esp.Title.Text
+                                                                v.Color = Esp.Title.Color
                                                             else
                                                                 if SShubEsp.Extra[Esp.Index][Index][3] ~= nil then
                                                                     v.Text = SShubEsp.Extra[Esp.Index][Index][3] or "..."
@@ -623,7 +625,9 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
                                                             if SShubEsp.Extra[Esp.Index].GlobalColor[1] then
                                                                 v.Color = SShubEsp.Extra[Esp.Index].GlobalColor[2]
                                                             else
-                                                                v.Color = SShubEsp.Extra[Esp.Index][Index][2]
+                                                                if not Index == ("Title" or "Distance") then
+                                                                    v.Color = SShubEsp.Extra[Esp.Index][Index][2]
+                                                                end
                                                             end
                                                         end
                                                     else
