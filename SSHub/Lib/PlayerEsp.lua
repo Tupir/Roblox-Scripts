@@ -249,10 +249,10 @@ local function GeneratePlayerEsp(Player)
                                 local NewSizeX = (Size * SShubEsp.Players.BoxStretch) / 2
                                 local NewSizeY = (Size * SShubEsp.Players.BoxShift) / 2
 
-                                local UpLeft = Vector2.new(RootVector.X-NewSizeX, RootVector.Y-NewSizeY)
-                                local UpRight = Vector2.new(RootVector.X+NewSizeX, RootVector.Y-NewSizeY)
-                                local LowLeft = Vector2.new(RootVector.X-NewSizeX, RootVector.Y+NewSizeY)
-                                local LowRight = Vector2.new(RootVector.X+NewSizeX, RootVector.Y+NewSizeY)
+                                local UpLeft = Vector2.new(RootVector.X+NewSizeX, RootVector.Y+NewSizeY)
+                                local UpRight = Vector2.new(RootVector.X-NewSizeX, RootVector.Y+NewSizeY)
+                                local LowLeft = Vector2.new(RootVector.X+NewSizeX, RootVector.Y-NewSizeY)
+                                local LowRight = Vector2.new(RootVector.X-NewSizeX, RootVector.Y-NewSizeY)
 
                                 local DirectionH = Vector2.new(Size/4, 0)
                                 local DirectionV = Vector2.new(0, Size/4)
