@@ -416,13 +416,6 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
     local Esp = {
         Index = Add.Index or "Global",
         RemoveOnToggle = Add.RemoveOnToggle or false,
-        Boxes = {
-            Enabled = Add.Boxes.Enabled or false,
-            Color = Add.Boxes.Color or Color3.fromRGB(255,255,255),
-            X = Add.Boxes.X or 0.75,
-            Y = Add.Boxes.Y or 1.5,
-            Size = Add.Boxes.Size or 2500
-        },
         Title = {
             Enabled = Add.Title.Enabled or true,
             Color = Add.Title.Color or Color3.fromRGB(255,255,255),
@@ -438,6 +431,15 @@ function SShubEsp:NewEsp(Instance, Add, ExtraTexts)
             Color = Add.GlobalColor.Color or Color3.fromRGB(255,255,255),
         }
     }
+    if Add["Boxes"] then
+        Esp["Boxes"] = {
+            Enabled = Add.Boxes.Enabled or false,
+            Color = Add.Boxes.Color or Color3.fromRGB(255,255,255),
+            X = Add.Boxes.X or 0.75,
+            Y = Add.Boxes.Y or 1.5,
+            Size = Add.Boxes.Size or 2500
+        }
+    end
     local function InfoUpdate()
         if Instance ~= nil then
             if table.find(Class, Instance.ClassName) then
